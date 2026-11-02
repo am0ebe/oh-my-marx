@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- adaptive icon: Marx (Mayall 1875, PD) w Heiligenschein on Parteibuch-rot
+     src: img/marx_portrait/ ➡ composed w magick (see notes.md § icon) -->
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+    <background android:drawable="@color/red" />
+    <foreground android:drawable="@mipmap/ic_marx_fg" />
+    <!-- Android 13 themed icons: monochrome silhouette (halo + book) -->
+    <monochrome android:drawable="@drawable/ic_launcher_fg" />
+</adaptive-icon>

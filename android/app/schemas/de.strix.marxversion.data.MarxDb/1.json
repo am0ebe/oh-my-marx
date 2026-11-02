@@ -1,0 +1,108 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "b5a3609e05cbd9557fbff011f9cddcf1",
+    "entities": [
+      {
+        "tableName": "Mark",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`verseId` TEXT NOT NULL, `highlight` INTEGER, `bookmark` INTEGER NOT NULL, `note` TEXT, `updatedAt` INTEGER NOT NULL, PRIMARY KEY(`verseId`))",
+        "fields": [
+          {
+            "fieldPath": "verseId",
+            "columnName": "verseId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "highlight",
+            "columnName": "highlight",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "bookmark",
+            "columnName": "bookmark",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "note",
+            "columnName": "note",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "updatedAt",
+            "columnName": "updatedAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "verseId"
+          ]
+        }
+      },
+      {
+        "tableName": "ReadLog",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`verseId` TEXT NOT NULL, `at` INTEGER NOT NULL, PRIMARY KEY(`verseId`))",
+        "fields": [
+          {
+            "fieldPath": "verseId",
+            "columnName": "verseId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "at",
+            "columnName": "at",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "verseId"
+          ]
+        }
+      },
+      {
+        "tableName": "DayLog",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`date` TEXT NOT NULL, `planId` TEXT NOT NULL, `planDay` INTEGER NOT NULL, PRIMARY KEY(`date`, `planId`))",
+        "fields": [
+          {
+            "fieldPath": "date",
+            "columnName": "date",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "planId",
+            "columnName": "planId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "planDay",
+            "columnName": "planDay",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "date",
+            "planId"
+          ]
+        }
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'b5a3609e05cbd9557fbff011f9cddcf1')"
+    ]
+  }
+}

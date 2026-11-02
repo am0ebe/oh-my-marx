@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 📱 home-screen widget (notify/Widget.kt) · dflt txt = what th widget picker preview shows -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/wg_evening"
+    android:orientation="vertical"
+    android:padding="14dp">
+
+    <TextView
+        android:id="@+id/head"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="☭ Marx-Losung  ·  🔥 7"
+        android:textColor="#FFFFFFFF"
+        android:textSize="13sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/quote"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="6dp"
+        android:ellipsize="end"
+        android:fontFamily="serif"
+        android:gravity="center_vertical"
+        android:maxLines="6"
+        android:text="„Das Kapital ist verstorbne Arbeit, die sich nur vampyrmäßig belebt durch Einsaugung lebendiger Arbeit.“"
+        android:textColor="#FFFFFFFF"
+        android:textSize="16sp"
+        android:textStyle="italic" />
+
+    <TextView
+        android:id="@+id/ref"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:text="— Karl Marx, Kapital 8,9"
+        android:textColor="#DDFFFFFF"
+        android:textSize="12sp" />
+</LinearLayout>

@@ -1,0 +1,116 @@
+package de.strix.marxversion.ui
+
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import de.strix.marxversion.MarxApp
+import de.strix.marxversion.data.DayLog
+import de.strix.marxversion.data.Lang
+import de.strix.marxversion.data.Mark
+import de.strix.marxversion.data.ReadLog
+import de.strix.marxversion.data.Settings
+import de.strix.marxversion.logic.DayTime
+import de.strix.marxversion.logic.Feast
+import de.strix.marxversion.logic.dailyPool
+import de.strix.marxversion.notify.refreshWidgets
+import de.strix.marxversion.logic.today
+import de.strix.marxversion.logic.verseOfDay
+import de.strix.marxversion.notify.LosungWorker
+import de.strix.marxversion.notify.schedule
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+
+/**
+ * ViewModel = survives screen rotation · holds UI state as StateFlows.
+ * Screens *observe* (collectAsStateWithLifecycle) and *call* th funs below — never touch db/prefs directly.
+ */
+class AppVm(app: Application) : AndroidViewModel(app) {
+    private val marx = app as MarxApp
+    val content = marx.content
+
+    private val _loaded = MutableStateFlow(content.loaded)
+    val loaded: StateFlow<Boolean> = _loaded
+
+    /** false til DataStore delivered th real settings (dflt Settings() would flash th daily popup) */
+    val prefsReady = MutableStateFlow(false)
+    val settings: StateFlow<Settings> = marx.prefs.settings.onEach { prefsReady.value = true }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, Settings())
+    val marks: StateFlow<List<Mark>> = marx.db.marks().all().stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+    val readIds: StateFlow<Set<String>> = marx.db.logs().readIds().map { it.toSet() }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, emptySet())
+    val days: StateFlow<List<DayLog>> = marx.db.logs().days().stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+
+    /** 🧪 test mode: "🎲 neuer Vers" bumps this ➡ verse-o-day re-rolls (in memory only, gone aft restart) */
+    val reroll = MutableStateFlow(0)
+    /** popup opened by tapping th Losung (or 🪝 test chip) · normal: once a day, see MainActivity */
+    val forcePopup = MutableStateFlow(false)
+    /** 🪝 preview a feast / time o day (null = real calendar + clock) */
+    val feastPreview = MutableStateFlow<Feast?>(null)
+    val timePreview = MutableStateFlow<DayTime?>(null)
+
+    init {
+        // parsing ~6 MB JSON on th main thread would freeze th UI ➡ IO dispatcher
+        viewModelScope.launch(Dispatchers.IO) { content.load(); _loaded.value = true; refreshWidgets(app) }
+    }
+
+    private val pool by lazy { dailyPool(content.verses) }
+
+    /** 🎉 feast verse wins (unless re-rolled), else th date-seeded ⭐ verse */
+    fun verseOfDay(r: Int, feast: Feast?) =
+        feast?.takeIf { r == 0 }?.let { content.verse(it.verse) } ?: verseOfDay(pool, today(), r)
+
+    private fun widgets() = viewModelScope.launch(Dispatchers.IO) { refreshWidgets(getApplication()) }
+
+    fun mark(id: String) = marx.db.marks().one(id)
+
+    private fun edit(id: String, f: (Mark) -> Mark) = viewModelScope.launch {
+        val dao = marx.db.marks()
+        dao.put(f(dao.get(id) ?: Mark(id)).copy(updatedAt = System.currentTimeMillis()))
+    }
+
+    fun highlight(id: String, color: Int?) = edit(id) { it.copy(highlight = if (it.highlight == color) null else color) }
+    fun bookmark(id: String) = edit(id) { it.copy(bookmark = !it.bookmark) }
+    fun note(id: String, text: String) = edit(id) { it.copy(note = text.ifBlank { null }) }
+
+    fun read(ids: List<String>) = viewModelScope.launch { ids.forEach { marx.db.logs().read(ReadLog(it)) } }
+
+    /** "Tag geschafft! ☭" */
+    fun dayDone(planId: String, planDay: Int, verseIds: List<String>) = viewModelScope.launch {
+        marx.db.logs().day(DayLog(today(), planId, planDay))
+        read(verseIds)
+        widgets()
+    }
+
+    /** "Amen ☭" on th Losung = th tiny habit: 1 verse read counts as a reading day (Fogg: ability > motivation) */
+    fun amen(verseId: String) = viewModelScope.launch {
+        marx.db.logs().day(DayLog(today(), "losung", 0))
+        read(listOf(verseId))
+        popupDone()
+        widgets()
+    }
+
+    fun startPlan(id: String) = viewModelScope.launch { marx.prefs.startPlan(id, today()) }
+    fun setLang(l: Lang) = viewModelScope.launch { marx.prefs.setLang(l); widgets() }
+    fun setTestMode(on: Boolean) = viewModelScope.launch { marx.prefs.setTestMode(on) }
+    fun setPersona(p: Persona) = viewModelScope.launch { marx.prefs.setPersona(p.name) }
+    fun popupDone() = viewModelScope.launch { forcePopup.value = false; marx.prefs.popupSeen(today()) }
+    fun setNotif(on: Boolean, h: Int, m: Int) = viewModelScope.launch {
+        marx.prefs.setNotif(on, h, m)
+        schedule(getApplication(), on, h, m)
+    }
+
+    // ── 🧪 test mode ──
+    fun testNotifNow() = WorkManager.getInstance(getApplication()).enqueue(OneTimeWorkRequestBuilder<LosungWorker>().build())
+    fun testUndoDay() = viewModelScope.launch { marx.db.logs().undoDay(today()); widgets() }
+    /** cycle: real ➡ each feast ➡ real */
+    fun testNextFeast() { feastPreview.value = Feast.entries.getOrNull((feastPreview.value?.ordinal ?: -1) + 1) }
+    fun testNextTime() { timePreview.value = DayTime.entries.getOrNull((timePreview.value?.ordinal ?: -1) + 1) }
+}

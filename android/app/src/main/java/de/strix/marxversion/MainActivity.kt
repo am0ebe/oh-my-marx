@@ -1,0 +1,196 @@
+package de.strix.marxversion
+
+import android.Manifest
+import android.os.Build
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
+import de.strix.marxversion.data.Lang
+import de.strix.marxversion.data.T
+import de.strix.marxversion.logic.today
+import de.strix.marxversion.notify.schedule
+import de.strix.marxversion.ui.APP_NAME
+import de.strix.marxversion.ui.AppVm
+import de.strix.marxversion.ui.ChapterScreen
+import de.strix.marxversion.ui.HookedScreen
+import de.strix.marxversion.ui.LocalOpenHooked
+import androidx.compose.runtime.CompositionLocalProvider
+import de.strix.marxversion.ui.LosungPopup
+import de.strix.marxversion.ui.MarxTheme
+import de.strix.marxversion.ui.MineScreen
+import de.strix.marxversion.ui.PlanDetail
+import de.strix.marxversion.ui.PlansScreen
+import de.strix.marxversion.ui.ReadScreen
+import de.strix.marxversion.ui.SettingsScreen
+import de.strix.marxversion.ui.TodayScreen
+import de.strix.marxversion.ui.tr
+
+/** th only Activity · evythg else = composables swapped by th NavHost */
+class MainActivity : ComponentActivity() {
+    private val vm: AppVm by viewModels()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent {
+            val s by vm.settings.collectAsStateWithLifecycle()
+            val loaded by vm.loaded.collectAsStateWithLifecycle()
+            MarxTheme(s.lang, if (loaded) vm.content.tr(s.lang) else null) {
+                if (!loaded) Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator() }
+                else App(vm)
+            }
+        }
+    }
+}
+
+private val TABS = listOf(
+    Triple("today", "☀️", T("Heute", "Today")),
+    Triple("plans", "📚", T("Pläne", "Plans")),
+    Triple("read", "📖", T("Lesen", "Read")),
+    Triple("mine", "☭", T("Mein Kapital", "My Capital")),
+)
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun App(vm: AppVm) {
+    val nav = rememberNavController()
+    val s by vm.settings.collectAsStateWithLifecycle()
+    val forcePopup by vm.forcePopup.collectAsStateWithLifecycle()
+    val route = nav.currentBackStackEntryAsState().value?.destination?.route
+
+    // Android 13+ runtime permission 4 notifications
+    val notifPermission = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) {}
+    val askNotif = { if (Build.VERSION.SDK_INT >= 33) notifPermission.launch(Manifest.permission.POST_NOTIFICATIONS) }
+    LaunchedEffect(Unit) {
+        // 1st start: ask once + plan th daily Losung w th saved time
+        if (s.notifOn) { askNotif(); schedule(vm.getApplication(), true, s.notifHour, s.notifMinute) }
+    }
+    val openChapter = { kap: String, v: String -> nav.navigate("chapter/$kap?v=$v") }
+    val openHooked = { nav.navigate("hooked") { launchSingleTop = true } }
+
+    CompositionLocalProvider(LocalOpenHooked provides openHooked) {
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                // tap Marx (or th name) = home
+                navigationIcon = {
+                    Image(painterResource(R.mipmap.ic_marx_fg), contentDescription = tr("Heute", "Today"),
+                        modifier = Modifier.padding(start = 4.dp).size(44.dp).clickable { nav.go("today") })
+                },
+                title = { Text(APP_NAME, modifier = Modifier.clickable { nav.go("today") }) },
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.primary, titleContentColor = Color.White),
+                actions = {
+                    if (s.testMode) TextButton(onClick = openHooked) { Text("🪝") }
+                    LangButton(s.lang) { vm.setLang(it) }
+                    TextButton(onClick = { nav.navigate("settings") { launchSingleTop = true } }) { Text("⚙️") }
+                },
+            )
+        },
+        bottomBar = {
+            NavigationBar {
+                TABS.forEach { (r, icon, label) ->
+                    NavigationBarItem(
+                        selected = route == r,
+                        onClick = { nav.go(r) },
+                        icon = { Text(icon) },
+                        label = { Text(tr(label)) },
+                    )
+                }
+            }
+        },
+    ) { pad ->
+        NavHost(nav, startDestination = "today", modifier = Modifier.padding(pad)) {
+            composable("today") { TodayScreen(vm, askNotif, openChapter) { nav.go("plans") } }
+            composable("plans") { PlansScreen(vm) { nav.navigate("plan/$it") } }
+            composable("plan/{id}") { e -> PlanDetail(vm, e.arguments?.getString("id")!!) { nav.go("today") } }
+            composable("read") { ReadScreen(vm) { nav.navigate("chapter/$it") } }
+            composable("chapter/{kap}?v={v}") { e -> ChapterScreen(vm, e.arguments?.getString("kap")!!, e.arguments?.getString("v")) }
+            composable("mine") { MineScreen(vm, openChapter) }
+            composable("settings") { SettingsScreen(vm, askNotif) }
+            composable("hooked") {
+                HookedScreen { dest ->
+                    if (dest == "popup") { nav.go("today"); vm.forcePopup.value = true }
+                    else if (dest == "settings") nav.navigate("settings") { launchSingleTop = true }
+                    else nav.go(dest)
+                }
+            }
+        }
+    }
+
+    // 🌅 1st open o th day ➡ Losung popup (Hooked: reward right at th door) · tap th Losung / 🪝 chip = again
+    val prefsReady by vm.prefsReady.collectAsStateWithLifecycle()
+    if (forcePopup || (prefsReady && s.popupSeen != today())) LosungPopup(vm, openChapter)
+    }
+}
+
+/** shows only th current language · tap ➡ menu w th oth 6 */
+@Composable
+private fun LangButton(cur: Lang, pick: (Lang) -> Unit) {
+    var open by remember { mutableStateOf(false) }
+    Box {
+        TextButton(onClick = { open = true }) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(cur.code, color = Color.White, fontWeight = FontWeight.Bold)
+                Icon(painterResource(R.drawable.ic_expand), null, tint = Color.White, modifier = Modifier.size(18.dp))
+            }
+        }
+        DropdownMenu(open, { open = false }) {
+            Lang.entries.forEach { l ->
+                DropdownMenuItem(
+                    text = { Text((if (l == cur) "✓ " else "    ") + l.native) },
+                    onClick = { open = false; pick(l) },
+                )
+            }
+        }
+    }
+}
+
+/**
+ * bottom-tab navigation: always land on th tab's root.
+ * 🐛 was: saveState/restoreState ➡ tapping "Heute"/"Lesen" restored th old back stack incl. ⚙️ Settings
+ */
+private fun NavHostController.go(route: String) = navigate(route) {
+    popUpTo(graph.findStartDestination().id)
+    launchSingleTop = true
+}

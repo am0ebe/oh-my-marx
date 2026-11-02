@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- only th launcher label lives here · in-app txt = tr("de", "en") + assets/content/i18n_xx.json -->
+    <string name="app_name">bibleApp</string>
+    <string name="widget_desc">Marx-Losung des Tages + 🔥 Streak · Farben nach Tageszeit</string>
+</resources>

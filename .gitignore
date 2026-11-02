@@ -1,0 +1,19 @@
+# android build output + caches (regenerable)
+android/**/build/
+android/.gradle/
+android/.kotlin/
+android/local.properties
+*.apk
+
+# downloaded src html (regenerable: bin/fetch.py) · big
+data/raw/
+
+# python
+__pycache__/
+
+# page fotos (boox proc: rm aft QA) — kept local til then
+img_orig/
+img/IMG_*.jpg
+
+# logs
+data/*.log

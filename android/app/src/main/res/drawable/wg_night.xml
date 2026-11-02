@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- widget bg 4 th night (logic/Feast.kt DayTime) -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <gradient android:angle="270" android:startColor="#FF03061A" android:centerColor="#FF0B1026" android:endColor="#FF1F2F4F" />
+    <corners android:radius="22dp" />
+</shape>

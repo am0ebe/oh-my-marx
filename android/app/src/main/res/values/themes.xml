@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- window theme b4 Compose draws (splash/background) · real theme = ui/Theme.kt -->
+    <style name="Theme.MarxVersion" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/paper</item>
+        <item name="android:statusBarColor">@color/red</item>
+    </style>
+    <color name="paper">#FFF6EEDC</color>
+    <color name="red">#FFB3261E</color>
+    <color name="gold">#FFE8B931</color>
+</resources>

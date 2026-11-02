@@ -1,0 +1,11 @@
+Idea: bible app 4 days capital >> bitesized chunks pieces 2 not overwhelm.
+    - ez++ 2use >> freq > habit
+    - place interesting++ section upfront, HD/boring later
+    - d-1 plan only simple inspire T + few short verses
+    - forrrer effect
+    - unK wh verse will be sel & how relate 2 personal struggle (how personalized? Usr type sth?
+    - ~bible app
+    - endowed progress effect
+    - hiliteverse, comment, bm , share (IKEA effect)
+    - audio version
+    - scan chapter.. Mk PR/bible... Goo!

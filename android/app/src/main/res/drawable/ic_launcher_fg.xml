@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- halo over an open book (108dp canvas, safe zone = inner 66dp)
+     used as: notification small icon + Android 13 themed (monochrome) launcher icon -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp" android:height="108dp"
+    android:viewportWidth="108" android:viewportHeight="108">
+    <!-- halo -->
+    <path android:strokeColor="#FFE8B931" android:strokeWidth="3.5" android:fillColor="#00000000"
+        android:pathData="M54,22 m-17,0 a17,7 0 1,0 34,0 a17,7 0 1,0 -34,0" />
+    <!-- book: 2 pages -->
+    <path android:fillColor="#FFF6EEDC"
+        android:pathData="M30,40 L52,44 L52,80 L30,76 Z" />
+    <path android:fillColor="#FFF6EEDC"
+        android:pathData="M78,40 L56,44 L56,80 L78,76 Z" />
+    <!-- lines o text -->
+    <path android:strokeColor="#FFB3261E" android:strokeWidth="1.6"
+        android:pathData="M34,50 L48,52.5 M34,56 L48,58.5 M34,62 L48,64.5 M60,52.5 L74,50 M60,58.5 L74,56 M60,64.5 L74,62" />
+</vector>
