@@ -20,7 +20,8 @@ curl -s localhost:8000/v1/stats?keys=p:247
 ## On the VPS
 Container (as `am0`, docker group, no sudo — already done by Claude @1103):
 ```
-rsync -a server/ vps:omm-api/ && ssh vps 'cd omm-api && docker compose up -d --build'
+rsync -a --exclude __pycache__ --exclude test_omm_api.py --exclude matrix server/ vps:/srv/omm-api/ && ssh vps 'cd /srv/omm-api && docker compose up -d --build'
+# (stack moved ~am0/omm-api ➡ /srv/omm-api by ops @1103: fleet.py runs as `claude` + manages updates/bup)
 ssh vps 'docker exec caddy wget -qO- http://omm-api:8000/v1/health'     # {"ok": true}
 ```
 **Public route — 1 manual step (Caddyfile is owned by `claude`, needs sudo):**

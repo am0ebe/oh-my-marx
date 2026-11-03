@@ -1,4 +1,6 @@
-# 💬 Oh My Marx comments = a small Matrix homeserver (Synapse) · lives i ~am0/omm-matrix on th VPS
+# 💬 Oh My Marx comments = a small Matrix homeserver (Synapse) · lives i /srv/omm-matrix on th VPS (moved by ops @1103)
+# ⚠️ NOT th source o truth 4 th image tag anymore: ops' fleet.py auto-bumps th pin ON TH BOX (sqlite bup 1st)
+#    ➡ never rsync this file over th box's copy wo re-reading it (would downgrade synapse) · this copy = th initial setup only
 # client API only (federation off), reached only via Caddy: scagent.de/_matrix/* ➡ omm-matrix:8008
 services:
   omm-matrix:

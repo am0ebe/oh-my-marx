@@ -1,4 +1,4 @@
-# 👥 Oh My Marx counter API on th VPS (lives i ~am0/omm-api · bin: server/README.md)
+# 👥 Oh My Marx counter API on th VPS (lives i /srv/omm-api since @1103, moved by ops · see server/README.md)
 # not published on any host port: only Caddy reaches it over th `web` network ➡ scagent.de/omm/api/*
 services:
   omm-api:

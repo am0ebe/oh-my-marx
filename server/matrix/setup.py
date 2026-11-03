@@ -1,6 +1,6 @@
 """💬 one-time / idempotent setup o th Oh My Marx homeserver — run INSIDE th container:
 
-    docker exec -i -e OMM_ADMIN_PW="$(cat ~/omm-matrix/admin.secret)" omm-matrix python3 - < setup.py
+    docker exec -i -e OMM_ADMIN_PW="$(cat /srv/omm-matrix/admin.secret)" omm-matrix python3 - < setup.py
 
 - logs in as @ommadmin
 - app registration token: reuses /data/omm_reg_token o creates one (printed: it ships i th APK anyway —
