@@ -10,7 +10,7 @@ import java.net.URLEncoder
 
 /**
  * 👥 "Mitlesen" = th community counter (server/omm_api.py on th VPS, behind Caddy).
- * Only called when th usr switched ⚙️ Mitlesen on. Sends: a random token that changes daily + page keys.
+ * Only called while ⚙️ Mitlesen is on (dflt on, switch off anytime). Sends: a random token that changes daily + page keys.
  * Evy call fails soft (null / false) ➡ offline o server down = th counters just don't show.
  * HttpURLConnection = no extra library 4 3 tiny JSON calls.
  */

@@ -8,7 +8,7 @@ Step ① of the community plan (`../notes.md` § community): **"👥 34× gelese
 - the server keeps a token **only for today** (to count each reader once per page per day)
 - the first write of a new day **deletes all of yesterday's tokens** → only totals are left
 - IPs are never written to disk (RAM only, 1 min, for the rate limit) · no access log
-- the app only talks to it when the user turns on **⚙️ Mitlesen** (off by default)
+- the app only talks to it while **⚙️ Mitlesen** is on (on by default since @1103, one switch to turn it off)
 
 ## Run + test locally
 ```

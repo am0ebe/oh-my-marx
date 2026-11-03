@@ -27,7 +27,7 @@ data class Settings(
     val activePlan: String? = null,
     val planStart: String? = null,      // "2026-10-28"
     val readScale: Float = 1f,          // 🤏 pinch i th reader ➡ font size × this
-    val community: Boolean = false,     // 👥 Mitlesen (opt-in): send anonymous daily-token counts (data/Community.kt)
+    val community: Boolean = true,      // 👥 Mitlesen (dflt ON @1103 strix · switch off i ⚙️): anonymous daily-token counts + comments
 )
 
 class Prefs(private val context: Context) {
@@ -85,7 +85,7 @@ class Prefs(private val context: Context) {
             activePlan = p[K.activePlan],
             planStart = p[K.planStart],
             readScale = p[K.readScale] ?: 1f,
-            community = p[K.community] ?: false,
+            community = p[K.community] ?: true,
         )
     }
 

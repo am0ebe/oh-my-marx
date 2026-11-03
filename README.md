@@ -48,9 +48,10 @@ Einfach an strix schicken (Signal / Nachricht):
 
 ## 🔒 Daten
 
-Alles bleibt auf deinem Handy. Nur wenn du in ⚙️ **„Mitlesen“** einschaltest, schickt die App anonym,
-*welche Seite* gelesen wurde (mit einer Zufallszahl, die sich täglich ändert) — damit „👥 34× gelesen“
-angezeigt werden kann. Kein Konto, keine IP gespeichert.
+Deine Lesezeichen, Notizen und dein Streak bleiben auf deinem Handy. **„Mitlesen“** ist an (abschaltbar in ⚙️):
+die App schickt anonym, *welche Seite* gelesen wurde (mit einer Zufallszahl, die sich täglich ändert) — damit
+„👥 34× gelesen“ angezeigt werden kann. Kein Konto, keine IP gespeichert.
+**Kommentare** (💬 unter jeder Buchseite) sind öffentlich für alle Mitlesenden; ein Name wird erst beim ersten Kommentar gebraucht.
 
 ---
 
