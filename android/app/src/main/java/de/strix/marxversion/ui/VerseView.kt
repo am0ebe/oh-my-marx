@@ -5,6 +5,9 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
@@ -73,11 +76,19 @@ fun ref(v: Verse): String {
 fun verseText(v: Verse): String =
     if (LocalLang.current != Lang.DE && v.en.isNotBlank()) v.en.replace(" ¶ ", "\n\n") else v.de
 
+/** th LLM-picked line · ~1/5 o all paragraphs have none (dry tables, short bridges — eg 355 i th Jahresplan) ➡ opening sentence */
 @Composable
 fun verseQuote(v: Verse): String = when (LocalLang.current) {
     Lang.DE -> v.quoteDe
     Lang.EN -> v.quoteEn.ifBlank { v.quoteDe }
     else -> LocalTr.current?.q?.get(v.id) ?: v.quoteEn.ifBlank { v.quoteDe }
+}.ifBlank { opening(verseText(v)) }
+
+/** 1st sentence (≥ 40 chars so "Ad 1." isn't it), max ~220 chars, footnote marks gone */
+fun opening(t: String): String {
+    val s = t.replace(Regex("\\s*\\[\\d+[a-z]?]"), "").replace(Regex("\\s+"), " ").trim()
+    val end = Regex("[.!?;:](\\s|$)").findAll(s).map { it.range.first + 1 }.firstOrNull { it >= 40 } ?: s.length
+    return if (end <= 220) s.take(end) else s.take(220).substringBeforeLast(' ') + " …"
 }
 
 @Composable
@@ -121,7 +132,6 @@ fun VerseView(vm: AppVm, v: Verse, speaker: Speaker? = null, showActions: Boolea
     var footnote by remember { mutableStateOf<String?>(null) }
     var editNote by remember { mutableStateOf(false) }
     var open by remember { mutableStateOf(false) }
-    var palette by remember { mutableStateOf(false) }
     var card by remember { mutableStateOf(false) }
     val lang = LocalLang.current
     val txt = verseText(v)
@@ -135,8 +145,14 @@ fun VerseView(vm: AppVm, v: Verse, speaker: Speaker? = null, showActions: Boolea
     }
     val copied = tr("📋 kopiert", "📋 copied")
 
-    val bg = mark?.highlight?.let { HIGHLIGHT_COLORS[it] } ?: Color.Transparent
-    val sel = if (open) Modifier.border(1.dp, MaterialTheme.colorScheme.tertiary, RoundedCornerShape(6.dp)) else Modifier
+    // ✨ anything th usr did (🔖 · ✍️ · old highlight) ➡ gold tint + gold frame = "this one is mine" at a glance
+    val marked = mark?.bookmark == true || mark?.note != null || mark?.highlight != null
+    val bg = if (marked) Gold.copy(alpha = 0.16f) else Color.Transparent
+    val frame = when {
+        open -> Modifier.border(1.dp, MaterialTheme.colorScheme.tertiary, RoundedCornerShape(6.dp))
+        marked -> Modifier.border(1.5.dp, Gold.copy(alpha = 0.8f), RoundedCornerShape(6.dp))
+        else -> Modifier
+    }
     val scale = LocalReadScale.current
     val haptic = LocalHapticFeedback.current
     // ☭ burst on double-tap (Instagram-heart style): 0 ➡ 1 = grow + fade out
@@ -144,25 +160,24 @@ fun VerseView(vm: AppVm, v: Verse, speaker: Speaker? = null, showActions: Boolea
     val scope = rememberCoroutineScope()
     Box {
     Column(
-        Modifier.fillMaxWidth().clip(RoundedCornerShape(6.dp)).background(bg).then(sel)
+        Modifier.fillMaxWidth().clip(RoundedCornerShape(6.dp)).background(bg).then(frame)
             .then(if (showActions) Modifier.combinedClickable(
-                onClick = { open = !open; palette = false },
-                // double-tap = toggle highlight (1st colour) — same call as th palette's ✕ when alr marked
+                onClick = { open = !open },
+                // double-tap = 🔖 bookmark on/off · on ➡ ☭ burst
                 onDoubleClick = {
-                    vm.highlight(v.id, mark?.highlight ?: 0)
-                    if (mark?.highlight == null) {
+                    vm.bookmark(v.id)
+                    if (mark?.bookmark != true) {
                         haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                         scope.launch { burst.snapTo(0f); burst.animateTo(1f, tween(650)) }
                     }
                 },
-                onLongClick = { haptic.performHapticFeedback(HapticFeedbackType.LongPress); open = true; palette = true },
+                onLongClick = { haptic.performHapticFeedback(HapticFeedbackType.LongPress); open = true },
             ) else Modifier)
             .padding(6.dp),
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(r, fontSize = 11.sp, color = MaterialTheme.colorScheme.secondary, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
             if (mark?.bookmark == true) Icon(painterResource(R.drawable.ic_bookmark), null, Modifier.size(14.dp), tint = Red)
-            if (showActions && !open) Text("  ⋯", fontSize = 14.sp, color = MaterialTheme.colorScheme.secondary)
         }
         if (fallbackNote.isNotBlank()) Text(fallbackNote, fontSize = 11.sp, color = Color.Gray)
         val annotated = buildAnnotatedString {
@@ -178,17 +193,28 @@ fun VerseView(vm: AppVm, v: Verse, speaker: Speaker? = null, showActions: Boolea
             append(txt.substring(last))
         }
         Text(annotated, fontFamily = FontFamily.Serif, fontSize = 16.sp * scale, lineHeight = 23.sp * scale)
-        mark?.note?.let {
-            Text("✍️ $it", fontSize = 13.sp, color = MaterialTheme.colorScheme.secondary, modifier = Modifier.padding(top = 4.dp))
+        // ✍️ margin note: shown inline · tap it (or Notiz) = edit right here, no popup
+        if (editNote) {
+            var draft by remember { mutableStateOf(mark?.note ?: "") }
+            val focus = remember { FocusRequester() }
+            LaunchedEffect(Unit) { focus.requestFocus() }
+            OutlinedTextField(draft, { draft = it }, minLines = 2, modifier = Modifier.fillMaxWidth().padding(top = 6.dp).focusRequester(focus),
+                placeholder = { Text(tr("Deine Randnotiz …", "Your margin note …")) },
+                keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences))
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                TextButton(onClick = { editNote = false }) { Text("☭", fontSize = 18.sp) }  // ☭ = close (strix: use it more)
+                TextButton(onClick = { vm.note(v.id, draft); editNote = false }) { Text(tr("Speichern", "Save")) }
+            }
+        } else mark?.note?.let {
+            Text("✍️ $it", fontSize = 13.sp, color = MaterialTheme.colorScheme.secondary,
+                modifier = Modifier.padding(top = 4.dp).then(if (showActions) Modifier.clickable { editNote = true } else Modifier))
         }
 
         if (showActions && open) {
             Row(Modifier.fillMaxWidth().padding(top = 6.dp)) {
-                val hl = mark?.highlight?.let { HIGHLIGHT_COLORS[it].copy(alpha = 1f) } ?: MaterialTheme.colorScheme.secondary
-                Action(R.drawable.ic_highlight, tr("Markieren", "Highlight"), hl) { palette = !palette }
                 Action(if (mark?.bookmark == true) R.drawable.ic_bookmark else R.drawable.ic_bookmark_border,
                     tr("Lesezeichen", "Bookmark"), if (mark?.bookmark == true) Red else MaterialTheme.colorScheme.secondary) { vm.bookmark(v.id) }
-                Action(R.drawable.ic_note, tr("Notiz", "Note")) { editNote = true }
+                Action(R.drawable.ic_note, tr("Notiz", "Note"), if (mark?.note != null) Red else MaterialTheme.colorScheme.secondary) { editNote = !editNote }
                 Action(R.drawable.ic_copy, tr("Kopieren", "Copy")) {
                     copyText(ctx, "${lang.quote(txt)}\n— Karl Marx, $r")
                     android.widget.Toast.makeText(ctx, copied, android.widget.Toast.LENGTH_SHORT).show()
@@ -199,17 +225,8 @@ fun VerseView(vm: AppVm, v: Verse, speaker: Speaker? = null, showActions: Boolea
                     speaker.say(txt, textLang, Persona.of(settings.persona))
                 }
             }
-            if (palette) Row(Modifier.fillMaxWidth().padding(top = 4.dp), horizontalArrangement = Arrangement.spacedBy(14.dp, Alignment.CenterHorizontally),
-                verticalAlignment = Alignment.CenterVertically) {
-                HIGHLIGHT_COLORS.forEachIndexed { i, c ->
-                    Box(Modifier.size(30.dp).clip(CircleShape).background(c.copy(alpha = 0.9f))
-                        .then(if (mark?.highlight == i) Modifier.border(3.dp, Blue, CircleShape) else Modifier)
-                        .clickable { vm.highlight(v.id, i); palette = false })
-                }
-                if (mark?.highlight != null) TextButton(onClick = { vm.highlight(v.id, mark?.highlight); palette = false }) { Text("✕") }
-            }
         }
-        if (showActions && (mark?.highlight != null || mark?.note != null)) HookNote(Hook.INVESTMENT, settings.testMode)
+        if (showActions && marked) HookNote(Hook.INVESTMENT, settings.testMode)
     }
     if (burst.value < 1f) Text("☭", fontSize = 64.sp, color = Red, modifier = Modifier.align(Alignment.Center).graphicsLayer {
         val t = burst.value
@@ -217,7 +234,8 @@ fun VerseView(vm: AppVm, v: Verse, speaker: Speaker? = null, showActions: Boolea
     })
     }
 
-    if (card) CardDialog(vm, v, tr("🌅 Spruchkarte", "🌅 Verse card"), null, onDismiss = { card = false })
+    // 🌅 Teilen ➡ card preview w just 1 big Share btn (🔊 + 📋 alr sit i th verse's menu)
+    if (card) CardDialog(vm, v, tr("🌅 Spruchkarte", "🌅 Verse card"), null, onDismiss = { card = false }, shareOnly = true)
 
     footnote?.let { n ->
         val note = vm.content.note(v.kap, n)
@@ -228,23 +246,9 @@ fun VerseView(vm: AppVm, v: Verse, speaker: Speaker? = null, showActions: Boolea
         }
         AlertDialog(
             onDismissRequest = { footnote = null },
-            confirmButton = { TextButton(onClick = { footnote = null }) { Text("OK") } },
+            confirmButton = { TextButton(onClick = { footnote = null }) { Text("☭", fontSize = 20.sp) } },
             title = { Text(tr("Fußnote", "Footnote") + " $n") },
             text = { Text(body, fontFamily = FontFamily.Serif) },
-        )
-    }
-
-    if (editNote) {
-        var draft by remember { mutableStateOf(mark?.note ?: "") }
-        AlertDialog(
-            onDismissRequest = { editNote = false },
-            confirmButton = { TextButton(onClick = { vm.note(v.id, draft); editNote = false }) { Text(tr("Speichern", "Save")) } },
-            dismissButton = { TextButton(onClick = { editNote = false }) { Text(tr("Abbrechen", "Cancel")) } },
-            title = { Text(tr("Deine Randnotiz", "Your margin note")) },
-            text = {
-                OutlinedTextField(draft, { draft = it }, minLines = 3,
-                    keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences))
-            },
         )
     }
 }

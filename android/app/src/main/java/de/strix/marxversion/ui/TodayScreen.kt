@@ -27,6 +27,8 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.launch
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.layout.ContentScale
@@ -133,19 +135,37 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
     val lang = LocalLang.current
     val openHooked = LocalOpenHooked.current
     val vod = remember(today(), reroll, feast) { vm.verseOfDay(reroll, feast) }
-    var oracle by remember { mutableStateOf<Verse?>(null) }
     var celebrate by remember { mutableStateOf(false) }
     var rankUp by remember { mutableStateOf<Int?>(null) }
     val persona = Persona.of(s.persona)
     val doneToday = days.any { it.date == today() }
-    // 🔮 pull down = Marxoskop · 📳 shake = Krise! — both pop a card (variable reward, slot-machine pull 🪝)
-    var pop by remember { mutableStateOf<Pair<String, Verse>?>(null) }
-    val haptic = LocalHapticFeedback.current
-    val krise = tr("📉 Krise! Marx teilt aus:", "📉 Crisis! Marx lets rip:")
-    val orakel = tr("🔮 Marxoskop sagt:", "🔮 Marxoscope says:")
-    val roast = { vm.content.verses.filter { it.polemic && it.quoteDe.isNotBlank() }.randomOrNull()?.let { pop = krise to it } }
-    val oracleNow = { dailyPool(vm.content.verses).randomOrNull()?.let { pop = orakel to it } }
-    ShakeDetector { haptic.performHapticFeedback(HapticFeedbackType.LongPress); roast() }
+    // 🃏 cards: 🔮 pull down = oracle card · 📳 shake = crisis card (+ red flash) — both land i front i th carousel
+    val extras by vm.extraCards.collectAsStateWithLifecycle()
+    val jump by vm.homeJump.collectAsStateWithLifecycle()
+    var kriseFx by remember { mutableStateOf(false) }
+    var swoosh by remember { mutableStateOf(false) }
+    var confetti by remember { mutableStateOf(false) }
+    val scroll = rememberScrollState()
+    val scope = rememberCoroutineScope()
+    val roast: () -> Unit = {
+        vm.content.verses.filter { it.polemic && it.quoteDe.isNotBlank() }.randomOrNull()?.let {
+            vm.addCard(CardItem(it, CardItem.Kind.KRISE)); kriseFx = true; scope.launch { scroll.animateScrollTo(0) }
+        }
+    }
+    val oracleCard: (Verse?) -> Unit = { v -> v?.let { vm.addCard(CardItem(it, CardItem.Kind.ORAKEL)); scope.launch { scroll.animateScrollTo(0) } } }
+    val oracleNow: () -> Unit = { oracleCard(dailyPool(vm.content.verses).randomOrNull()) }
+    ShakeDetector { roast() }
+    // Amen on today's card: 📳 thump + toast · ☭ swoosh · full Stempelkarte ➡ 🎉 confetti
+    val total = readingDays(days)
+    val fills = !doneToday && cardJustFilled(total + 1)
+    val amenMsg = if (fills) tr("🏅 Stempelkarte voll! Neuer Rang: %s", "🏅 Stamp card full! New rank: %s").f(tr(rank(cardsDone(total + 1) - 1)))
+        else tr("☭ Lesetag gezählt — 🔥 %d", "☭ Reading day counted — 🔥 %d").f(streak(days) + 1)
+    val amen: (Verse) -> Unit = { v ->
+        Toast.makeText(ctx, amenMsg, Toast.LENGTH_LONG).show()
+        buzz(ctx, longArrayOf(0, 40, 60, 90))
+        if (fills) confetti = true else swoosh = true
+        vm.amen(v.id)
+    }
     // 🚀 launcher shortcut "Orakel" / "Krise!"
     val req by vm.popRequest.collectAsStateWithLifecycle()
     LaunchedEffect(req) {
@@ -154,7 +174,17 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
     }
 
     PullToRefreshBox(isRefreshing = false, onRefresh = { oracleNow() }) {
-    Column(Modifier.fillMaxWidth().verticalScroll(rememberScrollState()).padding(16.dp)) {
+    Column(Modifier.fillMaxWidth().verticalScroll(scroll).padding(vertical = 12.dp)) {
+        // ── 🃏 th cards: 1st thing u see (Hooked: reward right at th door) ──
+        CardCarousel(vm, extras, vod?.let { CardItem(it, CardItem.Kind.TODAY, 0, feast) }, doneToday, speaker, persona, jump, openChapter, amen)
+        Column(Modifier.padding(horizontal = 16.dp)) {
+            HookNote(Hook.POPUP, s.testMode)
+            HookNote(Hook.TINY, s.testMode)
+            HookNote(Hook.VARIABLE, s.testMode)
+            HookNote(Hook.SHARE, s.testMode)
+        }
+        Gap(16)
+    Column(Modifier.padding(horizontal = 16.dp)) {
         // ── 🪝 Hooked mode panel: explainer + test buttons ──
         if (s.testMode) {
             val soon = tr("🔔 kommt in ein paar Sekunden", "🔔 arriving in a few seconds")
@@ -179,40 +209,6 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
         }
 
         Hero(days, feast, dt, s.testMode)
-        Gap(16)
-
-        // ── Vers des Tages ──
-        vod?.let { v ->
-            val q = verseQuote(v)  // read composable values here — onClick lambdas aren't composable
-            val r = ref(v)
-            LaunchedEffect(q, lang, persona) { speaker.prerender(q, lang, persona) }  // 🔊 tap = instant
-            Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)) {
-                Column(Modifier.padding(16.dp)) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(tr("✨ Marx-Losung für heute", "✨ Today's Marx verse"), fontSize = 13.sp, color = MaterialTheme.colorScheme.secondary,
-                            modifier = Modifier.weight(1f))
-                        CopyIcon("${lang.quote(q)}\n— Karl Marx, $r")  // 📋 1 tap, like a code block's copy btn
-                    }
-                    // tap th quote ➡ th colourful Spruchkarte popup (share from there)
-                    Box(Modifier.clickable { vm.forcePopup.value = true }) { QuoteText(quoted(q)) }
-                    Gap(6)
-                    Text(r, fontSize = 12.sp, color = MaterialTheme.colorScheme.secondary, modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.End)
-                    FlowRow(horizontalArrangement = Arrangement.spacedBy(2.dp), verticalArrangement = Arrangement.Center) {
-                        TextButton(onClick = { openChapter(v.kap, v.id) }) { Text(tr("📖 Im Kontext", "📖 In context")) }
-                        TextButton(onClick = { vm.forcePopup.value = true }) {
-                            Icon(painterResource(R.drawable.ic_share), null, Modifier.size(18.dp)); Text(" " + tr("Spruchkarte", "Verse card"))
-                        }
-                        TextButton(onClick = { speaker.say(q, lang, persona) }) {
-                            Icon(painterResource(R.drawable.ic_volume), null, Modifier.size(18.dp), tint = if (speaker.speaking) Red else Blue)
-                        }
-                        if (!doneToday) Button(onClick = { vm.amen(v.id) }) { Text(tr("✔️ Gelesen", "✔️ Read")) }
-                    }
-                    HookNote(Hook.TINY, s.testMode)
-                    HookNote(Hook.VARIABLE, s.testMode)
-                    HookNote(Hook.SHARE, s.testMode)
-                }
-            }
-        }
         Gap(20)
 
         // ── Lesepläne ──
@@ -257,7 +253,7 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
                 Button(onClick = {
                     val total = readingDays(days)
                     if (!doneToday && cardJustFilled(total + 1)) rankUp = cardsDone(total + 1) - 1
-                    vm.dayDone(plan.id, idx, day.verseIds); celebrate = true
+                    vm.dayDone(plan.id, idx, day.verseIds); celebrate = true; swoosh = true
                 },
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                     modifier = Modifier.fillMaxWidth()) { Text(tr("Tag geschafft! ☭", "Day complete! ☭"), fontSize = 18.sp) }
@@ -272,21 +268,13 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
         Text(tr("🔮 Marxoskop — was nervt dich gerade?", "🔮 Marxoscope — what's bugging you?"), fontWeight = FontWeight.Bold)
         FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
             NERVT.keys.forEach { k ->
-                FilterChip(selected = false, onClick = { oracle = marxoskop(vm.content.verses, k) }, label = { Text(tr(NERVT_LABEL.getValue(k))) })
+                // answer = a card, flies 2 th front o th deck up top
+                FilterChip(selected = false, onClick = { oracleCard(marxoskop(vm.content.verses, k)) }, label = { Text(tr(NERVT_LABEL.getValue(k))) })
             }
         }
         HookNote(Hook.FORER, s.testMode)
         Text(tr("⬇ Seite runterziehen = Zufalls-Orakel · 📳 Handy schütteln = Krise!", "⬇ pull the page down = random oracle · 📳 shake the phone = crisis!"),
             fontSize = 11.sp, color = MaterialTheme.colorScheme.secondary)
-        oracle?.let { v ->
-            Card(Modifier.padding(top = 8.dp)) {
-                Column(Modifier.padding(12.dp)) {
-                    QuoteText(quoted(verseQuote(v)), 18)
-                    Text(ref(v), fontSize = 12.sp)
-                    TextButton(onClick = { openChapter(v.kap, v.id) }) { Text(tr("📖 Im Kontext", "📖 In context")) }
-                }
-            }
-        }
         Gap(40)
 
         if (celebrate) {
@@ -316,9 +304,12 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
             if (rankUp != null) Confetti {}  // 🎉 full card = paper rain on top
         }
     }
+    }  // inner padded Column
     }  // PullToRefreshBox
 
-    pop?.let { (title, v) -> CardDialog(vm, v, title, null, onDismiss = { pop = null }, openChapter = { k, id -> pop = null; openChapter(k, id) }) }
+    if (kriseFx) KriseFlash { kriseFx = false }
+    if (swoosh) SickleSwoosh { swoosh = false }
+    if (confetti) Confetti { confetti = false }
 }
 
 /**
@@ -388,6 +379,7 @@ fun CardDialog(
     full: Boolean = false,
     // 📱 stories (full only): tap left/right half o th card = older/newer day · null = no such day
     onOlder: (() -> Unit)? = null, onNewer: (() -> Unit)? = null, storyLabel: String? = null,
+    shareOnly: Boolean = false,  // fr a verse's Teilen: just 1 big Share btn + ☭ close
 ) {
     val s by vm.settings.collectAsStateWithLifecycle()
     val ctx = LocalContext.current
@@ -398,11 +390,18 @@ fun CardDialog(
     val speaker = rememberSpeaker()
     val q = verseQuote(v).ifBlank { verseText(v).take(240).substringBeforeLast(' ') + " …" }
     val r = ref(v)
-    val bmp = remember(q, r, lang, feast) { cardBitmap(q, r, lang, feast).asImageBitmap() }
+    val bmp = remember(q, r, lang, feast) { cardBitmap(ctx, q, r, lang, feast).asImageBitmap() }
     val shareTitle = tr("Spruchkarte teilen", "Share verse card")
     val persona = Persona.of(s.persona)
     LaunchedEffect(q, lang, persona) { speaker.prerender(q, lang, persona) }  // 🔊 tap = instant
     val buttons: @Composable (Color) -> Unit = { fg ->
+        if (shareOnly) Row(Modifier.fillMaxWidth().padding(top = 8.dp), verticalAlignment = Alignment.CenterVertically) {
+            Button(onClick = { shareCard(ctx, bmp.asAndroidBitmap(), "${lang.quote(q)} — Karl Marx, $r\n$APP_NAME", shareTitle) },
+                modifier = Modifier.weight(1f)) {
+                Icon(painterResource(R.drawable.ic_share), null, Modifier.size(20.dp)); Text("  " + tr("Teilen", "Share"), fontSize = 17.sp)
+            }
+            TextButton(onClick = onDismiss) { Text("☭", fontSize = 24.sp, color = Red) }
+        } else
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly, verticalAlignment = Alignment.CenterVertically) {
             TextButton(onClick = { shareCard(ctx, bmp.asAndroidBitmap(), "${lang.quote(q)} — Karl Marx, $r\n$APP_NAME", shareTitle) }) {
                 Icon(painterResource(R.drawable.ic_share), null, Modifier.size(18.dp), tint = fg); Text(" " + tr("Teilen", "Share"), color = fg)
@@ -413,7 +412,7 @@ fun CardDialog(
             CopyIcon("${lang.quote(q)}\n— Karl Marx, $r", fg)
             if (openChapter != null) TextButton(onClick = { openChapter(v.kap, v.id) }) { Text("📖") }
             if (onAmen != null) Button(onClick = onAmen) { Text(tr("Amen ☭", "Amen ☭")) }
-            else TextButton(onClick = onDismiss) { Text("✕", color = fg) }
+            else TextButton(onClick = onDismiss) { Text("☭", fontSize = 22.sp, color = if (fg == Color.White) fg else Red) }
         }
     }
     if (full) {

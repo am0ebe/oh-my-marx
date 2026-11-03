@@ -30,6 +30,25 @@ import androidx.compose.ui.input.pointer.positionChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import kotlin.math.abs
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.TransformOrigin
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.text.font.FontFamily
+import de.strix.marxversion.data.Verse
+import kotlinx.coroutines.launch
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -90,35 +109,48 @@ fun ReadScreen(vm: AppVm, openChapter: (String) -> Unit) {
 /** 🤏 reader font scale (pinch) · only th chapter reader provides it, evywhere else = 1 */
 val LocalReadScale = compositionLocalOf { 1f }
 
+/** 1 page o th book = th paragraphs that start on 1 MEW page (= strix's paper copy) — 708 pages, ~2 000 chars each */
+data class BookPage(val kap: String, val page: Int?, val verses: List<Verse>)
+
+fun bookPages(all: List<Verse>): List<BookPage> {
+    val out = mutableListOf<BookPage>()
+    for (v in all) {
+        val last = out.lastOrNull()
+        if (last != null && last.kap == v.kap && last.page == v.page) out[out.lastIndex] = last.copy(verses = last.verses + v)
+        else out += BookPage(v.kap, v.page, listOf(v))
+    }
+    return out
+}
+
+private val PAPER = Color(0xFFF3E7CF)
+private val INK = Color(0xFF3B2A1A)
+
 /**
- * Chapter reader. Gestures:
- *  👉 swipe ⬅ / ➡ = nxt / prev chapter (whole-screen, not fr th edge = Android's back gesture)
- *  🤏 pinch = font size (saved) · 2 fingers ➡ th list doesn't scroll meanwhile
- *  verse: tap = action bar · double-tap = ☭ highlight · hold = colour palette (VerseView)
+ * 📖 th book (strix @1103: "like th actual old book, swipe ➡ th page turns"):
+ *  whole Kapital as 1 stack o pages · drag ⬅ = th page lifts off th spine + turns · drag ➡ = turn back
+ *  🤏 pinch = font size (saved) · long page ➡ scroll down inside it
+ *  verse: tap = menu · double-tap = 🔖 + ☭ burst · hold = menu
+ * Own pager (not HorizontalPager): th turning page must be drawn ABOVE th next one, pinned at th spine.
  */
 @Composable
-fun ChapterScreen(vm: AppVm, kap: String, focus: String?, goChapter: (String) -> Unit = {}) {
-    val verses = remember(kap) { vm.content.chapter(kap) }
-    val chapter = vm.content.chapters.firstOrNull { it.kap == kap }
-    val order = vm.content.chapters
-    val idx = order.indexOfFirst { it.kap == kap }
-    val prevK = order.getOrNull(idx - 1)?.kap
-    val nextK = order.getOrNull(idx + 1)?.kap
+fun ChapterScreen(vm: AppVm, kap: String, focus: String?, @Suppress("UNUSED_PARAMETER") goChapter: (String) -> Unit = {}) {
+    val pages = remember { bookPages(vm.content.verses) }
+    val start = remember(kap, focus) {
+        pages.indexOfFirst { p -> p.verses.any { it.id == focus } }.takeIf { it >= 0 } ?: pages.indexOfFirst { it.kap == kap }.coerceAtLeast(0)
+    }
+    var index by remember(start) { mutableIntStateOf(start) }
+    val turn = remember { Animatable(0f) }   // < 0 = current page turning away (fwd) · > 0 = previous page turning back
+    val scope = rememberCoroutineScope()
     val s by vm.settings.collectAsStateWithLifecycle()
     var scale by remember(s.readScale) { mutableFloatStateOf(s.readScale) }
     val speaker = rememberSpeaker()
-    val state = rememberLazyListState()
-    val swipeMin = with(LocalDensity.current) { 110.dp.toPx() }
-    // scroll 2 th verse we came fr ("Im Kontext") · +1 = th title item
-    LaunchedEffect(focus) {
-        val i = verses.indexOfFirst { it.id == focus }
-        if (i >= 0) state.scrollToItem(i + 1)
-    }
+    val density = LocalDensity.current
+    LaunchedEffect(index) { vm.read(pages[index].verses.map { it.id }) }  // page seen = read
+
     CompositionLocalProvider(LocalReadScale provides scale) {
-        LazyColumn(
-            Modifier.fillMaxWidth().padding(horizontal = 12.dp)
-                // 🤏 pinch: Initial pass = we see 2-finger moves BEFORE th list scrolls, consume them
-                .pointerInput(Unit) {
+        BoxWithConstraints(
+            Modifier.fillMaxSize().background(Color(0xFF2A1E14))  // th desk under th book
+                .pointerInput(Unit) {  // 🤏 pinch (Initial pass: before th page scrolls)
                     awaitEachGesture {
                         awaitFirstDown(requireUnconsumed = false)
                         var pinched = false
@@ -133,42 +165,79 @@ fun ChapterScreen(vm: AppVm, kap: String, focus: String?, goChapter: (String) ->
                         if (pinched) vm.setReadScale(scale)
                     }
                 }
-                // 👉 swipe: Main pass = aft th list · a vertical scroll consumes ➡ not a swipe
-                .pointerInput(prevK, nextK) {
-                    awaitEachGesture {
-                        val down = awaitFirstDown(requireUnconsumed = false)
-                        var dx = 0f; var dy = 0f; var spoiled = false
-                        do {
-                            val ev = awaitPointerEvent()
-                            if (ev.changes.size > 1 || ev.changes.any { it.isConsumed && it.positionChanged() }) spoiled = true
-                            ev.changes.firstOrNull { it.id == down.id }?.let { dx += it.positionChange().x; dy += it.positionChange().y }
-                        } while (ev.changes.any { it.pressed })
-                        if (!spoiled && abs(dx) > swipeMin && abs(dx) > 2 * abs(dy)) {
-                            (if (dx < 0) nextK else prevK)?.let(goChapter)
-                        }
-                    }
+                .pointerInput(pages.size) {  // 👉 drag = turn
+                    val w = size.width.toFloat()
+                    detectHorizontalDragGestures(
+                        onHorizontalDrag = { ch, dx ->
+                            ch.consume()
+                            val lo = if (index < pages.lastIndex) -1f else 0f
+                            val hi = if (index > 0) 1f else 0f
+                            scope.launch { turn.snapTo((turn.value + dx / w).coerceIn(lo, hi)) }
+                        },
+                        onDragEnd = {
+                            scope.launch {
+                                val t = turn.value
+                                when {
+                                    t < -0.25f -> { turn.animateTo(-1f, tween(260)); index++; turn.snapTo(0f) }
+                                    t > 0.25f -> { turn.animateTo(1f, tween(260)); index--; turn.snapTo(0f) }
+                                    else -> turn.animateTo(0f, tween(180))
+                                }
+                            }
+                        },
+                        onDragCancel = { scope.launch { turn.animateTo(0f) } },
+                    )
                 },
-            state = state,
         ) {
-            item { Text(chapter?.let { chapterTitle(it) } ?: kap, fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(vertical = 12.dp)) }
-            items(verses, key = { it.id }) { v ->
-                val prev = verses.getOrNull(verses.indexOf(v) - 1)
+            val t = turn.value
+            val cam = 18 * density.density
+            // under: th page revealed (fwd: nxt page · back: current) · shadow fades as th turning page leaves
+            val under = if (t < 0) index + 1 else index
+            val over = if (t < 0) index else if (t > 0) index - 1 else -1
+            key(under) { Page(vm, pages[under], speaker, under, pages.size, Modifier.fillMaxSize()) }
+            // fwd: covered at th start (dark) ➡ revealed (light) · back: gets covered (light ➡ dark)
+            if (t != 0f) Box(Modifier.fillMaxSize().background(Color.Black.copy(alpha = 0.35f * if (t < 0) 1f + t else t)))
+            if (over >= 0) key(over) {
+                // turning page: hinged at th left edge (spine) · fwd: 0 ➡ -90° · back: -90° ➡ 0
+                val angle = if (t < 0) 90f * t else -90f * (1f - t)
+                Page(vm, pages[over], speaker, over, pages.size, Modifier.fillMaxSize().graphicsLayer {
+                    transformOrigin = TransformOrigin(0f, 0.5f)
+                    rotationY = angle
+                    cameraDistance = cam
+                })
+            }
+        }
+    }
+}
+
+/** 1 sheet o old paper: running head (chapter · MEW page) · paragraphs · folio at th bottom */
+@Composable
+private fun Page(vm: AppVm, p: BookPage, speaker: Speaker, i: Int, n: Int, modifier: Modifier) {
+    val chapter = vm.content.chapters.firstOrNull { it.kap == p.kap }
+    val firstOfChapter = p.verses.first().let { f -> vm.content.chapter(p.kap).firstOrNull()?.id == f.id }
+    Box(modifier.background(PAPER).background(
+        // spine shadow left + page-edge darkening right = it looks bound
+        Brush.horizontalGradient(0f to Color(0x33000000), 0.06f to Color.Transparent, 0.94f to Color.Transparent, 1f to Color(0x22000000)))) {
+        Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(start = 22.dp, end = 16.dp, top = 10.dp, bottom = 14.dp)) {
+            Row(Modifier.fillMaxWidth()) {
+                Text((chapter?.let { chapterTitle(it) } ?: p.kap).uppercase(), fontSize = 10.sp, color = INK.copy(alpha = 0.6f),
+                    letterSpacing = 1.2.sp, maxLines = 1, modifier = Modifier.weight(1f))
+                p.page?.let { Text(tr("MEW S. %d", "MEW p. %d").f(it), fontSize = 10.sp, color = INK.copy(alpha = 0.6f)) }
+            }
+            HorizontalDivider(color = INK.copy(alpha = 0.25f), modifier = Modifier.padding(vertical = 6.dp))
+            if (firstOfChapter) Text(chapter?.let { chapterTitle(it) } ?: p.kap, fontSize = 22.sp, fontWeight = FontWeight.Bold, color = INK,
+                fontFamily = FontFamily.Serif, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth().padding(vertical = 14.dp))
+            p.verses.forEachIndexed { k, v ->
+                val prev = p.verses.getOrNull(k - 1)
                 if (v.secTitle.isNotBlank() && v.sec != prev?.sec) SectionTitle(v.secTitle)
-                // composed = (about 2 be) on screen ➡ count as read
-                LaunchedEffect(v.id) { vm.read(listOf(v.id)) }
                 VerseView(vm, v, speaker)
-                Gap(6)
+                Gap(4)
             }
-            // end o chapter: where th swipe goes
-            item {
-                Text(
-                    listOfNotNull(prevK?.let { tr("➡ wischen: voriges Kapitel", "➡ swipe: previous chapter") },
-                        nextK?.let { tr("⬅ wischen: nächstes Kapitel", "⬅ swipe: next chapter") }).joinToString("   ·   ") +
-                        "\n" + tr("🤏 zwei Finger: Schriftgröße · doppelt tippen: ☭ markieren", "🤏 two fingers: font size · double-tap: ☭ highlight"),
-                    fontSize = 11.sp, color = MaterialTheme.colorScheme.secondary, modifier = Modifier.fillMaxWidth().padding(vertical = 20.dp),
-                    textAlign = TextAlign.Center,
-                )
-            }
+            Gap(12)
+            Text("— ${p.page ?: (i + 1)} —", fontSize = 12.sp, color = INK.copy(alpha = 0.55f), fontFamily = FontFamily.Serif,
+                textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
+            if (i == 0 || i == n - 1) Text(
+                tr("⬅ ziehen = umblättern · 🤏 zwei Finger = Schrift · doppelt tippen = 🔖", "⬅ drag = turn the page · 🤏 two fingers = font · double-tap = 🔖"),
+                fontSize = 11.sp, color = INK.copy(alpha = 0.5f), textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth().padding(top = 8.dp))
         }
     }
 }

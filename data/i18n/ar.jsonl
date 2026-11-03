@@ -1864,3 +1864,7 @@
 {"kind": "ui", "k": "%d days ago", "src": "vor %d Tagen\u0000%d days ago", "t": "منذ %d أيام"}
 {"kind": "ui", "k": "📜 Verse from %s", "src": "📜 Losung von %s\u0000📜 Verse from %s", "t": "📜 آية من %s"}
 {"kind": "ui", "k": "tap card left/right = older/newer · swipe ⬆ = Amen · ⬇ = close", "src": "Karte links/rechts tippen = älter/neuer · ⬆ wischen = Amen · ⬇ = zu\u0000tap card left/right = older/newer · swipe ⬆ = Amen · ⬇ = close", "t": "انقر على البطاقة يمينًا/يسارًا = أقدم/أحدث · اسحب لأعلى = آمين · اسحب لأسفل = إغلاق"}
+{"kind": "ui", "k": "⬅ swipe: earlier verses · ⬇ pull: oracle · 📳 shake: crisis", "src": "⬅ wischen: frühere Losungen · ⬇ ziehen: Orakel · 📳 schütteln: Krise\u0000⬅ swipe: earlier verses · ⬇ pull: oracle · 📳 shake: crisis", "t": "⬅ اسحب: الآيات السابقة · ⬇ اسحب لأسفل: القراءة · 📳 هز: أزمة"}
+{"kind": "ui", "k": "MEW p. %d", "src": "MEW S. %d\u0000MEW p. %d", "t": "MEW ص. %d"}
+{"kind": "ui", "k": "⬅ drag = turn the page · 🤏 two fingers = font · double-tap = 🔖", "src": "⬅ ziehen = umblättern · 🤏 zwei Finger = Schrift · doppelt tippen = 🔖\u0000⬅ drag = turn the page · 🤏 two fingers = font · double-tap = 🔖", "t": "⬅ اسحب = التمرير · 🤏 اثنين من الأصابع = الخط · اضغط مرتين = 🔖"}
+{"kind": "ui", "k": "Your margin note …", "src": "Deine Randnotiz …\u0000Your margin note …", "t": "ملاحظتك الهامشية …"}

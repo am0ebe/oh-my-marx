@@ -1866,3 +1866,7 @@
 {"kind": "ui", "k": "%d days ago", "src": "vor %d Tagen\u0000%d days ago", "t": "%d 天前"}
 {"kind": "ui", "k": "📜 Verse from %s", "src": "📜 Losung von %s\u0000📜 Verse from %s", "t": "📜 来自 %s 的箴言"}
 {"kind": "ui", "k": "tap card left/right = older/newer · swipe ⬆ = Amen · ⬇ = close", "src": "Karte links/rechts tippen = älter/neuer · ⬆ wischen = Amen · ⬇ = zu\u0000tap card left/right = older/newer · swipe ⬆ = Amen · ⬇ = close", "t": "左右轻点卡片 = 旧/新 · ⬆ 滑动 = 阿门 · ⬇ = 关闭"}
+{"kind": "ui", "k": "⬅ swipe: earlier verses · ⬇ pull: oracle · 📳 shake: crisis", "src": "⬅ wischen: frühere Losungen · ⬇ ziehen: Orakel · 📳 schütteln: Krise\u0000⬅ swipe: earlier verses · ⬇ pull: oracle · 📳 shake: crisis", "t": "⬅ 滑动：前一句 · ⬇ 拉动：神谕 · 📳 摇晃：危机"}
+{"kind": "ui", "k": "MEW p. %d", "src": "MEW S. %d\u0000MEW p. %d", "t": "MEW 第%d页"}
+{"kind": "ui", "k": "⬅ drag = turn the page · 🤏 two fingers = font · double-tap = 🔖", "src": "⬅ ziehen = umblättern · 🤏 zwei Finger = Schrift · doppelt tippen = 🔖\u0000⬅ drag = turn the page · 🤏 two fingers = font · double-tap = 🔖", "t": "⬅ 拖动 = 翻页 · 🤏 双指 = 字体 · 双击 = 🔖"}
+{"kind": "ui", "k": "Your margin note …", "src": "Deine Randnotiz …\u0000Your margin note …", "t": "你的批注……"}

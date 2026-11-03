@@ -54,6 +54,11 @@ class AppVm(app: Application) : AndroidViewModel(app) {
     val forcePopup = MutableStateFlow(false)
     /** 🚀 shortcut asked 4 a card on Today: "oracle" | "krise" · TodayScreen shows it + clears */
     val popRequest = MutableStateFlow<String?>(null)
+    /** 🃏 pulled / shaken-in cards, newest 1st (max 10) · sit i front o today's Losung i th Home carousel */
+    val extraCards = MutableStateFlow<List<CardItem>>(emptyList())
+    fun addCard(c: CardItem) { extraCards.value = (listOf(c) + extraCards.value).take(10) }
+    /** ++ ➡ Home carousel jumps back 2 th 1st card (home btn, notif tap) */
+    val homeJump = MutableStateFlow(0)
     /** 🪝 preview a feast / time o day (null = real calendar + clock) */
     val feastPreview = MutableStateFlow<Feast?>(null)
     val timePreview = MutableStateFlow<DayTime?>(null)

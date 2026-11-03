@@ -1867,3 +1867,7 @@
 {"kind": "ui", "k": "%d days ago", "src": "vor %d Tagen\u0000%d days ago", "t": "%d giorni fa"}
 {"kind": "ui", "k": "📜 Verse from %s", "src": "📜 Losung von %s\u0000📜 Verse from %s", "t": "📜 Versetto di %s"}
 {"kind": "ui", "k": "tap card left/right = older/newer · swipe ⬆ = Amen · ⬇ = close", "src": "Karte links/rechts tippen = älter/neuer · ⬆ wischen = Amen · ⬇ = zu\u0000tap card left/right = older/newer · swipe ⬆ = Amen · ⬇ = close", "t": "tocca la carta sinistra/destra = più vecchio/più nuovo · scorri ⬆ = Amen · ⬇ = chiudi"}
+{"kind": "ui", "k": "⬅ swipe: earlier verses · ⬇ pull: oracle · 📳 shake: crisis", "src": "⬅ wischen: frühere Losungen · ⬇ ziehen: Orakel · 📳 schütteln: Krise\u0000⬅ swipe: earlier verses · ⬇ pull: oracle · 📳 shake: crisis", "t": "⬅ scorri: versi precedenti · ⬇ trascina: oracolo · 📳 scuoti: crisi"}
+{"kind": "ui", "k": "MEW p. %d", "src": "MEW S. %d\u0000MEW p. %d", "t": "MEW p. %d"}
+{"kind": "ui", "k": "⬅ drag = turn the page · 🤏 two fingers = font · double-tap = 🔖", "src": "⬅ ziehen = umblättern · 🤏 zwei Finger = Schrift · doppelt tippen = 🔖\u0000⬅ drag = turn the page · 🤏 two fingers = font · double-tap = 🔖", "t": "⬅ trascina = sfoglia · 🤏 due dita = carattere · doppio tocco = 🔖"}
+{"kind": "ui", "k": "Your margin note …", "src": "Deine Randnotiz …\u0000Your margin note …", "t": "La tua nota a margine …"}

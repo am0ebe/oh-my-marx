@@ -4,7 +4,14 @@
 ## ⏳
 
 ## ‼️
-- 🦠🔒 VPS: `ssh vps 'sudo install -d -o am0 -g am0 /srv/www/bible'` ➡ 🤖 `bin/ship.sh` (page + GitHub release) ➡ Obtainium on fon: add `https://scagent.de/bible/`
+- 🦠🤔 **new name** (bibleApp = taken) ➡ pick ➡ 🤖 rename label + APP_NAME + ship page (applicationId stays ➡ updates keep working) · shortlist i ✔️ answer @1103: Oh My Marx · Heiliger Marx · Das Kapital · Kapital-Kreis
+- 🦠👀 QA v0.5.0 on fon (via Obtainium!):
+  - 🃏 Home = card deck: swipe ⬅ = earlier days · Teilen big · Amen ➡ ☭ swoosh · Marx icon/Heute tab = back 2 1st card
+  - 📉 shake = red flash + buzz + KRISE card i front · ⬇ pull = 🔮 card · Marxoskop chips ➡ card up top
+  - 📖 book: drag ⬅ = page turns (hinged left) · paper look · MEW page numbers · 🤏 font
+  - 🔖 double-tap = bookmark + ☭ burst · marked verses = gold frame · ✍️ note inline (no popup) · no highlight btn, no ⋯
+  - 😇 cards: Saint Marx w beard on top · Teilen on a verse = only big Share + ☭
+  - Jahresplan: no more empty quotes (opening sentence)
 - 🦠👀 QA v0.4.0 gestures on fon:
   - 🌅 Losung popup: tap card left/right = older/newer day · hold = voice pauses · swipe ⬆ = Amen · ⬇ = close · 📋 copy btn
   - 📖 chapter: swipe ⬅➡ = nxt/prev chapter · 🤏 pinch = font size (kept) · double-tap verse = ☭ burst + highlight · hold = palette
@@ -33,7 +40,13 @@
 - 📦 "Was nervt?" ➡ free-txt + embeddings match (MVP = 7 chips ➡ tags)
 - 📦 Mehrwert-Rechner (salary ⬄ revenue/employee)
 - 📦 Fußnoten-Burns: rank footnotes 4 roasts (Dunning "300 %" = fn 24:250) ➡ own plan
-- 📦 Lesekreis-Modus (host pushes passage 2 friends) — needs server
+- 📦⭐ **Kapital-Lesekreis** (🦠 @1103: community = th missing Hooked piece · YouVersion's #1 driver = "Plans With Friends")
+  - 💡 MVP wo accounts: host makes a circle ➡ invite link/QR (`scagent.de/kreis/ABC`) ➡ all read th same plan day ➡ see who said Amen today (✔️ dots, no streak shaming) ➡ 1 comment thread per day's verse
+  - 💡 "Randnotizen teilen": ur ✍️ notes on a verse visible 2 th circle (opt-in per note) = social proof + investment
+  - 💡 weekly "Sitzung": 1 tap ➡ Jitsi/Signal group call link 4 th circle · agenda = th week's 🔥 verses
+  - 💡 Kreis-Stempelkarte: card fills when *evyone* read ➡ solidarity, not competition (Marx-y twist on streaks)
+  - 🔍 server: tiny API on th VPS (FastAPI + SQLite, behind Caddy) · or Matrix room per circle (E2E, existing clients) · or Nextcloud (alr hosted) · ⚠️ needs INTERNET permission + privacy note
+  - 🪝 Hooked: social trigger ("Anna hat heute Amen gesagt") · variable reward o th tribe · investment = shared notes
 - 📦 Feiertage 2: own notif txt per feast · ctx plans (Black Friday ➡ Fetisch-Detox · Halloween ➡ Vampir-Plan) · widget in feast colours
 - 📦 export "Mein Kapital" (md/json) — Mine screen promises it
 - 🏗️ AGP 9 + compileSdk 37 upgrade (AndroidX pinned 2 late-2025) = L step
@@ -43,6 +56,7 @@
 - 🤖 aft QA: rm page fotos (boox proc step 8)
 
 ## ✔️
+- ✔️ v0.5.0 @1103: 🃏 Home = card carousel (cards 1st-class, no popup on open) · 📉 Krise = full-screen red flash + buzz + crisis card · ☭ swoosh on Amen/Tag geschafft · 📖 book reader (708 MEW pages, paper, page turn) · 😇 Saint Marx on cards · 🔖 double-tap bookmark · gold frame on marked · ✍️ inline notes · ❌ highlight btn + ⋯ · share-only dialog · ☭ = close · Jahresplan quotes fallback
 - ✔️ v0.4.0 @1103: gestures (popup stories · chapter swipe · pinch font · double-tap ☭ burst · hold palette · pull-down oracle · shake Krise) · 📋 copy icon · 🎉 confetti · 📳 haptics · 🚀 3 launcher shortcuts + ⚙️ QS tile · "Karl" restored (strix: can stay) · `dev.sh -q` = install wo launch
 - ✔️ v0.3.2 @1103: 🌅 notif/widget tap ➡ full-screen Losung (blurred card bg) · 🔊 prerender (tap = instant) + voice sample on chip tap · ⏰ picker always 24 h · 😇 new icon (halo + beard, notif + themed) · lang menu says "full txt: EN" · 🚫 "Karl" out o code/UI · 🩹 doubled quote marks · adb = SDK one (apt rm'd) · dev.sh tstd ✔️
 - ✔️ v0.3.1 @1102: 🔊 holy voices on-device (TTS ➡ wav per pitch layer ➡ mix + Freeverb hall ➡ MediaPlayer, cached) · ☭☁️ Gottvater Marx = new default · 5 DSP tests · repo ➡ GitHub am0ebe/bibleApp (priv) + gitea remote (repo not created yet)

@@ -36,6 +36,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.FileProvider
+import androidx.core.content.ContextCompat
 import de.strix.marxversion.data.Lang
 import de.strix.marxversion.data.T
 import de.strix.marxversion.logic.Feast
@@ -67,24 +68,51 @@ const val APP_NAME = "bibleApp ☭"
 // ── Spruchkarte: kitsch sunset + Marx quote ➡ png ➡ Android share sheet ──
 // drawn w plain android.graphics.Canvas (simpler than capturing a composable) · same bitmap = Losung popup preview
 
-/** feast ≠ null ➡ 🎉 Sondermotiv: its colours + big emoji instead o th halo */
-fun cardBitmap(quote: String, ref: String, lang: Lang, feast: Feast? = null): Bitmap {
+/** 📉 crisis card palette: black ➡ blood ➡ alarm red */
+private val KRISE_COLORS = intArrayOf(0xFF000000.toInt(), 0xFF3A0000.toInt(), 0xFF8E0000.toInt(), 0xFFE53935.toInt())
+
+/**
+ * feast ≠ null ➡ 🎉 Sondermotiv: its colours + its emoji next 2 th saint · krise ➡ 📉 black/red, crashing chart, no halo
+ * evy normal card: 😇 Saint Marx (halo + beard = res/drawable/ic_launcher_fg) on top
+ */
+fun cardBitmap(ctx: Context, quote: String, ref: String, lang: Lang, feast: Feast? = null, krise: Boolean = false): Bitmap {
     val w = 1080; val h = 1350
     val bmp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
     val c = Canvas(bmp)
-    // Kalenderspruch-Sonnenuntergang (or th feast's palette)
+    // Kalenderspruch-Sonnenuntergang (or th feast's palette / crisis)
     val bg = Paint().apply {
         shader = LinearGradient(0f, 0f, 0f, h.toFloat(),
-            feast?.colors ?: intArrayOf(0xFF2B1B4F.toInt(), 0xFFB3261E.toInt(), 0xFFF29E4C.toInt(), 0xFFFFD98E.toInt()),
+            if (krise) KRISE_COLORS else feast?.colors ?: intArrayOf(0xFF2B1B4F.toInt(), 0xFFB3261E.toInt(), 0xFFF29E4C.toInt(), 0xFFFFD98E.toInt()),
             floatArrayOf(0f, 0.45f, 0.8f, 1f), Shader.TileMode.CLAMP)
     }
     c.drawRect(0f, 0f, w.toFloat(), h.toFloat(), bg)
-    // sun + halo
-    c.drawCircle(w / 2f, h * 0.86f, 170f, Paint().apply { color = 0xCCFFE9A8.toInt() })
-    if (feast == null) c.drawOval(w / 2f - 120, 70f, w / 2f + 120, 130f,
-        Paint().apply { style = Paint.Style.STROKE; strokeWidth = 10f; color = 0xFFE8B931.toInt(); isAntiAlias = true })
-    else Paint(Paint.ANTI_ALIAS_FLAG).apply { textSize = 130f }.let { p ->  // colour emoji render fine i drawText
-        c.drawText(feast.emoji, w / 2f - p.measureText(feast.emoji) / 2f, 175f, p)
+    if (krise) {
+        // 📉 jagged crash line across th card + "KRISE!" header
+        val line = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE; strokeWidth = 14f; color = 0x66FFFFFF; strokeJoin = Paint.Join.ROUND }
+        val pts = floatArrayOf(0f, 0.30f, 0.12f, 0.26f, 0.22f, 0.34f, 0.33f, 0.29f, 0.45f, 0.45f, 0.55f, 0.40f, 0.66f, 0.62f, 0.78f, 0.57f, 0.9f, 0.85f, 1f, 0.97f)
+        val path = android.graphics.Path().apply {
+            moveTo(pts[0] * w, pts[1] * h)
+            for (i in 2 until pts.size step 2) lineTo(pts[i] * w, pts[i + 1] * h)
+        }
+        c.drawPath(path, line)
+        val head = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = 0xFFFFFFFF.toInt(); textSize = 120f; typeface = Typeface.create(Typeface.SANS_SERIF, Typeface.BOLD)
+            setShadowLayer(18f, 0f, 0f, 0xFFFF1744.toInt())
+        }
+        val t = "📉 KRISE!"
+        c.drawText(t, w / 2f - head.measureText(t) / 2f, 190f, head)
+    } else {
+        // sun + 😇 Saint Marx (vector: halo + hair + beard)
+        c.drawCircle(w / 2f, h * 0.86f, 170f, Paint().apply { color = 0xCCFFE9A8.toInt() })
+        ContextCompat.getDrawable(ctx, R.drawable.ic_launcher_fg)?.apply {
+            setBounds(w / 2 - 140, 0, w / 2 + 140, 280)
+            draw(c)
+        }
+        feast?.let { f ->
+            Paint(Paint.ANTI_ALIAS_FLAG).apply { textSize = 110f }.let { p ->  // colour emoji render fine i drawText
+                c.drawText(f.emoji, w / 2f + 160f, 190f, p)
+            }
+        }
     }
 
     val tp = TextPaint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -100,8 +128,8 @@ fun cardBitmap(quote: String, ref: String, lang: Lang, feast: Feast? = null): Bi
         layout = StaticLayout.Builder.obtain(txt, 0, txt.length, tp, w - 160)
             .setAlignment(Layout.Alignment.ALIGN_CENTER).setLineSpacing(0f, 1.15f).build()
         size -= 4f
-    } while (layout.height > h * 0.6 && size > 28f)
-    c.save(); c.translate(80f, (h * 0.42f - layout.height / 2f).coerceAtLeast(if (feast == null) 170f else 230f)); layout.draw(c); c.restore()
+    } while (layout.height > h * 0.5 && size > 28f)  // room: below th saint (290) ➡ above th ref (0.76 h)
+    c.save(); c.translate(80f, (h * 0.46f - layout.height / 2f).coerceAtLeast(290f)); layout.draw(c); c.restore()
 
     val small = TextPaint(tp).apply { textSize = 40f; typeface = Typeface.create(Typeface.SERIF, Typeface.NORMAL) }
     val by = "— Karl Marx, $ref"

@@ -130,6 +130,8 @@ private fun App(vm: AppVm) {
     }
     val openChapter = { kap: String, v: String -> nav.navigate("chapter/$kap?v=$v") }
     val openHooked = { nav.navigate("hooked") { launchSingleTop = true } }
+    // 🏠 Marx icon / title / "Heute" tab ➡ Home + back 2 th 1st card
+    val home: () -> Unit = { nav.go("today"); vm.homeJump.value++ }
     // 🚀 shortcut card (Orakel / Krise) lives on Today ➡ go there 1st
     val popReq by vm.popRequest.collectAsStateWithLifecycle()
     LaunchedEffect(popReq) { if (popReq != null && route != "today") nav.go("today") }
@@ -141,9 +143,9 @@ private fun App(vm: AppVm) {
                 // tap Marx (or th name) = home
                 navigationIcon = {
                     Image(painterResource(R.mipmap.ic_marx_fg), contentDescription = tr("Heute", "Today"),
-                        modifier = Modifier.padding(start = 4.dp).size(44.dp).clickable { nav.go("today") })
+                        modifier = Modifier.padding(start = 4.dp).size(44.dp).clickable(onClick = home))
                 },
-                title = { Text(APP_NAME, modifier = Modifier.clickable { nav.go("today") }) },
+                title = { Text(APP_NAME, modifier = Modifier.clickable(onClick = home)) },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.primary, titleContentColor = Color.White),
                 actions = {
                     if (s.testMode) TextButton(onClick = openHooked) { Text("🪝") }
@@ -157,7 +159,7 @@ private fun App(vm: AppVm) {
                 TABS.forEach { (r, icon, label) ->
                     NavigationBarItem(
                         selected = route == r,
-                        onClick = { nav.go(r) },
+                        onClick = { if (r == "today") home() else nav.go(r) },
                         icon = { Text(icon) },
                         label = { Text(tr(label)) },
                     )
@@ -188,9 +190,10 @@ private fun App(vm: AppVm) {
         }
     }
 
-    // 🌅 1st open o th day ➡ Losung popup (Hooked: reward right at th door) · tap th Losung / 🪝 chip = again
-    val prefsReady by vm.prefsReady.collectAsStateWithLifecycle()
-    if (forcePopup || (prefsReady && s.popupSeen != today())) LosungPopup(vm, openChapter)
+    // 🃏 th cards r Home now (no more popup on open): notif / widget / tile / 🪝 chip ➡ Home, 1st card
+    LaunchedEffect(forcePopup) {
+        if (forcePopup) { nav.go("today"); vm.homeJump.value++; vm.popupDone() }
+    }
     }
 }
 

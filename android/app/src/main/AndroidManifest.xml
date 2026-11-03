@@ -3,6 +3,8 @@
 
     <!-- Android 13+: must ask at runtime b4 showing th daily Marx-Losung -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- 📳 Krise! buzz pattern (ui/Fx.kt) · normal permission, no prompt -->
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <!-- 🐛 Android 11+ package visibility: wo this th app can't see th TTS engine ➡ 🔊 silently did nothing -->
     <queries>

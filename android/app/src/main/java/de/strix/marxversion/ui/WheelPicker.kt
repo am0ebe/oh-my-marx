@@ -94,7 +94,7 @@ fun TimeWheelDialog(hour: Int, minute: Int, onDismiss: () -> Unit, onPick: (Int,
     AlertDialog(
         onDismissRequest = onDismiss,
         confirmButton = { TextButton(onClick = { onPick(h, m) }) { Text("OK") } },
-        dismissButton = { TextButton(onClick = onDismiss) { Text(tr("Abbrechen", "Cancel")) } },
+        dismissButton = { TextButton(onClick = onDismiss) { Text("☭", fontSize = 22.sp, color = Red) } },  // ☭ = close (strix @1103)
         text = {
             // clocks read left➡right evywhere, also i Arabic
             CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
