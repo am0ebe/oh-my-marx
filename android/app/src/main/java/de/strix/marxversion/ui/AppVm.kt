@@ -8,6 +8,7 @@ import androidx.work.WorkManager
 import de.strix.marxversion.MarxApp
 import de.strix.marxversion.data.Community
 import de.strix.marxversion.data.Matrix
+import de.strix.marxversion.data.Kreis
 import de.strix.marxversion.BuildConfig
 import de.strix.marxversion.data.DayLog
 import de.strix.marxversion.data.Lang
@@ -129,6 +130,60 @@ class AppVm(app: Application) : AndroidViewModel(app) {
     }
     suspend fun myUserId() = marx.prefs.mxSession()?.userId
 
+    // ── 👥 Kreise (Matrix rooms joined by code, data/Matrix.kt) ──
+    val kreise: StateFlow<List<Kreis>> = marx.prefs.kreise.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+    /** room ➡ members (user id ➡ name) */
+    val kreisMembers = MutableStateFlow<Map<String, Map<String, String>>>(emptyMap())
+    /** room ➡ chat + Amens, oldest 1st */
+    val kreisTimeline = MutableStateFlow<Map<String, List<Matrix.Event>>>(emptyMap())
+
+    /** found a Kreis ➡ done(code) · null = failed · new code if th random one is taken */
+    fun createKreis(name: String, myName: String?, done: (String?) -> Unit) = viewModelScope.launch {
+        val s = session(myName) ?: return@launch done(null)
+        repeat(3) {
+            val code = Matrix.newCode()
+            Matrix.createKreis(s, name.trim(), code)?.let { room ->
+                marx.prefs.addKreis(Kreis(room, code, name.trim())); loadKreis(room); return@launch done(code)
+            }
+        }
+        done(null)
+    }
+
+    fun joinKreis(code: String, myName: String?, done: (Boolean) -> Unit) = viewModelScope.launch {
+        val c = code.trim().uppercase().replace(" ", "")
+        val s = session(myName) ?: return@launch done(false)
+        val room = Matrix.join(s, Matrix.kreisAlias(c)) ?: return@launch done(false)
+        marx.prefs.addKreis(Kreis(room, c, Matrix.roomName(s, room) ?: c))
+        loadKreis(room); done(true)
+    }
+
+    fun leaveKreis(k: Kreis) = viewModelScope.launch {
+        session()?.let { Matrix.leave(it, k.room) }
+        marx.prefs.dropKreis(k.room)
+    }
+
+    fun loadKreis(room: String) = viewModelScope.launch {
+        val s = session() ?: return@launch
+        kreisMembers.value = kreisMembers.value + (room to Matrix.members(s, room))
+        kreisTimeline.value = kreisTimeline.value + (room to Matrix.timeline(s, room))
+    }
+
+    fun kreisSay(room: String, text: String, done: (Boolean) -> Unit) = viewModelScope.launch {
+        val s = session() ?: return@launch done(false)
+        val ok = Matrix.sendEvent(s, room, "m.room.message", org.json.JSONObject().put("msgtype", "m.text").put("body", text.trim())
+            .put("de.ohmymarx.name", mxName.value ?: ""))
+        if (ok) loadKreis(room)
+        done(ok)
+    }
+
+    /** my Amen ➡ evy Kreis gets a ☭ (th others see "Rosa ✔️ heute") */
+    private suspend fun amenToKreise() {
+        val s = marx.prefs.mxSession() ?: return
+        kreise.value.forEach { k ->
+            Matrix.sendEvent(s, k.room, Matrix.AMEN, org.json.JSONObject().put("day", today()).put("de.ohmymarx.name", mxName.value ?: ""))
+        }
+    }
+
     /** 🪝 preview a feast / time o day (null = real calendar + clock) */
     val feastPreview = MutableStateFlow<Feast?>(null)
     val timePreview = MutableStateFlow<DayTime?>(null)
@@ -177,6 +232,7 @@ class AppVm(app: Application) : AndroidViewModel(app) {
         popupDone()
         widgets()
         if (on) { Community.amen(marx.prefs.commToken(today())); refreshCrowd() }  // 👥 "Heute N × Amen"
+        amenToKreise()  // 👥 Kreise see it (explicit membership = consent, independent o Mitlesen)
     }
 
     fun startPlan(id: String) = viewModelScope.launch { marx.prefs.startPlan(id, today()) }

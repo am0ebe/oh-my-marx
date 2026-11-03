@@ -7,6 +7,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -29,6 +30,9 @@ data class Settings(
     val readScale: Float = 1f,          // 🤏 pinch i th reader ➡ font size × this
     val community: Boolean = true,      // 👥 Mitlesen (dflt ON @1103 strix · switch off i ⚙️): anonymous daily-token counts + comments
 )
+
+/** 👥 a Lesekreis = 1 Matrix room, found by its code */
+data class Kreis(val room: String, val code: String, val name: String)
 
 class Prefs(private val context: Context) {
     private object K {
@@ -72,6 +76,14 @@ class Prefs(private val context: Context) {
         it[M.user] = s.userId; it[M.token] = s.token; it[M.pw] = pw; it[M.name] = name
     }
     suspend fun setMxName(name: String) = context.store.edit { it[M.name] = name }
+
+    // 👥 my Kreise: "roomId|code|name" (room ids never contain '|')
+    private val kreiseKey = stringSetPreferencesKey("kreise")
+    val kreise: Flow<List<Kreis>> = context.store.data.map { p ->
+        p[kreiseKey].orEmpty().mapNotNull { e -> e.split("|", limit = 3).takeIf { it.size == 3 }?.let { Kreis(it[0], it[1], it[2]) } }.sortedBy { it.name }
+    }
+    suspend fun addKreis(k: Kreis) = context.store.edit { it[kreiseKey] = it[kreiseKey].orEmpty().filterNot { e -> e.startsWith(k.room + "|") }.toSet() + "${k.room}|${k.code}|${k.name}" }
+    suspend fun dropKreis(room: String) = context.store.edit { it[kreiseKey] = it[kreiseKey].orEmpty().filterNot { e -> e.startsWith("$room|") }.toSet() }
 
     val settings: Flow<Settings> = context.store.data.map { p: Preferences ->
         Settings(

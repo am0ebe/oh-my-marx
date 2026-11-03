@@ -1909,3 +1909,33 @@
 {"kind": "ui", "k": "⬅ you have this", "src": "⬅ du hast diese\u0000⬅ you have this", "t": "⬅ 你已有此"}
 {"kind": "ui", "k": "less ⬆", "src": "weniger ⬆\u0000less ⬆", "t": "更少 ⬆"}
 {"kind": "ui", "k": "all versions ⬇", "src": "alle Versionen ⬇\u0000all versions ⬇", "t": "所有版本 ⬇"}
+{"kind": "ui", "k": "Circle", "src": "Kreis\u0000Circle", "t": "圆圈"}
+{"kind": "ui", "k": "👥 Reading circles: found, share the code, join · who said Amen today · chat", "src": "👥 Lesekreise: gründen, Code teilen, beitreten · wer hat heute Amen gesagt · Chat\u0000👥 Reading circles: found, share the code, join · who said Amen today · chat", "t": "👥 阅读圈：创建、分享代码、加入 · 今天谁说了阿门 · 聊天"}
+{"kind": "ui", "k": "🎟️ Shared stamp card: a stamp only when everyone has read", "src": "🎟️ Gemeinsame Stempelkarte: ein Stempel nur, wenn alle gelesen haben\u0000🎟️ Shared stamp card: a stamp only when everyone has read", "t": "🎟️ 共享打卡卡：只有全员读完才盖章"}
+{"kind": "ui", "k": "⚠️ No circle with this code — typo? Internet?", "src": "⚠️ Kein Kreis mit diesem Code — vertippt? Internet?\u0000⚠️ No circle with this code — typo? Internet?", "t": "⚠️ 无法加入此代码的圈子 — 打错字了？网络问题？"}
+{"kind": "ui", "k": "✔️ Circle founded · code %s · tap it ➡ 📤 Invite", "src": "✔️ Kreis gegründet · Code %s · antippen ➡ 📤 Einladen\u0000✔️ Circle founded · code %s · tap it ➡ 📤 Invite", "t": "✔️ 圈子已创建 · 代码 %s · 点击 ➡ 📤 邀请"}
+{"kind": "ui", "k": "👥 Reading circles", "src": "👥 Lesekreise\u0000👥 Reading circles", "t": "👥 阅读圈"}
+{"kind": "ui", "k": "Read with friends: who said Amen today, a shared chat and a stamp card that only fills when everyone has read. Solidarity, not competition.", "src": "Lies mit Freund:innen: wer hat heute Amen gesagt, ein gemeinsamer Chat und eine Stempelkarte, die sich nur füllt, wenn alle gelesen haben. Solidarität statt Wettbewerb.\u0000Read with friends: who said Amen today, a shared chat and a stamp card that only fills when everyone has read. Solidarity, not competition.", "t": "和朋友一起读：今天谁说了阿门，共享聊天，只有全员读完才填满的打卡卡。团结，而非竞争。"}
+{"kind": "ui", "k": "%d people · today %d ✔️ · 🎟️ %d shared days", "src": "%d Leute · heute %d ✔️ · 🎟️ %d gemeinsame Tage\u0000%d people · today %d ✔️ · 🎟️ %d shared days", "t": "%d 人 · 今天 %d ✔️ · 🎟️ %d 共同天数"}
+{"kind": "ui", "k": "🌱 No circle yet. Found one and send the code to friends — or join with a code.", "src": "🌱 Noch kein Kreis. Gründe einen und schick den Code an Freund:innen — oder tritt mit einem Code bei.\u0000🌱 No circle yet. Found one and send the code to friends — or join with a code.", "t": "🌱 还没有圈子。快创建一个，把代码发给朋友 — 或用代码加入别人创建的圈子。"}
+{"kind": "ui", "k": "Your name (e.g. Rosa)", "src": "Dein Name (z. B. Rosa)\u0000Your name (e.g. Rosa)", "t": "你的名字（例如：罗莎）"}
+{"kind": "ui", "k": "＋ Found a circle", "src": "＋ Kreis gründen\u0000＋ Found a circle", "t": "＋ 创建圈子"}
+{"kind": "ui", "k": "e.g. Capital kitchen", "src": "z. B. Kapital-Küche\u0000e.g. Capital kitchen", "t": "例如：资本厨房"}
+{"kind": "ui", "k": "🔑 Join with a code", "src": "🔑 Mit Code beitreten\u0000🔑 Join with a code", "t": "🔑 用代码加入"}
+{"kind": "ui", "k": "Join", "src": "Beitreten\u0000Join", "t": "加入"}
+{"kind": "ui", "k": "⚠️ This build can't do circles (no server token).", "src": "⚠️ Diese Version kann keine Kreise (kein Server-Token gebaut).\u0000⚠️ This build can't do circles (no server token).", "t": "⚠️ 此版本无法使用圈子功能（未构建服务器令牌）。"}
+{"kind": "ui", "k": "Circles run on our own Matrix server (scagent.de). Not end-to-end encrypted — don't write what the server operator shouldn't read.", "src": "Kreise laufen über unseren eigenen Matrix-Server (scagent.de). Nicht Ende-zu-Ende-verschlüsselt — schreib nichts, was der Server-Betreiber nicht lesen soll.\u0000Circles run on our own Matrix server (scagent.de). Not end-to-end encrypted — don't write what the server operator shouldn't read.", "t": "圈子通过我们自己的 Matrix 服务器（scagent.de）运行（非端到端加密）——请勿写下服务器管理员不该看到的内容。"}
+{"kind": "ui", "k": "Join my reading circle “%s” on Oh My Marx ☭ — code: %s · app: https://scagent.de/omm", "src": "Komm in meinen Lesekreis „%s“ bei Oh My Marx ☭ — Code: %s · App: https://scagent.de/omm\u0000Join my reading circle “%s” on Oh My Marx ☭ — code: %s · app: https://scagent.de/omm", "t": "来加入我的阅读圈“%s”吧，Oh My Marx ☭ — 代码：%s · 应用：https://scagent.de/omm"}
+{"kind": "ui", "k": "Invite", "src": "Einladen\u0000Invite", "t": "邀请"}
+{"kind": "ui", "k": "Code: ", "src": "Code: \u0000Code: ", "t": "代码："}
+{"kind": "ui", "k": "📤 Invite", "src": "📤 Einladen\u0000📤 Invite", "t": "📤 邀请"}
+{"kind": "ui", "k": " (you)", "src": " (du)\u0000 (you)", "t": "(你)"}
+{"kind": "ui", "k": "➡ Say Amen ☭ on “Today” — then the others see it here.", "src": "➡ Sag auf „Heute“ Amen ☭ — dann sehen's die anderen hier.\u0000➡ Say Amen ☭ on “Today” — then the others see it here.", "t": "➡ 在“今天”说声阿门 ☭ — 然后大家就都看到了。"}
+{"kind": "ui", "k": "🎟️ Shared stamp card — %d days on which everyone read", "src": "🎟️ Gemeinsame Stempelkarte — %d Tage, an denen alle gelesen haben\u0000🎟️ Shared stamp card — %d days on which everyone read", "t": "🎟️ 共享打卡卡 — %d 天，大家全都读过"}
+{"kind": "ui", "k": "💬 Chat", "src": "💬 Chat\u0000💬 Chat", "t": "💬 聊天"}
+{"kind": "ui", "k": "🌱 Quiet here. What bugs you this week — and what does Marx say?", "src": "🌱 Noch still hier. Was nervt dich diese Woche — und was sagt Marx dazu?\u0000🌱 Quiet here. What bugs you this week — and what does Marx say?", "t": "🌱 还很安静。这周让你抓狂的事 — 马克思怎么说？"}
+{"kind": "ui", "k": "you", "src": "du\u0000you", "t": "你"}
+{"kind": "ui", "k": "Message …", "src": "Nachricht …\u0000Message …", "t": "消息 …"}
+{"kind": "ui", "k": "🔄 Refresh", "src": "🔄 Aktualisieren\u0000🔄 Refresh", "t": "🔄 刷新"}
+{"kind": "ui", "k": "Leave circle", "src": "Kreis verlassen\u0000Leave circle", "t": "退出圈子"}
+{"kind": "ui", "k": "Not end-to-end encrypted · the server operator could read along.", "src": "Nicht Ende-zu-Ende-verschlüsselt · der Server-Betreiber könnte mitlesen.\u0000Not end-to-end encrypted · the server operator could read along.", "t": "非端到端加密 · 服务器管理员可能偷看。"}

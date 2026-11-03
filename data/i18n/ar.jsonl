@@ -1907,3 +1907,33 @@
 {"kind": "ui", "k": "⬅ you have this", "src": "⬅ du hast diese\u0000⬅ you have this", "t": "⬅ لديك هذا"}
 {"kind": "ui", "k": "less ⬆", "src": "weniger ⬆\u0000less ⬆", "t": "أقل ⬆"}
 {"kind": "ui", "k": "all versions ⬇", "src": "alle Versionen ⬇\u0000all versions ⬇", "t": "جميع الإصدارات ⬇"}
+{"kind": "ui", "k": "Circle", "src": "Kreis\u0000Circle", "t": "دائرة"}
+{"kind": "ui", "k": "👥 Reading circles: found, share the code, join · who said Amen today · chat", "src": "👥 Lesekreise: gründen, Code teilen, beitreten · wer hat heute Amen gesagt · Chat\u0000👥 Reading circles: found, share the code, join · who said Amen today · chat", "t": "👥 دوائر القراءة: أنشئ، شارك الرمز، انضم · من قال آمين اليوم · دردشة"}
+{"kind": "ui", "k": "🎟️ Shared stamp card: a stamp only when everyone has read", "src": "🎟️ Gemeinsame Stempelkarte: ein Stempel nur, wenn alle gelesen haben\u0000🎟️ Shared stamp card: a stamp only when everyone has read", "t": "🎟️ بطاقة الطوابع المشتركة: طابع واحد فقط عندما يقرأ الجميع"}
+{"kind": "ui", "k": "⚠️ No circle with this code — typo? Internet?", "src": "⚠️ Kein Kreis mit diesem Code — vertippt? Internet?\u0000⚠️ No circle with this code — typo? Internet?", "t": "⚠️ لا توجد دائرة بهذا الرمز — خطأ إملائي؟ إنترنت؟"}
+{"kind": "ui", "k": "✔️ Circle founded · code %s · tap it ➡ 📤 Invite", "src": "✔️ Kreis gegründet · Code %s · antippen ➡ 📤 Einladen\u0000✔️ Circle founded · code %s · tap it ➡ 📤 Invite", "t": "✔️ تم إنشاء الدائرة · الرمز %s · اضغط ➡ 📤 دعوة"}
+{"kind": "ui", "k": "👥 Reading circles", "src": "👥 Lesekreise\u0000👥 Reading circles", "t": "👥 دوائر القراءة"}
+{"kind": "ui", "k": "Read with friends: who said Amen today, a shared chat and a stamp card that only fills when everyone has read. Solidarity, not competition.", "src": "Lies mit Freund:innen: wer hat heute Amen gesagt, ein gemeinsamer Chat und eine Stempelkarte, die sich nur füllt, wenn alle gelesen haben. Solidarität statt Wettbewerb.\u0000Read with friends: who said Amen today, a shared chat and a stamp card that only fills when everyone has read. Solidarity, not competition.", "t": "اقرأ مع الأصدقاء: من قال آمين اليوم، دردشة مشتركة وبطاقة طوابع تمتلئ فقط عندما يقرأ الجميع. تضامن بدلًا من منافسة."}
+{"kind": "ui", "k": "%d people · today %d ✔️ · 🎟️ %d shared days", "src": "%d Leute · heute %d ✔️ · 🎟️ %d gemeinsame Tage\u0000%d people · today %d ✔️ · 🎟️ %d shared days", "t": "%d أشخاص · اليوم %d ✔️ · 🎟️ %d أيام مشتركة"}
+{"kind": "ui", "k": "🌱 No circle yet. Found one and send the code to friends — or join with a code.", "src": "🌱 Noch kein Kreis. Gründe einen und schick den Code an Freund:innen — oder tritt mit einem Code bei.\u0000🌱 No circle yet. Found one and send the code to friends — or join with a code.", "t": "🌱 لا توجد دوائر بعد. أنشئ واحدة وأرسل الرمز لأصدقائك — أو انضم باستخدام رمز."}
+{"kind": "ui", "k": "Your name (e.g. Rosa)", "src": "Dein Name (z. B. Rosa)\u0000Your name (e.g. Rosa)", "t": "اسمك (مثلاً: روزا)"}
+{"kind": "ui", "k": "＋ Found a circle", "src": "＋ Kreis gründen\u0000＋ Found a circle", "t": "＋ أنشئ دائرة"}
+{"kind": "ui", "k": "e.g. Capital kitchen", "src": "z. B. Kapital-Küche\u0000e.g. Capital kitchen", "t": "مثلاً: مطبخ الرأسمالية"}
+{"kind": "ui", "k": "🔑 Join with a code", "src": "🔑 Mit Code beitreten\u0000🔑 Join with a code", "t": "🔑 انضم باستخدام الرمز"}
+{"kind": "ui", "k": "Join", "src": "Beitreten\u0000Join", "t": "انضم"}
+{"kind": "ui", "k": "⚠️ This build can't do circles (no server token).", "src": "⚠️ Diese Version kann keine Kreise (kein Server-Token gebaut).\u0000⚠️ This build can't do circles (no server token).", "t": "⚠️ هذه النسخة لا يمكنها إنشاء دوائر (لا يوجد رمز خادم)."}
+{"kind": "ui", "k": "Circles run on our own Matrix server (scagent.de). Not end-to-end encrypted — don't write what the server operator shouldn't read.", "src": "Kreise laufen über unseren eigenen Matrix-Server (scagent.de). Nicht Ende-zu-Ende-verschlüsselt — schreib nichts, was der Server-Betreiber nicht lesen soll.\u0000Circles run on our own Matrix server (scagent.de). Not end-to-end encrypted — don't write what the server operator shouldn't read.", "t": "تُدار الدوائر عبر خادمنا الخاص (scagent.de). ليست مشفرة من طرف إلى طرف — لا تكتب شيئًا لا ينبغي لمشغل الخادم قراءته."}
+{"kind": "ui", "k": "Join my reading circle “%s” on Oh My Marx ☭ — code: %s · app: https://scagent.de/omm", "src": "Komm in meinen Lesekreis „%s“ bei Oh My Marx ☭ — Code: %s · App: https://scagent.de/omm\u0000Join my reading circle “%s” on Oh My Marx ☭ — code: %s · app: https://scagent.de/omm", "t": "انضم إلى دوائر قراءتي «%s» في أوه ماي ماركس ☭ — الرمز: %s · التطبيق: https://scagent.de/omm"}
+{"kind": "ui", "k": "Invite", "src": "Einladen\u0000Invite", "t": "دعوة"}
+{"kind": "ui", "k": "Code: ", "src": "Code: \u0000Code: ", "t": "الرمز:"}
+{"kind": "ui", "k": "📤 Invite", "src": "📤 Einladen\u0000📤 Invite", "t": "📤 دعوة"}
+{"kind": "ui", "k": " (you)", "src": " (du)\u0000 (you)", "t": "(أنت)"}
+{"kind": "ui", "k": "➡ Say Amen ☭ on “Today” — then the others see it here.", "src": "➡ Sag auf „Heute“ Amen ☭ — dann sehen's die anderen hier.\u0000➡ Say Amen ☭ on “Today” — then the others see it here.", "t": "➡ قل آمين ☭ على «اليوم» — فسيرى الآخرون هنا."}
+{"kind": "ui", "k": "🎟️ Shared stamp card — %d days on which everyone read", "src": "🎟️ Gemeinsame Stempelkarte — %d Tage, an denen alle gelesen haben\u0000🎟️ Shared stamp card — %d days on which everyone read", "t": "🎟️ بطاقة التوقيع المشتركة — %d أيام قُرِئَ فيها الجميع"}
+{"kind": "ui", "k": "💬 Chat", "src": "💬 Chat\u0000💬 Chat", "t": "💬 دردشة"}
+{"kind": "ui", "k": "🌱 Quiet here. What bugs you this week — and what does Marx say?", "src": "🌱 Noch still hier. Was nervt dich diese Woche — und was sagt Marx dazu?\u0000🌱 Quiet here. What bugs you this week — and what does Marx say?", "t": "🌱 لا يزال هادئًا هنا. ما الذي يزعجك هذه الأسبوع — وماذا يقول ماركس عن ذلك؟"}
+{"kind": "ui", "k": "you", "src": "du\u0000you", "t": "أنت"}
+{"kind": "ui", "k": "Message …", "src": "Nachricht …\u0000Message …", "t": "رسالة …"}
+{"kind": "ui", "k": "🔄 Refresh", "src": "🔄 Aktualisieren\u0000🔄 Refresh", "t": "🔄 تحديث"}
+{"kind": "ui", "k": "Leave circle", "src": "Kreis verlassen\u0000Leave circle", "t": "مغادرة الدائرة"}
+{"kind": "ui", "k": "Not end-to-end encrypted · the server operator could read along.", "src": "Nicht Ende-zu-Ende-verschlüsselt · der Server-Betreiber könnte mitlesen.\u0000Not end-to-end encrypted · the server operator could read along.", "t": "غير مشفرة من طرف إلى طرف · قد يقرأ المُشغل الخاص بالخادم."}

@@ -10,7 +10,7 @@ plugins {
 }
 
 // ⭐ th 1 version number · bump b4 bin/ship.sh · bin/lib.sh reads this line
-val appVersion = "0.6.0"
+val appVersion = "0.7.0"
 
 // 💬 Matrix registration token (git-ignored file, see .gitignore) ➡ BuildConfig · missing ➡ comments off
 val ommRegToken: String = rootProject.file("omm.properties").takeIf { it.exists() }

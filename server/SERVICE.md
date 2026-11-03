@@ -31,6 +31,7 @@
 | server_name | `scagent.de` — baked into every user id + room alias, **can't change later** |
 | state | `/data/` = `homeserver.db` (all comments + accounts) · `*.signing.key` · `homeserver.yaml` · `omm_reg_token` · + `admin.secret` next to it ➡ **must be backed up** · loss = all comments + accounts gone |
 | one-time setup | `server/matrix/setup.py` (admin login ➡ registration token ➡ 31 chapter rooms) · safe to rerun |
+| user rooms (@1104) | 👥 **Lesekreise** = rooms users create themselves: alias `#omm-kreis-<6-char code>`, join rule public but not in the directory, history `shared`, custom timeline event `de.ohmymarx.amen` (`{"day":"YYYY-MM-DD"}`) · ⇒ room count + db grow with users (small text only) · needs: normal users may create rooms (Synapse default) |
 | health | `GET /_matrix/client/versions` |
 | resources | ~105 MB RAM idle · 512 MB cap |
 | updates | Synapse security releases are frequent ➡ bump often · SQLite backup before each bump |

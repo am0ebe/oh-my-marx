@@ -58,6 +58,8 @@ import de.strix.marxversion.ui.APP_NAME
 import de.strix.marxversion.ui.AppVm
 import de.strix.marxversion.ui.ChapterScreen
 import de.strix.marxversion.ui.HookedScreen
+import de.strix.marxversion.ui.KreiseScreen
+import de.strix.marxversion.ui.KreisDetail
 import de.strix.marxversion.ui.LocalOpenHooked
 import androidx.compose.runtime.CompositionLocalProvider
 import de.strix.marxversion.ui.LosungPopup
@@ -110,6 +112,7 @@ private val TABS = listOf(
     Triple("today", "☀️", T("Heute", "Today")),
     Triple("plans", "📚", T("Pläne", "Plans")),
     Triple("read", "📖", T("Lesen", "Read")),
+    Triple("kreis", "👥", T("Kreis", "Circle")),
     Triple("mine", "☭", T("Mein Kapital", "My Capital")),
 )
 
@@ -179,6 +182,9 @@ private fun App(vm: AppVm) {
                 }
             }
             composable("mine") { MineScreen(vm, openChapter) }
+            // 👥 Lesekreise (ui/KreisScreen.kt) · {i} = index i th sorted list
+            composable("kreis") { KreiseScreen(vm) { i -> nav.navigate("kreis/$i") } }
+            composable("kreis/{i}") { e -> KreisDetail(vm, e.arguments?.getString("i")?.toIntOrNull() ?: 0) { nav.popBackStack() } }
             composable("settings") { SettingsScreen(vm, askNotif) }
             composable("hooked") {
                 HookedScreen { dest ->
