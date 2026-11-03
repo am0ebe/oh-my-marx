@@ -22,6 +22,7 @@ Container (as `am0`, docker group, no sudo — already done by Claude @1103):
 ```
 rsync -a --exclude __pycache__ --exclude test_omm_api.py --exclude matrix server/ vps:/srv/omm-api/ && ssh vps 'cd /srv/omm-api && docker compose up -d --build'
 # (stack moved ~am0/omm-api ➡ /srv/omm-api by ops @1103: fleet.py runs as `claude` + manages updates/bup)
+# ⚠️ nvr `rsync --delete` over data/: vps_bup.sh keeps data/*.bak (600) there · .dockerignore keeps data/ out o th image
 ssh vps 'docker exec caddy wget -qO- http://omm-api:8000/v1/health'     # {"ok": true}
 ```
 **Public route — 1 manual step (Caddyfile is owned by `claude`, needs sudo):**
