@@ -37,7 +37,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="end"
-        android:text="— Marx, Kapital 8,9"
+        android:text="— Karl Marx, Kapital 8,9"
         android:textColor="#DDFFFFFF"
         android:textSize="12sp" />
 </LinearLayout>

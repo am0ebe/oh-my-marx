@@ -52,6 +52,8 @@ class AppVm(app: Application) : AndroidViewModel(app) {
     val reroll = MutableStateFlow(0)
     /** popup opened by tapping th Losung (or 🪝 test chip) · normal: once a day, see MainActivity */
     val forcePopup = MutableStateFlow(false)
+    /** 🚀 shortcut asked 4 a card on Today: "oracle" | "krise" · TodayScreen shows it + clears */
+    val popRequest = MutableStateFlow<String?>(null)
     /** 🪝 preview a feast / time o day (null = real calendar + clock) */
     val feastPreview = MutableStateFlow<Feast?>(null)
     val timePreview = MutableStateFlow<DayTime?>(null)
@@ -66,6 +68,10 @@ class AppVm(app: Application) : AndroidViewModel(app) {
     /** 🎉 feast verse wins (unless re-rolled), else th date-seeded ⭐ verse */
     fun verseOfDay(r: Int, feast: Feast?) =
         feast?.takeIf { r == 0 }?.let { content.verse(it.verse) } ?: verseOfDay(pool, today(), r)
+
+    /** th Losung any day had (popup stories: tap left = go back in time) · same rule as th real day: feast verse 1st */
+    fun losungOn(d: java.time.LocalDate) =
+        Feast.on(d)?.let { content.verse(it.verse) } ?: verseOfDay(pool, d.toString(), 0)
 
     private fun widgets() = viewModelScope.launch(Dispatchers.IO) { refreshWidgets(getApplication()) }
 
@@ -101,6 +107,7 @@ class AppVm(app: Application) : AndroidViewModel(app) {
     fun setLang(l: Lang) = viewModelScope.launch { marx.prefs.setLang(l); widgets() }
     fun setTestMode(on: Boolean) = viewModelScope.launch { marx.prefs.setTestMode(on) }
     fun setPersona(p: Persona) = viewModelScope.launch { marx.prefs.setPersona(p.name) }
+    fun setReadScale(s: Float) = viewModelScope.launch { marx.prefs.setReadScale(s.coerceIn(0.7f, 2f)) }
     fun popupDone() = viewModelScope.launch { forcePopup.value = false; marx.prefs.popupSeen(today()) }
     fun setNotif(on: Boolean, h: Int, m: Int) = viewModelScope.launch {
         marx.prefs.setNotif(on, h, m)

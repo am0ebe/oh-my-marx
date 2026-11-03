@@ -136,8 +136,8 @@ fun SettingsScreen(vm: AppVm, askNotifPermission: () -> Unit) {
         Text(tr("🤖 Stolz gevibecodet mit Claude Code (Anthropic, Claude Opus) — strix hat gewünscht, Claude hat getippt. Seiten-OCR: gemma3 + GLM-OCR, Übersetzungen: Qwen3, alles lokal auf einer RTX 3090 Ti. Entfremdete Arbeit, vollautomatisiert. Die Produktionsmittel gehören trotzdem uns.",
             "🤖 Proudly vibe-coded with Claude Code (Anthropic, Claude Opus) — strix wished, Claude typed. Page OCR: gemma3 + GLM-OCR, translations: Qwen3, all local on an RTX 3090 Ti. Alienated labour, fully automated. The means of production are still ours."), fontSize = 13.sp)
         Gap(6)
-        Text(tr("Text: Marx, Das Kapital Bd. 1, 4. Aufl. 1890 (MEW 23, Seitenzahlen = Dietz 1968). Englisch: Moore/Aveling 1887. Gemeinfrei.",
-            "Text: Marx, Capital vol. 1, 4th ed. 1890 (MEW 23, page numbers = Dietz 1968). English: Moore/Aveling 1887. Public domain."), fontSize = 13.sp)
+        Text(tr("Text: Karl Marx, Das Kapital Bd. 1, 4. Aufl. 1890 (MEW 23, Seitenzahlen = Dietz 1968). Englisch: Moore/Aveling 1887. Gemeinfrei.",
+            "Text: Karl Marx, Capital vol. 1, 4th ed. 1890 (MEW 23, page numbers = Dietz 1968). English: Moore/Aveling 1887. Public domain."), fontSize = 13.sp)
         Text(tr("Mechanik: abgeschaut bei Bibel-Apps, erklärt in Nir Eyal, „Hooked“, Kap. 7.",
             "Mechanics: borrowed from bible apps, explained in Nir Eyal, “Hooked”, ch. 7."), fontSize = 13.sp)
         Text(tr("Zitate, Andachten + Übersetzungen (IT · ES · PT · 中文 · عربي): von einem lokalen LLM — Irrtümer vorbehalten, Marx hat immer recht.",

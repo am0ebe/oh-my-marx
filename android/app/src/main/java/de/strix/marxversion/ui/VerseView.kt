@@ -1,5 +1,14 @@
 package de.strix.marxversion.ui
 
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
+import kotlinx.coroutines.launch
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -103,6 +112,7 @@ fun chapterTitle(c: Chapter) = when (LocalLang.current) {
  * 1 Vers. Tap it ➡ action bar (like th bible app): highlight · bookmark · note · copy · share · listen.
  * Footnote refs [52] r clickable ➡ dialog w th note (Marx' footnotes = where th roasts live).
  */
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun VerseView(vm: AppVm, v: Verse, speaker: Speaker? = null, showActions: Boolean = true) {
     val mark by vm.mark(v.id).collectAsStateWithLifecycle(null)
@@ -127,9 +137,26 @@ fun VerseView(vm: AppVm, v: Verse, speaker: Speaker? = null, showActions: Boolea
 
     val bg = mark?.highlight?.let { HIGHLIGHT_COLORS[it] } ?: Color.Transparent
     val sel = if (open) Modifier.border(1.dp, MaterialTheme.colorScheme.tertiary, RoundedCornerShape(6.dp)) else Modifier
+    val scale = LocalReadScale.current
+    val haptic = LocalHapticFeedback.current
+    // ☭ burst on double-tap (Instagram-heart style): 0 ➡ 1 = grow + fade out
+    val burst = remember { Animatable(1f) }
+    val scope = rememberCoroutineScope()
+    Box {
     Column(
         Modifier.fillMaxWidth().clip(RoundedCornerShape(6.dp)).background(bg).then(sel)
-            .then(if (showActions) Modifier.clickable { open = !open; palette = false } else Modifier)
+            .then(if (showActions) Modifier.combinedClickable(
+                onClick = { open = !open; palette = false },
+                // double-tap = toggle highlight (1st colour) — same call as th palette's ✕ when alr marked
+                onDoubleClick = {
+                    vm.highlight(v.id, mark?.highlight ?: 0)
+                    if (mark?.highlight == null) {
+                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        scope.launch { burst.snapTo(0f); burst.animateTo(1f, tween(650)) }
+                    }
+                },
+                onLongClick = { haptic.performHapticFeedback(HapticFeedbackType.LongPress); open = true; palette = true },
+            ) else Modifier)
             .padding(6.dp),
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -150,7 +177,7 @@ fun VerseView(vm: AppVm, v: Verse, speaker: Speaker? = null, showActions: Boolea
             }
             append(txt.substring(last))
         }
-        Text(annotated, fontFamily = FontFamily.Serif, fontSize = 16.sp, lineHeight = 23.sp)
+        Text(annotated, fontFamily = FontFamily.Serif, fontSize = 16.sp * scale, lineHeight = 23.sp * scale)
         mark?.note?.let {
             Text("✍️ $it", fontSize = 13.sp, color = MaterialTheme.colorScheme.secondary, modifier = Modifier.padding(top = 4.dp))
         }
@@ -163,7 +190,7 @@ fun VerseView(vm: AppVm, v: Verse, speaker: Speaker? = null, showActions: Boolea
                     tr("Lesezeichen", "Bookmark"), if (mark?.bookmark == true) Red else MaterialTheme.colorScheme.secondary) { vm.bookmark(v.id) }
                 Action(R.drawable.ic_note, tr("Notiz", "Note")) { editNote = true }
                 Action(R.drawable.ic_copy, tr("Kopieren", "Copy")) {
-                    copyText(ctx, "${lang.quote(txt)}\n— Marx, $r")
+                    copyText(ctx, "${lang.quote(txt)}\n— Karl Marx, $r")
                     android.widget.Toast.makeText(ctx, copied, android.widget.Toast.LENGTH_SHORT).show()
                 }
                 Action(R.drawable.ic_share, tr("Teilen", "Share")) { card = true }  // ➡ colourful card preview 1st
@@ -183,6 +210,11 @@ fun VerseView(vm: AppVm, v: Verse, speaker: Speaker? = null, showActions: Boolea
             }
         }
         if (showActions && (mark?.highlight != null || mark?.note != null)) HookNote(Hook.INVESTMENT, settings.testMode)
+    }
+    if (burst.value < 1f) Text("☭", fontSize = 64.sp, color = Red, modifier = Modifier.align(Alignment.Center).graphicsLayer {
+        val t = burst.value
+        scaleX = 0.4f + 1.4f * t; scaleY = scaleX; alpha = 1f - t
+    })
     }
 
     if (card) CardDialog(vm, v, tr("🌅 Spruchkarte", "🌅 Verse card"), null, onDismiss = { card = false })

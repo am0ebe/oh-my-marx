@@ -4,8 +4,13 @@
 ## ⏳
 
 ## ‼️
-- 🦠🧪 fon: Wireless debugging ON ➡ "Pair w code" ➡ tow `adb pair IP:PORT CODE` (once) ➡ then evy iter = `bin/dev.sh` (build + install + launch, 0 taps)
-- 🦠🤔 friends/away updates: 🤖 write `bin/ship.sh` ➡ APK on scagent.de ➡ Obtainium on fon? (needs go 4 public URL + `/srv/www` subdir)
+- 🦠🔒 VPS: `ssh vps 'sudo install -d -o am0 -g am0 /srv/www/bible'` ➡ 🤖 `bin/ship.sh` (page + GitHub release) ➡ Obtainium on fon: add `https://scagent.de/bible/`
+- 🦠👀 QA v0.4.0 gestures on fon:
+  - 🌅 Losung popup: tap card left/right = older/newer day · hold = voice pauses · swipe ⬆ = Amen · ⬇ = close · 📋 copy btn
+  - 📖 chapter: swipe ⬅➡ = nxt/prev chapter · 🤏 pinch = font size (kept) · double-tap verse = ☭ burst + highlight · hold = palette
+  - ☀️ Today: pull down = 🔮 oracle card · 📳 shake = 📉 Krise roast · 📋 copy icon on th Losung
+  - 🚀 long-press app icon = Losung · Orakel · Krise! · ⚙️ QS tile: pull down 2× ➡ ✏️ ➡ drag "Marx-Losung" in
+  - 🎉 confetti when th Stempelkarte fills (🪝 chip "Rang-Aufstieg" shows it)
 - 🦠👀 QA v0.3.0 on fon: hero colours (🪝 🌅 chip cycles) · 🎟️ Stempelkarte + 🕊️ · "✔️ Gelesen"/"Amen" counts day · tap Losung ➡ card popup · Teilen on any verse ➡ card preview · 🎉 chip cycles 12 Feiertage · 📱 add widget · 🪝 notes tap ➡ Hooked page · About
 - 🦠👀 QA v0.3.1 🔊 on fon: ⚙️ ➡ ☭☁️ Gottvater / ☁️ Gott / 📚 Marx im Lesesaal ➡ 🔊 on Losung · 1st tap 1-3 s wait, 2nd = instant? · hall too wet/dry? (`Room` i `logic/Voice.kt`) · zh/ar voice installed?
 - 🔵 later: real cloned voice (own / friend's Merz *impression*, 🚫 real Merz) ➡ 🤖 pre-render w Chatterbox
@@ -17,13 +22,8 @@
 
 ## 🔵
 - 📦⭐ **realistic holy voice** (🦠 @1103 "STT horrible + slow") ➡ plan i notes.md § voice 🗺️: A pre-render Losung w Chatterbox on tow ➡ C distill into a Piper voice (~20-60 MB) 4 th reader
-- 📦 **gestures / UX** (🦠 @1103 ask · proposal, 🦠 pick): 
-  - 📖 reader: swipe ⬅➡ = prev/nxt chapter · **double-tap verse = ☭ highlight** (Instagram-heart burst) · pinch = font size · hold = verse menu
-  - 🌅 Losung popup = **stories**: tap right/left = nxt/prev day's Losung · hold = pause voice · swipe ⬇ = close · swipe ⬆ = Amen
-  - ☀️ Today: **pull-down = Marxoskop/reroll** (slot-machine pull = variable reward 🪝) · swipe "Morgen"-teaser = blurred, locked (anticipation)
-  - 📳 **shake = "Krise!"** ➡ random 🔥 crisis/roast quote · haptic thump on Amen (stamp) · confetti on full Stempelkarte
-  - 🚀 launcher long-press shortcuts: Heute · Zufallsvers · Weiterlesen · Quick-Settings tile "Losung"
-  - ⚠️ no edge swipes (fight Android's back gesture)
+- 📦 gestures left over: "Morgen"-teaser blurred + locked (anticipation) · shortcut "Weiterlesen" (needs a last-read-chapter pref)
+- 🪝 Hooked notes 4 th new gestures (pull = slot machine · stories = Instagram/Snapchat · shake = variable reward)
 - 📦⭐ **Ask Marx: chat w an advisor Marx** (🦠 idea @1102): user describes an everyday problem (boss, rent, overtime, shopping urge) ➡ Marx answers short + punchy, w a matching Kapital quote + ref (tap ➡ open th chapter)
   - 💡 why it fits teaching: ties Kapital 2 th user's own life (transfer, not abstract theory) + a direct positive experience o th app ➡ th reason 2 come back (Hooked: variable reward o th self + investment)
   - 🔍 how: persona prompt + RAG over our scored verses (embed ➡ top-k quotes ➡ LLM must cite 1) · LLM where? on-device (Gemma 3 1B via MediaPipe/LiteRT, offline, ~600 MB 👎) ⬄ own server (ollama on tow/vps ➡ needs INTERNET + hosting) ⬄ API (costs, privacy) · ⚠️ guardrails: no real legal/medical/money advice, crisis ➡ point 2 real help · ironic tone, not cringe
@@ -43,6 +43,7 @@
 - 🤖 aft QA: rm page fotos (boox proc step 8)
 
 ## ✔️
+- ✔️ v0.4.0 @1103: gestures (popup stories · chapter swipe · pinch font · double-tap ☭ burst · hold palette · pull-down oracle · shake Krise) · 📋 copy icon · 🎉 confetti · 📳 haptics · 🚀 3 launcher shortcuts + ⚙️ QS tile · "Karl" restored (strix: can stay) · `dev.sh -q` = install wo launch
 - ✔️ v0.3.2 @1103: 🌅 notif/widget tap ➡ full-screen Losung (blurred card bg) · 🔊 prerender (tap = instant) + voice sample on chip tap · ⏰ picker always 24 h · 😇 new icon (halo + beard, notif + themed) · lang menu says "full txt: EN" · 🚫 "Karl" out o code/UI · 🩹 doubled quote marks · adb = SDK one (apt rm'd) · dev.sh tstd ✔️
 - ✔️ v0.3.1 @1102: 🔊 holy voices on-device (TTS ➡ wav per pitch layer ➡ mix + Freeverb hall ➡ MediaPlayer, cached) · ☭☁️ Gottvater Marx = new default · 5 DSP tests · repo ➡ GitHub am0ebe/bibleApp (priv) + gitea remote (repo not created yet)
 - ✔️ v0.3.0 @1101: 🎉 12 Feiertage (card motif + verse + greeting) · 🌅 time-o-day hero · 🔥 streak + 🕊️ Sabbat-Joker · 🎟️ Stempelkarte (2 gift) ➡ 7 ranks · 1 verse = reading day · 📱 widget · 🪝 Hooked-Modus + lesson page (4 phases + 6 extras) · card popup on tap + on evy Teilen · About: proudly vibecoded · notes: friends-wo-adb table + store FAQ

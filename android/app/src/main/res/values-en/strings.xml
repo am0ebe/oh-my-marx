@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- fon set 2 English (any EN locale) ➡ these · rest of th world ➡ values/ (German) -->
+    <string name="widget_desc">Daily Marx verse + 🔥 streak · colours follow th time of day</string>
+    <string name="sc_losung">Verse</string>
+    <string name="sc_losung_long">☭ Today\'s Marx verse</string>
+    <string name="sc_oracle">Oracle</string>
+    <string name="sc_oracle_long">🔮 Marxoscope: random verse</string>
+    <string name="sc_krise">Crisis!</string>
+    <string name="sc_krise_long">📉 Crisis! Marx lets rip</string>
+    <string name="tile">Marx verse</string>
+</resources>

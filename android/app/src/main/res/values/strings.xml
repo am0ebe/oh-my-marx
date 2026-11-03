@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- only th launcher label lives here · in-app txt = tr("de", "en") + assets/content/i18n_xx.json -->
+    <!-- system-shown txt only (launcher, widget picker, shortcuts, QS tile) · in-app txt = tr("de", "en") + assets/content/i18n_xx.json -->
     <string name="app_name">bibleApp</string>
     <string name="widget_desc">Marx-Losung des Tages + 🔥 Streak · Farben nach Tageszeit</string>
+    <!-- 🚀 long-press th launcher icon (res/xml/shortcuts.xml) -->
+    <string name="sc_losung">Losung</string>
+    <string name="sc_losung_long">☭ Heutige Marx-Losung</string>
+    <string name="sc_oracle">Orakel</string>
+    <string name="sc_oracle_long">🔮 Marxoskop: Zufallsvers</string>
+    <string name="sc_krise">Krise!</string>
+    <string name="sc_krise_long">📉 Krise! Marx teilt aus</string>
+    <!-- Quick-Settings tile -->
+    <string name="tile">Marx-Losung</string>
 </resources>

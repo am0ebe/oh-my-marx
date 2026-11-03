@@ -95,9 +95,15 @@ class MainActivity : ComponentActivity() {
 
     private fun openLosung(i: Intent?) {
         if (i?.getBooleanExtra(EXTRA_LOSUNG, false) == true) { vm.forcePopup.value = true; i.removeExtra(EXTRA_LOSUNG) }
+        // 🚀 launcher shortcuts (res/xml/shortcuts.xml) — string extras
+        when (val p = i?.getStringExtra(EXTRA_POP)) {
+            "losung" -> vm.forcePopup.value = true
+            "oracle", "krise" -> vm.popRequest.value = p
+        }
+        i?.removeExtra(EXTRA_POP)
     }
 
-    companion object { const val EXTRA_LOSUNG = "losung" }
+    companion object { const val EXTRA_LOSUNG = "losung"; const val EXTRA_POP = "pop" }
 }
 
 private val TABS = listOf(
@@ -124,6 +130,9 @@ private fun App(vm: AppVm) {
     }
     val openChapter = { kap: String, v: String -> nav.navigate("chapter/$kap?v=$v") }
     val openHooked = { nav.navigate("hooked") { launchSingleTop = true } }
+    // 🚀 shortcut card (Orakel / Krise) lives on Today ➡ go there 1st
+    val popReq by vm.popRequest.collectAsStateWithLifecycle()
+    LaunchedEffect(popReq) { if (popReq != null && route != "today") nav.go("today") }
 
     CompositionLocalProvider(LocalOpenHooked provides openHooked) {
     Scaffold(
@@ -161,7 +170,12 @@ private fun App(vm: AppVm) {
             composable("plans") { PlansScreen(vm) { nav.navigate("plan/$it") } }
             composable("plan/{id}") { e -> PlanDetail(vm, e.arguments?.getString("id")!!) { nav.go("today") } }
             composable("read") { ReadScreen(vm) { nav.navigate("chapter/$it") } }
-            composable("chapter/{kap}?v={v}") { e -> ChapterScreen(vm, e.arguments?.getString("kap")!!, e.arguments?.getString("v")) }
+            composable("chapter/{kap}?v={v}") { e ->
+                // 👉 swipe 2 a neighbour chapter = replace this one (back still goes 2 th list, not thru evy chapter)
+                ChapterScreen(vm, e.arguments?.getString("kap")!!, e.arguments?.getString("v")) { k ->
+                    nav.navigate("chapter/$k") { popUpTo("chapter/{kap}?v={v}") { inclusive = true } }
+                }
+            }
             composable("mine") { MineScreen(vm, openChapter) }
             composable("settings") { SettingsScreen(vm, askNotif) }
             composable("hooked") {

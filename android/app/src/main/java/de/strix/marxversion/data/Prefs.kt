@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
@@ -24,6 +25,7 @@ data class Settings(
     val popupSeen: String? = null,      // date th Losung popup was last shown ("2026-10-31")
     val activePlan: String? = null,
     val planStart: String? = null,      // "2026-10-28"
+    val readScale: Float = 1f,          // 🤏 pinch i th reader ➡ font size × this
 )
 
 class Prefs(private val context: Context) {
@@ -37,6 +39,7 @@ class Prefs(private val context: Context) {
         val popupSeen = stringPreferencesKey("popup_seen")
         val activePlan = stringPreferencesKey("active_plan")
         val planStart = stringPreferencesKey("plan_start")
+        val readScale = floatPreferencesKey("read_scale")
     }
 
     val settings: Flow<Settings> = context.store.data.map { p: Preferences ->
@@ -50,12 +53,14 @@ class Prefs(private val context: Context) {
             popupSeen = p[K.popupSeen],
             activePlan = p[K.activePlan],
             planStart = p[K.planStart],
+            readScale = p[K.readScale] ?: 1f,
         )
     }
 
     suspend fun setLang(l: Lang) = context.store.edit { it[K.lang] = l.name }
     suspend fun setTestMode(on: Boolean) = context.store.edit { it[K.testMode] = on }
     suspend fun setPersona(p: String) = context.store.edit { it[K.persona] = p }
+    suspend fun setReadScale(s: Float) = context.store.edit { it[K.readScale] = s }
     suspend fun popupSeen(date: String?) = context.store.edit { if (date == null) it.remove(K.popupSeen) else it[K.popupSeen] = date }
     suspend fun setNotif(on: Boolean, hour: Int, minute: Int) = context.store.edit {
         it[K.notifOn] = on; it[K.notifHour] = hour; it[K.notifMinute] = minute

@@ -14,6 +14,18 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import de.strix.marxversion.logic.dailyPool
+import androidx.compose.foundation.gestures.detectVerticalDragGestures
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.shadow
@@ -107,6 +119,7 @@ private fun teaser(s: String, lang: Lang, words: Int = 8) =
 @Composable
 private fun feastNow(vm: AppVm): Feast? = vm.feastPreview.collectAsStateWithLifecycle().value ?: Feast.on(LocalDate.now())
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -> Unit, openPlans: () -> Unit) {
     val s by vm.settings.collectAsStateWithLifecycle()
@@ -125,7 +138,22 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
     var rankUp by remember { mutableStateOf<Int?>(null) }
     val persona = Persona.of(s.persona)
     val doneToday = days.any { it.date == today() }
+    // 🔮 pull down = Marxoskop · 📳 shake = Krise! — both pop a card (variable reward, slot-machine pull 🪝)
+    var pop by remember { mutableStateOf<Pair<String, Verse>?>(null) }
+    val haptic = LocalHapticFeedback.current
+    val krise = tr("📉 Krise! Marx teilt aus:", "📉 Crisis! Marx lets rip:")
+    val orakel = tr("🔮 Marxoskop sagt:", "🔮 Marxoscope says:")
+    val roast = { vm.content.verses.filter { it.polemic && it.quoteDe.isNotBlank() }.randomOrNull()?.let { pop = krise to it } }
+    val oracleNow = { dailyPool(vm.content.verses).randomOrNull()?.let { pop = orakel to it } }
+    ShakeDetector { haptic.performHapticFeedback(HapticFeedbackType.LongPress); roast() }
+    // 🚀 launcher shortcut "Orakel" / "Krise!"
+    val req by vm.popRequest.collectAsStateWithLifecycle()
+    LaunchedEffect(req) {
+        when (req) { "oracle" -> oracleNow(); "krise" -> roast() }
+        if (req != null) vm.popRequest.value = null
+    }
 
+    PullToRefreshBox(isRefreshing = false, onRefresh = { oracleNow() }) {
     Column(Modifier.fillMaxWidth().verticalScroll(rememberScrollState()).padding(16.dp)) {
         // ── 🪝 Hooked mode panel: explainer + test buttons ──
         if (s.testMode) {
@@ -160,8 +188,11 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
             LaunchedEffect(q, lang, persona) { speaker.prerender(q, lang, persona) }  // 🔊 tap = instant
             Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)) {
                 Column(Modifier.padding(16.dp)) {
-                    Text(tr("✨ Marx-Losung für heute", "✨ Today's Marx verse"), fontSize = 13.sp, color = MaterialTheme.colorScheme.secondary)
-                    Gap(6)
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(tr("✨ Marx-Losung für heute", "✨ Today's Marx verse"), fontSize = 13.sp, color = MaterialTheme.colorScheme.secondary,
+                            modifier = Modifier.weight(1f))
+                        CopyIcon("${lang.quote(q)}\n— Karl Marx, $r")  // 📋 1 tap, like a code block's copy btn
+                    }
                     // tap th quote ➡ th colourful Spruchkarte popup (share from there)
                     Box(Modifier.clickable { vm.forcePopup.value = true }) { QuoteText(quoted(q)) }
                     Gap(6)
@@ -245,6 +276,8 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
             }
         }
         HookNote(Hook.FORER, s.testMode)
+        Text(tr("⬇ Seite runterziehen = Zufalls-Orakel · 📳 Handy schütteln = Krise!", "⬇ pull the page down = random oracle · 📳 shake the phone = crisis!"),
+            fontSize = 11.sp, color = MaterialTheme.colorScheme.secondary)
         oracle?.let { v ->
             Card(Modifier.padding(top = 8.dp)) {
                 Column(Modifier.padding(12.dp)) {
@@ -280,8 +313,12 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
                     }
                 },
             )
+            if (rankUp != null) Confetti {}  // 🎉 full card = paper rain on top
         }
     }
+    }  // PullToRefreshBox
+
+    pop?.let { (title, v) -> CardDialog(vm, v, title, null, onDismiss = { pop = null }, openChapter = { k, id -> pop = null; openChapter(k, id) }) }
 }
 
 /**
@@ -349,9 +386,14 @@ fun CardDialog(
     vm: AppVm, v: Verse, title: String, feast: Feast?, onDismiss: () -> Unit,
     openChapter: ((String, String) -> Unit)? = null, onAmen: (() -> Unit)? = null, hooks: @Composable () -> Unit = {},
     full: Boolean = false,
+    // 📱 stories (full only): tap left/right half o th card = older/newer day · null = no such day
+    onOlder: (() -> Unit)? = null, onNewer: (() -> Unit)? = null, storyLabel: String? = null,
 ) {
     val s by vm.settings.collectAsStateWithLifecycle()
     val ctx = LocalContext.current
+    val haptic = LocalHapticFeedback.current
+    val swipeMin = with(LocalDensity.current) { 90.dp.toPx() }
+    val rtl = LocalLayoutDirection.current == LayoutDirection.Rtl  // Arabic: "older" = right half
     val lang = LocalLang.current
     val speaker = rememberSpeaker()
     val q = verseQuote(v).ifBlank { verseText(v).take(240).substringBeforeLast(' ') + " …" }
@@ -362,12 +404,13 @@ fun CardDialog(
     LaunchedEffect(q, lang, persona) { speaker.prerender(q, lang, persona) }  // 🔊 tap = instant
     val buttons: @Composable (Color) -> Unit = { fg ->
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly, verticalAlignment = Alignment.CenterVertically) {
-            TextButton(onClick = { shareCard(ctx, bmp.asAndroidBitmap(), "${lang.quote(q)} — Marx, $r\n$APP_NAME", shareTitle) }) {
+            TextButton(onClick = { shareCard(ctx, bmp.asAndroidBitmap(), "${lang.quote(q)} — Karl Marx, $r\n$APP_NAME", shareTitle) }) {
                 Icon(painterResource(R.drawable.ic_share), null, Modifier.size(18.dp), tint = fg); Text(" " + tr("Teilen", "Share"), color = fg)
             }
             TextButton(onClick = { speaker.say(q, lang, persona) }) {
                 Icon(painterResource(R.drawable.ic_volume), null, Modifier.size(22.dp), tint = if (speaker.speaking) Red else fg)
             }
+            CopyIcon("${lang.quote(q)}\n— Karl Marx, $r", fg)
             if (openChapter != null) TextButton(onClick = { openChapter(v.kap, v.id) }) { Text("📖") }
             if (onAmen != null) Button(onClick = onAmen) { Text(tr("Amen ☭", "Amen ☭")) }
             else TextButton(onClick = onDismiss) { Text("✕", color = fg) }
@@ -376,7 +419,20 @@ fun CardDialog(
     if (full) {
         // 🌅 daily Losung = th whole screen: card blurred as backdrop + card i front (Hooked: reward right at th door)
         Dialog(onDismissRequest = onDismiss, properties = DialogProperties(usePlatformDefaultWidth = false, decorFitsSystemWindows = false)) {
-            Box(Modifier.fillMaxSize()) {
+            // swipe ⬆ = Amen · swipe ⬇ = close (whole screen)
+            Box(Modifier.fillMaxSize().pointerInput(onAmen) {
+                var dy = 0f
+                detectVerticalDragGestures(
+                    onDragStart = { dy = 0f },
+                    onVerticalDrag = { ch, d -> dy += d; ch.consume() },
+                    onDragEnd = {
+                        when {
+                            dy < -swipeMin && onAmen != null -> { haptic.performHapticFeedback(HapticFeedbackType.LongPress); onAmen() }
+                            dy > swipeMin -> onDismiss()
+                        }
+                    },
+                )
+            }) {
                 Image(bmp, null, Modifier.fillMaxSize().blur(40.dp), contentScale = ContentScale.Crop)  // blur = API 31+, older: just darker
                 Box(Modifier.fillMaxSize().background(Color.Black.copy(alpha = 0.45f)))
                 Column(
@@ -384,8 +440,21 @@ fun CardDialog(
                     horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.SpaceEvenly,
                 ) {
                     Text(title, color = Color.White, fontSize = 22.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center)
+                    storyLabel?.let { Text(it, color = Color.White.copy(alpha = 0.75f), fontSize = 12.sp, textAlign = TextAlign.Center) }
+                    var held by remember { mutableStateOf(false) }
                     Image(bmp, contentDescription = q, modifier = Modifier.fillMaxWidth().aspectRatio(1080f / 1350f)
-                        .shadow(18.dp, RoundedCornerShape(16.dp)).clip(RoundedCornerShape(16.dp)))
+                        .shadow(18.dp, RoundedCornerShape(16.dp)).clip(RoundedCornerShape(16.dp))
+                        // stories: tap ⬅ half = older day · ➡ half = newer · hold = pause th voice
+                        .pointerInput(onOlder, onNewer) {
+                            detectTapGestures(
+                                onPress = { tryAwaitRelease(); if (held) { held = false; speaker.resume() } },
+                                onLongPress = { held = true; speaker.pause() },
+                                onTap = { p ->
+                                                    val older = (p.x < size.width / 2) != rtl
+                                    (if (older) onOlder else onNewer)?.invoke()
+                                },
+                            )
+                        })
                     hooks()
                     buttons(Color.White)
                 }
@@ -412,26 +481,51 @@ fun LosungPopup(vm: AppVm, openChapter: (String, String) -> Unit) {
     val reroll by vm.reroll.collectAsStateWithLifecycle()
     val s by vm.settings.collectAsStateWithLifecycle()
     val days by vm.days.collectAsStateWithLifecycle()
-    val feast = feastNow(vm)
-    val v = remember(today(), reroll, feast) { vm.verseOfDay(reroll, feast) } ?: return
+    // 📱 stories: 0 = today · n = n days ago (max 2 weeks back)
+    var back by remember { mutableIntStateOf(0) }
+    val day = LocalDate.now().minusDays(back.toLong())
+    val feast = if (back == 0) feastNow(vm) else Feast.on(day)
+    val v = remember(today(), reroll, feast, back) { if (back == 0) vm.verseOfDay(reroll, feast) else vm.losungOn(day) } ?: return
     val ctx = LocalContext.current
+    val haptic = LocalHapticFeedback.current
     val total = readingDays(days)
     val counted = days.any { it.date == today() }
-    val msg = if (!counted && cardJustFilled(total + 1))
+    val fills = !counted && cardJustFilled(total + 1)
+    var confetti by remember { mutableStateOf(false) }
+    val msg = if (fills)
         tr("🏅 Stempelkarte voll! Neuer Rang: %s", "🏅 Stamp card full! New rank: %s").f(tr(rank(cardsDone(total + 1) - 1)))
     else tr("☭ Lesetag gezählt — 🔥 %d", "☭ Reading day counted — 🔥 %d").f(streak(days) + if (counted) 0 else 1)
+    val ago = when (back) {
+        0 -> tr("heute", "today")
+        1 -> tr("gestern", "yesterday")
+        else -> tr("vor %d Tagen", "%d days ago").f(back)
+    }
     CardDialog(
         vm, v,
-        title = feast?.let { it.emoji + " " + tr(it.greet) } ?: tr("✨ Deine Marx-Losung für heute", "✨ Your Marx verse for today"),
+        title = when {
+            back > 0 -> tr("📜 Losung von %s", "📜 Verse from %s").f(ago)
+            feast != null -> feast.emoji + " " + tr(feast.greet)
+            else -> tr("✨ Deine Marx-Losung für heute", "✨ Your Marx verse for today")
+        },
         feast = feast,
         onDismiss = { vm.popupDone() },
         openChapter = { k, id -> vm.popupDone(); openChapter(k, id) },
-        onAmen = { vm.amen(v.id); Toast.makeText(ctx, msg, Toast.LENGTH_LONG).show() },
+        onAmen = {
+            // 📳 a stamp thump · full card ➡ 🎉 confetti, then close
+            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+            Toast.makeText(ctx, msg, Toast.LENGTH_LONG).show()
+            if (fills) confetti = true else vm.amen(v.id)
+        },
         hooks = {
             HookNote(Hook.POPUP, s.testMode)
             HookNote(Hook.TINY, s.testMode)
             if (feast != null) HookNote(Hook.FEAST, s.testMode)
         },
         full = true,
+        onOlder = if (back < 14) ({ back++ }) else null,
+        onNewer = if (back > 0) ({ back-- }) else null,
+        storyLabel = "$ago  ·  " + tr("Karte links/rechts tippen = älter/neuer · ⬆ wischen = Amen · ⬇ = zu",
+            "tap card left/right = older/newer · swipe ⬆ = Amen · ⬇ = close"),
     )
+    if (confetti) Confetti { confetti = false; vm.amen(v.id) }
 }

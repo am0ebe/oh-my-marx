@@ -23,7 +23,7 @@ SCHEMA = {"type": "object", "required": ["quote_de", "quote_en", "juice", "diffi
               "tags": {"type": "array", "items": {"type": "string", "enum": TAGS}, "maxItems": 4},
               "polemic": {"type": "boolean"}, "bible": {"type": "boolean"}}}
 
-PROMPT = """You rate one paragraph of Marx, "Das Kapital" vol. 1 (chapter {kap}: {title}) for a playful daily-reading app ("Bible app for Kapital").
+PROMPT = """You rate one paragraph of Karl Marx, "Das Kapital" vol. 1 (chapter {kap}: {title}) for a playful daily-reading app ("Bible app for Kapital").
 
 German original:
 {de}

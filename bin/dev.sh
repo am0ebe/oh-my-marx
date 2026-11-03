@@ -21,5 +21,7 @@ fi
 have_fon || { echo "📱 no fon: Wireless debugging ON + same wifi? · 1st time: $adb pair IP:PORT CODE"; exit 1; }
 
 ./gradlew --offline -q installDebug
+# -q / --quiet = install only, don't pop th app up (u r using th fon 4 sth else)
+if [[ "${1:-}" == -q || "${1:-}" == --quiet ]]; then echo "✔️ installed (not launched)"; exit 0; fi
 "$adb" shell am start -n de.strix.marxversion/.MainActivity >/dev/null
 echo "✔️ installed + launched"

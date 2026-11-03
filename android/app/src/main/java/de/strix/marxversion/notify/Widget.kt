@@ -66,7 +66,7 @@ suspend fun refreshWidgets(ctx: Context) {
         setInt(R.id.root, "setBackgroundResource", DayTime.at(LocalTime.now().hour).bg())
         setTextViewText(R.id.head, "${feast?.emoji ?: "☭"} ${table.t(lang, HEAD.first, HEAD.second)}" + if (st > 0) "  ·  🔥 $st" else "")
         setTextViewText(R.id.quote, lang.quote(quoteFor(v, lang, table)))
-        setTextViewText(R.id.ref, "— Marx, " + table.t(lang, BOOK.first, BOOK.second).f(v.id))
+        setTextViewText(R.id.ref, "— Karl Marx, " + table.t(lang, BOOK.first, BOOK.second).f(v.id))
         setOnClickPendingIntent(R.id.root, open)
     }
     mgr.updateAppWidget(ids, rv)

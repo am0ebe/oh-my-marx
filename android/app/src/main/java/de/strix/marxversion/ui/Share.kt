@@ -16,6 +16,18 @@ import android.text.Layout
 import android.text.StaticLayout
 import android.text.TextPaint
 import android.widget.Toast
+import android.os.Build
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
+import de.strix.marxversion.R
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
@@ -92,7 +104,7 @@ fun cardBitmap(quote: String, ref: String, lang: Lang, feast: Feast? = null): Bi
     c.save(); c.translate(80f, (h * 0.42f - layout.height / 2f).coerceAtLeast(if (feast == null) 170f else 230f)); layout.draw(c); c.restore()
 
     val small = TextPaint(tp).apply { textSize = 40f; typeface = Typeface.create(Typeface.SERIF, Typeface.NORMAL) }
-    val by = "— Marx, $ref"
+    val by = "— Karl Marx, $ref"
     c.drawText(by, w / 2f - small.measureText(by) / 2f, h * 0.76f, small)
     small.textSize = 30f
     c.drawText(APP_NAME, w / 2f - small.measureText(APP_NAME) / 2f, h - 50f, small)
@@ -115,6 +127,21 @@ fun shareCard(ctx: Context, bmp: Bitmap, text: String, chooserTitle: String) {
 
 fun copyText(ctx: Context, text: String) {
     ctx.getSystemService(ClipboardManager::class.java).setPrimaryClip(ClipData.newPlainText("Marx", text))
+}
+
+/** 📋 lil copy btn (like on a chat app's code block) · Android 13+ shows its own "copied" bubble ➡ toast only below */
+@Composable
+fun CopyIcon(text: String, tint: Color = MaterialTheme.colorScheme.secondary) {
+    val ctx = LocalContext.current
+    val haptic = LocalHapticFeedback.current
+    val done = tr("📋 Kopiert", "📋 Copied")
+    IconButton(onClick = {
+        copyText(ctx, text)
+        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+        if (Build.VERSION.SDK_INT < 33) Toast.makeText(ctx, done, Toast.LENGTH_SHORT).show()
+    }, modifier = Modifier.size(36.dp)) {
+        Icon(painterResource(R.drawable.ic_copy), tr("Kopieren", "Copy"), Modifier.size(18.dp), tint = tint)
+    }
 }
 
 // ── Vorlesen: Android's built-in TTS + "personas" ──
@@ -261,6 +288,10 @@ class Speaker(ctx: Context) {
             prepare(); start()
         }
     }
+
+    /** hold th popup = pause (stories-style) · plain TTS can't pause ➡ stops */
+    fun pause() { player?.takeIf { it.isPlaying }?.pause() ?: run { if (speaking && player == null) stop() } }
+    fun resume() { player?.takeIf { !it.isPlaying && speaking }?.start() }
 
     fun stop() {
         job?.cancel(); job = null

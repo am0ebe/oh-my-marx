@@ -29,7 +29,7 @@ LANGS = {
 }
 
 STYLE = {
-    "q": "These are quotations from Marx, 'Das Kapital' vol. 1 (19th-century prose). Translate faithfully from the "
+    "q": "These are quotations from Karl Marx, 'Das Kapital' vol. 1 (19th-century prose). Translate faithfully from the "
          "German original (English given only as reference). Keep it a dignified, quotable Marx sentence — no modernising, "
          "no explanations, no added quotation marks. Keep footnote markers like [52] if present.",
     "a": "These are short tongue-in-cheek 'devotionals' from a playful app that presents Marx' Kapital like a Bible app. "

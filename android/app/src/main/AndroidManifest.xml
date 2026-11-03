@@ -29,7 +29,21 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <!-- 🚀 long-press icon: Losung · Orakel · Krise -->
+            <meta-data android:name="android.app.shortcuts" android:resource="@xml/shortcuts" />
         </activity>
+
+        <!-- ⚙️ Quick-Settings tile ➡ full-screen Losung (notify/LosungTile.kt) -->
+        <service
+            android:name=".notify.LosungTile"
+            android:exported="true"
+            android:icon="@drawable/ic_launcher_fg"
+            android:label="@string/tile"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
 
         <!-- 📱 home-screen widget (notify/Widget.kt) -->
         <receiver
