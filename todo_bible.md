@@ -5,7 +5,8 @@
 
 ## ‼️
 - 🦠🧪 Obtainium on fon: /bible is gone ➡ edit/re-add: stable `https://scagent.de/oh-my-marx/` · ＋ 2nd app `https://scagent.de/oh-my-marx/dev/` = "Oh My Marx DEV" · no regex needed
-- 🦠👀 QA dev 0.6.0: ⚙️ 👥 Mitlesen ON ➡ book: header "👥 N×" + bottom "💬 Mitreden" ➡ pick name ➡ comment ☭ ➡ hold own = delete · Home "👥 Heute lesen N mit · M × Amen" · ⚙️ rename
+- 💬 short link `scagent.de/omm` ➡ /oh-my-marx/ (+ /omm/dev) = Caddy redir, asked ops @1104 ➡ when live: 🤖 README + download page use it
+- 🦠👀 QA 0.6.0 (shipped @1104): ⚙️ 👥 Mitlesen ON ➡ book: header "👥 N×" + bottom "💬 Mitreden" ➡ pick name ➡ comment ☭ ➡ hold own = delete · Home "👥 Heute lesen N mit · M × Amen" · ⚙️ rename
 - 🦠🔒 `ssh -t vps sudo rmdir /srv/www/bible` (empty leftover, root-owned parent)
 - 🦠📣 send scagent.de/oh-my-marx 2 2-3 friends ➡ collect feedback (after dev QA ➡ 🤖 ship 0.6.0)
 - 🔵 community ③ Kreise (private rooms, invite link/QR) + friends/DMs ➡ ④ Salon (forum per Abschnitt) · 💬 on cards (today's Losung thread) · ⚠️ report btn + mod tools b4 strangers join
