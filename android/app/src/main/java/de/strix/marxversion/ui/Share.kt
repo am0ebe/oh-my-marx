@@ -63,7 +63,7 @@ import kotlinx.coroutines.withTimeoutOrNull
 import java.io.File
 import java.util.concurrent.ConcurrentHashMap
 
-const val APP_NAME = "bibleApp ☭"
+const val APP_NAME = "Oh My Marx ☭"  // @1103 (was bibleApp = YouVersion's name) · applicationId stays de.strix.marxversion
 
 // ── Spruchkarte: kitsch sunset + Marx quote ➡ png ➡ Android share sheet ──
 // drawn w plain android.graphics.Canvas (simpler than capturing a composable) · same bitmap = Losung popup preview

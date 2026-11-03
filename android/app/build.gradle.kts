@@ -1,3 +1,6 @@
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -5,6 +8,9 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
 }
+
+// ⭐ th 1 version number · bump b4 bin/ship.sh · bin/lib.sh reads this line
+val appVersion = "0.5.1"
 
 android {
     namespace = "de.strix.marxversion"
@@ -14,8 +20,13 @@ android {
         applicationId = "de.strix.marxversion"
         minSdk = 26
         targetSdk = 36
-        versionCode = 7
-        versionName = "0.5.0"
+        // versionCode = minutes since 2026-01-01 ➡ evy build is "newer" than th last (dev + ship share 1 counter:
+        // no downgrade error when th fon jumps between th dev channel and a release)
+        versionCode = (System.currentTimeMillis() / 60_000L - 29_453_760L).toInt()
+        // -Pdev (bin/deploy.sh) ➡ 0.5.1-dev.1103.0215 = a new version 4 Obtainium evy minute
+        versionName = if (project.hasProperty("dev"))
+            appVersion + "-dev." + LocalDateTime.now().format(DateTimeFormatter.ofPattern("MMdd.HHmm"))
+        else appVersion
     }
 
     buildTypes {

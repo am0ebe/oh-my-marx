@@ -1,4 +1,4 @@
-# dfs — **bibleApp** (code pkg `marxversion`) · Kapital als Bible-App
+# dfs — **Oh My Marx** (was bibleApp · code pkg `marxversion`) · Kapital als Bible-App
 
 _Marx' Kapital Bd.1 i bite-sized daily verses, w bible-app mechanics + Augenzwinkern · 1st Android app = L project_
 _raw idea: [plan.md](plan.md) · full plan @1028: `~/.claude/plans/read-plan-md-for-floofy-eich.md` · todo: [todo_bible.md](todo_bible.md)_
@@ -180,6 +180,39 @@ _per concept 2-3 lines_
 - prereq 4 all: ‼️ **release signing key** (debug key = per-machine, can't be used 4 real releases · lose th key ➡ friends must uninstall 2 update) ➡ keystore outside th repo + backup
 - prereq 4 F-Droid/Izzy: pick a license (code GPL-3? content PD) + public repo
 - 💡 rec: Obtainium + GitHub Releases now (1 cmd per release) · own F-Droid repo later if >5 friends
+- ✔️ @1103 live: **2 channels** on th VPS · `bin/ship.sh` ➡ scagent.de/bible/ (stable, friends) · `bin/deploy.sh` ➡ scagent.de/bible/dev/ (🦠's fon, evy build = new version `x.y.z-dev.MMDD.HHMM`) · versionCode = minutes since 2026 ➡ dev ⬄ stable nvr "downgrade"
+
+## 📱🍏 sharing apps w friends on ANY fon (@1103 · strix: "keepandroidopen sounds like a dead end")
+- 🚧 Android 2027: certified fons block apps fr unregistered devs (incl. sideload/F-Droid/Obtainium)
+  - ⤵️ free "limited distribution" dev acct: no ID, no $25, ≤20 devices = a friends circle ✔️ · o $25 + ID = unlimited
+  - ⤵️ friend's side: 1-time "advanced flow" (settings unlock + 24 h wait) ➡ then installs anything
+  - ✔️ GrapheneOS / LineageOS etc. = not Google-certified ➡ prob unaffected
+- 🍏 iPhone: **no APK, no sideload** (EU: alt marketplaces, still Apple-notarized + $99/yr acct) · TestFlight = $99/yr, 90-day builds
+- ⭐ **th universal escape hatch = a web app (PWA)**: a URL ➡ "Add 2 Home Screen" ➡ icon, offline, push (iOS ≥16.4) · no store, no review, no verification, same code 4 Android + iPhone + desktop
+  - 4 Oh My Marx: th core (cards · daily Losung · book · notes) = web-friendly · ⚠️ widget / QS tile / shake / TTS voices = native-only o weaker on web
+  - routes: (a) **Compose Multiplatform** (Kotlin ➡ Android + iOS + web/wasm, reuse ~70 % o our code · web target = beta) · (b) small separate PWA (Svelte/vanilla) reading th same assets JSON · (c) Kotlin/Wasm later
+  - 💡 rule 4 future fun prototypes: **web 1st** (share = a link) · native only when th fon's sensors/widgets r th point
+
+## 👥 community / Lesekreis (@1103 · strix: fitness + meditation apps all have it · ppl share experience + knowledge · also 4 hardcore Marxists)
+### 🧑 user experience
+- **Mitlesen** (opt-in, ⚙️): pick a name (+ emoji avatar) ➡ no email, no pw (account made in th background)
+- 📖 **evy book page / section**: `👥 34 lasen diese Seite · 💬 12` ➡ tap ➡ th thread 4 that page: comments, ☭ reactions, replies
+  - 🔖 ✍️ share a margin note ➡ it appears i th thread, quoted w th verse (opt-in per note)
+- 🃏 **evy card**: `💬` ➡ what ppl say about today's Losung · "Heute: 212 Amen ☭" (crowd = social proof)
+- 👥 **Kreise**: make one ➡ invite link / QR ➡ friends join ➡ same plan, circle Stempelkarte (fills when *all* read = solidarity), circle chat
+- 🤝 **friends**: add via QR / name ➡ DM · see their Amen today (opt-in)
+- 🧙 **Salon** (forum 4 deep dives): topic rooms per Abschnitt ("Wertform", "Akkumulation") ➡ long posts, threads · hardcore readers can use a desktop client (Element) on th same rooms
+- 🛡️ report · mute · block · circle admins kick · rate limit
+### 🏗️ technical: Matrix
+- **homeserver on th VPS**: Synapse (mature, Python, ~300-500 MB RAM) o **continuwuity/conduwuit** (Rust, ~50-100 MB, 1 binary + RocksDB) ⭐ 4 a small box · docker compose ➡ Caddy `matrix.scagent.de` + `/.well-known/matrix/*` on scagent.de ➡ users = `@name:scagent.de`
+- **mapping**: book section = public room `#kap-08:scagent.de` · page = **thread** i that room (thread root = "MEW S. 247") · Kreis = private room (invite) · friend = DM room · reaction ☭ = m.reaction · shared note = message w a `de.ohmymarx.verse` field
+- **app side**: Matrix Client-Server REST (register · login · sync · send · threads) via OkHttp/ktor — tiny subset · o **matrix-rust-sdk** Kotlin bindings (what Element X uses: E2E, sync, offline cache) = heavier but done
+- **"34 lasen diese Seite"**: NOT via Matrix (would leak who reads what) ➡ tiny counter API on th VPS (FastAPI + SQLite): `POST /read/{page}` w a daily random token ➡ aggregate counts only
+- **accounts**: app auto-registers w a registration token (no open signup = no spam) · pw lives i Android Keystore · "delete my account" = Matrix deactivate
+- 👍 open standard, own server i DE, federation (users fr matrix.org can join), E2E 4 Kreise/DMs, existing clients 4 power users · 👎 Matrix = cpx (sync, state, moderation tools) · a homeserver = 1 more service 2 run + bup
+- ⬄ alt: own FastAPI + SQLite (comments + counts only): simpler, full ctrl, no federation/E2E/desktop client · ⬄ Discourse (forum, heavy, ~2 GB RAM)
+- order: ① counter API + "👥 N lasen" (1 evening, read-only social proof) ➡ ② homeserver + section rooms (comments) ➡ ③ Kreise + friends ➡ ④ Salon
+- ⚠️ needs INTERNET permission + privacy page (DSGVO: what's stored, where, delete) · moderation = a real job once strangers join
 
 ## icon
 - Marx (J. J. E. Mayall, London 1875, PD) · crop face ➡ sepia ➡ circle ➡ gold halo · on Parteibuch-rot

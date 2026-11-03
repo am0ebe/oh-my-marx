@@ -4,7 +4,10 @@
 ## ⏳
 
 ## ‼️
-- 🦠🤔 **new name** (bibleApp = taken) ➡ pick ➡ 🤖 rename label + APP_NAME + ship page (applicationId stays ➡ updates keep working) · shortlist i ✔️ answer @1103: Oh My Marx · Heiliger Marx · Das Kapital · Kapital-Kreis
+- 🦠🧪 Obtainium on fon: th app ➡ ✏️ source URL = `https://scagent.de/bible/dev/` (dev channel) · version regex `(\d+\.\d+\.\d+[-.\w]*)\.apk` ➡ then evy `bin/deploy.sh` = pull 2 refresh ➡ Update
+- 🦠🤔 community: start w ① "👥 N lasen diese Seite" counter API? (notes.md § community) ➡ then Matrix homeserver
+- 🦠🤔 web/PWA version 4 iPhone friends? (notes.md § sharing apps) · Compose Multiplatform ⬄ small PWA
+- 🔵 rename GitHub/Forgejo repo bibleApp ➡ OhMyMarx (remotes + Obtainium URL unchanged on VPS)
 - 🦠👀 QA v0.5.0 on fon (via Obtainium!):
   - 🃏 Home = card deck: swipe ⬅ = earlier days · Teilen big · Amen ➡ ☭ swoosh · Marx icon/Heute tab = back 2 1st card
   - 📉 shake = red flash + buzz + KRISE card i front · ⬇ pull = 🔮 card · Marxoskop chips ➡ card up top
@@ -56,6 +59,7 @@
 - 🤖 aft QA: rm page fotos (boox proc step 8)
 
 ## ✔️
+- ✔️ v0.5.1 @1103: name = **Oh My Marx** · `bin/deploy.sh` (dev channel /bible/dev ➡ Obtainium · `-a` = wireless adb) replaces dev.sh · `bin/ship.sh` + `-h/--help/-?` on both + tools list (`bin/lib.sh`) · 1 version (`val appVersion`) + auto versionCode
 - ✔️ v0.5.0 @1103: 🃏 Home = card carousel (cards 1st-class, no popup on open) · 📉 Krise = full-screen red flash + buzz + crisis card · ☭ swoosh on Amen/Tag geschafft · 📖 book reader (708 MEW pages, paper, page turn) · 😇 Saint Marx on cards · 🔖 double-tap bookmark · gold frame on marked · ✍️ inline notes · ❌ highlight btn + ⋯ · share-only dialog · ☭ = close · Jahresplan quotes fallback
 - ✔️ v0.4.0 @1103: gestures (popup stories · chapter swipe · pinch font · double-tap ☭ burst · hold palette · pull-down oracle · shake Krise) · 📋 copy icon · 🎉 confetti · 📳 haptics · 🚀 3 launcher shortcuts + ⚙️ QS tile · "Karl" restored (strix: can stay) · `dev.sh -q` = install wo launch
 - ✔️ v0.3.2 @1103: 🌅 notif/widget tap ➡ full-screen Losung (blurred card bg) · 🔊 prerender (tap = instant) + voice sample on chip tap · ⏰ picker always 24 h · 😇 new icon (halo + beard, notif + themed) · lang menu says "full txt: EN" · 🚫 "Karl" out o code/UI · 🩹 doubled quote marks · adb = SDK one (apt rm'd) · dev.sh tstd ✔️

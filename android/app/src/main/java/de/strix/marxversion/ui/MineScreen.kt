@@ -105,8 +105,8 @@ fun SettingsScreen(vm: AppVm, askNotifPermission: () -> Unit) {
         // ── 📱 widget hint ──
         Gap(8)
         Text(tr("📱 Widget", "📱 Widget"))
-        Text(tr("Homescreen lang drücken ➡ Widgets ➡ bibleApp: Losung + 🔥 Streak, Farbe wechselt mit der Tageszeit.",
-            "Long-press the home screen ➡ Widgets ➡ bibleApp: daily verse + 🔥 streak, colour changes with the time of day."),
+        Text(tr("Homescreen lang drücken ➡ Widgets ➡ Oh My Marx: Losung + 🔥 Streak, Farbe wechselt mit der Tageszeit.",
+            "Long-press the home screen ➡ Widgets ➡ Oh My Marx: daily verse + 🔥 streak, colour changes with the time of day."),
             fontSize = 12.sp, color = MaterialTheme.colorScheme.secondary)
         HookNote(Hook.WIDGET, s.testMode)
         Gap(8)

@@ -1870,3 +1870,4 @@
 {"kind": "ui", "k": "MEW p. %d", "src": "MEW S. %d\u0000MEW p. %d", "t": "MEW 第%d页"}
 {"kind": "ui", "k": "⬅ drag = turn the page · 🤏 two fingers = font · double-tap = 🔖", "src": "⬅ ziehen = umblättern · 🤏 zwei Finger = Schrift · doppelt tippen = 🔖\u0000⬅ drag = turn the page · 🤏 two fingers = font · double-tap = 🔖", "t": "⬅ 拖动 = 翻页 · 🤏 双指 = 字体 · 双击 = 🔖"}
 {"kind": "ui", "k": "Your margin note …", "src": "Deine Randnotiz …\u0000Your margin note …", "t": "你的批注……"}
+{"kind": "ui", "k": "Long-press the home screen ➡ Widgets ➡ Oh My Marx: daily verse + 🔥 streak, colour changes with the time of day.", "src": "Homescreen lang drücken ➡ Widgets ➡ Oh My Marx: Losung + 🔥 Streak, Farbe wechselt mit der Tageszeit.\u0000Long-press the home screen ➡ Widgets ➡ Oh My Marx: daily verse + 🔥 streak, colour changes with the time of day.", "t": "长按主屏幕 ➡ 小部件 ➡ 阿玛斯：每日箴言 + 🔥 连续打卡，颜色随时间变化。"}
