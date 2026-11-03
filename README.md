@@ -57,4 +57,4 @@ die App schickt anonym, *welche Seite* gelesen wurde (mit einer Zufallszahl, die
 
 <sub>Text: Karl Marx, *Das Kapital* Bd. 1 (1890, gemeinfrei) · Englisch: Moore/Aveling 1887 · Zitate,
 Andachten + Übersetzungen von einem lokalen LLM · gevibecodet mit Claude Code.
-Für Entwickler: `notes.md` (Konzept + Aufbau), `bin/deploy.sh -h`, `bin/ship.sh -h`, `server/README.md`.</sub>
+Für Entwickler: `notes.md` (Konzept + Aufbau), `bin/deploy.sh -h`, `bin/ship.sh -h`, `server/SERVICE.md` (was die Server brauchen + wer wofür zuständig ist).</sub>

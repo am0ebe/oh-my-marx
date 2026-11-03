@@ -17,29 +17,13 @@ python3 -m unittest server/test_omm_api.py
 curl -s localhost:8000/v1/stats?keys=p:247
 ```
 
-## On the VPS
-Container (as `am0`, docker group, no sudo — already done by Claude @1103):
-```
-rsync -a --exclude __pycache__ --exclude test_omm_api.py --exclude matrix server/ vps:/srv/omm-api/ && ssh vps 'cd /srv/omm-api && docker compose up -d --build'
-# (stack moved ~am0/omm-api ➡ /srv/omm-api by ops @1103: fleet.py runs as `claude` + manages updates/bup)
-# ⚠️ nvr `rsync --delete` over data/: vps_bup.sh keeps data/*.bak (600) there · .dockerignore keeps data/ out o th image
-ssh vps 'docker exec caddy wget -qO- http://omm-api:8000/v1/health'     # {"ok": true}
-```
-**Public route — 1 manual step (Caddyfile is owned by `claude`, needs sudo):**
-```
-ssh -t vps sudo -e /srv/proxy/Caddyfile
-```
-in the `scagent.de, www.scagent.de { … }` block, replace `file_server` with:
-```
-	handle_path /omm/api/* {
-		reverse_proxy omm-api:8000
-	}
-	handle {
-		file_server
-	}
-```
-then `ssh vps 'docker exec caddy caddy reload --config /etc/caddy/Caddyfile'` and check
-`curl -s https://scagent.de/omm/api/v1/health` → `{"ok": true}`.
+## Run it anywhere
+`docker compose up -d --build` in this dir (compose.yml = template: joins an external `web` network, no host port) ·
+then route `https://<host>/omm/api/*` (prefix stripped) to `omm-api:8000`. Full needs: [`SERVICE.md`](SERVICE.md).
+
+## Where it runs for real
+**ops runs it** on our VPS (dirs, Caddy, updates, backups, monitoring) — see `pr/ops/handoff_omm.md`.
+This repo doesn't touch prod: code changes here ➡ ask ops to roll them out.
 
 ## API
 | | |

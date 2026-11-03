@@ -193,6 +193,12 @@ _per concept 2-3 lines_
   - routes: (a) **Compose Multiplatform** (Kotlin ➡ Android + iOS + web/wasm, reuse ~70 % o our code · web target = beta) · (b) small separate PWA (Svelte/vanilla) reading th same assets JSON · (c) Kotlin/Wasm later
   - 💡 rule 4 future fun prototypes: **web 1st** (share = a link) · native only when th fon's sensors/widgets r th point
 
+## 🧭 ownership: bible ⬄ ops (@1103 · strix: "responsibility gets diffused")
+- **bible** (this repo) = th product: app · server **code** + config templates · [server/SERVICE.md](server/SERVICE.md) = th contract ("what it needs")
+- **ops** (`pr/ops`) = running it on our VPS: dirs, Caddy, TLS, pins/updates, backups, monitoring ➡ `pr/ops/handoff_omm.md`
+- rules: bible doesn't change prod (asks ops) · ops doesn't change code (asks bible) · only shared seam = SERVICE.md · exception: bible's ship/deploy drop APKs into `/srv/www/oh-my-marx`
+- rip-out: drop bible ➡ ops' doc lists what 2 delete · drop th VPS ➡ SERVICE.md is enough 2 run it elsewhere
+
 ## 👥 community / Lesekreis (@1103 · strix: fitness + meditation apps all have it · ppl share experience + knowledge · also 4 hardcore Marxists)
 ### 🧑 user experience
 - **Mitlesen** (opt-in, ⚙️): pick a name (+ emoji avatar) ➡ no email, no pw (account made in th background)
