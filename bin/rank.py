@@ -16,7 +16,7 @@ SCHEMA = {"type": "object", "required": ["best", "roasts"],
           "properties": {"best": {"type": "array", "items": {"type": "string"}},
                          "roasts": {"type": "array", "items": {"type": "string"}}}}
 
-PROMPT = """Below are candidate quotes from one section of Karl Marx, "Das Kapital" vol. 1 ({where}), each with its id.
+PROMPT = """Below are candidate quotes from one section of Marx, "Das Kapital" vol. 1 ({where}), each with its id.
 They are for a playful daily-quote app ("Bible app for Kapital"), read by modern people with no background.
 
 {items}

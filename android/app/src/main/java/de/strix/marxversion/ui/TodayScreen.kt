@@ -11,7 +11,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.draw.blur
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -151,6 +157,7 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
         vod?.let { v ->
             val q = verseQuote(v)  // read composable values here — onClick lambdas aren't composable
             val r = ref(v)
+            LaunchedEffect(q, lang, persona) { speaker.prerender(q, lang, persona) }  // 🔊 tap = instant
             Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)) {
                 Column(Modifier.padding(16.dp)) {
                     Text(tr("✨ Marx-Losung für heute", "✨ Today's Marx verse"), fontSize = 13.sp, color = MaterialTheme.colorScheme.secondary)
@@ -341,6 +348,7 @@ private fun Hero(days: List<DayLog>, feast: Feast?, dt: DayTime, hooked: Boolean
 fun CardDialog(
     vm: AppVm, v: Verse, title: String, feast: Feast?, onDismiss: () -> Unit,
     openChapter: ((String, String) -> Unit)? = null, onAmen: (() -> Unit)? = null, hooks: @Composable () -> Unit = {},
+    full: Boolean = false,
 ) {
     val s by vm.settings.collectAsStateWithLifecycle()
     val ctx = LocalContext.current
@@ -350,6 +358,41 @@ fun CardDialog(
     val r = ref(v)
     val bmp = remember(q, r, lang, feast) { cardBitmap(q, r, lang, feast).asImageBitmap() }
     val shareTitle = tr("Spruchkarte teilen", "Share verse card")
+    val persona = Persona.of(s.persona)
+    LaunchedEffect(q, lang, persona) { speaker.prerender(q, lang, persona) }  // 🔊 tap = instant
+    val buttons: @Composable (Color) -> Unit = { fg ->
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly, verticalAlignment = Alignment.CenterVertically) {
+            TextButton(onClick = { shareCard(ctx, bmp.asAndroidBitmap(), "${lang.quote(q)} — Marx, $r\n$APP_NAME", shareTitle) }) {
+                Icon(painterResource(R.drawable.ic_share), null, Modifier.size(18.dp), tint = fg); Text(" " + tr("Teilen", "Share"), color = fg)
+            }
+            TextButton(onClick = { speaker.say(q, lang, persona) }) {
+                Icon(painterResource(R.drawable.ic_volume), null, Modifier.size(22.dp), tint = if (speaker.speaking) Red else fg)
+            }
+            if (openChapter != null) TextButton(onClick = { openChapter(v.kap, v.id) }) { Text("📖") }
+            if (onAmen != null) Button(onClick = onAmen) { Text(tr("Amen ☭", "Amen ☭")) }
+            else TextButton(onClick = onDismiss) { Text("✕", color = fg) }
+        }
+    }
+    if (full) {
+        // 🌅 daily Losung = th whole screen: card blurred as backdrop + card i front (Hooked: reward right at th door)
+        Dialog(onDismissRequest = onDismiss, properties = DialogProperties(usePlatformDefaultWidth = false, decorFitsSystemWindows = false)) {
+            Box(Modifier.fillMaxSize()) {
+                Image(bmp, null, Modifier.fillMaxSize().blur(40.dp), contentScale = ContentScale.Crop)  // blur = API 31+, older: just darker
+                Box(Modifier.fillMaxSize().background(Color.Black.copy(alpha = 0.45f)))
+                Column(
+                    Modifier.fillMaxSize().systemBarsPadding().padding(horizontal = 20.dp, vertical = 12.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.SpaceEvenly,
+                ) {
+                    Text(title, color = Color.White, fontSize = 22.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center)
+                    Image(bmp, contentDescription = q, modifier = Modifier.fillMaxWidth().aspectRatio(1080f / 1350f)
+                        .shadow(18.dp, RoundedCornerShape(16.dp)).clip(RoundedCornerShape(16.dp)))
+                    hooks()
+                    buttons(Color.White)
+                }
+            }
+        }
+        return
+    }
     Dialog(onDismissRequest = onDismiss, properties = DialogProperties(usePlatformDefaultWidth = false)) {
         Card(Modifier.fillMaxWidth().padding(20.dp)) {
             Column(Modifier.padding(12.dp)) {
@@ -357,17 +400,7 @@ fun CardDialog(
                 Gap(8)
                 Image(bmp, contentDescription = q, modifier = Modifier.fillMaxWidth().aspectRatio(1080f / 1350f).clip(RoundedCornerShape(12.dp)))
                 hooks()
-                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly, verticalAlignment = Alignment.CenterVertically) {
-                    TextButton(onClick = { shareCard(ctx, bmp.asAndroidBitmap(), "${lang.quote(q)} — Karl Marx, $r\n$APP_NAME", shareTitle) }) {
-                        Icon(painterResource(R.drawable.ic_share), null, Modifier.size(18.dp)); Text(" " + tr("Teilen", "Share"))
-                    }
-                    TextButton(onClick = { speaker.say(q, lang, Persona.of(s.persona)) }) {
-                        Icon(painterResource(R.drawable.ic_volume), null, Modifier.size(18.dp), tint = if (speaker.speaking) Red else Blue)
-                    }
-                    if (openChapter != null) TextButton(onClick = { openChapter(v.kap, v.id) }) { Text("📖") }
-                    if (onAmen != null) Button(onClick = onAmen) { Text(tr("Amen ☭", "Amen ☭")) }
-                    else TextButton(onClick = onDismiss) { Text("✕") }
-                }
+                buttons(Blue)
             }
         }
     }
@@ -399,5 +432,6 @@ fun LosungPopup(vm: AppVm, openChapter: (String, String) -> Unit) {
             HookNote(Hook.TINY, s.testMode)
             if (feast != null) HookNote(Hook.FEAST, s.testMode)
         },
+        full = true,
     )
 }

@@ -77,8 +77,9 @@ fun ensureChannel(ctx: Context) {
 fun show(ctx: Context, title: String, text: String) {
     if (ContextCompat.checkSelfPermission(ctx, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) return
     val open = PendingIntent.getActivity(
-        ctx, 0, Intent(ctx, MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP),
-        PendingIntent.FLAG_IMMUTABLE,
+        // EXTRA_LOSUNG ➡ app opens straight on th full-screen Losung, even if alr seen today
+        ctx, 0, Intent(ctx, MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP).putExtra(MainActivity.EXTRA_LOSUNG, true),
+        PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
     )
     val n = NotificationCompat.Builder(ctx, CHANNEL)
         .setSmallIcon(R.drawable.ic_launcher_fg)

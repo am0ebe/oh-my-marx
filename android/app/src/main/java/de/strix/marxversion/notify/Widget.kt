@@ -60,12 +60,13 @@ suspend fun refreshWidgets(ctx: Context) {
     val st = streak(app.db.logs().days().first())
     val feast = Feast.on(LocalDate.now())
     val open = PendingIntent.getActivity(ctx, 1, Intent(ctx, MainActivity::class.java)
-        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP), PendingIntent.FLAG_IMMUTABLE)
+        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP).putExtra(MainActivity.EXTRA_LOSUNG, true),
+        PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
     val rv = RemoteViews(ctx.packageName, R.layout.widget_losung).apply {
         setInt(R.id.root, "setBackgroundResource", DayTime.at(LocalTime.now().hour).bg())
         setTextViewText(R.id.head, "${feast?.emoji ?: "☭"} ${table.t(lang, HEAD.first, HEAD.second)}" + if (st > 0) "  ·  🔥 $st" else "")
         setTextViewText(R.id.quote, lang.quote(quoteFor(v, lang, table)))
-        setTextViewText(R.id.ref, "— Karl Marx, " + table.t(lang, BOOK.first, BOOK.second).f(v.id))
+        setTextViewText(R.id.ref, "— Marx, " + table.t(lang, BOOK.first, BOOK.second).f(v.id))
         setOnClickPendingIntent(R.id.root, open)
     }
     mgr.updateAppWidget(ids, rv)

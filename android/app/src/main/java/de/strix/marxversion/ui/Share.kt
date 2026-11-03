@@ -36,6 +36,9 @@ import android.media.MediaPlayer
 import android.os.Bundle
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
@@ -89,7 +92,7 @@ fun cardBitmap(quote: String, ref: String, lang: Lang, feast: Feast? = null): Bi
     c.save(); c.translate(80f, (h * 0.42f - layout.height / 2f).coerceAtLeast(if (feast == null) 170f else 230f)); layout.draw(c); c.restore()
 
     val small = TextPaint(tp).apply { textSize = 40f; typeface = Typeface.create(Typeface.SERIF, Typeface.NORMAL) }
-    val by = "— Karl Marx, $ref"
+    val by = "— Marx, $ref"
     c.drawText(by, w / 2f - small.measureText(by) / 2f, h * 0.76f, small)
     small.textSize = 30f
     c.drawText(APP_NAME, w / 2f - small.measureText(APP_NAME) / 2f, h - 50f, small)
@@ -166,19 +169,46 @@ class Speaker(ctx: Context) {
 
     private fun failed(id: String?) { waits.remove(id)?.complete(false) ?: run { if (id == PLAIN) speaking = false } }
 
+    private fun clean(t: String) = t.replace(Regex("\\[\\d+[a-z]?]"), "").take(TextToSpeech.getMaxSpeechInputLength() - 1)
+
+    /** renders running or done: same text+voice asked twice (prerender, then tap) ➡ 1 render */
+    private val inflight = ConcurrentHashMap<String, Deferred<File?>>()
+
+    private fun renderAsync(text: String, lang: Lang, persona: Persona, h: Holy): Deferred<File?> {
+        val k = persona.name + lang.code + text
+        inflight[k]?.let { return it }
+        val d = scope.async(start = CoroutineStart.LAZY) {
+            try { runCatching { render(text, lang, persona, h) }.getOrNull() } finally { inflight.remove(k) }
+        }
+        inflight[k] = d
+        d.start()
+        return d
+    }
+
+    /** render th holy wav i th background (eg th Losung while th popup is open) ➡ 🔊 tap plays at once */
+    fun prerender(text: String, lang: Lang, persona: Persona) {
+        val h = persona.holy ?: return
+        val go: () -> Unit = { renderAsync(clean(text), lang, persona, h) }
+        if (ready) go() else if (pending == null) pending = go
+    }
+
+    /** voice picker: always (re)start, even while sth else plays */
+    fun sample(text: String, lang: Lang, persona: Persona) { stop(); say(text, lang, persona) }
+
     /** tap again while talking (or still rendering) = stop */
     fun say(text: String, lang: Lang, persona: Persona) {
         if (speaking) { stop(); return }
-        val clean = text.replace(Regex("\\[\\d+[a-z]?]"), "").take(TextToSpeech.getMaxSpeechInputLength() - 1)
+        val clean = clean(text)
         val go: () -> Unit = {
             val r = tts.setLanguage(lang.locale)
             if (r == TextToSpeech.LANG_MISSING_DATA || r == TextToSpeech.LANG_NOT_SUPPORTED)
                 Toast.makeText(app, "🔇 ${lang.native}: voice missing — Android settings › Text-to-speech › install voice data", Toast.LENGTH_LONG).show()
             if (persona.holy == null) plain(clean, persona)
             else {
-                speaking = true  // = "⏹" right away, rendering takes ~1-3 s
+                speaking = true  // = "⏹" right away, rendering takes ~1-3 s (0 if prerendered)
+                val d = renderAsync(clean, lang, persona, persona.holy)
                 job = scope.launch {
-                    val f = runCatching { render(clean, lang, persona, persona.holy) }.getOrNull()
+                    val f = d.await()
                     withContext(Dispatchers.Main) {
                         if (!isActive) return@withContext
                         if (f == null) plain(clean, persona)  // engine can't write files ➡ at least speak
@@ -201,6 +231,7 @@ class Speaker(ctx: Context) {
         val dir = File(app.cacheDir, "voice").apply { mkdirs() }
         val out = File(dir, "%08x.wav".format((persona.name + lang.code + text).hashCode()))
         if (out.length() > 44) return out
+        tts.setLanguage(lang.locale)  // also snapshotted per request (prerender may run w a dif lang)
         val passes = h.layers.mapIndexed { i, l ->
             val id = "holy$i-${System.nanoTime()}"
             val f = File(dir, "pass-$id.wav")  // unique: 2 screens may render at once

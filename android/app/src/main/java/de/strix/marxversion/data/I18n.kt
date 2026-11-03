@@ -24,7 +24,8 @@ enum class Lang(
     AR("عربي", "العربية", Locale.forLanguageTag("ar"), "«", "»", rtl = true);
 
     val file get() = "i18n_${name.lowercase()}.json"
-    fun quote(s: String) = open + s + close
+    // LLM quotes sometimes carry their own marks ➡ strip them, else „"…“
+    fun quote(s: String) = open + s.trim().trim('"', '\'', '„', '“', '”', '«', '»', '‚', '‘', '’') + close
 }
 
 /** 1 translation table (per lang) · fields mirror bin/translate.py export */

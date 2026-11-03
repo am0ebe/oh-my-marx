@@ -138,6 +138,19 @@ _per concept 2-3 lines_
   - "voice o God" = same line at octave ⇩ (authority) + ⇧ (choir) + long hall · film/radio trick
   - personas: ☭☁️ Gottvater Marx (dflt · 0.6 + 0.35, Kirche) · ☁️ Gott (0.4 + 0.8 + 1.3, Kathedrale 3.5 s) · 📚 Marx im Lesesaal (0.62, small room) · ⛪ Pfarrer (+ Kirche) · 🙂 · 🤖 plain
   - ⚠️ pitch shift inside th TTS engine ⇩ 0.35 can sound grainy · zh/ar need th voice installed on th fon
+  - 🪞 @1103 strix on th fon: **sounds horrible + takes long** ➡ v0.3.2 prerenders th Losung (popup/Today open ➡ tap = instant) · real fix = plan ⬇️
+
+### 🗺️ plan: realistic voices (@1103)
+- 🐛 y bad now: system TTS + pitch shifted far down = robot · y slow: 2-3 TTS passes i a row + DSP, all on th fon
+- **A ⭐ pre-render on tow** (content is fixed!) — best quality, 0 compute on th fon, instant
+  - M: **Chatterbox Multilingual** (MIT, 23 langs incl de/en/it/es/pt/zh/ar, zero-shot clone fr ~10 s ref, "exaggeration" knob = preacher pathos) · alt F5-TTS (code MIT, ⚠️ weights CC-BY-NC) · ❌ XTTS-v2 (non-commercial CPML)
+  - ➡ our Freeverb + octave layer on top (same `logic/Voice.kt` chain, run i a Kotlin/py script on tow) ➡ opus 24 kbit
+  - size: ⭐288 quotes × ~25 KB ≈ 7 MB/lang·voice · + 92 Andachten × ~180 KB ≈ 17 MB ➡ DE+EN 1 voice ≈ 50 MB ➡ ship as **download pack** fr scagent.de, not i th APK
+  - covers: Losung + Andachten · full reader txt ➡ falls back 2 B/system TTS
+- **B on-device neural TTS** — any txt, offline: **sherpa-onnx** runtime (Apache) + **Piper** voices (VITS) ~20 MB (low) – 60 MB (medium) per voice·lang, faster than real time on a fon · Kokoro-82M int8 ~90 MB (en/es/it/pt/zh, ❌ de/ar)
+- **C = "train big, ship small"** (distillation): Chatterbox (A) makes ~1-2 h o th holy voice (any Kapital txt) ➡ fine-tune a Piper checkpoint on tow (3090: hours, not days) ➡ ONNX ~20-60 MB ➡ B plays it · = own Marx/God voice 4 evy txt, small, offline
+- **ref voice 4 cloning** (~10-30 s clean speech): 🦠 own / a consenting friend ✔️ · LibriVox = public-domain *recordings* (⚠️ readers r real ppl ➡ ask) · 🚫 real public figures
+- order: A 4 DE+EN Losung (1 evening) ➡ judge ➡ C if th reader voice matters
 - 💡 holy voice = **pre-render on tow** (content is fixed!) ➡ ship audio i assets, no on-device M
   - M: **Chatterbox Multilingual** (Resemble AI, MIT, zero-shot clone fr ~10 s ref, 23 langs incl de/it/es/pt/zh/ar, emotion knob) · 3090 Ti ok
   - "holy" = mostly post-proc: church reverb (impulse response, `ffmpeg afir`) + pitch ⇩ + soft organ drone (Musopen CC0)

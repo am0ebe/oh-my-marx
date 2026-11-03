@@ -15,7 +15,7 @@ SKIP = {"jahr"}
 SCHEMA = {"type": "object", "required": ["de", "en"],
           "properties": {"de": {"type": "string"}, "en": {"type": "string"}}}
 
-PROMPT = """You write the daily "Andacht" (devotional) for a playful app that presents Karl Marx' "Das Kapital" like a Bible app.
+PROMPT = """You write the daily "Andacht" (devotional) for a playful app that presents Marx' "Das Kapital" like a Bible app.
 Reading plan: "{plan}" — day {day} of {ndays}.
 
 Today's reading (German original, Kapital {ids}):

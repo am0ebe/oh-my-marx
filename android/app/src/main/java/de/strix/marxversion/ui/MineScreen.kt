@@ -87,10 +87,14 @@ fun SettingsScreen(vm: AppVm, askNotifPermission: () -> Unit) {
 
         // ── voice persona ──
         Gap(8)
-        Text(tr("🔊 Vorlese-Stimme", "🔊 Reading voice"))
+        Text(tr("🔊 Vorlese-Stimme — antippen = Hörprobe", "🔊 Reading voice — tap = sample"))
+        val speaker = rememberSpeaker()
+        val lang = LocalLang.current
+        val sample = tr("Das Kapital ist verstorbne Arbeit, die sich nur vampyrmäßig belebt.",
+            "Capital is dead labour, that, vampire-like, only lives by sucking living labour.")
         FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
             Persona.entries.forEach { p ->
-                FilterChip(selected = s.persona == p.name, onClick = { vm.setPersona(p) }, label = { Text(tr(p.label)) })
+                FilterChip(selected = s.persona == p.name, onClick = { vm.setPersona(p); speaker.sample(sample, lang, p) }, label = { Text(tr(p.label)) })
             }
         }
         Text(tr("Heilig = die Android-Stimme 2–3× in verschiedenen Tonhöhen übereinander (Oktave drunter = Autorität, drüber = Chor) + Kirchenhall, auf dem Handy gerechnet. Erstes Abspielen dauert 1–3 s, danach sofort.",
@@ -132,8 +136,8 @@ fun SettingsScreen(vm: AppVm, askNotifPermission: () -> Unit) {
         Text(tr("🤖 Stolz gevibecodet mit Claude Code (Anthropic, Claude Opus) — strix hat gewünscht, Claude hat getippt. Seiten-OCR: gemma3 + GLM-OCR, Übersetzungen: Qwen3, alles lokal auf einer RTX 3090 Ti. Entfremdete Arbeit, vollautomatisiert. Die Produktionsmittel gehören trotzdem uns.",
             "🤖 Proudly vibe-coded with Claude Code (Anthropic, Claude Opus) — strix wished, Claude typed. Page OCR: gemma3 + GLM-OCR, translations: Qwen3, all local on an RTX 3090 Ti. Alienated labour, fully automated. The means of production are still ours."), fontSize = 13.sp)
         Gap(6)
-        Text(tr("Text: Karl Marx, Das Kapital Bd. 1, 4. Aufl. 1890 (MEW 23, Seitenzahlen = Dietz 1968). Englisch: Moore/Aveling 1887. Gemeinfrei.",
-            "Text: Karl Marx, Capital vol. 1, 4th ed. 1890 (MEW 23, page numbers = Dietz 1968). English: Moore/Aveling 1887. Public domain."), fontSize = 13.sp)
+        Text(tr("Text: Marx, Das Kapital Bd. 1, 4. Aufl. 1890 (MEW 23, Seitenzahlen = Dietz 1968). Englisch: Moore/Aveling 1887. Gemeinfrei.",
+            "Text: Marx, Capital vol. 1, 4th ed. 1890 (MEW 23, page numbers = Dietz 1968). English: Moore/Aveling 1887. Public domain."), fontSize = 13.sp)
         Text(tr("Mechanik: abgeschaut bei Bibel-Apps, erklärt in Nir Eyal, „Hooked“, Kap. 7.",
             "Mechanics: borrowed from bible apps, explained in Nir Eyal, “Hooked”, ch. 7."), fontSize = 13.sp)
         Text(tr("Zitate, Andachten + Übersetzungen (IT · ES · PT · 中文 · عربي): von einem lokalen LLM — Irrtümer vorbehalten, Marx hat immer recht.",

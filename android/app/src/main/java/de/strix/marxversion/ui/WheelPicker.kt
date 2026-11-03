@@ -1,6 +1,5 @@
 package de.strix.marxversion.ui
 
-import android.text.format.DateFormat
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.snapping.SnapPosition
 import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
@@ -87,10 +86,9 @@ fun Wheel(count: Int, value: Int, label: (Int) -> String, onChange: (Int) -> Uni
     }
 }
 
-/** dialog w hour + minute wheels (+ AM/PM if th phone is set 2 12 h) · OK ➡ onPick(h24, m) */
+/** dialog w hour + minute wheels · OK ➡ onPick(h24, m) */
 @Composable
 fun TimeWheelDialog(hour: Int, minute: Int, onDismiss: () -> Unit, onPick: (Int, Int) -> Unit) {
-    val h24 = DateFormat.is24HourFormat(LocalContext.current)
     var h by remember { mutableIntStateOf(hour) }
     var m by remember { mutableIntStateOf(minute) }
     AlertDialog(
@@ -100,17 +98,11 @@ fun TimeWheelDialog(hour: Int, minute: Int, onDismiss: () -> Unit, onPick: (Int,
         text = {
             // clocks read left➡right evywhere, also i Arabic
             CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+                // always 24 h: 2 wheels 00-23 : 00-59 (strix @1103: no AM/PM, even if th fon is set 2 12 h)
                 Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                    if (h24) {
-                        Wheel(24, h, { "%02d".format(it) }, { h = it }, Modifier.weight(1f))
-                    } else {
-                        // 12 h: wheel shows 12,1..11 · h stays 0-23
-                        Wheel(12, h % 12, { if (it == 0) "12" else "$it" }, { h = it + if (h >= 12) 12 else 0 }, Modifier.weight(1f))
-                    }
+                    Wheel(24, h, { "%02d".format(it) }, { h = it }, Modifier.weight(1f))
                     Text(":", fontSize = 24.sp, modifier = Modifier.width(12.dp), textAlign = TextAlign.Center)
                     Wheel(60, m, { "%02d".format(it) }, { m = it }, Modifier.weight(1f))
-                    if (!h24) Wheel(2, if (h >= 12) 1 else 0, { if (it == 0) "AM" else "PM" },
-                        { h = h % 12 + it * 12 }, Modifier.weight(1f), cyclic = false)
                 }
             }
         },

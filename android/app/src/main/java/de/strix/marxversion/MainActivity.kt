@@ -1,6 +1,7 @@
 package de.strix.marxversion
 
 import android.Manifest
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -11,7 +12,9 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -81,7 +84,20 @@ class MainActivity : ComponentActivity() {
                 else App(vm)
             }
         }
+        if (savedInstanceState == null) openLosung(intent)  // not again on rotate (same intent comes back)
     }
+
+    /** app alr running (SINGLE_TOP) ➡ notif / widget tap lands here */
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        openLosung(intent)
+    }
+
+    private fun openLosung(i: Intent?) {
+        if (i?.getBooleanExtra(EXTRA_LOSUNG, false) == true) { vm.forcePopup.value = true; i.removeExtra(EXTRA_LOSUNG) }
+    }
+
+    companion object { const val EXTRA_LOSUNG = "losung" }
 }
 
 private val TABS = listOf(
@@ -178,7 +194,14 @@ private fun LangButton(cur: Lang, pick: (Lang) -> Unit) {
         DropdownMenu(open, { open = false }) {
             Lang.entries.forEach { l ->
                 DropdownMenuItem(
-                    text = { Text((if (l == cur) "✓ " else "    ") + l.native) },
+                    text = {
+                        Column {
+                            Text((if (l == cur) "✓ " else "    ") + l.native)
+                            // Marx's full txt exists only i DE + EN ➡ say so, don't promise Kapital i 中文
+                            if (l.ordinal > 1) Text("    " + tr("App + Zitate · Kapital-Volltext: Englisch", "app + quotes · full Capital text: English"),
+                                fontSize = 11.sp, color = MaterialTheme.colorScheme.secondary)
+                        }
+                    },
                     onClick = { open = false; pick(l) },
                 )
             }

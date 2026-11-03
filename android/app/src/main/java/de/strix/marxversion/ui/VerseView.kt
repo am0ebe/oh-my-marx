@@ -163,7 +163,7 @@ fun VerseView(vm: AppVm, v: Verse, speaker: Speaker? = null, showActions: Boolea
                     tr("Lesezeichen", "Bookmark"), if (mark?.bookmark == true) Red else MaterialTheme.colorScheme.secondary) { vm.bookmark(v.id) }
                 Action(R.drawable.ic_note, tr("Notiz", "Note")) { editNote = true }
                 Action(R.drawable.ic_copy, tr("Kopieren", "Copy")) {
-                    copyText(ctx, "${lang.quote(txt)}\n— Karl Marx, $r")
+                    copyText(ctx, "${lang.quote(txt)}\n— Marx, $r")
                     android.widget.Toast.makeText(ctx, copied, android.widget.Toast.LENGTH_SHORT).show()
                 }
                 Action(R.drawable.ic_share, tr("Teilen", "Share")) { card = true }  // ➡ colourful card preview 1st
