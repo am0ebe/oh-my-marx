@@ -20,6 +20,9 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.calculateZoom
@@ -146,6 +149,10 @@ fun ChapterScreen(vm: AppVm, kap: String, focus: String?, @Suppress("UNUSED_PARA
     val speaker = rememberSpeaker()
     val density = LocalDensity.current
     LaunchedEffect(index) { vm.read(pages[index].verses.map { it.id }); vm.pageSeen(pages[index].page) }  // page seen = read (+ 👥 count)
+    // 💬 comments: load th chapter's room when entering a chapter · sheet = th page whose 💬 was tapped
+    LaunchedEffect(pages[index].kap, s.community) { vm.loadComments(pages[index].kap) }
+    var talk by remember { mutableStateOf<BookPage?>(null) }
+    talk?.let { p -> CommentsSheet(vm, p.kap, p.page) { talk = null } }
 
     CompositionLocalProvider(LocalReadScale provides scale) {
         BoxWithConstraints(
@@ -193,7 +200,7 @@ fun ChapterScreen(vm: AppVm, kap: String, focus: String?, @Suppress("UNUSED_PARA
             // under: th page revealed (fwd: nxt page · back: current) · shadow fades as th turning page leaves
             val under = if (t < 0) index + 1 else index
             val over = if (t < 0) index else if (t > 0) index - 1 else -1
-            key(under) { Page(vm, pages[under], speaker, under, pages.size, Modifier.fillMaxSize()) }
+            key(under) { Page(vm, pages[under], speaker, under, pages.size, Modifier.fillMaxSize()) { talk = pages[under] } }
             // fwd: covered at th start (dark) ➡ revealed (light) · back: gets covered (light ➡ dark)
             if (t != 0f) Box(Modifier.fillMaxSize().background(Color.Black.copy(alpha = 0.35f * if (t < 0) 1f + t else t)))
             if (over >= 0) key(over) {
@@ -203,7 +210,7 @@ fun ChapterScreen(vm: AppVm, kap: String, focus: String?, @Suppress("UNUSED_PARA
                     transformOrigin = TransformOrigin(0f, 0.5f)
                     rotationY = angle
                     cameraDistance = cam
-                })
+                }) { talk = pages[over] }
             }
         }
     }
@@ -211,9 +218,13 @@ fun ChapterScreen(vm: AppVm, kap: String, focus: String?, @Suppress("UNUSED_PARA
 
 /** 1 sheet o old paper: running head (chapter · MEW page) · paragraphs · folio at th bottom */
 @Composable
-private fun Page(vm: AppVm, p: BookPage, speaker: Speaker, i: Int, n: Int, modifier: Modifier) {
+private fun Page(vm: AppVm, p: BookPage, speaker: Speaker, i: Int, n: Int, modifier: Modifier, onTalk: () -> Unit) {
     val chapter = vm.content.chapters.firstOrNull { it.kap == p.kap }
     val reads by vm.pageReads.collectAsStateWithLifecycle()
+    val s by vm.settings.collectAsStateWithLifecycle()
+    val all by vm.comments.collectAsStateWithLifecycle()
+    val talkCount = all[p.kap]?.count { it.page == p.page } ?: 0
+    val talkOn = s.community && vm.commentsAvailable
     val firstOfChapter = p.verses.first().let { f -> vm.content.chapter(p.kap).firstOrNull()?.id == f.id }
     Box(modifier.background(PAPER).background(
         // spine shadow left + page-edge darkening right = it looks bound
@@ -224,6 +235,8 @@ private fun Page(vm: AppVm, p: BookPage, speaker: Speaker, i: Int, n: Int, modif
                     letterSpacing = 1.2.sp, maxLines = 1, modifier = Modifier.weight(1f))
                 // 👥 Mitlesen: how often this page was read (social proof, opt-in)
                 p.page?.let { pg -> reads[pg]?.let { Text("👥 %d×  ·  ".f(it), fontSize = 10.sp, color = Red.copy(alpha = 0.8f)) } }
+                if (talkOn && talkCount > 0) Text("💬 %d  ·  ".f(talkCount), fontSize = 10.sp, color = Red.copy(alpha = 0.8f),
+                    modifier = Modifier.clickable(onClick = onTalk))
                 p.page?.let { Text(tr("MEW S. %d", "MEW p. %d").f(it), fontSize = 10.sp, color = INK.copy(alpha = 0.6f)) }
             }
             HorizontalDivider(color = INK.copy(alpha = 0.25f), modifier = Modifier.padding(vertical = 6.dp))
@@ -236,6 +249,13 @@ private fun Page(vm: AppVm, p: BookPage, speaker: Speaker, i: Int, n: Int, modif
                 Gap(4)
             }
             Gap(12)
+            // 💬 end o th page = th natural moment 2 talk about it (Mitlesen on)
+            if (talkOn) OutlinedButton(onClick = onTalk, modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.outlinedButtonColors(contentColor = INK)) {
+                Text(if (talkCount == 0) tr("💬 Mitreden — sei die/der Erste zu dieser Seite", "💬 Join in — be the first on this page")
+                    else tr("💬 %d Kommentare zu dieser Seite", "💬 %d comments on this page").f(talkCount))
+            }
+            Gap(8)
             Text("— ${p.page ?: (i + 1)} —", fontSize = 12.sp, color = INK.copy(alpha = 0.55f), fontFamily = FontFamily.Serif,
                 textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
             if (i == 0 || i == n - 1) Text(

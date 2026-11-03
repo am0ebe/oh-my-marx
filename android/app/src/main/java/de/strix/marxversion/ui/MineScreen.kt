@@ -17,6 +17,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -120,6 +121,21 @@ fun SettingsScreen(vm: AppVm, askNotifPermission: () -> Unit) {
                     "Shows how often a page was read and how many say Amen today. Sent: only which page + a random number that changes every day. No account, no IP stored, the server forgets the number the next day."), fontSize = 12.sp)
             }
             Switch(s.community, { vm.setCommunity(it) })
+        }
+        // 💬 comments: name = what others see (account is made w ur 1st comment, lives only on this fon)
+        if (s.community) {
+            val mx by vm.mxName.collectAsStateWithLifecycle()
+            Text(tr("💬 Dazu: unter jeder Buchseite kommentieren. Kommentare sind öffentlich für alle Mitlesenden.",
+                "💬 Plus: comment under every book page. Comments are public to everyone reading along."), fontSize = 12.sp)
+            mx?.let { cur ->
+                var edit by remember { mutableStateOf(false) }
+                var draft by remember(cur) { mutableStateOf(cur) }
+                if (!edit) TextButton(onClick = { edit = true }) { Text(tr("👤 Dein Name: %s ✏️", "👤 Your name: %s ✏️").f(cur)) }
+                else Row(verticalAlignment = Alignment.CenterVertically) {
+                    OutlinedTextField(draft, { draft = it }, singleLine = true, modifier = Modifier.weight(1f))
+                    TextButton(onClick = { vm.rename(draft); edit = false }) { Text(tr("Speichern", "Save")) }
+                }
+            }
         }
         HookNote(Hook.SOCIAL, s.testMode)
         HorizontalDivider()

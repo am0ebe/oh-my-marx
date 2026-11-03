@@ -5,9 +5,10 @@
 
 ## ‼️
 - 🦠🧪 Obtainium on fon: /bible is gone ➡ edit/re-add: stable `https://scagent.de/oh-my-marx/` · ＋ 2nd app `https://scagent.de/oh-my-marx/dev/` = "Oh My Marx DEV" · no regex needed
-- 🦠👀 QA dev build: ⚙️ 👥 Mitlesen ON ➡ book page header "👥 N×" · Home "👥 Heute lesen N mit · M × Amen"
-- 🦠📣 send scagent.de/oh-my-marx 2 2-3 friends ➡ collect feedback
-- 🔵 community ② Matrix (continuwuity) + section rooms ➡ ③ Kreise + friends ➡ ④ Salon (notes.md § community)
+- 🦠👀 QA dev 0.6.0: ⚙️ 👥 Mitlesen ON ➡ book: header "👥 N×" + bottom "💬 Mitreden" ➡ pick name ➡ comment ☭ ➡ hold own = delete · Home "👥 Heute lesen N mit · M × Amen" · ⚙️ rename
+- 🦠🔒 `ssh -t vps sudo rmdir /srv/www/bible` (empty leftover, root-owned parent)
+- 🦠📣 send scagent.de/oh-my-marx 2 2-3 friends ➡ collect feedback (after dev QA ➡ 🤖 ship 0.6.0)
+- 🔵 community ③ Kreise (private rooms, invite link/QR) + friends/DMs ➡ ④ Salon (forum per Abschnitt) · 💬 on cards (today's Losung thread) · ⚠️ report btn + mod tools b4 strangers join
 - 🔵 web/PWA version 4 iPhone friends — later, rebuild (no shake, new voices) · this proj stays Android 🤖📱
 - 🔵 rename GitHub/Forgejo repo bibleApp ➡ OhMyMarx (remotes + Obtainium URL unchanged on VPS)
 - 🦠👀 QA v0.5.0 on fon (via Obtainium!):
@@ -61,6 +62,7 @@
 - 🤖 aft QA: rm page fotos (boox proc step 8)
 
 ## ✔️
+- ✔️ dev 0.6.0 @1103: 💬 comments per book page (Matrix: Synapse `omm-matrix` on VPS, client-only, token signup, 31 chapter rooms, e2e tstd w throwaway user) · Caddy /omm/api + /_matrix live (via vps-claude, bak .bak-1103/-1103b) · /bible ➡ /oh-my-marx (0.5.2 shipped)
 - ✔️ dev @1103: 👥 community ① — `server/omm_api.py` (stdlib + sqlite, daily tokens, 5 tests) runs on VPS (`~am0/omm-api`, docker, `web` net, no public route yet) · app: ⚙️ Mitlesen opt-in, 👥 N× per book page, Home crowd line, INTERNET perm · dev build = own app `.dev` · README.md 4 friends · lib.sh: /oh-my-marx when it exists
 - ✔️ v0.5.1 @1103: name = **Oh My Marx** · `bin/deploy.sh` (dev channel /bible/dev ➡ Obtainium · `-a` = wireless adb) replaces dev.sh · `bin/ship.sh` + `-h/--help/-?` on both + tools list (`bin/lib.sh`) · 1 version (`val appVersion`) + auto versionCode
 - ✔️ v0.5.0 @1103: 🃏 Home = card carousel (cards 1st-class, no popup on open) · 📉 Krise = full-screen red flash + buzz + crisis card · ☭ swoosh on Amen/Tag geschafft · 📖 book reader (708 MEW pages, paper, page turn) · 😇 Saint Marx on cards · 🔖 double-tap bookmark · gold frame on marked · ✍️ inline notes · ❌ highlight btn + ⋯ · share-only dialog · ☭ = close · Jahresplan quotes fallback

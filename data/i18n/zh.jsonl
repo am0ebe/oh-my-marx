@@ -1875,3 +1875,16 @@
 {"kind": "ui", "k": "👥 Read along", "src": "👥 Mitlesen\u0000👥 Read along", "t": "👥 一起读"}
 {"kind": "ui", "k": "Shows how often a page was read and how many say Amen today. Sent: only which page + a random number that changes every day. No account, no IP stored, the server forgets the number the next day.", "src": "Zeigt, wie oft eine Seite gelesen wurde und wie viele heute Amen sagen. Gesendet wird nur: welche Seite + eine Zufallszahl, die sich jeden Tag ändert. Kein Konto, keine IP gespeichert, der Server vergisst die Zufallszahl am nächsten Tag.\u0000Shows how often a page was read and how many say Amen today. Sent: only which page + a random number that changes every day. No account, no IP stored, the server forgets the number the next day.", "t": "显示页面被阅读的次数以及今日有多少人喊“阿门”。仅发送：哪一页 + 每天变化的随机数。无账号，不存IP，服务器第二天就忘了这个随机数。"}
 {"kind": "ui", "k": "👥 %d reading along today · %d × Amen ☭", "src": "👥 Heute lesen %d mit · %d × Amen ☭\u0000👥 %d reading along today · %d × Amen ☭", "t": "👥 今日有%d人一起读 · %d次阿门 ☭"}
+{"kind": "ui", "k": "💬 Page %s", "src": "💬 Seite %s\u0000💬 Page %s", "t": "💬 第 %s 页"}
+{"kind": "ui", "k": "Ch. %s", "src": "Kap. %s\u0000Ch. %s", "t": "第 %s 章"}
+{"kind": "ui", "k": "What do you think? Ask, disagree, tell from your own life.", "src": "Was denkst du? Frag, widersprich, erzähl aus deinem Alltag.\u0000What do you think? Ask, disagree, tell from your own life.", "t": "你怎么看？提问、反驳、讲讲你的日常经历。"}
+{"kind": "ui", "k": "🌱 Nothing here yet. Be the first!", "src": "🌱 Noch nichts hier. Sei die/der Erste!\u0000🌱 Nothing here yet. Be the first!", "t": "🌱 还没人来过。快来当第一个！"}
+{"kind": "ui", "k": "Your name here (e.g. Rosa)", "src": "Dein Name hier (z. B. Rosa)\u0000Your name here (e.g. Rosa)", "t": "这里写你的名字（比如：罗莎）"}
+{"kind": "ui", "k": "👤 you write as %s", "src": "👤 du schreibst als %s\u0000👤 you write as %s", "t": "👤 你以 %s 的身份发言"}
+{"kind": "ui", "k": "Comment …", "src": "Kommentar …\u0000Comment …", "t": "💬 评论……"}
+{"kind": "ui", "k": "⚠️ Didn't work — internet? Try again.", "src": "⚠️ Ging nicht — Internet? Nochmal versuchen.\u0000⚠️ Didn't work — internet? Try again.", "t": "⚠️ 失败了——网络问题？再试一次。"}
+{"kind": "ui", "k": "Hold your own comment = delete · public to everyone reading along", "src": "Eigenen Kommentar lange drücken = löschen · öffentlich für alle Mitlesenden\u0000Hold your own comment = delete · public to everyone reading along", "t": "长按自己的评论 = 删除 · 对所有读者公开"}
+{"kind": "ui", "k": "💬 Plus: comment under every book page. Comments are public to everyone reading along.", "src": "💬 Dazu: unter jeder Buchseite kommentieren. Kommentare sind öffentlich für alle Mitlesenden.\u0000💬 Plus: comment under every book page. Comments are public to everyone reading along.", "t": "💬 附加：在每页书下评论。评论对所有读者公开。"}
+{"kind": "ui", "k": "👤 Your name: %s ✏️", "src": "👤 Dein Name: %s ✏️\u0000👤 Your name: %s ✏️", "t": "👤 你的名字：%s ✏️"}
+{"kind": "ui", "k": "💬 Join in — be the first on this page", "src": "💬 Mitreden — sei die/der Erste zu dieser Seite\u0000💬 Join in — be the first on this page", "t": "💬 参与讨论——成为本页第一个发言者"}
+{"kind": "ui", "k": "💬 %d comments on this page", "src": "💬 %d Kommentare zu dieser Seite\u0000💬 %d comments on this page", "t": "💬 本页有 %d 条评论"}

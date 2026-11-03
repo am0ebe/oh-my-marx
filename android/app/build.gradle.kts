@@ -10,7 +10,11 @@ plugins {
 }
 
 // ⭐ th 1 version number · bump b4 bin/ship.sh · bin/lib.sh reads this line
-val appVersion = "0.5.2"
+val appVersion = "0.6.0"
+
+// 💬 Matrix registration token (git-ignored file, see .gitignore) ➡ BuildConfig · missing ➡ comments off
+val ommRegToken: String = rootProject.file("omm.properties").takeIf { it.exists() }
+    ?.readLines()?.firstOrNull { it.startsWith("omm.regToken=") }?.substringAfter("=")?.trim() ?: ""
 
 android {
     namespace = "de.strix.marxversion"
@@ -18,6 +22,7 @@ android {
 
     defaultConfig {
         applicationId = "de.strix.marxversion"
+        buildConfigField("String", "OMM_REG_TOKEN", "\"$ommRegToken\"")
         minSdk = 26
         targetSdk = 36
         // versionCode = minutes since 2026-01-01 ➡ evy build is "newer" than th last (dev + ship share 1 counter:

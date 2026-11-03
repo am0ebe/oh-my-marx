@@ -212,6 +212,9 @@ _per concept 2-3 lines_
 - 👍 open standard, own server i DE, federation (users fr matrix.org can join), E2E 4 Kreise/DMs, existing clients 4 power users · 👎 Matrix = cpx (sync, state, moderation tools) · a homeserver = 1 more service 2 run + bup
 - ⬄ alt: own FastAPI + SQLite (comments + counts only): simpler, full ctrl, no federation/E2E/desktop client · ⬄ Discourse (forum, heavy, ~2 GB RAM)
 - order: ① counter API + "👥 N lasen" (1 evening, read-only social proof) ➡ ② homeserver + section rooms (comments) ➡ ③ Kreise + friends ➡ ④ Salon
+- ✔️ @1103 **① live**: `server/omm_api.py` ➡ scagent.de/omm/api · **② live**: Synapse 1.164.2 `omm-matrix` (client-only, token signup, 31 chapter rooms) ➡ scagent.de/_matrix · app: 💬 under evy book page (bottom sheet, name on 1st comment, hold own = delete) · details `server/README.md` + `server/matrix/README.md`
+  - chose Synapse over continuwuity: known config + admin API (registration tokens, rate-limit override) · 105 MB RAM idle
+  - 💬 = public 2 all Mitlesenden · no DMs/Kreise yet (③)
 - ⚠️ needs INTERNET permission + privacy page (DSGVO: what's stored, where, delete) · moderation = a real job once strangers join
 
 ## icon

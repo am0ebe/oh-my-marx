@@ -1,0 +1,21 @@
+# 💬 Oh My Marx comments = a small Matrix homeserver (Synapse) · lives i ~am0/omm-matrix on th VPS
+# client API only (federation off), reached only via Caddy: scagent.de/_matrix/* ➡ omm-matrix:8008
+services:
+  omm-matrix:
+    image: matrixdotorg/synapse:v1.164.2
+    container_name: omm-matrix
+    restart: unless-stopped
+    environment:
+      UID: "1000"
+      GID: "1000"
+      SYNAPSE_CONFIG_PATH: /data/homeserver.yaml
+    volumes:
+      - ./data:/data            # homeserver.yaml · signing key · sqlite db (= th comments) ➡ bup!
+    networks: [web]
+    mem_limit: 512m
+    cpus: 0.5
+    security_opt: ["no-new-privileges:true"]
+
+networks:
+  web:
+    external: true

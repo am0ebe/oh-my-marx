@@ -9,6 +9,7 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
 // DataStore = async key-value store (replaces SharedPreferences) · 1 file, survives app restarts
@@ -56,6 +57,21 @@ class Prefs(private val context: Context) {
         return t
     }
     suspend fun setCommunity(on: Boolean) = context.store.edit { it[K.community] = on }
+
+    // 💬 Matrix account (made on 1st comment, data/Matrix.kt) · lives only on this fon
+    private object M {
+        val user = stringPreferencesKey("mx_user"); val token = stringPreferencesKey("mx_token")
+        val pw = stringPreferencesKey("mx_pw"); val name = stringPreferencesKey("mx_name")
+    }
+    val mxName: Flow<String?> = context.store.data.map { it[M.name] }
+    suspend fun mxSession(): Matrix.Session? = context.store.data.first().let { p ->
+        val u = p[M.user]; val t = p[M.token]
+        if (u != null && t != null) Matrix.Session(u, t) else null
+    }
+    suspend fun saveMx(s: Matrix.Session, pw: String, name: String) = context.store.edit {
+        it[M.user] = s.userId; it[M.token] = s.token; it[M.pw] = pw; it[M.name] = name
+    }
+    suspend fun setMxName(name: String) = context.store.edit { it[M.name] = name }
 
     val settings: Flow<Settings> = context.store.data.map { p: Preferences ->
         Settings(

@@ -7,6 +7,8 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import de.strix.marxversion.MarxApp
 import de.strix.marxversion.data.Community
+import de.strix.marxversion.data.Matrix
+import de.strix.marxversion.BuildConfig
 import de.strix.marxversion.data.DayLog
 import de.strix.marxversion.data.Lang
 import de.strix.marxversion.data.Mark
@@ -81,6 +83,51 @@ class AppVm(app: Application) : AndroidViewModel(app) {
             pageReads.value = pageReads.value + (page to (s.reads[k] ?: 0)); crowd.value = s
         }
     }
+
+    // ── 💬 comments per book page (Matrix, data/Matrix.kt) · needs Mitlesen ON + a token i th build ──
+    val commentsAvailable get() = BuildConfig.OMM_REG_TOKEN.isNotBlank()
+    val mxName: StateFlow<String?> = marx.prefs.mxName.stateIn(viewModelScope, SharingStarted.Eagerly, null)
+    /** chapter ➡ its comments (oldest 1st) */
+    val comments = MutableStateFlow<Map<String, List<Matrix.Comment>>>(emptyMap())
+    private val rooms = mutableMapOf<String, String>()
+
+    /** existing account · o (name given) make one now */
+    private suspend fun session(name: String? = null): Matrix.Session? {
+        marx.prefs.mxSession()?.let { return it }
+        val n = name?.trim()?.takeIf { it.isNotEmpty() } ?: return null
+        val (s, pw) = Matrix.register(n, BuildConfig.OMM_REG_TOKEN) ?: return null
+        marx.prefs.saveMx(s, pw, n)
+        return s
+    }
+    private suspend fun room(s: Matrix.Session, kap: String) = rooms[kap] ?: Matrix.join(s, Matrix.alias(kap))?.also { rooms[kap] = it }
+
+    fun loadComments(kap: String) = viewModelScope.launch {
+        if (!on || !commentsAvailable) return@launch
+        val s = session() ?: return@launch
+        val r = room(s, kap) ?: return@launch
+        comments.value = comments.value + (kap to Matrix.comments(s, r))
+    }
+
+    /** post ➡ done(ok) · 1st post w a name ➡ makes th account */
+    fun postComment(kap: String, page: Int?, text: String, name: String?, done: (Boolean) -> Unit) = viewModelScope.launch {
+        val s = session(name)
+        val r = s?.let { room(it, kap) }
+        val ok = s != null && r != null && Matrix.send(s, r, text.trim(), page, mxName.value ?: name ?: "")
+        if (ok) comments.value = comments.value + (kap to Matrix.comments(s!!, r!!))
+        done(ok)
+    }
+
+    fun deleteComment(kap: String, id: String) = viewModelScope.launch {
+        val s = session() ?: return@launch
+        val r = room(s, kap) ?: return@launch
+        if (Matrix.redact(s, r, id)) comments.value = comments.value + (kap to Matrix.comments(s, r))
+    }
+
+    fun rename(name: String) = viewModelScope.launch {
+        val n = name.trim().takeIf { it.isNotEmpty() } ?: return@launch
+        marx.prefs.setMxName(n); session()?.let { Matrix.setName(it, n) }
+    }
+    suspend fun myUserId() = marx.prefs.mxSession()?.userId
 
     /** 🪝 preview a feast / time o day (null = real calendar + clock) */
     val feastPreview = MutableStateFlow<Feast?>(null)
