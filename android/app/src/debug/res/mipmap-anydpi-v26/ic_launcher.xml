@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 🧪 DEV app icon = same Marx, BLUE background ➡ tell DEV ⬄ stable apart on th home screen at a glance -->
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+    <background android:drawable="@color/dev_blue" />
+    <foreground android:drawable="@mipmap/ic_marx_fg" />
+    <monochrome android:drawable="@drawable/ic_launcher_fg" />
+</adaptive-icon>
