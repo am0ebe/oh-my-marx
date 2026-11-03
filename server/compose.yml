@@ -1,4 +1,4 @@
-# 👥 Oh My Marx counter API · TEMPLATE 4 any operator (server/SERVICE.md § 1) · our VPS copy is ops-owned (pr/ops/handoff_omm.md)
+# 👥 Oh My Marx counter API · TEMPLATE 4 any operator (server/SERVICE.md § 1) · our VPS copy is ops-owned (pr/ops/omm.md)
 # not published on any host port: only Caddy reaches it over th `web` network ➡ scagent.de/omm/api/*
 services:
   omm-api:

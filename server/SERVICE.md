@@ -6,7 +6,7 @@
 | owns | app · server **code** · images/config **templates** · this contract | **running** it: VPS dirs, Caddy routes, TLS, pins + updates, backups, monitoring, box secrets |
 | changes prod? | ❌ no — asks ops (todo / msg) · only exception: writes the download pages (below) | ✔️ yes |
 | changes code? | ✔️ yes | ❌ no — asks bible |
-| docs | generic: "this service needs X" (works on any box) | concrete: "on our VPS it's at /srv/…, routed by …" ➡ `pr/ops/handoff_omm.md` |
+| docs | generic: "this service needs X" (works on any box) | concrete: "on our VPS it's at /srv/…, routed by …" ➡ `pr/ops/omm.md` (ops-owned runbook + rip-out list) |
 - 🔌 **rip-out test**: drop bible ➡ ops' doc lists every container/dir/route/backup to delete · drop our VPS ➡ this file is enough for any operator to run it elsewhere
 - the shared seam is **only this file**. If it changes, tell the other side.
 

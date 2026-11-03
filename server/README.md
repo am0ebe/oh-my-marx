@@ -22,7 +22,7 @@ curl -s localhost:8000/v1/stats?keys=p:247
 then route `https://<host>/omm/api/*` (prefix stripped) to `omm-api:8000`. Full needs: [`SERVICE.md`](SERVICE.md).
 
 ## Where it runs for real
-**ops runs it** on our VPS (dirs, Caddy, updates, backups, monitoring) — see `pr/ops/handoff_omm.md`.
+**ops runs it** on our VPS (dirs, Caddy, updates, backups, monitoring) — see `pr/ops/omm.md`.
 This repo doesn't touch prod: code changes here ➡ ask ops to roll them out.
 
 ## API

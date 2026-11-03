@@ -195,7 +195,7 @@ _per concept 2-3 lines_
 
 ## 🧭 ownership: bible ⬄ ops (@1103 · strix: "responsibility gets diffused")
 - **bible** (this repo) = th product: app · server **code** + config templates · [server/SERVICE.md](server/SERVICE.md) = th contract ("what it needs")
-- **ops** (`pr/ops`) = running it on our VPS: dirs, Caddy, TLS, pins/updates, backups, monitoring ➡ `pr/ops/handoff_omm.md`
+- **ops** (`pr/ops`) = running it on our VPS: dirs, Caddy, TLS, pins/updates, backups, monitoring ➡ `pr/ops/omm.md`
 - rules: bible doesn't change prod (asks ops) · ops doesn't change code (asks bible) · only shared seam = SERVICE.md · exception: bible's ship/deploy drop APKs into `/srv/www/oh-my-marx`
 - rip-out: drop bible ➡ ops' doc lists what 2 delete · drop th VPS ➡ SERVICE.md is enough 2 run it elsewhere
 

@@ -40,7 +40,7 @@ Room per chapter (`#omm-kap-8:scagent.de`), each comment carries the MEW page (`
 - Caddy: `scagent.de/_matrix/*` → `omm-matrix:8008` + `/.well-known/matrix/client`. Admin API (`/_synapse/admin`) is **not** routed (404 outside)
 - any Matrix app (Element …) can log in to `scagent.de` and join the same rooms → long discussions on a desktop
 
-- needs from the operator: [`../SERVICE.md`](../SERVICE.md) § 2 · **ops runs it on our VPS** ➡ `pr/ops/handoff_omm.md` (dirs, pins, backups, monitoring)
+- needs from the operator: [`../SERVICE.md`](../SERVICE.md) § 2 · **ops runs it on our VPS** ➡ `pr/ops/omm.md` (dirs, pins, backups, monitoring)
 
 ## Setup from scratch (any box · `DIR` = where the operator keeps the stack)
 ```
@@ -56,4 +56,4 @@ docker exec -i -e OMM_ADMIN_PW="$(cat admin.secret)" omm-matrix python3 - < setu
 
 ## Moderation (product side · as @ommadmin in any Matrix client)
 - delete a message: Element ➡ long-press ➡ Remove
-- lock out a user / rotate the app token: admin API on the box ➡ ask ops (`pr/ops/handoff_omm.md`) · token rotation = rebuild the app afterwards
+- lock out a user / rotate the app token: admin API on the box ➡ ask ops (`pr/ops/omm.md`) · token rotation = rebuild the app afterwards

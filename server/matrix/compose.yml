@@ -1,5 +1,5 @@
 # 💬 Oh My Marx comments = a small Matrix homeserver (Synapse) · TEMPLATE 4 any operator (server/SERVICE.md § 2)
-# our VPS copy is ops-owned (pr/ops/handoff_omm.md): ops pins + auto-bumps th tag there ➡ never copy this over it
+# our VPS copy is ops-owned (pr/ops/omm.md): ops pins + auto-bumps th tag there ➡ never copy this over it
 # client API only (federation off), reached only via Caddy: scagent.de/_matrix/* ➡ omm-matrix:8008
 services:
   omm-matrix:
