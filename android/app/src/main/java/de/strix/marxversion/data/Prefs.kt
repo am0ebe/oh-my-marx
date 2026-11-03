@@ -26,6 +26,7 @@ data class Settings(
     val activePlan: String? = null,
     val planStart: String? = null,      // "2026-10-28"
     val readScale: Float = 1f,          // 🤏 pinch i th reader ➡ font size × this
+    val community: Boolean = false,     // 👥 Mitlesen (opt-in): send anonymous daily-token counts (data/Community.kt)
 )
 
 class Prefs(private val context: Context) {
@@ -40,7 +41,21 @@ class Prefs(private val context: Context) {
         val activePlan = stringPreferencesKey("active_plan")
         val planStart = stringPreferencesKey("plan_start")
         val readScale = floatPreferencesKey("read_scale")
+        val community = booleanPreferencesKey("community")
+        val commDay = stringPreferencesKey("comm_day")      // th day th token belongs 2
+        val commToken = stringPreferencesKey("comm_token")  // random, new evy day
     }
+
+    /** 👥 today's random token (new day ➡ new token ➡ th server can't link days) */
+    suspend fun commToken(day: String): String {
+        var t = ""
+        context.store.edit { p ->
+            t = if (p[K.commDay] == day) p[K.commToken] ?: "" else ""
+            if (t.isEmpty()) { t = java.util.UUID.randomUUID().toString().replace("-", ""); p[K.commDay] = day; p[K.commToken] = t }
+        }
+        return t
+    }
+    suspend fun setCommunity(on: Boolean) = context.store.edit { it[K.community] = on }
 
     val settings: Flow<Settings> = context.store.data.map { p: Preferences ->
         Settings(
@@ -54,6 +69,7 @@ class Prefs(private val context: Context) {
             activePlan = p[K.activePlan],
             planStart = p[K.planStart],
             readScale = p[K.readScale] ?: 1f,
+            community = p[K.community] ?: false,
         )
     }
 

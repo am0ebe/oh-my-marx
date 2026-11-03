@@ -112,6 +112,18 @@ fun SettingsScreen(vm: AppVm, askNotifPermission: () -> Unit) {
         Gap(8)
         HorizontalDivider()
 
+        // ── 👥 Mitlesen (opt-in · data/Community.kt + server/omm_api.py) ──
+        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(vertical = 8.dp)) {
+            Column(Modifier.weight(1f)) {
+                Text(tr("👥 Mitlesen", "👥 Read along"))
+                Text(tr("Zeigt, wie oft eine Seite gelesen wurde und wie viele heute Amen sagen. Gesendet wird nur: welche Seite + eine Zufallszahl, die sich jeden Tag ändert. Kein Konto, keine IP gespeichert, der Server vergisst die Zufallszahl am nächsten Tag.",
+                    "Shows how often a page was read and how many say Amen today. Sent: only which page + a random number that changes every day. No account, no IP stored, the server forgets the number the next day."), fontSize = 12.sp)
+            }
+            Switch(s.community, { vm.setCommunity(it) })
+        }
+        HookNote(Hook.SOCIAL, s.testMode)
+        HorizontalDivider()
+
         // ── 🪝 Hooked mode (= explainer + 🪝 notes everywhere + test buttons) ──
         val openHooked = LocalOpenHooked.current
         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(vertical = 8.dp)) {

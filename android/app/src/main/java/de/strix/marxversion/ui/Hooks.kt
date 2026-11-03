@@ -20,6 +20,10 @@ import de.strix.marxversion.data.T
  * "Der Fetischcharakter der Ware" (Kap 1.4): th social relation hides behind a thing. Here: behind a button.
  */
 enum class Hook(val txt: Pair<String, String>) {
+    SOCIAL(T(
+        "🪝 Belohnung des Stammes + Social Proof (Hooked Kap. 4) — „34 lesen mit“ macht dich zum Teil einer Bewegung. Proletarier aller Länder, lest mit!",
+        "🪝 Reward of the tribe + social proof (Hooked ch. 4) — “34 reading along” makes you part of a movement. Readers of all countries, unite!",
+    )),
     VARIABLE(T(
         "🪝 Variable Belohnung (Hooked Kap. 4) — du weißt nie, welcher Vers kommt. Genau deshalb kommst du wieder. Spielautomat, aber mit Bart.",
         "🪝 Variable reward (Hooked ch. 4) — you never know which verse comes next. That's why you come back. A slot machine, but bearded.",

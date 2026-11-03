@@ -178,6 +178,14 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
         // ── 🃏 th cards: 1st thing u see (Hooked: reward right at th door) ──
         CardCarousel(vm, extras, vod?.let { CardItem(it, CardItem.Kind.TODAY, 0, feast) }, doneToday, speaker, persona, jump, openChapter, amen)
         Column(Modifier.padding(horizontal = 16.dp)) {
+            // 👥 Mitlesen: today's crowd (only if switched on + server reachable)
+            val crowd by vm.crowd.collectAsStateWithLifecycle()
+            LaunchedEffect(s.community) { vm.refreshCrowd() }
+            crowd?.let { c ->
+                Text(tr("👥 Heute lesen %d mit · %d × Amen ☭", "👥 %d reading along today · %d × Amen ☭").f(c.readersToday, c.amenToday),
+                    fontSize = 12.sp, color = Red, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth().padding(top = 4.dp))
+                HookNote(Hook.SOCIAL, s.testMode)
+            }
             HookNote(Hook.POPUP, s.testMode)
             HookNote(Hook.TINY, s.testMode)
             HookNote(Hook.VARIABLE, s.testMode)

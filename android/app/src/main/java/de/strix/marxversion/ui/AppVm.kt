@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import de.strix.marxversion.MarxApp
+import de.strix.marxversion.data.Community
 import de.strix.marxversion.data.DayLog
 import de.strix.marxversion.data.Lang
 import de.strix.marxversion.data.Mark
@@ -59,6 +60,28 @@ class AppVm(app: Application) : AndroidViewModel(app) {
     fun addCard(c: CardItem) { extraCards.value = (listOf(c) + extraCards.value).take(10) }
     /** ++ ➡ Home carousel jumps back 2 th 1st card (home btn, notif tap) */
     val homeJump = MutableStateFlow(0)
+    // ── 👥 Mitlesen (opt-in, data/Community.kt) ──
+    /** today's crowd: readers + Amen · null = off / offline */
+    val crowd = MutableStateFlow<Community.Stats?>(null)
+    /** MEW page ➡ "N× gelesen" (filled as pages r shown) */
+    val pageReads = MutableStateFlow<Map<Int, Int>>(emptyMap())
+    private val on get() = settings.value.community
+
+    fun setCommunity(on: Boolean) = viewModelScope.launch {
+        marx.prefs.setCommunity(on)
+        if (on) refreshCrowd() else { crowd.value = null; pageReads.value = emptyMap() }
+    }
+    fun refreshCrowd() = viewModelScope.launch { if (on) Community.stats()?.let { crowd.value = it } }
+    /** book page shown ➡ count me (once/day, server-side) ➡ fetch its total */
+    fun pageSeen(page: Int?) = viewModelScope.launch {
+        if (!on || page == null) return@launch
+        val k = Community.pageKey(page)
+        Community.read(marx.prefs.commToken(today()), listOf(k))
+        Community.stats(listOf(k))?.let { s ->
+            pageReads.value = pageReads.value + (page to (s.reads[k] ?: 0)); crowd.value = s
+        }
+    }
+
     /** 🪝 preview a feast / time o day (null = real calendar + clock) */
     val feastPreview = MutableStateFlow<Feast?>(null)
     val timePreview = MutableStateFlow<DayTime?>(null)
@@ -106,6 +129,7 @@ class AppVm(app: Application) : AndroidViewModel(app) {
         read(listOf(verseId))
         popupDone()
         widgets()
+        if (on) { Community.amen(marx.prefs.commToken(today())); refreshCrowd() }  // 👥 "Heute N × Amen"
     }
 
     fun startPlan(id: String) = viewModelScope.launch { marx.prefs.startPlan(id, today()) }

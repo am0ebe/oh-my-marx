@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 🧪 dev build (bin/deploy.sh) = own app next 2 th stable one ➡ label says so -->
+    <string name="app_name">Oh My Marx DEV</string>
+    <string name="tile">Marx DEV</string>
+</resources>

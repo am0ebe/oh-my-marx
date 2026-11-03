@@ -1,0 +1,24 @@
+# 👥 Oh My Marx counter API on th VPS (lives i ~am0/omm-api · bin: server/README.md)
+# not published on any host port: only Caddy reaches it over th `web` network ➡ scagent.de/omm/api/*
+services:
+  omm-api:
+    build: .
+    image: omm-api:local
+    container_name: omm-api
+    restart: unless-stopped
+    volumes:
+      - ./data:/data            # omm.db = totals + today's tokens only
+    networks: [web]
+    read_only: true
+    tmpfs: [/tmp]
+    mem_limit: 64m
+    cpus: 0.25
+    security_opt: ["no-new-privileges:true"]
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/v1/health')"]
+      interval: 60s
+      timeout: 5s
+
+networks:
+  web:
+    external: true

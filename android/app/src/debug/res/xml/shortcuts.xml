@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 🚀 static app shortcuts = long-press th launcher icon · extras r read by MainActivity.handle() -->
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut android:shortcutId="losung" android:enabled="true" android:icon="@drawable/ic_launcher_fg"
+        android:shortcutShortLabel="@string/sc_losung" android:shortcutLongLabel="@string/sc_losung_long">
+        <intent android:action="android.intent.action.VIEW"
+            android:targetPackage="de.strix.marxversion.dev" android:targetClass="de.strix.marxversion.MainActivity">
+            <extra android:name="pop" android:value="losung" />
+        </intent>
+    </shortcut>
+    <shortcut android:shortcutId="oracle" android:enabled="true" android:icon="@drawable/ic_launcher_fg"
+        android:shortcutShortLabel="@string/sc_oracle" android:shortcutLongLabel="@string/sc_oracle_long">
+        <intent android:action="android.intent.action.VIEW"
+            android:targetPackage="de.strix.marxversion.dev" android:targetClass="de.strix.marxversion.MainActivity">
+            <extra android:name="pop" android:value="oracle" />
+        </intent>
+    </shortcut>
+    <shortcut android:shortcutId="krise" android:enabled="true" android:icon="@drawable/ic_launcher_fg"
+        android:shortcutShortLabel="@string/sc_krise" android:shortcutLongLabel="@string/sc_krise_long">
+        <intent android:action="android.intent.action.VIEW"
+            android:targetPackage="de.strix.marxversion.dev" android:targetClass="de.strix.marxversion.MainActivity">
+            <extra android:name="pop" android:value="krise" />
+        </intent>
+    </shortcut>
+</shortcuts>

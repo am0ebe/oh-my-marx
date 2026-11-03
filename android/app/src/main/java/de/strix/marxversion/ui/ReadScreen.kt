@@ -145,7 +145,7 @@ fun ChapterScreen(vm: AppVm, kap: String, focus: String?, @Suppress("UNUSED_PARA
     var scale by remember(s.readScale) { mutableFloatStateOf(s.readScale) }
     val speaker = rememberSpeaker()
     val density = LocalDensity.current
-    LaunchedEffect(index) { vm.read(pages[index].verses.map { it.id }) }  // page seen = read
+    LaunchedEffect(index) { vm.read(pages[index].verses.map { it.id }); vm.pageSeen(pages[index].page) }  // page seen = read (+ 👥 count)
 
     CompositionLocalProvider(LocalReadScale provides scale) {
         BoxWithConstraints(
@@ -213,6 +213,7 @@ fun ChapterScreen(vm: AppVm, kap: String, focus: String?, @Suppress("UNUSED_PARA
 @Composable
 private fun Page(vm: AppVm, p: BookPage, speaker: Speaker, i: Int, n: Int, modifier: Modifier) {
     val chapter = vm.content.chapters.firstOrNull { it.kap == p.kap }
+    val reads by vm.pageReads.collectAsStateWithLifecycle()
     val firstOfChapter = p.verses.first().let { f -> vm.content.chapter(p.kap).firstOrNull()?.id == f.id }
     Box(modifier.background(PAPER).background(
         // spine shadow left + page-edge darkening right = it looks bound
@@ -221,6 +222,8 @@ private fun Page(vm: AppVm, p: BookPage, speaker: Speaker, i: Int, n: Int, modif
             Row(Modifier.fillMaxWidth()) {
                 Text((chapter?.let { chapterTitle(it) } ?: p.kap).uppercase(), fontSize = 10.sp, color = INK.copy(alpha = 0.6f),
                     letterSpacing = 1.2.sp, maxLines = 1, modifier = Modifier.weight(1f))
+                // 👥 Mitlesen: how often this page was read (social proof, opt-in)
+                p.page?.let { pg -> reads[pg]?.let { Text("👥 %d×  ·  ".f(it), fontSize = 10.sp, color = Red.copy(alpha = 0.8f)) } }
                 p.page?.let { Text(tr("MEW S. %d", "MEW p. %d").f(it), fontSize = 10.sp, color = INK.copy(alpha = 0.6f)) }
             }
             HorizontalDivider(color = INK.copy(alpha = 0.25f), modifier = Modifier.padding(vertical = 6.dp))

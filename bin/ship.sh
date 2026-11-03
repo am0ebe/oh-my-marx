@@ -31,8 +31,8 @@ git rev-parse -q --verify "refs/tags/v$ver" >/dev/null && { echo "❌ v$ver alr 
 out=$(mktemp -d); trap 'rm -rf "$out"' EXIT
 apk="$FILE-$ver.apk"
 cp android/app/build/outputs/apk/release/app-release.apk "$out/$apk"
-page "$out" "$ver" "$apk" ""
-publish "$out" /srv/www/bible
+page "$out" "$ver" "$apk" "" "$WEB/"
+publish "$out"
 
 # GitHub release (private repo 4 now ➡ friends use th VPS page · public later ➡ Obtainium can follow GitHub directly)
 gh release create "v$ver" "$out/$apk" --title "$APP $ver" --notes "$(git log -1 --format=%s)"

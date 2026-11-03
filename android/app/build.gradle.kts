@@ -30,6 +30,11 @@ android {
     }
 
     buildTypes {
+        // 🧪 dev builds (bin/deploy.sh) = a 2nd app "Oh My Marx DEV" next 2 th stable one:
+        // own package ➡ own data + own Obtainium entry · label/shortcuts overridden i src/debug/res
+        debug {
+            applicationIdSuffix = ".dev"
+        }
         release {
             isMinifyEnabled = false
             // sideload 2 friends: debug-signed is fine 4 now (no Play Store)
