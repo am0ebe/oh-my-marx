@@ -180,7 +180,7 @@ _per concept 2-3 lines_
 - prereq 4 all: ‼️ **release signing key** (debug key = per-machine, can't be used 4 real releases · lose th key ➡ friends must uninstall 2 update) ➡ keystore outside th repo + backup
 - prereq 4 F-Droid/Izzy: pick a license (code GPL-3? content PD) + public repo
 - 💡 rec: Obtainium + GitHub Releases now (1 cmd per release) · own F-Droid repo later if >5 friends
-- ✔️ @1103 live: **2 channels** on th VPS · `bin/ship.sh` ➡ scagent.de/bible/ (stable, friends) · `bin/deploy.sh` ➡ scagent.de/bible/dev/ (🦠's fon, evy build = new version `x.y.z-dev.MMDD.HHMM`) · versionCode = minutes since 2026 ➡ dev ⬄ stable nvr "downgrade"
+- ✔️ @1103 live: **2 channels** on th VPS · `bin/ship.sh` ➡ scagent.de/oh-my-marx/ (stable, friends) · `bin/deploy.sh` ➡ scagent.de/oh-my-marx/dev/ (/bible rm'd @1103) (🦠's fon, evy build = new version `x.y.z-dev.MMDD.HHMM`) · versionCode = minutes since 2026 ➡ dev ⬄ stable nvr "downgrade"
 
 ## 📱🍏 sharing apps w friends on ANY fon (@1103 · strix: "keepandroidopen sounds like a dead end")
 - 🚧 Android 2027: certified fons block apps fr unregistered devs (incl. sideload/F-Droid/Obtainium)

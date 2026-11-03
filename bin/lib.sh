@@ -6,13 +6,9 @@ FILE="OhMyMarx"                       # apk name: OhMyMarx-<version>.apk ➡ Obt
 export JAVA_HOME=~/.local/opt/jdk21 ANDROID_HOME=~/Android/Sdk
 ADB=$ANDROID_HOME/platform-tools/adb
 
-# 🌐 where th download pages live: /oh-my-marx (new name, needs 1 sudo mkdir on th VPS) + /bible (old, kept
-# in sync so existing Obtainium entries keep working) · WEB = th URL we tell ppl
-if ssh vps 'test -d /srv/www/oh-my-marx' 2>/dev/null; then
-    WEB=https://scagent.de/oh-my-marx; DIRS="/srv/www/oh-my-marx /srv/www/bible"
-else
-    WEB=https://scagent.de/bible; DIRS="/srv/www/bible"
-fi
+# 🌐 where th download pages live (@1103: /bible dropped, too new 2 need a redirect)
+WEB=https://scagent.de/oh-my-marx
+DIRS=/srv/www/oh-my-marx
 
 # th 1 version number lives i android/app/build.gradle.kts: val appVersion = "x.y.z"
 app_version() { sed -nE 's/^val appVersion = "([^"]+)".*/\1/p' android/app/build.gradle.kts; }

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 📦 ship = a release 4 friends: APK ➡ scagent.de/bible/ (download page) + GitHub release
+# 📦 ship = a release 4 friends: APK ➡ scagent.de/oh-my-marx/ (download page) + GitHub release
 set -euo pipefail
 cd "$(dirname "$0")/.."
 . bin/lib.sh

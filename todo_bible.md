@@ -4,12 +4,9 @@
 ## ⏳
 
 ## ‼️
-- 🦠🔒 VPS 2 sudo steps (5 min) ➡ unlock 👥 + new URL:
-  - `ssh -t vps sudo install -d -o am0 -g am0 /srv/www/oh-my-marx` ➡ nxt deploy/ship also publishes there
-  - Caddy route 4 th counter API: `server/README.md` § public route (3 lines + reload)
-- 🦠🧪 Obtainium on fon: **＋ a 2nd app** w URL `https://scagent.de/bible/dev/` = "Oh My Marx DEV" (own package, sits next 2 stable) · no regex needed
-- 🦠👀 QA dev build: ⚙️ 👥 Mitlesen ON ➡ book page header "👥 N×" · Home "👥 Heute lesen N mit · M × Amen" (after Caddy route)
-- 🦠📣 send README link / scagent.de/bible 2 2-3 friends ➡ collect feedback
+- 🦠🧪 Obtainium on fon: /bible is gone ➡ edit/re-add: stable `https://scagent.de/oh-my-marx/` · ＋ 2nd app `https://scagent.de/oh-my-marx/dev/` = "Oh My Marx DEV" · no regex needed
+- 🦠👀 QA dev build: ⚙️ 👥 Mitlesen ON ➡ book page header "👥 N×" · Home "👥 Heute lesen N mit · M × Amen"
+- 🦠📣 send scagent.de/oh-my-marx 2 2-3 friends ➡ collect feedback
 - 🔵 community ② Matrix (continuwuity) + section rooms ➡ ③ Kreise + friends ➡ ④ Salon (notes.md § community)
 - 🔵 web/PWA version 4 iPhone friends — later, rebuild (no shake, new voices) · this proj stays Android 🤖📱
 - 🔵 rename GitHub/Forgejo repo bibleApp ➡ OhMyMarx (remotes + Obtainium URL unchanged on VPS)

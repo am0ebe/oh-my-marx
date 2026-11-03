@@ -10,7 +10,7 @@ Ein Spaß-Prototyp von strix. **Ich will dein Feedback!** 🙏
 
 ## 📱 Installieren (Android, ~2 Minuten)
 
-1. Auf dem Handy öffnen: **https://scagent.de/bible/**
+1. Auf dem Handy öffnen: **https://scagent.de/oh-my-marx/**
 2. Den roten Knopf **„⬇️ Oh My Marx herunterladen“** antippen
 3. Download antippen ➡ Android fragt: *„Apps aus dieser Quelle zulassen?“* ➡ **zulassen** (nur einmal)
 4. **Installieren** ➡ fertig. Das Icon heißt *Oh My Marx*.
@@ -25,7 +25,7 @@ Ein Spaß-Prototyp von strix. **Ich will dein Feedback!** 🙏
 Neue Versionen kommen oft. Am bequemsten mit der kostenlosen App **Obtainium**:
 
 1. Obtainium installieren: https://github.com/ImranR98/Obtainium/releases ➡ bei der neuesten Version die `.apk` mit **arm64** im Namen (gleiche Schritte wie oben)
-2. In Obtainium: **＋** ➡ bei *URL* eintragen: `https://scagent.de/bible/` ➡ **Hinzufügen**
+2. In Obtainium: **＋** ➡ bei *URL* eintragen: `https://scagent.de/oh-my-marx/` ➡ **Hinzufügen**
 3. Ab jetzt meldet Obtainium neue Versionen ➡ antippen ➡ Update.
 
 Ohne Obtainium: einfach ab und zu Schritt 1–4 oben wiederholen (deine Daten bleiben erhalten).

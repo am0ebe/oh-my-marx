@@ -10,7 +10,7 @@ plugins {
 }
 
 // ⭐ th 1 version number · bump b4 bin/ship.sh · bin/lib.sh reads this line
-val appVersion = "0.5.1"
+val appVersion = "0.5.2"
 
 android {
     namespace = "de.strix.marxversion"
