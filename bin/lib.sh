@@ -7,6 +7,7 @@ export JAVA_HOME=~/.local/opt/jdk21 ANDROID_HOME=~/Android/Sdk
 ADB=$ANDROID_HOME/platform-tools/adb
 
 # 🌐 where th download pages live (@1103: /bible dropped, too new 2 need a redirect)
+# short link 4 ppl: scagent.de/omm (+ /omm/dev) = 302 by ops' Caddy · Obtainium keeps th full URL
 WEB=https://scagent.de/oh-my-marx
 DIRS=/srv/www/oh-my-marx
 
@@ -49,7 +50,7 @@ $note
 <ol><li>APK antippen ➡ „Aus dieser Quelle zulassen“ (einmalig) ➡ Installieren</li>
 <li>Play Protect meckert evtl. („unbekannte App“) ➡ „Trotzdem installieren“</li>
 <li>Updates automatisch: App <b>Obtainium</b> ➡ ＋ ➡ URL <code>$url</code> ➡ Hinzufügen. Fertig.</li></ol>
-<p>Feedback? Einfach an strix schicken — Screenshot + ein Satz reicht 🙏</p>
+<p>Weitersagen: <b><a href="https://scagent.de/omm">scagent.de/omm</a></b> 🔗 · Feedback? Einfach an strix schicken — Screenshot + ein Satz reicht 🙏</p>
 <p><small>v$ver · $(date '+%F %H:%M') · sha256 $sha…</small></p>
 EOF
 }

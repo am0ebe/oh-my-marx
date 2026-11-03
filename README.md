@@ -10,7 +10,7 @@ Ein Spaß-Prototyp von strix. **Ich will dein Feedback!** 🙏
 
 ## 📱 Installieren (Android, ~2 Minuten)
 
-1. Auf dem Handy öffnen: **https://scagent.de/oh-my-marx/**
+1. Auf dem Handy öffnen: **https://scagent.de/omm**
 2. Den roten Knopf **„⬇️ Oh My Marx herunterladen“** antippen
 3. Download antippen ➡ Android fragt: *„Apps aus dieser Quelle zulassen?“* ➡ **zulassen** (nur einmal)
 4. **Installieren** ➡ fertig. Das Icon heißt *Oh My Marx*.
