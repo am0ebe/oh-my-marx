@@ -29,7 +29,7 @@ import de.strix.marxversion.data.f
 data class Release(val version: String, val date: String, val items: List<Pair<String, String>>)
 
 val RELEASES = listOf(
-    Release("0.6.0", "2026-11-03", listOf(
+    Release("0.6.0", "2026-11-04", listOf(
         T("💬 Kommentare unter jeder Buchseite — Name erst beim ersten Kommentar, eigene lange drücken = löschen", "💬 Comments under every book page — name only at your first comment, hold your own = delete"),
         T("👥 Mitlesen (an): „34× gelesen“ pro Seite + „Heute lesen 12 mit“", "👥 Read along (on): “read 34×” per page + “12 reading along today”"),
         T("🌅 Teilen aus dem Buch zeigt genau den Absatz, den du liest", "🌅 Sharing from the book shows exactly the paragraph you read"),
