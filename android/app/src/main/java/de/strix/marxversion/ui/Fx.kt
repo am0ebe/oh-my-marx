@@ -91,6 +91,7 @@ private fun Overlay(content: @Composable () -> Unit) =
 fun KriseFlash(onDone: () -> Unit) {
     val done by rememberUpdatedState(onDone)
     val ctx = LocalContext.current
+    val word = kriseWord(LocalLang.current)
     val t = remember { Animatable(0f) }
     LaunchedEffect(Unit) {
         buzz(ctx, longArrayOf(0, 120, 60, 120, 60, 300))
@@ -100,7 +101,7 @@ fun KriseFlash(onDone: () -> Unit) {
         val v = t.value
         val flash = (sin(v * 3 * PI).toFloat()).coerceAtLeast(0f) * 0.85f * (1f - v * 0.4f)
         Box(Modifier.fillMaxSize().background(Color(0xFFD50000).copy(alpha = flash)), contentAlignment = Alignment.Center) {
-            Text("📉 KRISE!", fontSize = 56.sp, fontWeight = FontWeight.Black, color = Color.White,
+            Text(word, fontSize = 56.sp, fontWeight = FontWeight.Black, color = Color.White,
                 modifier = Modifier.graphicsLayer {
                     val s = if (v < 0.15f) v / 0.15f * 1.4f else 1.4f - (v - 0.15f) * 0.5f
                     scaleX = s; scaleY = s

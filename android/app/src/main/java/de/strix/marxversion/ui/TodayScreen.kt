@@ -388,6 +388,7 @@ fun CardDialog(
     // 📱 stories (full only): tap left/right half o th card = older/newer day · null = no such day
     onOlder: (() -> Unit)? = null, onNewer: (() -> Unit)? = null, storyLabel: String? = null,
     shareOnly: Boolean = false,  // fr a verse's Teilen: just 1 big Share btn + ☭ close
+    text: String? = null,        // what goes on th card · null = th verse's quote (fr a verse's Teilen: th paragraph itself)
 ) {
     val s by vm.settings.collectAsStateWithLifecycle()
     val ctx = LocalContext.current
@@ -396,7 +397,7 @@ fun CardDialog(
     val rtl = LocalLayoutDirection.current == LayoutDirection.Rtl  // Arabic: "older" = right half
     val lang = LocalLang.current
     val speaker = rememberSpeaker()
-    val q = verseQuote(v).ifBlank { verseText(v).take(240).substringBeforeLast(' ') + " …" }
+    val q = text ?: verseQuote(v).ifBlank { verseText(v).take(240).substringBeforeLast(' ') + " …" }
     val r = ref(v)
     val bmp = remember(q, r, lang, feast) { cardBitmap(ctx, q, r, lang, feast).asImageBitmap() }
     val shareTitle = tr("Spruchkarte teilen", "Share verse card")

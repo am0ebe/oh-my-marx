@@ -235,7 +235,9 @@ fun VerseView(vm: AppVm, v: Verse, speaker: Speaker? = null, showActions: Boolea
     }
 
     // 🌅 Teilen ➡ card preview w just 1 big Share btn (🔊 + 📋 alr sit i th verse's menu)
-    if (card) CardDialog(vm, v, tr("🌅 Spruchkarte", "🌅 Verse card"), null, onDismiss = { card = false }, shareOnly = true)
+    // card text = exactly th paragraph u see (was: th LLM quote ➡ "different text than i th snippet", strix @1103)
+    if (card) CardDialog(vm, v, tr("🌅 Spruchkarte", "🌅 Verse card"), null, onDismiss = { card = false }, shareOnly = true,
+        text = txt.replace(Regex("\\s*\\[\\d+[a-z]?]"), "").replace(Regex("\\s+"), " ").trim())
 
     footnote?.let { n ->
         val note = vm.content.note(v.kap, n)

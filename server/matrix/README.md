@@ -1,5 +1,33 @@
 # 💬 omm-matrix — comments for Oh My Marx (step ② of `../../notes.md` § community)
 
+## 🧩 Matrix in 1 minute (why we use it)
+- an **open chat standard** — like e-mail, but chat. No company in the middle.
+- **homeserver** = a server that stores accounts + rooms (ours: Synapse on the VPS, `scagent.de`)
+- **client** = the app people use: Element, FluffyChat, gomuks … — and **Oh My Marx**, which speaks a tiny part of the protocol
+- **federation** = servers talk to each other (`@rosa:scagent.de` ⬄ `@max:matrix.org`). **Ours: off.**
+- 🔐 cryptography, not coins: servers sign their events; DMs / private rooms can be **end-to-end encrypted**
+  (only the people in the chat can read). Our public chapter rooms are **not** encrypted (the app has no E2E code).
+- why Matrix and not our own comment DB: accounts, rooms, moderation, history, rate limits come for free — and every
+  Matrix app can join the same rooms (desktop deep dives, own friends chat)
+
+## 👥 fast: your own chat with friends (~5 min)
+1. **your account** (as server admin), asks for a password:
+   `ssh -t vps docker exec -it omm-matrix register_new_matrix_user -c /data/homeserver.yaml -u strix -a http://localhost:8008`
+2. **app**: Element (Android/iOS, "Element Classic") · desktop: Element Desktop or https://app.element.io
+   ➡ *Sign in* ➡ *Edit* homeserver ➡ `scagent.de` ➡ `strix` + password
+3. try it: *Join room* ➡ `#omm-kap-8:scagent.de` = the app's chapter-8 comments, live
+4. **friends**: Element ➡ *Create account* ➡ server `scagent.de` ➡ it asks for the **registration token**
+   (`cat android/omm.properties` on tow, or `ssh vps 'docker exec omm-matrix cat /data/omm_reg_token'`)
+5. you: *Start chat* ➡ `@friend:scagent.de` ➡ DM (encrypted by default in Element) · or a room ➡ invite
+- these are **normal Matrix accounts** — usable for anything, not just Oh My Marx
+- 📱 **Element X** (the new, faster Element on mobile) can *log in* to an existing account (Synapse ≥ 1.114 has the
+  sliding sync it needs), but it can't *sign up* with a registration token → create the account first (step 1 / classic Element)
+
+## 🌍 later: talk to the rest of the Matrix world (federation on)
+1. `overrides.yaml`: listener `names: [client, federation]` · drop `federation_domain_whitelist: []` · `trusted_key_servers: [{server_name: matrix.org}]`
+2. Caddy: `/.well-known/matrix/server` ➡ `{"m.server":"scagent.de:443"}` (federation then runs over 443, `/_matrix/*` is already routed)
+3. ⚠️ more traffic + spam · joining big public rooms costs a lot of RAM on Synapse · signing key becomes the server's identity (backup!)
+
 A small **Synapse** homeserver on the VPS. The app uses it for **comments under every book page**.
 Room per chapter (`#omm-kap-8:scagent.de`), each comment carries the MEW page (`de.ohmymarx.page`).
 

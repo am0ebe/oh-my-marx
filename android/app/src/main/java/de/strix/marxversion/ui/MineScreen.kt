@@ -153,6 +153,12 @@ fun SettingsScreen(vm: AppVm, askNotifPermission: () -> Unit) {
         if (s.testMode) TextButton(onClick = openHooked) { Text(tr("📖 Hooked erklärt ➡", "📖 Hooked explained ➡")) }
         HorizontalDivider()
 
+        // ── 📜 release notes (ui/Changelog.kt) ──
+        Gap(8)
+        ReleaseNotes()
+        Gap(8)
+        HorizontalDivider()
+
         // ── about ──
         Gap()
         Text(tr("Über", "About"), fontWeight = FontWeight.Bold)

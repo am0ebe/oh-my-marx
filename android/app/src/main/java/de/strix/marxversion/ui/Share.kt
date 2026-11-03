@@ -68,6 +68,12 @@ const val APP_NAME = "Oh My Marx ☭"  // @1103 (was bibleApp = YouVersion's nam
 // ── Spruchkarte: kitsch sunset + Marx quote ➡ png ➡ Android share sheet ──
 // drawn w plain android.graphics.Canvas (simpler than capturing a composable) · same bitmap = Losung popup preview
 
+/** 📉 th crisis shout i evy lang (card header + shake flash) · short on purpose: it's 120 px / 56 sp */
+fun kriseWord(lang: Lang) = "📉 " + when (lang) {
+    Lang.DE -> "KRISE!"; Lang.EN -> "CRISIS!"; Lang.IT -> "CRISI!"; Lang.ES -> "¡CRISIS!"
+    Lang.PT -> "CRISE!"; Lang.ZH -> "危机！"; Lang.AR -> "!أزمة"
+}
+
 /** 📉 crisis card palette: black ➡ blood ➡ alarm red */
 private val KRISE_COLORS = intArrayOf(0xFF000000.toInt(), 0xFF3A0000.toInt(), 0xFF8E0000.toInt(), 0xFFE53935.toInt())
 
@@ -99,7 +105,7 @@ fun cardBitmap(ctx: Context, quote: String, ref: String, lang: Lang, feast: Feas
             color = 0xFFFFFFFF.toInt(); textSize = 120f; typeface = Typeface.create(Typeface.SANS_SERIF, Typeface.BOLD)
             setShadowLayer(18f, 0f, 0f, 0xFFFF1744.toInt())
         }
-        val t = "📉 KRISE!"
+        val t = kriseWord(lang)
         c.drawText(t, w / 2f - head.measureText(t) / 2f, 190f, head)
     } else {
         // sun + 😇 Saint Marx (vector: halo + hair + beard)
@@ -129,6 +135,13 @@ fun cardBitmap(ctx: Context, quote: String, ref: String, lang: Lang, feast: Feas
             .setAlignment(Layout.Alignment.ALIGN_CENTER).setLineSpacing(0f, 1.15f).build()
         size -= 4f
     } while (layout.height > h * 0.5 && size > 28f)  // room: below th saint (290) ➡ above th ref (0.76 h)
+    if (layout.height > h * 0.5) {
+        // still 2 long at th smallest size (a whole paragraph) ➡ as many lines as fit, then "…"
+        val lines = (h * 0.5f / (layout.height.toFloat() / layout.lineCount)).toInt().coerceAtLeast(1)
+        layout = StaticLayout.Builder.obtain(txt, 0, txt.length, tp, w - 160)
+            .setAlignment(Layout.Alignment.ALIGN_CENTER).setLineSpacing(0f, 1.15f)
+            .setMaxLines(lines).setEllipsize(android.text.TextUtils.TruncateAt.END).build()
+    }
     c.save(); c.translate(80f, (h * 0.46f - layout.height / 2f).coerceAtLeast(290f)); layout.draw(c); c.restore()
 
     val small = TextPaint(tp).apply { textSize = 40f; typeface = Typeface.create(Typeface.SERIF, Typeface.NORMAL) }
