@@ -93,8 +93,8 @@ fun SettingsScreen(vm: AppVm, askNotifPermission: () -> Unit) {
                 FilterChip(selected = s.persona == p.name, onClick = { vm.setPersona(p) }, label = { Text(tr(p.label)) })
             }
         }
-        Text(tr("Android-Stimme mit Tonhöhe + Tempo. Echte heilige Stimmen: in Arbeit.",
-            "Android voice with pitch + speed. Real holy voices: work in progress."), fontSize = 12.sp, color = MaterialTheme.colorScheme.secondary)
+        Text(tr("Heilig = die Android-Stimme 2–3× in verschiedenen Tonhöhen übereinander (Oktave drunter = Autorität, drüber = Chor) + Kirchenhall, auf dem Handy gerechnet. Erstes Abspielen dauert 1–3 s, danach sofort.",
+            "Holy = the Android voice stacked 2–3× at different pitches (octave below = authority, above = choir) + church reverb, computed on the phone. First play takes 1–3 s, then instant."), fontSize = 12.sp, color = MaterialTheme.colorScheme.secondary)
         Gap(8)
         HorizontalDivider()
 

@@ -20,7 +20,7 @@ data class Settings(
     val notifHour: Int = 8,
     val notifMinute: Int = 55,          // Mo 8:55 = 5 min b4 th Arbeitstag starts
     val testMode: Boolean = false,      // 🧪 Testmodus: shows th app's own Hooked tricks + test buttons
-    val persona: String = "PFARRER",    // TTS voice preset (ui/Share.kt Persona)
+    val persona: String = "GOTTVATER",  // TTS voice preset (ui/Share.kt Persona)
     val popupSeen: String? = null,      // date th Losung popup was last shown ("2026-10-31")
     val activePlan: String? = null,
     val planStart: String? = null,      // "2026-10-28"
@@ -46,7 +46,7 @@ class Prefs(private val context: Context) {
             notifHour = p[K.notifHour] ?: 8,
             notifMinute = p[K.notifMinute] ?: 55,
             testMode = p[K.testMode] ?: false,
-            persona = p[K.persona] ?: "PFARRER",
+            persona = p[K.persona] ?: "GOTTVATER",
             popupSeen = p[K.popupSeen],
             activePlan = p[K.activePlan],
             planStart = p[K.planStart],

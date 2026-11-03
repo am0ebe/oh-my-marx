@@ -131,7 +131,13 @@ _per concept 2-3 lines_
 
 ## 🔊 voice (@1031)
 - 🐛 TTS was silent: Android 11+ package visibility ➡ needs `<queries>` TTS_SERVICE i manifest ✔️ fixed
-- now: Android TTS + persona = pitch/speed preset (⛪ Pfarrer · 🧔 Prophet Karl · 🙂 Nüchtern · 🤖 Maschinerie)
+- v0.2: Android TTS + persona = pitch/speed preset
+- ✔️ v0.3.1 (@1102) **holy = on-device DSP** (`logic/Voice.kt` · `Speaker` i `ui/Share.kt`) · no ML o our own, no download
+  - th voice = th fon's system TTS (usually Google Speech Services, neural, offline) · `synthesizeToFile` 1× per layer w its own pitch ➡ 16-bit PCM wav
+  - mix layers (gain + few ms delay = choir smear, not unison) ➡ **Freeverb** (Jezar 2000: 8 damped feedback combs ∥ ➡ 4 allpasses →, tunings scaled 44.1k ➡ TTS rate) ➡ wet set by RMS ratio ➡ peak-normalize ➡ wav ➡ `MediaPlayer` · cache 30 files
+  - "voice o God" = same line at octave ⇩ (authority) + ⇧ (choir) + long hall · film/radio trick
+  - personas: ☭☁️ Gottvater Marx (dflt · 0.6 + 0.35, Kirche) · ☁️ Gott (0.4 + 0.8 + 1.3, Kathedrale 3.5 s) · 📚 Marx im Lesesaal (0.62, small room) · ⛪ Pfarrer (+ Kirche) · 🙂 · 🤖 plain
+  - ⚠️ pitch shift inside th TTS engine ⇩ 0.35 can sound grainy · zh/ar need th voice installed on th fon
 - 💡 holy voice = **pre-render on tow** (content is fixed!) ➡ ship audio i assets, no on-device M
   - M: **Chatterbox Multilingual** (Resemble AI, MIT, zero-shot clone fr ~10 s ref, 23 langs incl de/it/es/pt/zh/ar, emotion knob) · 3090 Ti ok
   - "holy" = mostly post-proc: church reverb (impulse response, `ffmpeg afir`) + pitch ⇩ + soft organ drone (Musopen CC0)

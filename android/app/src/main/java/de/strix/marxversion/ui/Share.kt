@@ -27,7 +27,25 @@ import androidx.core.content.FileProvider
 import de.strix.marxversion.data.Lang
 import de.strix.marxversion.data.T
 import de.strix.marxversion.logic.Feast
+import de.strix.marxversion.logic.Holy
+import de.strix.marxversion.logic.Layer
+import de.strix.marxversion.logic.Room
+import de.strix.marxversion.logic.Wav
+import de.strix.marxversion.logic.holy
+import android.media.MediaPlayer
+import android.os.Bundle
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeoutOrNull
 import java.io.File
+import java.util.concurrent.ConcurrentHashMap
 
 const val APP_NAME = "bibleApp ☭"
 
@@ -96,16 +114,25 @@ fun copyText(ctx: Context, text: String) {
     ctx.getSystemService(ClipboardManager::class.java).setPrimaryClip(ClipData.newPlainText("Marx", text))
 }
 
-// ── Vorlesen: Android's built-in TTS + "personas" = pitch/speed presets ──
-// (real holy voices = pre-rendered audio, see notes.md § voice)
+// ── Vorlesen: Android's built-in TTS + "personas" ──
+// plain = pitch/speed preset · holy ≠ null ➡ TTS ➡ wav per layer ➡ logic/Voice.kt (layer + Hall) ➡ MediaPlayer
+// (real cloned voices = pre-rendered audio, later · notes.md § voice)
 
-enum class Persona(val label: Pair<String, String>, val pitch: Float, val rate: Float) {
-    PFARRER(T("⛪ Pfarrer", "⛪ Pastor"), 0.78f, 0.82f),
-    PROPHET(T("🧔 Prophet Karl", "🧔 Prophet Karl"), 0.6f, 0.72f),
+enum class Persona(val label: Pair<String, String>, val pitch: Float, val rate: Float, val holy: Holy? = null) {
+    // ☭☁️ both: Marx's deep voice + an octave below + church = "Gottvater Marx"
+    GOTTVATER(T("☭☁️ Gottvater Marx", "☭☁️ God the Father Marx"), 0.6f, 0.74f,
+        Holy(listOf(Layer(0.6f), Layer(0.35f, 0.7f, 18)), Room.KIRCHE)),
+    // ☁️ God: low + mid + high = choir, smeared a bit, huge hall
+    GOTT(T("☁️ Gott (Kathedrale)", "☁️ God (cathedral)"), 0.45f, 0.7f,
+        Holy(listOf(Layer(0.4f), Layer(0.8f, 0.55f, 25), Layer(1.3f, 0.25f, 45)), Room.KATHEDRALE)),
+    // 📚 Marx alone, deep + slow, British Museum reading room (where Kapital was researched)
+    MARX(T("📚 Marx im Lesesaal", "📚 Marx in the reading room"), 0.62f, 0.76f,
+        Holy(listOf(Layer(0.62f)), Room.LESESAAL)),
+    PFARRER(T("⛪ Pfarrer", "⛪ Pastor"), 0.78f, 0.82f, Holy(listOf(Layer(0.78f)), Room.KIRCHE)),
     NORMAL(T("🙂 Nüchtern", "🙂 Sober"), 1f, 1f),
     MASCHINE(T("🤖 Maschinerie (Kap. 13)", "🤖 Machinery (ch. 13)"), 1.5f, 1.2f);
 
-    companion object { fun of(name: String) = entries.firstOrNull { it.name == name } ?: PFARRER }
+    companion object { fun of(name: String) = entries.firstOrNull { it.name == name } ?: GOTTVATER }
 }
 
 class Speaker(ctx: Context) {
@@ -113,6 +140,12 @@ class Speaker(ctx: Context) {
     private var ready = false
     private var pending: (() -> Unit)? = null
     var speaking by mutableStateOf(false); private set
+
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+    private var job: Job? = null
+    private var player: MediaPlayer? = null
+    /** synthesizeToFile passes in flight: utterance id ➡ done/failed */
+    private val waits = ConcurrentHashMap<String, CompletableDeferred<Boolean>>()
 
     // ⚠️ needs <queries> TTS_SERVICE i th manifest (Android 11+ package visibility) — else init fails silently
     private val tts = TextToSpeech(app) { status ->
@@ -124,28 +157,89 @@ class Speaker(ctx: Context) {
 
     init {
         tts.setOnUtteranceProgressListener(object : UtteranceProgressListener() {
-            override fun onStart(id: String?) { speaking = true }
-            override fun onDone(id: String?) { speaking = false }
-            @Deprecated("old API, still abstract") override fun onError(id: String?) { speaking = false }
+            override fun onStart(id: String?) { if (id == PLAIN) speaking = true }
+            override fun onDone(id: String?) { waits.remove(id)?.complete(true) ?: run { if (id == PLAIN) speaking = false } }
+            @Deprecated("old API, still abstract") override fun onError(id: String?) { failed(id) }
+            override fun onError(id: String?, code: Int) { failed(id) }
         })
     }
 
-    /** tap again while talking = stop */
+    private fun failed(id: String?) { waits.remove(id)?.complete(false) ?: run { if (id == PLAIN) speaking = false } }
+
+    /** tap again while talking (or still rendering) = stop */
     fun say(text: String, lang: Lang, persona: Persona) {
         if (speaking) { stop(); return }
+        val clean = text.replace(Regex("\\[\\d+[a-z]?]"), "").take(TextToSpeech.getMaxSpeechInputLength() - 1)
         val go: () -> Unit = {
             val r = tts.setLanguage(lang.locale)
             if (r == TextToSpeech.LANG_MISSING_DATA || r == TextToSpeech.LANG_NOT_SUPPORTED)
                 Toast.makeText(app, "🔇 ${lang.native}: voice missing — Android settings › Text-to-speech › install voice data", Toast.LENGTH_LONG).show()
-            tts.setPitch(persona.pitch)
-            tts.setSpeechRate(persona.rate)
-            tts.speak(text.replace(Regex("\\[\\d+[a-z]?]"), ""), TextToSpeech.QUEUE_FLUSH, null, "marx")
+            if (persona.holy == null) plain(clean, persona)
+            else {
+                speaking = true  // = "⏹" right away, rendering takes ~1-3 s
+                job = scope.launch {
+                    val f = runCatching { render(clean, lang, persona, persona.holy) }.getOrNull()
+                    withContext(Dispatchers.Main) {
+                        if (!isActive) return@withContext
+                        if (f == null) plain(clean, persona)  // engine can't write files ➡ at least speak
+                        else play(f)
+                    }
+                }
+            }
         }
         if (ready) go() else pending = go  // 1st tap right aft opening: engine still booting
     }
 
-    fun stop() { tts.stop(); speaking = false }
-    fun close() = tts.shutdown()
+    private fun plain(text: String, persona: Persona) {
+        tts.setPitch(persona.pitch)
+        tts.setSpeechRate(persona.rate)
+        tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, PLAIN)
+    }
+
+    /** 1 TTS pass per layer ➡ layer + Hall ➡ cache/voice/<hash>.wav (same verse again = instant) */
+    private suspend fun render(text: String, lang: Lang, persona: Persona, h: Holy): File? {
+        val dir = File(app.cacheDir, "voice").apply { mkdirs() }
+        val out = File(dir, "%08x.wav".format((persona.name + lang.code + text).hashCode()))
+        if (out.length() > 44) return out
+        val passes = h.layers.mapIndexed { i, l ->
+            val id = "holy$i-${System.nanoTime()}"
+            val f = File(dir, "pass-$id.wav")  // unique: 2 screens may render at once
+            val d = CompletableDeferred<Boolean>().also { waits[id] = it }
+            // pitch/rate r snapshotted per request ➡ set, queue, set, queue …
+            tts.setPitch(l.pitch); tts.setSpeechRate(persona.rate)
+            if (tts.synthesizeToFile(text, Bundle(), f, id) != TextToSpeech.SUCCESS) { waits.remove(id); return null }
+            f to d
+        }
+        val ok = withTimeoutOrNull(60_000) { passes.all { it.second.await() } } ?: false
+        if (!ok) return null
+        val wav = holy(passes.map { Wav.read(it.first.readBytes()) }, h)
+        out.writeBytes(Wav.write(wav))
+        passes.forEach { it.first.delete() }
+        // keep th cache 🤏: newest 30
+        dir.listFiles { f -> f.name != out.name && !f.name.startsWith("pass") }
+            ?.sortedByDescending { it.lastModified() }?.drop(29)?.forEach { it.delete() }
+        return out
+    }
+
+    private fun play(f: File) {
+        player?.release()
+        player = MediaPlayer().apply {
+            setDataSource(f.path)
+            setOnCompletionListener { speaking = false; it.release(); if (player === it) player = null }
+            setOnErrorListener { mp, _, _ -> speaking = false; mp.release(); if (player === mp) player = null; true }
+            prepare(); start()
+        }
+    }
+
+    fun stop() {
+        job?.cancel(); job = null
+        player?.run { runCatching { stop() }; release() }; player = null
+        tts.stop(); speaking = false
+    }
+
+    fun close() { stop(); scope.cancel(); tts.shutdown() }
+
+    private companion object { const val PLAIN = "marx" }
 }
 
 /** 1 Speaker per screen, freed when th screen leaves (DisposableEffect = cleanup hook) */
