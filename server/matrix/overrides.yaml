@@ -1,5 +1,5 @@
 
-# ── Oh My Marx overrides (@1103 · pr/bible/server/matrix) · appended 2 th generated homeserver.yaml, later keys win ──
+# ── Oh My Marx overrides (@1103 · pr/omm/server/matrix) · appended 2 th generated homeserver.yaml, later keys win ──
 # client-only (no federation), registration only w a token (th app has it), no media, no presence
 public_baseurl: "https://scagent.de/"
 listeners:

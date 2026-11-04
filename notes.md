@@ -1,7 +1,7 @@
 # dfs — **Oh My Marx** (was bibleApp · code pkg `marxversion`) · Kapital als Bible-App
 
 _Marx' Kapital Bd.1 i bite-sized daily verses, w bible-app mechanics + Augenzwinkern · 1st Android app = L project_
-_raw idea: [plan.md](plan.md) · full plan @1028: `~/.claude/plans/read-plan-md-for-floofy-eich.md` · todo: [todo_bible.md](todo_bible.md)_
+_raw idea: [plan.md](plan.md) · full plan @1028: `~/.claude/plans/read-plan-md-for-floofy-eich.md` · todo: [todo_omm.md](todo_omm.md) · dir/repo renamed bible ➡ `pr/omm` · `github.com/am0ebe/oh-my-marx` @1104 (app id `de.strix.marxversion` unchanged)_
 
 ## 🎯 goals
 1. strix actually gets thru Kapital — habit, not willpower
@@ -193,11 +193,11 @@ _per concept 2-3 lines_
   - routes: (a) **Compose Multiplatform** (Kotlin ➡ Android + iOS + web/wasm, reuse ~70 % o our code · web target = beta) · (b) small separate PWA (Svelte/vanilla) reading th same assets JSON · (c) Kotlin/Wasm later
   - 💡 rule 4 future fun prototypes: **web 1st** (share = a link) · native only when th fon's sensors/widgets r th point
 
-## 🧭 ownership: bible ⬄ ops (@1103 · strix: "responsibility gets diffused")
-- **bible** (this repo) = th product: app · server **code** + config templates · [server/SERVICE.md](server/SERVICE.md) = th contract ("what it needs")
+## 🧭 ownership: omm ⬄ ops (@1103 · strix: "responsibility gets diffused")
+- **omm** (this repo, was bible) = th product: app · server **code** + config templates · [server/SERVICE.md](server/SERVICE.md) = th contract ("what it needs")
 - **ops** (`pr/ops`) = running it on our VPS: dirs, Caddy, TLS, pins/updates, backups, monitoring ➡ `pr/ops/omm.md`
 - rules: bible doesn't change prod (asks ops) · ops doesn't change code (asks bible) · only shared seam = SERVICE.md · exception: bible's ship/deploy drop APKs into `/srv/www/oh-my-marx`
-- rip-out: drop bible ➡ ops' doc lists what 2 delete · drop th VPS ➡ SERVICE.md is enough 2 run it elsewhere
+- rip-out: drop omm ➡ ops' doc lists what 2 delete · drop th VPS ➡ SERVICE.md is enough 2 run it elsewhere
 
 ## 👥 community / Lesekreis (@1103 · strix: fitness + meditation apps all have it · ppl share experience + knowledge · also 4 hardcore Marxists)
 ### 🧑 user experience

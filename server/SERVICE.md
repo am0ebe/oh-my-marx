@@ -1,13 +1,13 @@
 # 📜 SERVICE.md — what Oh My Marx needs from whoever runs it (the contract)
 
 ## 🧭 who owns what (separation of concerns, @1103)
-| | **bible** (this repo = the product) | **ops** (`pr/ops` = our infra) |
+| | **omm** (this repo = the product) | **ops** (`pr/ops` = our infra) |
 |--|--|--|
 | owns | app · server **code** · images/config **templates** · this contract | **running** it: VPS dirs, Caddy routes, TLS, pins + updates, backups, monitoring, box secrets |
 | changes prod? | ❌ no — asks ops (todo / msg) · only exception: writes the download pages (below) | ✔️ yes |
-| changes code? | ✔️ yes | ❌ no — asks bible |
+| changes code? | ✔️ yes | ❌ no — asks omm |
 | docs | generic: "this service needs X" (works on any box) | concrete: "on our VPS it's at /srv/…, routed by …" ➡ `pr/ops/omm.md` (ops-owned runbook + rip-out list) |
-- 🔌 **rip-out test**: drop bible ➡ ops' doc lists every container/dir/route/backup to delete · drop our VPS ➡ this file is enough for any operator to run it elsewhere
+- 🔌 **rip-out test**: drop omm ➡ ops' doc lists every container/dir/route/backup to delete · drop our VPS ➡ this file is enough for any operator to run it elsewhere
 - the shared seam is **only this file**. If it changes, tell the other side.
 
 ## 1 · `omm-api` — anonymous read counter (`server/omm_api.py`)
@@ -40,6 +40,6 @@
 - **registration token**: made on the server by `setup.py` (`/data/omm_reg_token`) ➡ the app build needs it in git-ignored `android/omm.properties` (`omm.regToken=…`) ➡ ships inside the APK (by design)
 - `admin.secret` (@ommadmin pw): stays on the server, never in this repo
 
-## 4 · the 1 thing bible does on the box
+## 4 · the 1 thing omm does on the box
 - `bin/ship.sh` / `bin/deploy.sh` rsync APKs + `index.html` into `/srv/www/oh-my-marx/` (+ `dev/`), owned by am0
 - ops' part: Caddy serves `/srv/www` as static files at `https://scagent.de/`

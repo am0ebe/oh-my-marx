@@ -5,12 +5,14 @@
 - ▶ **RESUME @1104 (eos)** — where we are: stable **0.6.0** (comments + counters) live at scagent.de/omm · dev **0.7.0-dev.1104.1306** (Kreise + invite link + hourly Kreis notifs) on /oh-my-marx/dev · all committed + pushed (bible `ec8f7f2`+)
   - ▶ NEXT: 🦠 QA dev 0.7.0 (‼️ below) ➡ fix wh he finds ➡ `bin/ship.sh` (appVersion alr 0.7.0, Changelog entry alr written) ➡ then ③c (QR · Kreis plan · ntfy push) o th 🎨 design pass fr `pr/des/`
   - 👤 blocked on strix: fon QA (DEV app = blue icon) · friends feedback · pick nxt: ③c ⬄ design pass
-  - ⚠️ traps: VPS = **ops-owned** (pr/ops/omm.md) ➡ bible nvr edits Caddy//srv, asks ops (msg `ops` session) · box's `/srv/omm-matrix/compose.yml` owns th synapse tag (fleet.py bumps) ➡ nvr rsync ours over it · `android/omm.properties` (reg token, git-ignored) needed 4 builds w comments/Kreise · screenshots of his fon only after asking (mem) · zsh aliases: `command mv/grep`, nvr bare `tr`
+  - ⚠️ traps: VPS = **ops-owned** (pr/ops/omm.md) ➡ omm nvr edits Caddy//srv, asks ops (msg `ops` session) · box's `/srv/omm-matrix/compose.yml` owns th synapse tag (fleet.py bumps) ➡ nvr rsync ours over it · `android/omm.properties` (reg token, git-ignored) needed 4 builds w comments/Kreise · screenshots of his fon only after asking (mem) · zsh aliases: `command mv/grep`, nvr bare `tr`
 
 ## ‼️
 - 🦠👀 QA dev **0.7.0-dev.1104.1352** (@1104 feedback round): card btns = 5 equal pills w labels (Teilen quiet) · tap Marx/Heute/⚙️ when alr there = no flicker · bottom "runterziehen/schütteln" hint gone · ⚙️ ➡ Über = 📜 Quellen + 🤖 wh th app adds + 🔓 src link
 - 🔓 **public repo** (@1104 strix: show code 2 a privacy-aware IT guy): ✔️ ocr/ (Hooked ©) out o tree + history ➡ `re/boox/hooked/pages/` · ✔️ LICENSE GPL-3.0 · ✔️ README.md = EN dev readme (specs · build-it-urself · what leaves th fon · known gaps · sources) · DE guide ➡ ANLEITUNG.md · ✔️ repo ➡ `oh-my-marx`
   - 🦠 flip public: `gh repo edit am0ebe/oh-my-marx --visibility public --accept-visibility-change-consequences`
+  - 🦠 Forgejo: rename `am0/bibleApp` ➡ `oh-my-marx` (web: repo ⚙️ Settings ➡ name) ➡ `git remote set-url gitea ssh://git@git.scagent.de:2222/am0/oh-my-marx.git` + origin's 2nd push URL (old URL redirects meanwhile)
+  - pre-rewrite bup (incl. Hooked OCR history): `pr/.old/bibleApp_pre-filter_1104.bundle` · old mem/transcripts: `~/.claude/projects/-home-strix-gopro-go-pr-bible/` (new pool ➡ `~/dotfiles/.claude/memory/-home-strix-gopro-go-pr-omm`)
   - 🔵 release keystore (README "known gaps": release = debug-signed) ➡ friends reinstall once
   - 🔵 Mitlesen opt-in prompt on 1st start (now dflt on) · 🔵 ask ops: Synapse `user_ips_max_age` shorter (dflt 28d)
 - 🦠🧪 Obtainium on fon: /bible is gone ➡ edit/re-add: stable `https://scagent.de/oh-my-marx/` · ＋ 2nd app `https://scagent.de/oh-my-marx/dev/` = "Oh My Marx DEV" · no regex needed
@@ -37,13 +39,12 @@
 - 🔵 later: real cloned voice (own / friend's Merz *impression*, 🚫 real Merz) ➡ 🤖 pre-render w Chatterbox
 - 🦠🤔 friends route: Obtainium + GitHub Releases? (notes.md § friends wo adb) ➡ needs ‼️ release key + license + public repo · store = later
 - 🦠🤔 QA 10 sample Andachten (tone: wink, not cringe) ➡ tweak prompt i `bin/andacht.py` · ⚠️ local M makes Marx errors + "Heute lädt uns Marx ein" evy day ➡ maybe regen w Claude
-- 🦠🧪 install Android Studio (tarball, reuses `~/Android/Sdk`) ➡ open `pr/bible/android/` ➡ read code per notes.md § reading guide
+- 🦠🧪 install Android Studio (tarball, reuses `~/Android/Sdk`) ➡ open `pr/omm/android/` ➡ read code per notes.md § reading guide
 
 ## 📆
 
 ## 🔵
 - 🤖 🧪 tst `data/Matrix.kt` (refl @1104: 0 tsts, only th python flow): JVM tst vs a tiny fake HTTP server (register UIA 3 steps · join · timeline parse · redacted msgs dropped) · org.json needs `testImplementation("org.json:json:…")` (Android stub throws i unit tsts)
-- 🤖 🏗️ bible mem pool `~/.claude/projects/-home-strix-gopro-go-pr-bible/memory` = real dir, not i `~/dotfiles/.claude/memory/` like th oth pools ➡ move + symlink (kb/sys agent: install.sh) · links inside need `../../shared/` depth after th move
 - 🎨⭐ **design pass fr `pr/des/`** (🦠 @1103: 17 screenshots o another app = inspiration) ➡ pick themes · widgets · layouts ➡ apply 2 OMM (cards, Home, book) · 🤖 1st: go thru th shots w 🦠, list what 2 steal
 - 📦⭐ **realistic holy voice** (🦠 @1103 "STT horrible + slow") ➡ plan i notes.md § voice 🗺️: A pre-render Losung w Chatterbox on tow ➡ C distill into a Piper voice (~20-60 MB) 4 th reader
 - 📦 gestures left over: "Morgen"-teaser blurred + locked (anticipation) · shortcut "Weiterlesen" (needs a last-read-chapter pref)
