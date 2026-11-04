@@ -10,6 +10,8 @@ ADB=$ANDROID_HOME/platform-tools/adb
 # short link 4 ppl: scagent.de/omm (+ /omm/dev) = 302 by ops' Caddy · Obtainium keeps th full URL
 WEB=https://scagent.de/oh-my-marx
 DIRS=/srv/www/oh-my-marx
+MAIL=am0ebe@gmx.de                                  # feedback addr on th page (💡 later: omm@ alias, see todo)
+SRC=https://github.com/am0ebe/oh-my-marx
 
 # th 1 version number lives i android/app/build.gradle.kts: val appVersion = "x.y.z"
 app_version() { sed -nE 's/^val appVersion = "([^"]+)".*/\1/p' android/app/build.gradle.kts; }
@@ -50,9 +52,13 @@ $note
 <ol><li>APK antippen ➡ „Aus dieser Quelle zulassen“ (einmalig) ➡ Installieren</li>
 <li>Play Protect meckert evtl. („unbekannte App“) ➡ „Trotzdem installieren“</li>
 <li>Updates automatisch: App <b>Obtainium</b> ➡ ＋ ➡ URL <code>$url</code> ➡ Hinzufügen. Fertig.</li></ol>
-<p>Weitersagen: <b><a href="https://scagent.de/omm">scagent.de/omm</a></b> 🔗 · Feedback? Einfach an strix schicken — Screenshot + ein Satz reicht 🙏</p>
+<p>Weitersagen: <b><a href="https://scagent.de/omm">scagent.de/omm</a></b> 🔗</p>
+<p>💬 Feedback: <a href="mailto:$MAIL?subject=Oh%20My%20Marx%20$ver">$MAIL</a> — Screenshot + ein Satz reicht 🙏</p>
+<p>🔓 Quellcode: <a href="$SRC">$SRC</a> · lieber selbst bauen statt APK vertrauen</p>
 <p><small>v$ver · $(date '+%F %H:%M') · sha256 $sha…</small></p>
 EOF
+    # 🔄 machine-readable latest version (4 a future in-app "update available" check · Obtainium ignores it)
+    printf '{"version":"%s","apk":"%s","sha256":"%s"}\n' "$ver" "$apk" "$(sha256sum "$out/$apk" | cut -d' ' -f1)" > "$out/version.json"
 }
 
 # upload 2 evy page dir (+ SUBDIR): apk 1st, page 2nd (page nvr points at a missing file) · keep newest 3 apks
@@ -63,7 +69,7 @@ publish() {
         d="$d${sub:+/$sub}"
         ssh vps "mkdir -p $d"
         rsync -t --chmod=F644 "$out"/*.apk "vps:$d/"
-        rsync -t --chmod=F644 "$out/index.html" "vps:$d/"
+        rsync -t --chmod=F644 "$out/index.html" "$out/version.json" "vps:$d/"
         ssh vps "cd $d && ls -t *.apk | tail -n +4 | xargs -r rm --"
     done
     # 👥 Kreis invite landing page (bin/kreis.html) ➡ <web>/k/ · same 4 stable + dev, so always refreshed

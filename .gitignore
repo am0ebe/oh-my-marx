@@ -17,6 +17,7 @@ img/IMG_*.jpg
 
 # logs
 data/*.log
+data/i18n_full/*.log
 
 # 💬 Matrix registration token 4 th app (BuildConfig) · fr ssh vps docker exec omm-matrix cat /data/omm_reg_token
 android/omm.properties
