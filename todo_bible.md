@@ -2,6 +2,10 @@
 - Vers des Tages on 🦠's fon via own Android app
 
 ## ⏳
+- ▶ **RESUME @1104 (eos)** — where we are: stable **0.6.0** (comments + counters) live at scagent.de/omm · dev **0.7.0-dev.1104.1306** (Kreise + invite link + hourly Kreis notifs) on /oh-my-marx/dev · all committed + pushed (bible `ec8f7f2`+)
+  - ▶ NEXT: 🦠 QA dev 0.7.0 (‼️ below) ➡ fix wh he finds ➡ `bin/ship.sh` (appVersion alr 0.7.0, Changelog entry alr written) ➡ then ③c (QR · Kreis plan · ntfy push) o th 🎨 design pass fr `pr/des/`
+  - 👤 blocked on strix: fon QA (DEV app = blue icon) · friends feedback · pick nxt: ③c ⬄ design pass
+  - ⚠️ traps: VPS = **ops-owned** (pr/ops/omm.md) ➡ bible nvr edits Caddy//srv, asks ops (msg `ops` session) · box's `/srv/omm-matrix/compose.yml` owns th synapse tag (fleet.py bumps) ➡ nvr rsync ours over it · `android/omm.properties` (reg token, git-ignored) needed 4 builds w comments/Kreise · screenshots of his fon only after asking (mem) · zsh aliases: `command mv/grep`, nvr bare `tr`
 
 ## ‼️
 - 🦠🧪 Obtainium on fon: /bible is gone ➡ edit/re-add: stable `https://scagent.de/oh-my-marx/` · ＋ 2nd app `https://scagent.de/oh-my-marx/dev/` = "Oh My Marx DEV" · no regex needed
@@ -34,6 +38,8 @@
 ## 📆
 
 ## 🔵
+- 🤖 🧪 tst `data/Matrix.kt` (refl @1104: 0 tsts, only th python flow): JVM tst vs a tiny fake HTTP server (register UIA 3 steps · join · timeline parse · redacted msgs dropped) · org.json needs `testImplementation("org.json:json:…")` (Android stub throws i unit tsts)
+- 🤖 🏗️ bible mem pool `~/.claude/projects/-home-strix-gopro-go-pr-bible/memory` = real dir, not i `~/dotfiles/.claude/memory/` like th oth pools ➡ move + symlink (kb/sys agent: install.sh) · links inside need `../../shared/` depth after th move
 - 🎨⭐ **design pass fr `pr/des/`** (🦠 @1103: 17 screenshots o another app = inspiration) ➡ pick themes · widgets · layouts ➡ apply 2 OMM (cards, Home, book) · 🤖 1st: go thru th shots w 🦠, list what 2 steal
 - 📦⭐ **realistic holy voice** (🦠 @1103 "STT horrible + slow") ➡ plan i notes.md § voice 🗺️: A pre-render Losung w Chatterbox on tow ➡ C distill into a Piper voice (~20-60 MB) 4 th reader
 - 📦 gestures left over: "Morgen"-teaser blurred + locked (anticipation) · shortcut "Weiterlesen" (needs a last-read-chapter pref)
