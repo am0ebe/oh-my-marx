@@ -6,7 +6,45 @@ verses, using the mechanics of bible apps (daily verse, reading plans, streaks, 
 
 A fun prototype and a "learn Android" project. It is sideloaded to a few friends, not on any store.
 
-> 🇩🇪 Install guide for friends (German): [ANLEITUNG.md](ANLEITUNG.md) · download page: <https://scagent.de/omm>
+**Language policy:** the app speaks **German** first (Marx wrote in German, the original is German), translations
+sit on top. End-user text (the install part right below) is German. Everything technical (rest of this README, code,
+comments, commits) is **English**.
+
+---
+
+## 📱 Installieren (Android, ~2 Minuten)
+
+1. Auf dem Handy öffnen: **https://scagent.de/omm**
+2. Den roten Knopf **„⬇️ Oh My Marx herunterladen“** antippen
+3. Download antippen ➡ Android fragt: *„Apps aus dieser Quelle zulassen?“* ➡ **zulassen** (nur einmal)
+4. **Installieren** ➡ fertig. Das Icon heißt *Oh My Marx*.
+
+> ⚠️ Google Play Protect warnt evtl. „unbekannte App“ — das ist normal bei Apps außerhalb des Play Stores.
+> Auf **„Trotzdem installieren“** tippen. Lieber selbst bauen? ➡ [Build it yourself](#build-it-yourself).
+
+🍏 **iPhone:** geht leider (noch) nicht — Apple erlaubt keine Apps außerhalb des App Stores.
+
+**Updates** (optional, empfohlen) mit der kostenlosen App **Obtainium**:
+1. Obtainium installieren: https://github.com/ImranR98/Obtainium/releases ➡ die `.apk` mit **arm64** im Namen
+2. In Obtainium: **＋** ➡ *URL*: `https://scagent.de/oh-my-marx/` ➡ **Hinzufügen**
+3. Ab jetzt meldet Obtainium neue Versionen ➡ antippen ➡ Update.
+
+Ohne Obtainium: ab und zu Schritt 1–4 wiederholen (deine Daten bleiben erhalten).
+
+**Kurz-Tour**
+- **Heute**: der Karten-Stapel — nach links wischen = frühere Tage · **Amen ☭** = Lesetag zählt
+- ganz oben **runterziehen** = 🔮 Orakel-Karte · **Handy schütteln** = 📉 Krise!
+- **Lesen**: das Buch — Seite nach links ziehen = umblättern · zwei Finger = Schriftgröße
+- Absatz **doppelt tippen** = 🔖 Lesezeichen · einmal tippen = Menü (Notiz, Teilen, Vorlesen …)
+- **lange aufs App-Icon drücken** = Abkürzungen · Widget für den Homescreen gibt's auch
+- ⚙️ **Hooked-Modus** an = gelbe Zettel erklären jeden Psycho-Trick der App
+
+**Daten:** Lesezeichen, Notizen und Streak bleiben auf deinem Handy. **„Mitlesen“** (abschaltbar in ⚙️) schickt
+anonym, *welche Seite* gelesen wurde — kein Konto, keine IP gespeichert. **Kommentare** sind öffentlich für alle
+Mitlesenden. Details: [What leaves the phone](#what-leaves-the-phone).
+
+**Feedback:** Screenshot + ein Satz an strix (Signal) oder **am0ebe@gmx.de** — was war lustig, was nervt, wo hast
+du dich verirrt?
 
 ---
 

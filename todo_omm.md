@@ -9,11 +9,12 @@
 
 ## ‼️
 - 🦠👀 QA dev **0.7.0-dev.1104.1352** (@1104 feedback round): card btns = 5 equal pills w labels (Teilen quiet) · tap Marx/Heute/⚙️ when alr there = no flicker · bottom "runterziehen/schütteln" hint gone · ⚙️ ➡ Über = 📜 Quellen + 🤖 wh th app adds + 🔓 src link
-- 🔓 **public repo** (@1104 strix: show code 2 a privacy-aware IT guy): ✔️ ocr/ (Hooked ©) out o tree + history ➡ `re/boox/hooked/pages/` · ✔️ LICENSE GPL-3.0 · ✔️ README.md = EN dev readme (specs · build-it-urself · what leaves th fon · known gaps · sources) · DE guide ➡ ANLEITUNG.md · ✔️ repo ➡ `oh-my-marx`
-  - 🦠 flip public: `gh repo edit am0ebe/oh-my-marx --visibility public --accept-visibility-change-consequences`
+- 🔓 **public repo** (@1104 strix: show code 2 a privacy-aware IT guy): ✔️ ocr/ (Hooked ©) out o tree + history ➡ `re/boox/hooked/pages/` · ✔️ LICENSE GPL-3.0 · ✔️ README.md = EN dev readme (specs · build-it-urself · what leaves th fon · known gaps · sources) · DE install section on top (end-usr = DE, tech = EN) · ✔️ repo ➡ `oh-my-marx` · ✔️ public @1104
   - 🦠 Forgejo: rename `am0/bibleApp` ➡ `oh-my-marx` (web: repo ⚙️ Settings ➡ name) ➡ `git remote set-url gitea ssh://git@git.scagent.de:2222/am0/oh-my-marx.git` + origin's 2nd push URL (old URL redirects meanwhile)
   - pre-rewrite bup (incl. Hooked OCR history): `pr/.old/bibleApp_pre-filter_1104.bundle` · old mem/transcripts: `~/.claude/projects/-home-strix-gopro-go-pr-bible/` (new pool ➡ `~/dotfiles/.claude/memory/-home-strix-gopro-go-pr-omm`)
-  - 🔵 release keystore (README "known gaps": release = debug-signed) ➡ friends reinstall once
+  - ‼️ 🦠🔑 bup `~/.android/debug.keystore` (= th current release key!) ➡ secrets/ + offsite · lose it ➡ friends can't update
+  - 🔵 real release key + `apksigner rotate` (v3 lineage, Android 9+) ➡ no reinstall 4 friends
+  - 📦⭐ full Kapital txt i IT/ES/PT/ZH/AR: own LLM translation fr DE (EN as aid) + per-lang glossary o std Marxist terms (Mehrwert = plusvalore/plusvalía/mais-valia/剩余价值/فائض القيمة) · ~1-2 h/lang on 3090 · 🚫 official translations mostly © (Scaron/Siglo XXI 1975, Cantimori, Chinese CCTB …) · pilot: Kap 8 → 1 lang ➡ judge
   - 🔵 Mitlesen opt-in prompt on 1st start (now dflt on) · 🔵 ask ops: Synapse `user_ips_max_age` shorter (dflt 28d)
 - 🦠🧪 Obtainium on fon: /bible is gone ➡ edit/re-add: stable `https://scagent.de/oh-my-marx/` · ＋ 2nd app `https://scagent.de/oh-my-marx/dev/` = "Oh My Marx DEV" · no regex needed
 - 🦠📣 send **scagent.de/omm** 2 2-3 friends ➡ feedback (short link live @1104, ops' Caddy 302 ➡ /oh-my-marx/)
