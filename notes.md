@@ -63,7 +63,7 @@ _raw idea: [plan.md](plan.md) · full plan @1028: `~/.claude/plans/read-plan-md-
 - **P3** habit test on self + friends (Hooked ch8: identify ➡ codify ➡ modify)
 
 ## dirs
-- `img_orig/` raw fotos (EXIF rotated) · `img/` upright copies · `img/marx_portrait/` PD src 4 icon · `ocr/` raw OCR txt (bookocr.py)
+- `img/marx_portrait/` PD src 4 icon · Hooked page fotos + OCR ➡ moved 2 KB `re/boox/hooked/pages/` @1104 (© book, not 4 a public repo · `img_orig/` = local raw, git-ignored)
 - `bin/` pipeline · `data/` verses/plans/scores · `android/` Android Studio project (module `app`) · [kapital_toc.md](kapital_toc.md)
 
 ## 🔄 pipeline (P1) — re-run order

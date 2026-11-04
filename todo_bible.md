@@ -8,13 +8,17 @@
   - ⚠️ traps: VPS = **ops-owned** (pr/ops/omm.md) ➡ bible nvr edits Caddy//srv, asks ops (msg `ops` session) · box's `/srv/omm-matrix/compose.yml` owns th synapse tag (fleet.py bumps) ➡ nvr rsync ours over it · `android/omm.properties` (reg token, git-ignored) needed 4 builds w comments/Kreise · screenshots of his fon only after asking (mem) · zsh aliases: `command mv/grep`, nvr bare `tr`
 
 ## ‼️
+- 🦠👀 QA dev **0.7.0-dev.1104.1352** (@1104 feedback round): card btns = 5 equal pills w labels (Teilen quiet) · tap Marx/Heute/⚙️ when alr there = no flicker · bottom "runterziehen/schütteln" hint gone · ⚙️ ➡ Über = 📜 Quellen + 🤖 wh th app adds + 🔓 src link
+- 🔓 **public repo** (@1104 strix: show code 2 a privacy-aware IT guy): ✔️ ocr/ (Hooked ©) out o tree + history ➡ `re/boox/hooked/pages/` · ✔️ LICENSE GPL-3.0 · ✔️ README.md = EN dev readme (specs · build-it-urself · what leaves th fon · known gaps · sources) · DE guide ➡ ANLEITUNG.md · ✔️ repo ➡ `oh-my-marx`
+  - 🦠 flip public: `gh repo edit am0ebe/oh-my-marx --visibility public --accept-visibility-change-consequences`
+  - 🔵 release keystore (README "known gaps": release = debug-signed) ➡ friends reinstall once
+  - 🔵 Mitlesen opt-in prompt on 1st start (now dflt on) · 🔵 ask ops: Synapse `user_ips_max_age` shorter (dflt 28d)
 - 🦠🧪 Obtainium on fon: /bible is gone ➡ edit/re-add: stable `https://scagent.de/oh-my-marx/` · ＋ 2nd app `https://scagent.de/oh-my-marx/dev/` = "Oh My Marx DEV" · no regex needed
 - 🦠📣 send **scagent.de/omm** 2 2-3 friends ➡ feedback (short link live @1104, ops' Caddy 302 ➡ /oh-my-marx/)
 - 🦠👀 QA 0.6.0 (shipped @1104): ⚙️ 👥 Mitlesen ON ➡ book: header "👥 N×" + bottom "💬 Mitreden" ➡ pick name ➡ comment ☭ ➡ hold own = delete · Home "👥 Heute lesen N mit · M × Amen" · ⚙️ rename
 - 🦠👀 QA dev 0.7.0 👥 Kreise: tab 👥 Kreis ➡ gründen ➡ antippen ➡ 📤 Einladen ➡ friend taps th link ➡ page ➡ "In Oh My Marx öffnen" ➡ app ➡ Beitreten · Amen on Heute ➡ ✔️ i th Kreis · chat ☭ · 🎟️ only when all read · 🔔 friend's msg ➡ notif within ~1 h · evening nudge ➡ 🤖 ship 0.7.0
 - 🔵 community ③c: QR code 4 th invite (zxing lib) · Kreis plan (all read th same plan day) · real push (UnifiedPush/ntfy — we alr run ntfy!) instead o hourly polling · ④ Salon (forum per Abschnitt) · 💬 on cards · ⚠️ report btn + mod tools b4 strangers join · short invite link `scagent.de/omm/k?c=` (= ops redir)
 - 🔵 web/PWA version 4 iPhone friends — later, rebuild (no shake, new voices) · this proj stays Android 🤖📱
-- 🔵 rename GitHub/Forgejo repo bibleApp ➡ OhMyMarx (remotes + Obtainium URL unchanged on VPS)
 - 🦠👀 QA v0.5.0 on fon (via Obtainium!):
   - 🃏 Home = card deck: swipe ⬅ = earlier days · Teilen big · Amen ➡ ☭ swoosh · Marx icon/Heute tab = back 2 1st card
   - 📉 shake = red flash + buzz + KRISE card i front · ⬇ pull = 🔮 card · Marxoskop chips ➡ card up top

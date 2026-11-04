@@ -1,7 +1,15 @@
 package de.strix.marxversion.ui
 
+import android.os.Build
+import android.widget.Toast
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Surface
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -116,26 +124,44 @@ fun CardCarousel(
     val q = verseQuote(cur.v)
     val r = ref(cur.v)
     LaunchedEffect(cur.key, lang, persona) { speaker.prerender(q, lang, persona) }  // 🔊 tap = instant
-    Row(Modifier.fillMaxWidth().padding(top = 8.dp), horizontalArrangement = Arrangement.SpaceEvenly, verticalAlignment = Alignment.CenterVertically) {
-        TextButton(onClick = { speaker.say(q, lang, persona) }) {
-            Icon(painterResource(R.drawable.ic_volume), tr("Vorlesen", "Listen"), Modifier.size(22.dp), tint = if (speaker.speaking) Red else Blue)
+    // 1 row o equal pills (icon + tiny label) · Teilen = 1 o them, not th loud 1 (feedback @1104) · Amen = same shape, red
+    val haptic = LocalHapticFeedback.current
+    val copied = tr("📋 Kopiert", "📋 Copied")
+    val shareTitle = tr("Spruchkarte teilen", "Share verse card")
+    Row(Modifier.fillMaxWidth().padding(top = 10.dp), horizontalArrangement = Arrangement.SpaceEvenly, verticalAlignment = Alignment.Top) {
+        CardAction(R.drawable.ic_volume, tr("Vorlesen", "Listen"), if (speaker.speaking) Red else Blue) { speaker.say(q, lang, persona) }
+        CardAction(R.drawable.ic_copy, tr("Kopieren", "Copy"), Blue) {
+            copyText(ctx, "${lang.quote(q)}\n— Karl Marx, $r")
+            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+            if (Build.VERSION.SDK_INT < 33) Toast.makeText(ctx, copied, Toast.LENGTH_SHORT).show()
         }
-        CopyIcon("${lang.quote(q)}\n— Karl Marx, $r", Blue)
-        TextButton(onClick = { openChapter(cur.v.kap, cur.v.id) }) { Text("📖") }
-        val shareTitle = tr("Spruchkarte teilen", "Share verse card")
-        Button(onClick = {
+        CardAction(R.drawable.ic_book, tr("Im Buch", "In book"), Blue) { openChapter(cur.v.kap, cur.v.id) }
+        CardAction(R.drawable.ic_share, tr("Teilen", "Share"), Blue) {
             val bmp = cardBitmap(ctx, q, r, lang, cur.feast, cur.kind == CardItem.Kind.KRISE)
             shareCard(ctx, bmp, "${lang.quote(q)} — Karl Marx, $r\n$APP_NAME", shareTitle)
-        }) {
-            Icon(painterResource(R.drawable.ic_share), null, Modifier.size(18.dp)); Text(" " + tr("Teilen", "Share"))
         }
         if (cur.kind == CardItem.Kind.TODAY && !doneToday)
-            OutlinedButton(onClick = { onAmen(cur.v) }, colors = ButtonDefaults.outlinedButtonColors(contentColor = Red)) { Text(tr("Amen ☭", "Amen ☭")) }
+            CardAction(null, tr("Amen", "Amen"), Red, glyph = "☭") { onAmen(cur.v) }
     }
     Text(
         tr("⬅ wischen: frühere Losungen · ⬇ ziehen: Orakel · 📳 schütteln: Krise", "⬅ swipe: earlier verses · ⬇ pull: oracle · 📳 shake: crisis"),
         fontSize = 11.sp, color = MaterialTheme.colorScheme.secondary, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth(),
     )
+}
+
+/** 🔘 1 card action: soft-tinted circle (tint @8 % + hairline ring) + label underneath · icon xor glyph */
+@Composable
+private fun CardAction(icon: Int?, label: String, tint: Color, glyph: String? = null, onClick: () -> Unit) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.width(64.dp)) {
+        Surface(onClick = onClick, shape = CircleShape, color = tint.copy(alpha = 0.08f),
+            border = BorderStroke(1.dp, tint.copy(alpha = 0.22f)), modifier = Modifier.size(46.dp)) {
+            Box(contentAlignment = Alignment.Center) {
+                if (icon != null) Icon(painterResource(icon), label, Modifier.size(20.dp), tint = tint)
+                else Text(glyph.orEmpty(), color = tint, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+            }
+        }
+        Text(label, fontSize = 11.sp, color = tint.copy(alpha = 0.85f), maxLines = 1, modifier = Modifier.padding(top = 3.dp))
+    }
 }
 
 @Composable

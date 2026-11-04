@@ -170,12 +170,31 @@ fun SettingsScreen(vm: AppVm, askNotifPermission: () -> Unit) {
         Text(tr("🤖 Stolz gevibecodet mit Claude Code (Anthropic, Claude Opus) — strix hat gewünscht, Claude hat getippt. Seiten-OCR: gemma3 + GLM-OCR, Übersetzungen: Qwen3, alles lokal auf einer RTX 3090 Ti. Entfremdete Arbeit, vollautomatisiert. Die Produktionsmittel gehören trotzdem uns.",
             "🤖 Proudly vibe-coded with Claude Code (Anthropic, Claude Opus) — strix wished, Claude typed. Page OCR: gemma3 + GLM-OCR, translations: Qwen3, all local on an RTX 3090 Ti. Alienated labour, fully automated. The means of production are still ours."), fontSize = 13.sp)
         Gap(6)
-        Text(tr("Text: Karl Marx, Das Kapital Bd. 1, 4. Aufl. 1890 (MEW 23, Seitenzahlen = Dietz 1968). Englisch: Moore/Aveling 1887. Gemeinfrei.",
-            "Text: Karl Marx, Capital vol. 1, 4th ed. 1890 (MEW 23, page numbers = Dietz 1968). English: Moore/Aveling 1887. Public domain."), fontSize = 13.sp)
-        Text(tr("Mechanik: abgeschaut bei Bibel-Apps, erklärt in Nir Eyal, „Hooked“, Kap. 7.",
-            "Mechanics: borrowed from bible apps, explained in Nir Eyal, “Hooked”, ch. 7."), fontSize = 13.sp)
-        Text(tr("Zitate, Andachten + Übersetzungen (IT · ES · PT · 中文 · عربي): von einem lokalen LLM — Irrtümer vorbehalten, Marx hat immer recht.",
-            "Quotes, devotionals + translations (IT · ES · PT · 中文 · عربي): by a local LLM — errors reserved, Marx is always right."), fontSize = 13.sp)
+        // 📜 sources ⬄ what we (app / LLM) put on top · keep i sync w README.md § Sources
+        Gap(6)
+        Text(tr("📜 Quellen", "📜 Sources"), fontWeight = FontWeight.Bold, fontSize = 13.sp)
+        Text(tr("• Deutsch: Karl Marx, Das Kapital Bd. 1, 4. Aufl. 1890 (hg. Engels), Text nach MEW 23 (Dietz), über das archivierte mlwerke.de. Seitenzahlen = MEW 23. Fußnoten = Marx' eigene.",
+            "• German: Karl Marx, Das Kapital vol. 1, 4th ed. 1890 (ed. Engels), text as in MEW 23 (Dietz), via the archived mlwerke.de. Page numbers = MEW 23. Footnotes = Marx's own."), fontSize = 13.sp)
+        Text(tr("• Englisch: Übersetzung Samuel Moore & Edward Aveling 1887 (hg. Engels), über marxists.org.",
+            "• English: translation by Samuel Moore & Edward Aveling 1887 (ed. Engels), via marxists.org."), fontSize = 13.sp)
+        Text(tr("• Porträt: J. J. E. Mayall, London 1875. Alles gemeinfrei.",
+            "• Portrait: J. J. E. Mayall, London 1875. All public domain."), fontSize = 13.sp)
+        Text(tr("• Mechanik: abgeschaut bei Bibel-Apps, erklärt in Nir Eyal, „Hooked“ (2014), Kap. 7 — nur kurz zitiert.",
+            "• Mechanics: borrowed from bible apps, explained in Nir Eyal, “Hooked” (2014), ch. 7 — only briefly quoted."), fontSize = 13.sp)
+        Gap(6)
+        Text(tr("🤖 Was die App obendrauf macht", "🤖 What the app adds on top"), fontWeight = FontWeight.Bold, fontSize = 13.sp)
+        Text(tr("• Absätze Deutsch ⬄ Englisch automatisch zugeordnet — kann mal danebenliegen.",
+            "• Paragraphs German ⬄ English paired automatically — may be off now and then."), fontSize = 13.sp)
+        Text(tr("• Zitate: ein lokales LLM (Qwen3) wählt und bewertet sie, der Wortlaut ist aber immer Marx' Originalsatz (automatisch geprüft).",
+            "• Quotes: a local LLM (Qwen3) picks and rates them, but the wording is always Marx's original sentence (checked automatically)."), fontSize = 13.sp)
+        Text(tr("• Andachten: vom LLM geschrieben (Deutsch + Englisch).",
+            "• Devotionals: written by the LLM (German + English)."), fontSize = 13.sp)
+        Text(tr("• IT · ES · PT · 中文 · عربي: App, Zitate, Andachten + Pläne maschinell übersetzt (Qwen3). Der volle Kapital-Text mit Fußnoten bleibt Deutsch + Englisch — in diesen Sprachen liest du ihn auf Englisch.",
+            "• IT · ES · PT · 中文 · عربي: app, quotes, devotionals + plans machine-translated (Qwen3). The full Capital text with footnotes stays German + English — in these languages you read it in English."), fontSize = 13.sp)
+        Text(tr("Irrtümer vorbehalten, Marx hat immer recht.", "Errors reserved, Marx is always right."), fontSize = 13.sp, color = MaterialTheme.colorScheme.secondary)
+        Gap(6)
+        Text(tr("🔓 Quellcode: github.com/am0ebe/oh-my-marx (GPL-3.0) — selbst bauen statt APK vertrauen.",
+            "🔓 Source code: github.com/am0ebe/oh-my-marx (GPL-3.0) — build it yourself instead of trusting the APK."), fontSize = 13.sp)
     }
 
     if (pickTime) TimeWheelDialog(s.notifHour, s.notifMinute, onDismiss = { pickTime = false }) { h, m ->

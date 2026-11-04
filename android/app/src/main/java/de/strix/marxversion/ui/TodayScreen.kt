@@ -281,8 +281,7 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
             }
         }
         HookNote(Hook.FORER, s.testMode)
-        Text(tr("⬇ Seite runterziehen = Zufalls-Orakel · 📳 Handy schütteln = Krise!", "⬇ pull the page down = random oracle · 📳 shake the phone = crisis!"),
-            fontSize = 11.sp, color = MaterialTheme.colorScheme.secondary)
+        // (pull/shake hint lives only under th cards: down here "pull down" doesn't work ➡ misleading, rm'd @1104)
         Gap(40)
 
         if (celebrate) {

@@ -1,60 +1,105 @@
 # ☭ Oh My Marx
 
-**Marx lesen wie die Bibel.** Jeden Tag ein Spruch aus *Das Kapital* als schöne Karte,
-das ganze Buch zum Blättern, Lesepläne, Streak und Stempelkarte — und ein Augenzwinkern:
-die App erklärt dir nebenbei, mit welchen Tricks Apps dich süchtig machen (🪝 Hooked-Modus).
+*Read Marx like the Bible.* An Android app that serves Karl Marx's *Capital*, vol. 1, in daily bite-sized
+verses, using the mechanics of bible apps (daily verse, reading plans, streaks, share cards). It also comes with a
+**Hooked mode** that labels every one of its own habit-forming tricks and links it to Nir Eyal's *Hooked*.
 
-Ein Spaß-Prototyp von strix. **Ich will dein Feedback!** 🙏
+A fun prototype and a "learn Android" project. It is sideloaded to a few friends, not on any store.
 
----
-
-## 📱 Installieren (Android, ~2 Minuten)
-
-1. Auf dem Handy öffnen: **https://scagent.de/omm**
-2. Den roten Knopf **„⬇️ Oh My Marx herunterladen“** antippen
-3. Download antippen ➡ Android fragt: *„Apps aus dieser Quelle zulassen?“* ➡ **zulassen** (nur einmal)
-4. **Installieren** ➡ fertig. Das Icon heißt *Oh My Marx*.
-
-> ⚠️ Google Play Protect warnt evtl. „unbekannte App“ — das ist normal bei Apps außerhalb des Play Stores.
-> Auf **„Trotzdem installieren“** tippen.
-
-🍏 **iPhone:** geht leider (noch) nicht — Apple erlaubt keine Apps außerhalb des App Stores.
-
-## 🔄 Updates bekommen (optional, empfohlen)
-
-Neue Versionen kommen oft. Am bequemsten mit der kostenlosen App **Obtainium**:
-
-1. Obtainium installieren: https://github.com/ImranR98/Obtainium/releases ➡ bei der neuesten Version die `.apk` mit **arm64** im Namen (gleiche Schritte wie oben)
-2. In Obtainium: **＋** ➡ bei *URL* eintragen: `https://scagent.de/oh-my-marx/` ➡ **Hinzufügen**
-3. Ab jetzt meldet Obtainium neue Versionen ➡ antippen ➡ Update.
-
-Ohne Obtainium: einfach ab und zu Schritt 1–4 oben wiederholen (deine Daten bleiben erhalten).
-
-## 💬 Feedback geben
-
-Einfach an strix schicken (Signal / Nachricht):
-- **ein Screenshot + ein Satz** reicht völlig
-- was war **lustig**? was **nervt**? wo hast du dich **verirrt**? was hast du **nicht gefunden**?
-- Bugs: was hast du getippt, was ist passiert?
-
-## 👆 Kurz-Tour
-
-- **Heute**: die Karten-Stapel — nach links wischen = frühere Tage · **Amen ☭** = Lesetag zählt
-- **runterziehen** = 🔮 Orakel-Karte · **Handy schütteln** = 📉 Krise!
-- **Lesen**: das Buch — Seite nach links ziehen = umblättern · zwei Finger = Schriftgröße
-- auf einen Absatz **doppelt tippen** = 🔖 Lesezeichen · einmal tippen = Menü (Notiz, Teilen, Vorlesen …)
-- **lange aufs App-Icon drücken** = Abkürzungen · Widget für den Homescreen gibt's auch
-- ⚙️ **Hooked-Modus** an = gelbe Zettel erklären jeden Psycho-Trick der App
-
-## 🔒 Daten
-
-Deine Lesezeichen, Notizen und dein Streak bleiben auf deinem Handy. **„Mitlesen“** ist an (abschaltbar in ⚙️):
-die App schickt anonym, *welche Seite* gelesen wurde (mit einer Zufallszahl, die sich täglich ändert) — damit
-„👥 34× gelesen“ angezeigt werden kann. Kein Konto, keine IP gespeichert.
-**Kommentare** (💬 unter jeder Buchseite) sind öffentlich für alle Mitlesenden; ein Name wird erst beim ersten Kommentar gebraucht.
+> 🇩🇪 Install guide for friends (German): [ANLEITUNG.md](ANLEITUNG.md) · download page: <https://scagent.de/omm>
 
 ---
 
-<sub>Text: Karl Marx, *Das Kapital* Bd. 1 (1890, gemeinfrei) · Englisch: Moore/Aveling 1887 · Zitate,
-Andachten + Übersetzungen von einem lokalen LLM · gevibecodet mit Claude Code.
-Für Entwickler: `notes.md` (Konzept + Aufbau), `bin/deploy.sh -h`, `bin/ship.sh -h`, `server/SERVICE.md` (was die Server brauchen + wer wofür zuständig ist).</sub>
+## Specs
+
+| | |
+|---|---|
+| **version** | `0.7.0` (single source: `appVersion` in [`android/app/build.gradle.kts`](android/app/build.gradle.kts)) · changelog in-app (⚙️ ➡ release notes, `ui/Changelog.kt`) |
+| **platform** | Android 8.0+ (`minSdk 26`), `targetSdk`/`compileSdk 36` |
+| **stack** | Kotlin 2.4 · Jetpack Compose (Material 3) · Room · DataStore · WorkManager · kotlinx-serialization |
+| **build** | AGP 8.13 · Gradle 8.14 (wrapper) · JDK 17+ (built with 21) |
+| **dependencies** | AndroidX + kotlinx only. **No** Google Play Services, Firebase, analytics, crash reporting or ads. HTTP via plain `HttpURLConnection`. |
+| **permissions** | `INTERNET` (counter + comments, see below) · `POST_NOTIFICATIONS` (daily verse) · `VIBRATE` |
+| **languages** | full book text: DE + EN · app, quotes, devotionals, plans: + IT · ES · PT · 中文 · عربي (RTL) |
+| **size** | ~17 MB APK, the whole book in 2 languages ships inside (offline-first) |
+| **package** | `de.strix.marxversion` (dev builds: `….dev`, installable side by side) |
+| **license** | code: [GPL-3.0](LICENSE) · book texts: public domain (see [Sources](#sources--copyright)) |
+
+## Build it yourself
+
+Don't trust a prebuilt APK? Good. Build your own:
+
+```sh
+git clone https://github.com/am0ebe/oh-my-marx && cd oh-my-marx/android
+export ANDROID_HOME=~/Android/Sdk          # SDK with platform 36 (Android Studio's default location works)
+./gradlew testDebugUnitTest                # JVM tests: content JSON ⬄ Kotlin classes, streak logic, circles, voice DSP
+./gradlew assembleDebug                    # ➡ app/build/outputs/apk/debug/app-debug.apk
+adb install app/build/outputs/apk/debug/app-debug.apk
+```
+
+- A fresh clone builds with **comments switched off**: the Matrix registration token lives in the git-ignored
+  `android/omm.properties`. Everything else (book, cards, plans, streak, voice, widget, counter) works.
+- Your build is signed with *your* debug key, so it installs as a separate app identity. It can't update over
+  the friends' APK and the friends' APK can't update over yours.
+- Content (`android/app/src/main/assets/content/*.json`) is generated by the Python pipeline in `bin/` (see
+  [Layout](#layout)) and committed, so you don't need to rerun the pipeline to build.
+
+## What leaves the phone
+
+Everything personal (bookmarks, notes, highlights, streak, stamp card, settings) stays in the app's local Room DB
+and DataStore. No account is needed to use the app.
+
+Two optional online features talk to **one host, `scagent.de`** (a small VPS in Germany, run by me):
+
+| feature | endpoint | what is sent | stored on the server |
+|---|---|---|---|
+| 👥 **Read along** (⚙️ switch, currently **on by default**) | `https://scagent.de/omm/api/v1` · [`server/omm_api.py`](server/omm_api.py) | page keys you read (`p:247`) + a random token that changes daily | per-page totals + today's Amen count. Today's tokens are deleted on the first write of the next day. The app doesn't store IPs (held in RAM 1 min for rate limiting), the proxy doesn't keep access logs for this host. |
+| 💬 **Comments / reading circles** (only once you write a comment or join a circle) | `https://scagent.de/_matrix/client/v3` · Synapse homeserver, config in [`server/matrix/`](server/matrix/) | a self-chosen display name, your comments, circle messages | a Matrix account (`@<name>-<4 hex>:scagent.de`, random password generated and kept on the phone) + your messages. Comments are public to all app users. |
+
+The counter API is ~200 lines of Python stdlib (`http.server` + `sqlite3`), so it's quick to audit.
+
+### Known gaps (honest list)
+
+- 🔑 The **registration token** for the comment server is compiled into the APK (`BuildConfig.OMM_REG_TOKEN`).
+  That is by design: it only keeps drive-by bots from signing up. Rate limits do the rest. Extracting it gets you
+  the same thing the app can do.
+- 🔓 Circle chats are **not end-to-end encrypted**: the server admin could read them. Don't put secrets in there.
+- 🌐 Synapse keeps its default client-IP bookkeeping (`user_ips`, ~28 days) for comment accounts. The counter API
+  stores none.
+- ✍️ Release APKs are currently **signed with a debug key**. A proper release key is on the todo list.
+- 👥 *Read along* is opt-out (on by default). It's anonymous, but an opt-in prompt on first start would be cleaner.
+
+## Layout
+
+```
+android/            Android Studio project (module app)
+  app/src/main/java/de/strix/marxversion/
+    MainActivity.kt   1 Activity · Scaffold (top bar + tabs) · NavHost
+    ui/               Compose screens: Today (cards), Read (book), Plans, Circle, My Capital, Settings, Hooked
+    data/             Room DB · DataStore prefs · assets JSON · i18n · Community (counter) · Matrix (comments)
+    logic/            pure Kotlin, no Android: verse of the day, streak, holidays, voice DSP (Freeverb) ➡ unit-tested
+    notify/           WorkManager daily notification · widget · quick-settings tile
+bin/                content pipeline (Python, local LLM via ollama) + release scripts
+data/               pipeline intermediates: verses, alignment, scores, translations cache
+server/             counter API (Docker) · Matrix homeserver config · SERVICE.md (what the server side needs)
+notes.md            design notes, decisions, research (my own shorthand style)
+```
+
+Content pipeline (rerun order): `fetch.py` (sources) ➡ `split.py` (verses, MEW pages, footnotes) ➡ `align.py`
+(DE⬄EN paragraph alignment) ➡ `score.py` + `rank.py` (LLM picks quotable verses) ➡ `build.py` (verbatim quotes +
+plans ➡ app JSON) ➡ `andacht.py` (devotionals) ➡ `translate.py` (IT/ES/PT/ZH/AR).
+
+## Sources & copyright
+
+| what | source | status |
+|---|---|---|
+| German text | Karl Marx, *Das Kapital* vol. 1, 4th ed. 1890 (ed. Engels), text as in MEW 23 (Dietz), via archived mlwerke.de | Marx † 1883, Engels † 1895 ➡ public domain. We use the text, page numbers and Marx's own footnotes, **not** MEW's editorial apparatus (endnotes, indexes, introductions). Exception: ~200 one-line MEW translations of Latin/French phrases, kept inline as `⟨…⟩` (e.g. *De te fabula narratur! ⟨Über dich wird hier berichtet!⟩*). |
+| English text | Samuel Moore & Edward Aveling 1887 (ed. Engels), via marxists.org | translators † 1911 / † 1898 ➡ public domain |
+| portrait | J. J. E. Mayall, London 1875 | public domain |
+| *Hooked* | Nir Eyal 2014 | only short quotes + own summaries in the Hooked mode (quotation right). The book itself is **not** in this repo. |
+| quote selection, devotionals, IT/ES/PT/ZH/AR translations | local LLM (Qwen3 30B via ollama) | generated for this project, GPL-3.0 like the code. Quotes are always Marx's verbatim sentence (fuzzy-matched back to the source). |
+
+## Credits & contact
+
+Built by **strix** (am0ebe) with Claude Code (Anthropic) doing most of the typing, plus local models on an RTX 3090 Ti.
+Questions, bugs, ideas: open an issue or mail **am0ebe@gmx.de**.

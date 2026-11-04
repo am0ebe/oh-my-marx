@@ -139,8 +139,8 @@ private fun App(vm: AppVm) {
         if (s.notifOn) { askNotif(); schedule(vm.getApplication(), true, s.notifHour, s.notifMinute) }
     }
     val openChapter = { kap: String, v: String -> nav.navigate("chapter/$kap?v=$v") }
-    val openHooked = { nav.navigate("hooked") { launchSingleTop = true } }
-    // 🏠 Marx icon / title / "Heute" tab ➡ Home + back 2 th 1st card
+    val openHooked = { nav.open("hooked") }
+    // 🏠 Marx icon / title / "Heute" tab ➡ Home + back 2 th 1st card · alr home ➡ only glide 2 card 1 (no re-nav = no flicker)
     val home: () -> Unit = { nav.go("today"); vm.homeJump.value++ }
     // 🚀 shortcut card (Orakel / Krise) lives on Today ➡ go there 1st
     val popReq by vm.popRequest.collectAsStateWithLifecycle()
@@ -163,7 +163,7 @@ private fun App(vm: AppVm) {
                 actions = {
                     if (s.testMode) TextButton(onClick = openHooked) { Text("🪝") }
                     LangButton(s.lang) { vm.setLang(it) }
-                    TextButton(onClick = { nav.navigate("settings") { launchSingleTop = true } }) { Text("⚙️") }
+                    TextButton(onClick = { nav.open("settings") }) { Text("⚙️") }
                 },
             )
         },
@@ -199,7 +199,7 @@ private fun App(vm: AppVm) {
             composable("hooked") {
                 HookedScreen { dest ->
                     if (dest == "popup") { nav.go("today"); vm.forcePopup.value = true }
-                    else if (dest == "settings") nav.navigate("settings") { launchSingleTop = true }
+                    else if (dest == "settings") nav.open("settings")
                     else nav.go(dest)
                 }
             }
@@ -242,11 +242,22 @@ private fun LangButton(cur: Lang, pick: (Lang) -> Unit) {
     }
 }
 
+/** alr showing `route`? ➡ 🐛 @1104 re-navigating 2 th same screen re-ran it = flicker (Home, ⚙️, tabs) */
+private fun NavHostController.isOn(route: String) = currentDestination?.route == route
+
 /**
- * bottom-tab navigation: always land on th tab's root.
+ * bottom-tab navigation: always land on th tab's root · no-op if alr there.
  * 🐛 was: saveState/restoreState ➡ tapping "Heute"/"Lesen" restored th old back stack incl. ⚙️ Settings
  */
-private fun NavHostController.go(route: String) = navigate(route) {
-    popUpTo(graph.findStartDestination().id)
-    launchSingleTop = true
+private fun NavHostController.go(route: String) {
+    if (isOn(route)) return
+    navigate(route) {
+        popUpTo(graph.findStartDestination().id)
+        launchSingleTop = true
+    }
+}
+
+/** push a screen on top (⚙️ · 🪝) · no-op if alr there */
+private fun NavHostController.open(route: String) {
+    if (!isOn(route)) navigate(route) { launchSingleTop = true }
 }

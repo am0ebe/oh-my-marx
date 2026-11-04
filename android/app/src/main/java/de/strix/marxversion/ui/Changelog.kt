@@ -34,6 +34,9 @@ val RELEASES = listOf(
         T("🎟️ Gemeinsame Stempelkarte: ein Stempel nur, wenn alle gelesen haben", "🎟️ Shared stamp card: a stamp only when everyone has read"),
         T("📨 Einladung als Link: antippen ➡ App öffnet den Kreis", "📨 Invite as a link: tap ➡ the app opens the circle"),
         T("🔔 Neue Kreis-Nachrichten + abends: „Rosa hat heute gelesen — du noch nicht“", "🔔 New circle messages + in the evening: “Rosa read today — not you yet”"),
+        T("🔘 Karten-Knöpfe einheitlich mit Beschriftung · Teilen nicht mehr so laut", "🔘 Card buttons all alike, with labels · Share not so loud anymore"),
+        T("✨ Kein Flackern mehr, wenn du antippst, wo du schon bist", "✨ No more flicker when you tap where you already are"),
+        T("📜 Über: welche Quellen, was LLM + App obendrauf gemacht haben · Quellcode offen (GPL-3.0)", "📜 About: which sources, what the LLM + app added on top · source code open (GPL-3.0)"),
     )),
     Release("0.6.0", "2026-11-04", listOf(
         T("💬 Kommentare unter jeder Buchseite — Name erst beim ersten Kommentar, eigene lange drücken = löschen", "💬 Comments under every book page — name only at your first comment, hold your own = delete"),
