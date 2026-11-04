@@ -1,0 +1,22 @@
+<!doctype html><html lang="de"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<!-- 👥 Kreis invite landing page · published by bin/lib.sh ➡ <web>/k/ · link = <web>/k/?c=K7M2Q9
+     Android Chrome: intent:// opens th app (stable o DEV) straight into th circle · no app ➡ fallback = download page -->
+<title>Oh My Marx ☭ · Lesekreis</title>
+<style>body{font:17px/1.5 system-ui,sans-serif;max-width:30em;margin:2em auto;padding:0 16px;background:#1d1230;color:#f4ead8;text-align:center}
+a.b{display:block;background:#b3261e;color:#fff;padding:.9em;border-radius:12px;text-decoration:none;font-weight:700;margin:1em 0}
+.c{font:700 2.2em ui-monospace,monospace;letter-spacing:.15em;color:#e8b931;margin:.3em 0}small{opacity:.7}a{color:#e8b931}</style>
+<h1>👥 Lesekreis-Einladung</h1>
+<p>Jemand will mit dir <i>Das Kapital</i> lesen ☭</p>
+<div class="c" id="code">······</div>
+<a class="b" id="open" href="#">☭ In Oh My Marx öffnen</a>
+<p><small>App noch nicht da? ➡ <a href="https://scagent.de/omm">scagent.de/omm</a> installieren, dann hier nochmal tippen
+— oder in der App: 👥 Kreis ➡ Code eintippen.</small></p>
+<p><small><a id="dev" href="#">(DEV-App)</a></small></p>
+<script>
+  const c = (new URLSearchParams(location.search).get("c") || location.hash.slice(1) || "").toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 8);
+  document.getElementById("code").textContent = c || "??????";
+  const fb = encodeURIComponent("https://scagent.de/omm");
+  const link = pkg => `intent://kreis/${c}#Intent;scheme=ohmymarx;package=${pkg};S.browser_fallback_url=${fb};end`;
+  document.getElementById("open").href = link("de.strix.marxversion");
+  document.getElementById("dev").href = link("de.strix.marxversion.dev");
+</script>

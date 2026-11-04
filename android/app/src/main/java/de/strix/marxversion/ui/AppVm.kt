@@ -131,6 +131,12 @@ class AppVm(app: Application) : AndroidViewModel(app) {
     suspend fun myUserId() = marx.prefs.mxSession()?.userId
 
     // ── 👥 Kreise (Matrix rooms joined by code, data/Matrix.kt) ──
+    /** invite link opened ➡ th code waiting 4 "Beitreten" */
+    val pendingKreis = MutableStateFlow<String?>(null)
+    /** ++ ➡ MainActivity switches 2 th Kreis tab */
+    val openKreise = MutableStateFlow(0)
+    /** opened a Kreis ➡ its newest msg counts as seen (KreisWorker won't notify it) */
+    fun kreisSeen(room: String, ts: Long) = viewModelScope.launch { marx.prefs.setKreisSeen(room, ts) }
     val kreise: StateFlow<List<Kreis>> = marx.prefs.kreise.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
     /** room ➡ members (user id ➡ name) */
     val kreisMembers = MutableStateFlow<Map<String, Map<String, String>>>(emptyMap())

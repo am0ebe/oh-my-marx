@@ -91,6 +91,29 @@ fun KreiseScreen(vm: AppVm, open: (Int) -> Unit) {
         HookNote(Hook.SOCIAL, vm.settings.collectAsStateWithLifecycle().value.testMode)
         Gap(12)
 
+        // 📨 came in via an invite link ➡ alr a member? open it · else 1 tap 2 join
+        val pending by vm.pendingKreis.collectAsStateWithLifecycle()
+        pending?.let { pc ->
+            val idx = kreise.indexOfFirst { it.code == pc }
+            if (idx >= 0) LaunchedEffect(pc) { vm.pendingKreis.value = null; open(idx) }
+            else Card(colors = CardDefaults.cardColors(containerColor = Gold.copy(alpha = 0.25f)), modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)) {
+                Column(Modifier.padding(12.dp)) {
+                    Text(tr("📨 Einladung in einen Lesekreis", "📨 Invitation to a reading circle"), fontWeight = FontWeight.Bold)
+                    Text(pc, fontFamily = FontFamily.Monospace, fontSize = 22.sp, fontWeight = FontWeight.Bold, color = Red)
+                    if (name == null) OutlinedTextField(myName, { myName = it }, singleLine = true, modifier = Modifier.fillMaxWidth(),
+                        label = { Text(tr("Dein Name (z. B. Rosa)", "Your name (e.g. Rosa)")) },
+                        keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Words))
+                    Row {
+                        Button(onClick = {
+                            busy = true; msg = null
+                            vm.joinKreis(pc, name ?: myName.takeIf { it.isNotBlank() }) { ok -> busy = false; if (ok) vm.pendingKreis.value = null else msg = notFound }
+                        }, enabled = !busy && (name != null || myName.isNotBlank())) { Text(tr("☭ Beitreten", "☭ Join")) }
+                        TextButton(onClick = { vm.pendingKreis.value = null }) { Text(tr("Später", "Later")) }
+                    }
+                }
+            }
+        }
+
         kreise.forEachIndexed { i, k ->
             val m = members[k.room].orEmpty()
             val ev = tl[k.room].orEmpty()
@@ -167,9 +190,13 @@ fun KreisDetail(vm: AppVm, i: Int, back: () -> Unit) {
     val chat = ev.filter { it.type == "m.room.message" }
     val list = rememberLazyListState()
     LaunchedEffect(k.room) { vm.loadKreis(k.room) }
-    LaunchedEffect(chat.size) { if (chat.isNotEmpty()) list.scrollToItem(chat.lastIndex + 1) }
-    val invite = tr("Komm in meinen Lesekreis „%s“ bei Oh My Marx ☭ — Code: %s · App: https://scagent.de/omm",
-        "Join my reading circle “%s” on Oh My Marx ☭ — code: %s · app: https://scagent.de/omm").f(k.name, k.code)
+    LaunchedEffect(chat.size) {
+        if (chat.isNotEmpty()) { list.scrollToItem(chat.lastIndex + 1); vm.kreisSeen(k.room, chat.last().ts) }  // 🔔 seen ➡ no notif 4 these
+    }
+    // link = th landing page (bin/kreis.html) ➡ "In Oh My Marx öffnen" ➡ app opens w th code · + th code 4 typing
+    val invite = tr("Komm in meinen Lesekreis „%s“ bei Oh My Marx ☭\nAntippen: %s\n(oder in der App: 👥 Kreis ➡ Code %s · App: https://scagent.de/omm)",
+        "Join my reading circle “%s” on Oh My Marx ☭\nTap: %s\n(or in the app: 👥 Circle ➡ code %s · app: https://scagent.de/omm)")
+        .f(k.name, "https://scagent.de/oh-my-marx/k/?c=" + k.code, k.code)
     val inviteTitle = tr("Einladen", "Invite")
 
     LazyColumn(Modifier.fillMaxSize().padding(horizontal = 16.dp).imePadding(), state = list) {

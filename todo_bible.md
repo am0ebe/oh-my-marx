@@ -7,8 +7,8 @@
 - 🦠🧪 Obtainium on fon: /bible is gone ➡ edit/re-add: stable `https://scagent.de/oh-my-marx/` · ＋ 2nd app `https://scagent.de/oh-my-marx/dev/` = "Oh My Marx DEV" · no regex needed
 - 🦠📣 send **scagent.de/omm** 2 2-3 friends ➡ feedback (short link live @1104, ops' Caddy 302 ➡ /oh-my-marx/)
 - 🦠👀 QA 0.6.0 (shipped @1104): ⚙️ 👥 Mitlesen ON ➡ book: header "👥 N×" + bottom "💬 Mitreden" ➡ pick name ➡ comment ☭ ➡ hold own = delete · Home "👥 Heute lesen N mit · M × Amen" · ⚙️ rename
-- 🦠👀 QA dev 0.7.0 👥 Kreise: tab 👥 Kreis ➡ gründen ➡ antippen ➡ 📤 Einladen (Code) ➡ 2nd fon/friend: Code beitreten ➡ Amen on Heute ➡ ✔️ shows i th Kreis · chat ☭ · shared 🎟️ fills only when all read ➡ 🤖 ship 0.7.0
-- 🔵 community ③b: invite as tappable link/QR (needs app links = `assetlinks.json` on scagent.de ➡ ops) · Kreis plan (all read th same plan day) · push notif on Kreis msgs · ④ Salon (forum per Abschnitt) · 💬 on cards · ⚠️ report btn + mod tools b4 strangers join
+- 🦠👀 QA dev 0.7.0 👥 Kreise: tab 👥 Kreis ➡ gründen ➡ antippen ➡ 📤 Einladen ➡ friend taps th link ➡ page ➡ "In Oh My Marx öffnen" ➡ app ➡ Beitreten · Amen on Heute ➡ ✔️ i th Kreis · chat ☭ · 🎟️ only when all read · 🔔 friend's msg ➡ notif within ~1 h · evening nudge ➡ 🤖 ship 0.7.0
+- 🔵 community ③c: QR code 4 th invite (zxing lib) · Kreis plan (all read th same plan day) · real push (UnifiedPush/ntfy — we alr run ntfy!) instead o hourly polling · ④ Salon (forum per Abschnitt) · 💬 on cards · ⚠️ report btn + mod tools b4 strangers join · short invite link `scagent.de/omm/k?c=` (= ops redir)
 - 🔵 web/PWA version 4 iPhone friends — later, rebuild (no shake, new voices) · this proj stays Android 🤖📱
 - 🔵 rename GitHub/Forgejo repo bibleApp ➡ OhMyMarx (remotes + Obtainium URL unchanged on VPS)
 - 🦠👀 QA v0.5.0 on fon (via Obtainium!):

@@ -18,5 +18,6 @@ class MarxApp : Application() {
     override fun onCreate() {
         super.onCreate()
         ensureChannel(this)
+        de.strix.marxversion.notify.scheduleKreis(this)  // 🔔 Lesekreis msgs + evening nudge (no-op wo circles)
     }
 }

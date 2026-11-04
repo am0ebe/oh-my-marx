@@ -32,6 +32,8 @@ val RELEASES = listOf(
     Release("0.7.0", "2026-11-04", listOf(
         T("👥 Lesekreise: gründen, Code teilen, beitreten · wer hat heute Amen gesagt · Chat", "👥 Reading circles: found, share the code, join · who said Amen today · chat"),
         T("🎟️ Gemeinsame Stempelkarte: ein Stempel nur, wenn alle gelesen haben", "🎟️ Shared stamp card: a stamp only when everyone has read"),
+        T("📨 Einladung als Link: antippen ➡ App öffnet den Kreis", "📨 Invite as a link: tap ➡ the app opens the circle"),
+        T("🔔 Neue Kreis-Nachrichten + abends: „Rosa hat heute gelesen — du noch nicht“", "🔔 New circle messages + in the evening: “Rosa read today — not you yet”"),
     )),
     Release("0.6.0", "2026-11-04", listOf(
         T("💬 Kommentare unter jeder Buchseite — Name erst beim ersten Kommentar, eigene lange drücken = löschen", "💬 Comments under every book page — name only at your first comment, hold your own = delete"),

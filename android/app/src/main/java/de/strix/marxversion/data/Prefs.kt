@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
@@ -83,6 +84,14 @@ class Prefs(private val context: Context) {
         p[kreiseKey].orEmpty().mapNotNull { e -> e.split("|", limit = 3).takeIf { it.size == 3 }?.let { Kreis(it[0], it[1], it[2]) } }.sortedBy { it.name }
     }
     suspend fun addKreis(k: Kreis) = context.store.edit { it[kreiseKey] = it[kreiseKey].orEmpty().filterNot { e -> e.startsWith(k.room + "|") }.toSet() + "${k.room}|${k.code}|${k.name}" }
+    // 🔔 KreisWorker bookkeeping: newest msg ts seen per room · day o th last "du fehlst noch" nudge
+    private fun seenKey(room: String) = longPreferencesKey("kseen_" + room.hashCode())
+    private val nudgeKey = stringPreferencesKey("kreis_nudge_day")
+    suspend fun kreisSeen(room: String): Long? = context.store.data.first()[seenKey(room)]
+    suspend fun setKreisSeen(room: String, ts: Long) = context.store.edit { p -> if ((p[seenKey(room)] ?: 0) < ts) p[seenKey(room)] = ts }
+    suspend fun nudgeDay(): String? = context.store.data.first()[nudgeKey]
+    suspend fun setNudgeDay(day: String) = context.store.edit { it[nudgeKey] = day }
+
     suspend fun dropKreis(room: String) = context.store.edit { it[kreiseKey] = it[kreiseKey].orEmpty().filterNot { e -> e.startsWith("$room|") }.toSet() }
 
     val settings: Flow<Settings> = context.store.data.map { p: Preferences ->

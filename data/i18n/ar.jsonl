@@ -1937,3 +1937,13 @@
 {"kind": "ui", "k": "🔄 Refresh", "src": "🔄 Aktualisieren\u0000🔄 Refresh", "t": "🔄 تحديث"}
 {"kind": "ui", "k": "Leave circle", "src": "Kreis verlassen\u0000Leave circle", "t": "مغادرة الدائرة"}
 {"kind": "ui", "k": "Not end-to-end encrypted · the server operator could read along.", "src": "Nicht Ende-zu-Ende-verschlüsselt · der Server-Betreiber könnte mitlesen.\u0000Not end-to-end encrypted · the server operator could read along.", "t": "غير مشفرة من طرف إلى طرف · قد يقرأ المُشغل الخاص بالخادم."}
+{"kind": "ui", "k": "👥 %s · %s: %s", "src": "👥 %s · %s: %s\u0000👥 %s · %s: %s", "t": "👥 %s · %s: %s"}
+{"kind": "ui", "k": "(+%d more)", "src": "(+%d weitere)\u0000(+%d more)", "t": "(+%d إضافي)"}
+{"kind": "ui", "k": "👥 Your reading circle read today", "src": "👥 Dein Lesekreis hat heute gelesen\u0000👥 Your reading circle read today", "t": "👥 قرأت جماعتك القراءة اليوم"}
+{"kind": "ui", "k": "%s — not you yet. One verse is enough ☭", "src": "%s — du noch nicht. Ein Vers reicht ☭\u0000%s — not you yet. One verse is enough ☭", "t": "%s — لم تقرأ بعد. آية واحدة تكفي ☭"}
+{"kind": "ui", "k": "📨 Invite as a link: tap ➡ the app opens the circle", "src": "📨 Einladung als Link: antippen ➡ App öffnet den Kreis\u0000📨 Invite as a link: tap ➡ the app opens the circle", "t": "📨 دعوة كرابط: اضغط ➡ يفتح التطبيق الدائرة"}
+{"kind": "ui", "k": "🔔 New circle messages + in the evening: “Rosa read today — not you yet”", "src": "🔔 Neue Kreis-Nachrichten + abends: „Rosa hat heute gelesen — du noch nicht“\u0000🔔 New circle messages + in the evening: “Rosa read today — not you yet”", "t": "🔔 رسائل جديدة في الدائرة + مساءً: «روزا قرأت اليوم — أنت لم تقرأ بعد»"}
+{"kind": "ui", "k": "📨 Invitation to a reading circle", "src": "📨 Einladung in einen Lesekreis\u0000📨 Invitation to a reading circle", "t": "📨 دعوة إلى دائرة قراءة"}
+{"kind": "ui", "k": "☭ Join", "src": "☭ Beitreten\u0000☭ Join", "t": "☭ الانضمام"}
+{"kind": "ui", "k": "Later", "src": "Später\u0000Later", "t": "لاحقًا"}
+{"kind": "ui", "k": "Join my reading circle “%s” on Oh My Marx ☭\nTap: %s\n(or in the app: 👥 Circle ➡ code %s · app: https://scagent.de/omm)", "src": "Komm in meinen Lesekreis „%s“ bei Oh My Marx ☭\nAntippen: %s\n(oder in der App: 👥 Kreis ➡ Code %s · App: https://scagent.de/omm)\u0000Join my reading circle “%s” on Oh My Marx ☭\nTap: %s\n(or in the app: 👥 Circle ➡ code %s · app: https://scagent.de/omm)", "t": "انضم إلى دائرتي القرائية «%s» في أوه ماي ماركس ☭\nاضغط: %s\n(أو داخل التطبيق: 👥 الدائرة ➡ الرمز %s · التطبيق: https://scagent.de/omm)"}

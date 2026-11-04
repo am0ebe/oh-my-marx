@@ -101,8 +101,15 @@ class MainActivity : ComponentActivity() {
         when (val p = i?.getStringExtra(EXTRA_POP)) {
             "losung" -> vm.forcePopup.value = true
             "oracle", "krise" -> vm.popRequest.value = p
+            "kreis" -> vm.openKreise.value++          // 👥 Kreis notification tap
         }
         i?.removeExtra(EXTRA_POP)
+        // 👥 invite link: ohmymarx://kreis/K7M2Q9 ➡ Kreis tab w th code ready
+        i?.data?.takeIf { it.scheme == "ohmymarx" && it.host == "kreis" }?.lastPathSegment?.let { code ->
+            vm.pendingKreis.value = code.uppercase().filter { it.isLetterOrDigit() }.take(8)
+            vm.openKreise.value++
+            i.data = null
+        }
     }
 
     companion object { const val EXTRA_LOSUNG = "losung"; const val EXTRA_POP = "pop" }
@@ -138,6 +145,9 @@ private fun App(vm: AppVm) {
     // 🚀 shortcut card (Orakel / Krise) lives on Today ➡ go there 1st
     val popReq by vm.popRequest.collectAsStateWithLifecycle()
     LaunchedEffect(popReq) { if (popReq != null && route != "today") nav.go("today") }
+    // 👥 invite link / Kreis notification ➡ th Kreis tab
+    val openKreise by vm.openKreise.collectAsStateWithLifecycle()
+    LaunchedEffect(openKreise) { if (openKreise > 0) nav.go("kreis") }
 
     CompositionLocalProvider(LocalOpenHooked provides openHooked) {
     Scaffold(

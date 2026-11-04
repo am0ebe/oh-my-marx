@@ -33,6 +33,13 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <!-- 👥 Kreis invite: ohmymarx://kreis/K7M2Q9 (fr th landing page <web>/k/?c=…, bin/kreis.html) -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="ohmymarx" android:host="kreis" />
+            </intent-filter>
             <!-- 🚀 long-press icon: Losung · Orakel · Krise -->
             <meta-data android:name="android.app.shortcuts" android:resource="@xml/shortcuts" />
         </activity>

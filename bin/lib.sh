@@ -66,4 +66,9 @@ publish() {
         rsync -t --chmod=F644 "$out/index.html" "vps:$d/"
         ssh vps "cd $d && ls -t *.apk | tail -n +4 | xargs -r rm --"
     done
+    # 👥 Kreis invite landing page (bin/kreis.html) ➡ <web>/k/ · same 4 stable + dev, so always refreshed
+    for d in $DIRS; do
+        ssh vps "mkdir -p $d/k"
+        rsync -t --chmod=F644 bin/kreis.html "vps:$d/k/index.html"
+    done
 }

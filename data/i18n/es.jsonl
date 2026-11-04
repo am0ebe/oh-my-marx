@@ -1940,3 +1940,13 @@
 {"kind": "ui", "k": "🔄 Refresh", "src": "🔄 Aktualisieren\u0000🔄 Refresh", "t": "🔄 Actualizar"}
 {"kind": "ui", "k": "Leave circle", "src": "Kreis verlassen\u0000Leave circle", "t": "Salir del círculo"}
 {"kind": "ui", "k": "Not end-to-end encrypted · the server operator could read along.", "src": "Nicht Ende-zu-Ende-verschlüsselt · der Server-Betreiber könnte mitlesen.\u0000Not end-to-end encrypted · the server operator could read along.", "t": "No cifrado de extremo a extremo · el operador del servidor podría leerlo."}
+{"kind": "ui", "k": "👥 %s · %s: %s", "src": "👥 %s · %s: %s\u0000👥 %s · %s: %s", "t": "👥 %s · %s: %s"}
+{"kind": "ui", "k": "(+%d more)", "src": "(+%d weitere)\u0000(+%d more)", "t": "(+%d más)"}
+{"kind": "ui", "k": "👥 Your reading circle read today", "src": "👥 Dein Lesekreis hat heute gelesen\u0000👥 Your reading circle read today", "t": "👥 Tu círculo de lectura ha leído hoy"}
+{"kind": "ui", "k": "%s — not you yet. One verse is enough ☭", "src": "%s — du noch nicht. Ein Vers reicht ☭\u0000%s — not you yet. One verse is enough ☭", "t": "%s — aún no tú. Un versículo basta ☭"}
+{"kind": "ui", "k": "📨 Invite as a link: tap ➡ the app opens the circle", "src": "📨 Einladung als Link: antippen ➡ App öffnet den Kreis\u0000📨 Invite as a link: tap ➡ the app opens the circle", "t": "📨 Invitación como enlace: toca ➡ la app abre el círculo"}
+{"kind": "ui", "k": "🔔 New circle messages + in the evening: “Rosa read today — not you yet”", "src": "🔔 Neue Kreis-Nachrichten + abends: „Rosa hat heute gelesen — du noch nicht“\u0000🔔 New circle messages + in the evening: “Rosa read today — not you yet”", "t": "🔔 Nuevas noticias del círculo + por la noche: «Rosa ha leído hoy — tú aún no»"}
+{"kind": "ui", "k": "📨 Invitation to a reading circle", "src": "📨 Einladung in einen Lesekreis\u0000📨 Invitation to a reading circle", "t": "📨 Invitación a un círculo de lectura"}
+{"kind": "ui", "k": "☭ Join", "src": "☭ Beitreten\u0000☭ Join", "t": "☭ Unirme"}
+{"kind": "ui", "k": "Later", "src": "Später\u0000Later", "t": "Más tarde"}
+{"kind": "ui", "k": "Join my reading circle “%s” on Oh My Marx ☭\nTap: %s\n(or in the app: 👥 Circle ➡ code %s · app: https://scagent.de/omm)", "src": "Komm in meinen Lesekreis „%s“ bei Oh My Marx ☭\nAntippen: %s\n(oder in der App: 👥 Kreis ➡ Code %s · App: https://scagent.de/omm)\u0000Join my reading circle “%s” on Oh My Marx ☭\nTap: %s\n(or in the app: 👥 Circle ➡ code %s · app: https://scagent.de/omm)", "t": "¡Entra en mi círculo de lectura «%s» en Oh My Marx ☭\nToque: %s\n(o en la app: 👥 Círculo ➡ código %s · app: https://scagent.de/omm)"}
