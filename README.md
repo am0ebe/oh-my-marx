@@ -91,7 +91,7 @@ Pipeline: `fetch.py` ➡ `split.py` ➡ `align.py` (DE⬄EN) ➡ `score.py` + `r
 `build.py` (app JSON) ➡ `andacht.py` (devotionals) ➡ `translate.py` (IT/ES/PT/ZH/AR) · experimental:
 `translate_full.py` (the whole book).
 
-Channels: `bin/deploy.sh` ➡ the page's [Dev tab](https://scagent.de/oh-my-marx/#dev) (separate "DEV" app, every build) ·
+Channels: `bin/deploy.sh` ➡ your own phone over wireless adb (separate "DEV" app, every build) ·
 `bin/ship.sh` ➡ stable page + git tag + GitHub release.
 
 ## Sources

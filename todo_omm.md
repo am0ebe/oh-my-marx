@@ -1,104 +1,59 @@
 ## 🎯 sprint goal
-- Vers des Tages on 🦠's fon via own Android app
+- 🧪 **QA + iterate 0.7.0 b4 anything new** (🦠 @1106: "test existing feats + iterate a couple o times, else slop") ➡ friends' feedback in ➡ fix ➡ only then 0.8.0
+  - 🚦 rule: no version bump / ship / big new feat til th current one had ≥1 QA round on th fon · big side-quests (voice, chat infra) ➡ own pr
 
 ## ⏳
-- ▶ **RESUME @1105 (eos)** — repo **public** github.com/am0ebe/oh-my-marx (GPL-3.0, history scrubbed o Hooked OCR) · dir `pr/omm` · Forgejo `am0/oh-my-marx` · stable **0.6.0** live · dev **0.7.0-dev.1105.0129** on /dev (Kreise + pills + no-flicker + Über/Quellen + 🆕 update banner · EN page w What's new + omm@) · all committed + pushed (`f608166`+)
-  - ⚠️ live: `translate_full.py` running overnight (nohup, GPU) ➡ `data/i18n_full/*.jsonl` growing + deliberately uncommitted ➡ commit only aft it's done (`pgrep -f translate_full` = still running)
-  - ⚠️ stable page still old DE layout til `ship.sh` 0.7.0 · update banner only reaches ppl on ≥0.7.0 (0.6.0 users need 1 manual update)
-  - ▶ NEXT (order): ✔️ Migadu aliases `omm@` + `hey@scagent.de` (@1105 strix) ➡ 🦠 read th overnight translation (`bin/translate_full.py --stats` + `--show 5 --langs it`) ➡ 🦠 QA dev (update banner: install an older dev, open app ➡ 🆕 banner) ➡ `bin/ship.sh` 0.7.0
-  - 👤 blocked on strix: keystore symlink (cmd below, he cp'd it @1105) · fon QA · friends feedback
-  - 🤖 aft th overnight job: `bin/translate.py --only ui` (3 new 0.7.0 strings timed out @1105 while GPU busy ➡ show EN i IT/ES/PT/ZH/AR til then) ➡ commit `data/i18n_full/` + i18n json
-  - 🧹 `pr/bible/` = only a `.claude/` stub th old session re-created ➡ `rm -r ~/gopro/go/pr/bible` once no session runs there
+- ▶ **RESUME @1106** — repo **public** github.com/am0ebe/oh-my-marx (GPL-3.0) · Forgejo mirror `am0/oh-my-marx` · stable **0.7.0** live (tag v0.7.0) · dev `0.7.0-dev.1106.0007` on `/dev`
+  - ✔️ @1106 page: no ⬇️ heading · 3rd option "Or build it yourself" (GitHub | Forgejo tabs, issue link) · What's new = pane, 🤏, no emoji · footer = Feedback (mailto w version) + Share, `#feedback` anchor
+  - ✔️ @1106 `/dev` back = bare Obtainium source (no page) · `deploy.sh` ➡ /dev · `-a` = + adb · DEV app's update banner works again
+  - ✔️ @1106 `--redo-bad`: 243/272 length warns fixed (29 left, `--bad`) · warns total 696 ➡ 453 (rest = fn markers) · ✔️ `translate.py --only ui` ➡ i18n_*.json updated (3 new 0.7.0 strings) ➡ nxt dev build has them
+  - ⚠️ uncommitted: lib/deploy/ship/notes.py · README · favicon · `.github/ISSUE_TEMPLATE/` · `data/i18n_full/` ➡ commit + push (templates only work once pushed)
+  - ▶ NEXT: 🦠 Obtainium DEV ➡ pull 2 refresh (should update now) ➡ 🦠 QA (notes.md § 🧪, top 2 lines) ➡ 📣 friends
   - ⚠️ traps: VPS = **ops-owned** (pr/ops/omm.md) ➡ omm nvr edits Caddy//srv, asks ops (msg `ops` session) · box's `/srv/omm-matrix/compose.yml` owns th synapse tag (fleet.py bumps) ➡ nvr rsync ours over it · `android/omm.properties` (reg token, git-ignored) needed 4 builds w comments/Kreise · screenshots of his fon only after asking (mem) · zsh aliases: `command mv/grep`, nvr bare `tr`
 
 ## ‼️
-- 🔗 repo links: GitHub `github.com/am0ebe/oh-my-marx` = canonical (issues, releases, ppl trust it) · Forgejo `git.scagent.de/am0/oh-my-marx` = public mirror (same code, 200 anon ✔️) · ez 2 say: `scagent.de/omm` ➡ page links th src · 💡 ask ops 4 `scagent.de/omm/src` ➡ GitHub 302
-- 🦠👀 QA dev **0.7.0-dev.1104.1352** (@1104 feedback round): card btns = 5 equal pills w labels (Teilen quiet) · tap Marx/Heute/⚙️ when alr there = no flicker · bottom "runterziehen/schütteln" hint gone · ⚙️ ➡ Über = 📜 Quellen + 🤖 wh th app adds + 🔓 src link
-- 🔓 **public repo** (@1104 strix: show code 2 a privacy-aware IT guy): ✔️ ocr/ (Hooked ©) out o tree + history ➡ `re/boox/hooked/pages/` · ✔️ LICENSE GPL-3.0 · ✔️ README.md all EN @1105 (install · specs · build-it-urself beginner steps · online bits casual · known gaps · sources · centaur credit) · ✔️ repo ➡ `oh-my-marx` · ✔️ public @1104
-  - ✔️ Forgejo renamed + remotes updated @1105 · pre-rewrite bup: `pr/.old/bibleApp_pre-filter_1104.bundle` · old transcripts: `~/.claude/projects/-home-strix-gopro-go-pr-bible/` (mem pool now `~/dotfiles/.claude/memory/-home-strix-gopro-go-pr-omm`)
-  - ⚠️ GitHub keeps th pre-rewrite commits reachable by exact SHA (unknown 2 anyone) ➡ accepted risk
-- 🦠🔑 **keystore = th app's identity**: Android installs an update only if signed w th SAME key · ours = `~/.android/debug.keystore` (only on tow) ➡ lose it = friends can't update (uninstall = data gone)
-  - ✔️ symlink > cp (1 truth, ST syncs it 2 p15 + lap = lap builds same key · `secrets/` is git-ignored ✔️) · run once:
-    `mkdir -p ~/dotfiles/secrets/android && mv ~/.android/debug.keystore ~/dotfiles/secrets/android/omm.keystore && ln -s ~/dotfiles/secrets/android/omm.keystore ~/.android/debug.keystore`
-  - verify: build ➡ `~/Android/Sdk/build-tools/*/apksigner verify --print-certs android/app/build/outputs/apk/debug/app-debug.apk | grep SHA-256` = same as th shipped APK fr scagent.de/oh-my-marx/
-  - ⚠️ ST deletes propagate ➡ also 1 offline/restic copy · lap: same `ln -s` (➡ sys: ansible task?)
-  - 🔑 password manager: keystore = binary ➡ store as text: `base64 -w0 ~/dotfiles/secrets/android/omm.keystore` ➡ paste as a note (~3 KB) · restore: `base64 -d > omm.keystore` · + its pw (debug key: store/key pw `android`, alias `androiddebugkey`) · or attach th file (KeePassXC/Bitwarden do attachments)
-  - 🔵 later: real release key + `apksigner rotate` (v3 lineage, Android 9+) ➡ friends update wo reinstall · "CN=Android Debug" = looks unfinished 2 secu ppl
-- 📦⭐ **full Kapital txt i IT/ES/PT/ZH/AR** (🧪 experiment, @1105): `bin/translate_full.py` (DE source, EN ref, per-lang glossary, resumable, ⚠️ flags: length ratio + footnote markers)
-  - tstd: 12 IT + 6 ZH paragraphs ✔️ read well · speed IT ~100 tok/s, ZH ~150 ➡ **~1.5-2 h/lang, ~8-9 h all 5** (2 M chars/lang: book 1.5 M + footnotes 0.5 M)
-  - 🌙 run b4 leaving (order it ➡ es ➡ pt ➡ zh ➡ ar, whatever finishes is usable):
-    `cd ~/gopro/go/pr/omm && nohup bin/translate_full.py > data/i18n_full/run.log 2>&1 &` · progress: `tail -f data/i18n_full/run.log` · stop: `pkill -f translate_full` (resume = same cmd)
-  - 🌅 morning: `bin/translate_full.py --stats` · `--show 5 --langs it` (DE | EN | IT side by side)
-  - then 🤖: wire into th app (Read screen: lang ≠ DE/EN ➡ own txt + "🤖 maschinell übersetzt" badge) · update Über + README (no more "full txt only DE/EN") · APK +~10 MB (consider per-lang download later)
-  - 🔍 alt path = existing translations: © per translator (life + 70 y, ZH 50 y) · candidates 2 verify: ES Juan B. Justo 1898 (†1928 ➡ prob PD) · ZH 郭大力/王亚南 1938 (†1976/†1969 ➡ CN PD ~2027) · IT Cantimori (†1966 ➡ © til 2036) · ES Scaron/Siglo XXI + Roces (©) · marxists.org hosting ≠ PD · 🦠 decide aft comparing quality
-- ✔️ **in-app update check** @1105 (`data/Update.kt`): each app start reads `version.json` (stable app ➡ stable page · DEV ➡ /dev/) ➡ `code` > installed versionCode ➡ gold banner on Heute ➡ tap = download page ➡ install over, data kept · no self-install (would need REQUEST_INSTALL_PACKAGES = scary perm 4 secu ppl)
-  - 🔵 maybe later: in-app download + system install dialog (1 tap less, costs that permission)
-- 🔵🤖 tsts 4 th @1105 glue (refl: all 3 shipped w 0 tsts, page bug only caught by curl): `Update.check` vs a fake version.json (newer/older/garbage/offline) · `bin/notes.py` vs Changelog.kt (dev suffix ➡ base, unknown ➡ empty) · `page()` dry-run in a tmp dir ➡ assert `<h2>` + mailto + valid JSON (would've caught th `'` i `${:+}` heredoc)
-- ✔️ **release flow** @1105: `ship.sh` ➡ git tag + GitHub release w notes fr Changelog.kt (`bin/notes.py`) = archive o evy version · download page = EN, same structure as README, shows "What's new" + link 2 older releases
-  - 🔄 loop: feature on dev (`deploy.sh`, ur fon) ➡ good ➡ bump `appVersion` + Changelog entry ➡ commit + push ➡ `ship.sh` · ship often (prototype)
-- 📨 **mail**: README + page + app Über = `omm@scagent.de` · 🦠 Migadu admin: alias `omm@` + `hey@` ➡ ur inbox · optional per-source tracking: `omm-gh@` on GitHub etc. ➡ filter on To: · ⚠️ GMX has no `+` sub-addressing
-- 🔵 Mitlesen opt-in prompt on 1st start (now dflt on) · 🔵 ask ops: Synapse `user_ips_max_age` shorter (dflt 28d)
-- 📚 **dev ⬄ release** (4 strix, new 2 apps): 2 apps, 1 key · stable `de.strix.marxversion` "Oh My Marx" (red) ⬄ dev `….dev` "Oh My Marx DEV" (blue) = side by side, own data
-  - `bin/deploy.sh` ➡ /oh-my-marx/dev/ (evy build, only ur fon) · `bin/ship.sh` ➡ /oh-my-marx/ + GitHub release (friends) · versionCode = minutes since 2026 ➡ always "newer"
-- 🦠🧪 Obtainium on fon: /bible is gone ➡ edit/re-add: stable `https://scagent.de/oh-my-marx/` · ＋ 2nd app `https://scagent.de/oh-my-marx/dev/` = "Oh My Marx DEV" · no regex needed
-- 🦠📣 send **scagent.de/omm** 2 2-3 friends ➡ feedback (short link live @1104, ops' Caddy 302 ➡ /oh-my-marx/)
-- 🦠👀 QA 0.6.0 (shipped @1104): ⚙️ 👥 Mitlesen ON ➡ book: header "👥 N×" + bottom "💬 Mitreden" ➡ pick name ➡ comment ☭ ➡ hold own = delete · Home "👥 Heute lesen N mit · M × Amen" · ⚙️ rename
-- 🦠👀 QA dev 0.7.0 👥 Kreise: tab 👥 Kreis ➡ gründen ➡ antippen ➡ 📤 Einladen ➡ friend taps th link ➡ page ➡ "In Oh My Marx öffnen" ➡ app ➡ Beitreten · Amen on Heute ➡ ✔️ i th Kreis · chat ☭ · 🎟️ only when all read · 🔔 friend's msg ➡ notif within ~1 h · evening nudge ➡ 🤖 ship 0.7.0
-- 🔵 community ③c: QR code 4 th invite (zxing lib) · Kreis plan (all read th same plan day) · real push (UnifiedPush/ntfy — we alr run ntfy!) instead o hourly polling · ④ Salon (forum per Abschnitt) · 💬 on cards · ⚠️ report btn + mod tools b4 strangers join · short invite link `scagent.de/omm/k?c=` (= ops redir)
-- 🔵 web/PWA version 4 iPhone friends — later, rebuild (no shake, new voices) · this proj stays Android 🤖📱
-- 🦠👀 QA v0.5.0 on fon (via Obtainium!):
-  - 🃏 Home = card deck: swipe ⬅ = earlier days · Teilen big · Amen ➡ ☭ swoosh · Marx icon/Heute tab = back 2 1st card
-  - 📉 shake = red flash + buzz + KRISE card i front · ⬇ pull = 🔮 card · Marxoskop chips ➡ card up top
-  - 📖 book: drag ⬅ = page turns (hinged left) · paper look · MEW page numbers · 🤏 font
-  - 🔖 double-tap = bookmark + ☭ burst · marked verses = gold frame · ✍️ note inline (no popup) · no highlight btn, no ⋯
-  - 😇 cards: Saint Marx w beard on top · Teilen on a verse = only big Share + ☭
-  - Jahresplan: no more empty quotes (opening sentence)
-- 🦠👀 QA v0.4.0 gestures on fon:
-  - 🌅 Losung popup: tap card left/right = older/newer day · hold = voice pauses · swipe ⬆ = Amen · ⬇ = close · 📋 copy btn
-  - 📖 chapter: swipe ⬅➡ = nxt/prev chapter · 🤏 pinch = font size (kept) · double-tap verse = ☭ burst + highlight · hold = palette
-  - ☀️ Today: pull down = 🔮 oracle card · 📳 shake = 📉 Krise roast · 📋 copy icon on th Losung
-  - 🚀 long-press app icon = Losung · Orakel · Krise! · ⚙️ QS tile: pull down 2× ➡ ✏️ ➡ drag "Marx-Losung" in
-  - 🎉 confetti when th Stempelkarte fills (🪝 chip "Rang-Aufstieg" shows it)
-- 🦠👀 QA v0.3.0 on fon: hero colours (🪝 🌅 chip cycles) · 🎟️ Stempelkarte + 🕊️ · "✔️ Gelesen"/"Amen" counts day · tap Losung ➡ card popup · Teilen on any verse ➡ card preview · 🎉 chip cycles 12 Feiertage · 📱 add widget · 🪝 notes tap ➡ Hooked page · About
-- 🦠👀 QA v0.3.1 🔊 on fon: ⚙️ ➡ ☭☁️ Gottvater / ☁️ Gott / 📚 Marx im Lesesaal ➡ 🔊 on Losung · 1st tap 1-3 s wait, 2nd = instant? · hall too wet/dry? (`Room` i `logic/Voice.kt`) · zh/ar voice installed?
-- 🔵 later: real cloned voice (own / friend's Merz *impression*, 🚫 real Merz) ➡ 🤖 pre-render w Chatterbox
-- 🦠🤔 friends route: Obtainium + GitHub Releases? (notes.md § friends wo adb) ➡ needs ‼️ release key + license + public repo · store = later
-- 🦠🤔 QA 10 sample Andachten (tone: wink, not cringe) ➡ tweak prompt i `bin/andacht.py` · ⚠️ local M makes Marx errors + "Heute lädt uns Marx ein" evy day ➡ maybe regen w Claude
-- 🦠🧪 install Android Studio (tarball, reuses `~/Android/Sdk`) ➡ open `pr/omm/android/` ➡ read code per notes.md § reading guide
+- 🦠📣 send **scagent.de/omm** 2 2-3 friends (0.6.0 ppl need 1 manual update, banner only fr ≥0.7.0)
+- 📨⭐ **feedback** — phase 1 = links only, no new server (plan: notes.md § 📨)
+  - ✔️ page: mail (fast) + GitHub issue link · Forgejo = code only (sign-up off ➡ no issues there)
+  - ✔️ GitHub: issue forms 🐛 + 💡 + "no account? mail" (`.github/ISSUE_TEMPLATE/`, live aft push) · labels `needs-triage` `from-app`
+  - 🤖📦 app ⚙️ ➡ Über: "💬 omm@" = plain txt now ➡ tappable "💬 Feedback" ➡ opens `scagent.de/oh-my-marx/#feedback` (o mailto w version + fon prefilled) · 🤏 change, next dev
+  - 🤖🛠️ `/triage` skill: `gh issue list -l needs-triage` + Migadu inbox ➡ label · dedupe · draft reply · mail-feedback ➡ `gh issue create -l from-app` (reworded, no names)
+  - 🔵 phase 2 (aft QA rounds): in-app form ➡ `POST /feedback` (omm_api) ➡ priv inbox ➡ triage · CONTRIBUTING · CI
+- 📦⭐ **full txt IT/ES/PT/ZH/AR** (✔️ translated · not i th app yet · how + tst: notes.md § 🌍)
+  - 🦠 read samples: `bin/translate_full.py --show 5 --langs it es`
+  - 🔵 wire into app = new feat ➡ aft 0.7.0 QA: Read screen lang ≠ DE/EN ➡ own txt + "🤖 maschinell übersetzt" badge · jsonl 1.9-3 MB/lang (~12 MB all 5, APK zips it ⇩) ➡ i APK o per-lang download
+  - 👤 native QA zh/ar
+  - 🔍 alt = existing translations: © per translator (life + 70 y, ZH 50 y) · ES Juan B. Justo 1898 (†1928 ➡ prob PD) · ZH 郭大力/王亚南 1938 (CN PD ~2027) · IT Cantimori (© til 2036) · marxists.org hosting ≠ PD · 🦠 decide aft comparing
+- 🦠📚 **Matrix + chat: K + tst**
+  - 🦠 re: notes.md § 🏗️ technical: Matrix (10 min) + `server/matrix/README.md`
+  - 🤖🧪 `bin/matrix_e2e.py`: 2 throwaway users ➡ Kreis gründen · beitreten · chat · Amen ➡ repeatable smoke tst vs live (th @1104 run wasn't saved) · + a bot user 🦠 can chat w fr th fon = tst chat alone
+  - 🤖🧪 `data/Matrix.kt` JVM tst vs a tiny fake HTTP server (register UIA 3 steps · join · timeline parse · redacted dropped) · needs `testImplementation("org.json:json:…")`
+- 🦠🔑 keystore: ✔️ symlink @1105 · left: KeePass note (`base64 -w0`, notes.md § 🔑) · 1 offline/restic copy · lap same `ln -s` (➡ sys ansible?)
+- 💬 ops (optional): `/omm/*` ➡ `/oh-my-marx/{path}` (Obtainium URL `scagent.de/omm/`) · `/omm/src` ➡ GitHub 302 · `/omm/dev` redirect = valid again (/dev back @1106)
 
 ## 📆
 
 ## 🔵
-- 🤖 🧪 tst `data/Matrix.kt` (refl @1104: 0 tsts, only th python flow): JVM tst vs a tiny fake HTTP server (register UIA 3 steps · join · timeline parse · redacted msgs dropped) · org.json needs `testImplementation("org.json:json:…")` (Android stub throws i unit tsts)
-- 🎨⭐ **design pass fr `pr/des/`** (🦠 @1103: 17 screenshots o another app = inspiration) ➡ pick themes · widgets · layouts ➡ apply 2 OMM (cards, Home, book) · 🤖 1st: go thru th shots w 🦠, list what 2 steal
-- 📦⭐ **realistic holy voice** (🦠 @1103 "STT horrible + slow") ➡ plan i notes.md § voice 🗺️: A pre-render Losung w Chatterbox on tow ➡ C distill into a Piper voice (~20-60 MB) 4 th reader
-- 📦 gestures left over: "Morgen"-teaser blurred + locked (anticipation) · shortcut "Weiterlesen" (needs a last-read-chapter pref)
-- 🪝 Hooked notes 4 th new gestures (pull = slot machine · stories = Instagram/Snapchat · shake = variable reward)
-- 📦⭐ **Ask Marx: chat w an advisor Marx** (🦠 idea @1102): user describes an everyday problem (boss, rent, overtime, shopping urge) ➡ Marx answers short + punchy, w a matching Kapital quote + ref (tap ➡ open th chapter)
-  - 💡 why it fits teaching: ties Kapital 2 th user's own life (transfer, not abstract theory) + a direct positive experience o th app ➡ th reason 2 come back (Hooked: variable reward o th self + investment)
-  - 🔍 how: persona prompt + RAG over our scored verses (embed ➡ top-k quotes ➡ LLM must cite 1) · LLM where? on-device (Gemma 3 1B via MediaPipe/LiteRT, offline, ~600 MB 👎) ⬄ own server (ollama on tow/vps ➡ needs INTERNET + hosting) ⬄ API (costs, privacy) · ⚠️ guardrails: no real legal/medical/money advice, crisis ➡ point 2 real help · ironic tone, not cringe
-- 📦 🔊 pre-rendered holy voices (Chatterbox ML + church reverb) · DE+EN 1st
-- 📦 full verse txt IT/ES/PT/ZH/AR (1.3 M chars/lang, ~1-2 h/lang local) — or PD translations? (zh: 郭大力/王亚南 1938 → PD i CN fr 2027)
-- 🔍 QA zh/ar translations w a native speaker 👤
-- 📦 "Was nervt?" ➡ free-txt + embeddings match (MVP = 7 chips ➡ tags)
-- 📦 Mehrwert-Rechner (salary ⬄ revenue/employee)
-- 📦 Fußnoten-Burns: rank footnotes 4 roasts (Dunning "300 %" = fn 24:250) ➡ own plan
-- 📦⭐ **Kapital-Lesekreis** (🦠 @1103: community = th missing Hooked piece · YouVersion's #1 driver = "Plans With Friends")
-  - 💡 MVP wo accounts: host makes a circle ➡ invite link/QR (`scagent.de/kreis/ABC`) ➡ all read th same plan day ➡ see who said Amen today (✔️ dots, no streak shaming) ➡ 1 comment thread per day's verse
-  - 💡 "Randnotizen teilen": ur ✍️ notes on a verse visible 2 th circle (opt-in per note) = social proof + investment
-  - 💡 weekly "Sitzung": 1 tap ➡ Jitsi/Signal group call link 4 th circle · agenda = th week's 🔥 verses
-  - 💡 Kreis-Stempelkarte: card fills when *evyone* read ➡ solidarity, not competition (Marx-y twist on streaks)
-  - 🔍 server: tiny API on th VPS (FastAPI + SQLite, behind Caddy) · or Matrix room per circle (E2E, existing clients) · or Nextcloud (alr hosted) · ⚠️ needs INTERNET permission + privacy note
-  - 🪝 Hooked: social trigger ("Anna hat heute Amen gesagt") · variable reward o th tribe · investment = shared notes
-- 📦 Feiertage 2: own notif txt per feast · ctx plans (Black Friday ➡ Fetisch-Detox · Halloween ➡ Vampir-Plan) · widget in feast colours
-- 📦 export "Mein Kapital" (md/json) — Mine screen promises it
-- 🏗️ AGP 9 + compileSdk 37 upgrade (AndroidX pinned 2 late-2025) = L step
-- 🏗️ release signing key (friends' updates need same key once off debug)
-- 🔍 tags over-applied by LLM ("kapitalist" 83 %) ➡ relative re-tag like rank.py?
-- 🦠 P3 habit test 2w · identify ➡ codify ➡ modify
-- 🤖 aft QA: rm page fotos (boox proc step 8)
+- 💡 🦠 @1106: "can tk ludites passage >> 4 ai marxoscope..." (Luddites passage, Kap. 13 Maschinerie ➡ Marxoskop card about AI?)
+- 🔊⭐ **realistic persona voices** ➡ own engine i **pr/audio** (reusable: omm · pod · …) · omm = 1st consumer · plan notes.md § voice 🗺️ (A Chatterbox pre-render on tow ➡ C distill 2 Piper ~20-60 MB) · ref voice = 🦠/consenting friend · 🚫 real Merz (impression = ok)
+- 🎨⭐ **design pass fr `pr/des/`** (17 screenshots o another app) ➡ themes · widgets · layouts ➡ 🤖 1st: go thru th shots w 🦠, list what 2 steal
+- 📦⭐ **Ask Marx**: everyday problem (boss, rent, overtime) ➡ Marx answers short + punchy w a Kapital quote + ref (tap ➡ chapter)
+  - 🔍 persona prompt + RAG over scored verses (must cite 1) · LLM: on-device Gemma 3 1B (~600 MB 👎) ⬄ ollama on tow/vps ⬄ API · ⚠️ no real legal/medical/money advice, crisis ➡ real help · ironic, not cringe
+- 👥 community nxt: QR invite (zxing) · Kreis plan (all same day) · real push (UnifiedPush/ntfy) instead o hourly poll · ④ Salon (forum per Abschnitt) · 💬 on cards · Randnotizen teilen (opt-in per note) · weekly Sitzung = Jitsi link · short invite `scagent.de/omm/k?c=` (ops) · ⚠️ report btn + mod tools b4 strangers join
+- 🔵 Mitlesen opt-in prompt on 1st start (now dflt on) · ask ops: Synapse `user_ips_max_age` shorter (dflt 28d)
+- 🤖🧪 tsts 4 @1105 glue: `Update.check` vs fake version.json (newer/older/garbage/offline) · `notes.py` vs Changelog.kt · `page()` dry-run ➡ assert `<h2>` + mailto + valid JSON
+- 🔑 real release key + `apksigner rotate` · in-app download + install dialog (costs REQUEST_INSTALL_PACKAGES)
+- 🌐 web/PWA 4 iPhone friends — later, rebuild (no shake, new voices)
+- 🦠🤔 QA 10 sample Andachten (tone: wink, not cringe) ➡ tweak `bin/andacht.py` · ⚠️ local M Marx errors + "Heute lädt uns Marx ein" evy day ➡ regen w Claude?
+- 📦 gestures left: "Morgen"-teaser blurred + locked · shortcut "Weiterlesen" (last-read pref) · 🪝 Hooked notes 4 th new gestures (pull = slot machine · stories · shake = variable reward)
+- 📦 "Was nervt?" free-txt + embeddings · Mehrwert-Rechner · Fußnoten-Burns plan (Dunning "300 %" = fn 24:250) · Feiertage 2 (own notif txt · Black Friday ➡ Fetisch-Detox · widget colours) · export "Mein Kapital" (md/json)
+- 🏗️ AGP 9 + compileSdk 37 · 🔍 tags over-applied ("kapitalist" 83 %) ➡ relative re-tag
+- 🦠🧪 install Android Studio (tarball, reuses `~/Android/Sdk`) ➡ notes.md § reading guide
+- 🦠 P3 habit test 2w · 🤖 aft QA: rm page fotos (boox proc step 8)
 
 ## ✔️
+- ✔️ @1105: 🔓 repo public (GPL-3.0 · Hooked OCR out o tree + history ➡ `re/boox/hooked/pages/` · README all EN · renamed `oh-my-marx` · Forgejo mirror) · bup `pr/.old/bibleApp_pre-filter_1104.bundle` · ⚠️ GH keeps old SHAs reachable = accepted risk
+- ✔️ @1105: 🆕 update check (`data/Update.kt`) · release flow (ship.sh ➡ tag + GH release, `notes.py`) · page EN + What's new + footer btns + favicon · /dev rm'd (deploy = adb) · Migadu `omm@` + `hey@` · keystore symlink · 🌍 full Kapital ➡ 5 langs overnight · `pr/bible/` rm'd
 - ✔️ dev 0.7.0 @1104: 👥 Lesekreise (5th tab): gründen w 6-char code (no look-alikes) · beitreten by code · 📤 invite text · today ✔️ per person (Amen ➡ `de.ohmymarx.amen` event i evy Kreis) · 🎟️ shared card (day counts only if all read) · chat · leave · e2e tstd on live server w 2 throwaway users · 3 tests · ⚠️ not E2E-encrypted (said i th UI) · 0.6.0 shipped + scagent.de/omm short link (ops)
 - ✔️ dev 0.6.0 @1103 (2): 📉 Krise translated (card + flash, 7 langs) · 🌅 Teilen aus dem Buch = exactly th shown paragraph (long ➡ "…") · 📜 ⚙️ "Was ist neu" (ui/Changelog.kt, add on top b4 ship) · 🔵 DEV icon blue · Matrix README (why · friends chat · Element X · federation) · ops handoff ➡ now ops-owned runbook `pr/ops/omm.md` (bup §3i, fleet auto-rebuild/bump, mon, rip-out list) · contract = `server/SERVICE.md`
 - ✔️ dev 0.6.0 @1103: 💬 comments per book page (Matrix: Synapse `omm-matrix` on VPS, client-only, token signup, 31 chapter rooms, e2e tstd w throwaway user) · Caddy /omm/api + /_matrix live (via vps-claude, bak .bak-1103/-1103b) · /bible ➡ /oh-my-marx (0.5.2 shipped)

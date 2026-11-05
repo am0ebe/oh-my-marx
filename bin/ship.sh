@@ -6,9 +6,10 @@ cd "$(dirname "$0")/.."
 
 usage() {
     cat <<EOF
-usage: bin/ship.sh [-h|--help|-?]
+usage: bin/ship.sh [-p|--page] [-h|--help|-?]
 
   📦 release: build release APK ➡ $WEB/ (page, Obtainium follows it) + GitHub release v<version>
+  -p --page   only re-render + upload th page (lib.sh page() changed) 4 th last shipped version · no build, no tag
 
   before:
     1. bump  val appVersion = "x.y.z"  i android/app/build.gradle.kts  (Obtainium only sees a NEW version)
@@ -19,7 +20,21 @@ usage: bin/ship.sh [-h|--help|-?]
 EOF
     tools
 }
-case "${1:-}" in -h|--help|-\?) usage; exit 0 ;; "") ;; *) usage; exit 1 ;; esac
+case "${1:-}" in -h|--help|-\?) usage; exit 0 ;; -p|--page) only_page=1 ;; "") ;; *) usage; exit 1 ;; esac
+
+if [ -n "${only_page:-}" ]; then
+    # last shipped = newest v* tag · apk comes fr th server (size + sha + versionCode = exactly what ppl download)
+    ver=$(git tag -l 'v*' --sort=-v:refname | head -1); ver=${ver#v}
+    [ -n "$ver" ] || { echo "❌ no v* tag ➡ nothing shipped yet"; exit 1; }
+    out=$(mktemp -d); trap 'rm -rf "$out"' EXIT
+    apk="$FILE-$ver.apk"
+    curl -fsSo "$out/$apk" "$WEB/$apk" || { echo "❌ $WEB/$apk not on th server"; exit 1; }
+    page "$out" "$ver" "$apk"
+    rm "$out/$apk"                     # page only ➡ publish skips th apk upload
+    publish "$out"
+    echo "✔️ page re-rendered 4 v$ver ➡ $WEB/"
+    exit 0
+fi
 
 ver=$(app_version)
 [ -n "$ver" ] || { echo "❌ no appVersion i build.gradle.kts"; exit 1; }
@@ -31,7 +46,7 @@ git rev-parse -q --verify "refs/tags/v$ver" >/dev/null && { echo "❌ v$ver alr 
 out=$(mktemp -d); trap 'rm -rf "$out"' EXIT
 apk="$FILE-$ver.apk"
 cp android/app/build/outputs/apk/release/app-release.apk "$out/$apk"
-page "$out" "$ver" "$apk" stable
+page "$out" "$ver" "$apk"
 publish "$out"
 
 # GitHub release = th archive: evy version stays downloadable (bug i 0.8? grab 0.7) · notes = th in-app changelog

@@ -180,6 +180,7 @@ _per concept 2-3 lines_
 - prereq 4 all: ‼️ **release signing key** (debug key = per-machine, can't be used 4 real releases · lose th key ➡ friends must uninstall 2 update) ➡ keystore outside th repo + backup
 - prereq 4 F-Droid/Izzy: pick a license (code GPL-3? content PD) + public repo
 - 💡 rec: Obtainium + GitHub Releases now (1 cmd per release) · own F-Droid repo later if >5 friends
+- @1105: /dev web channel rm'd · @1106 back as bare Obtainium source (strix: no dev webpage, but th Obtainium URL) · 1 page = stable · favicon = app icon (`bin/favicon.png`)
 - ✔️ @1103 live: **2 channels** on th VPS · `bin/ship.sh` ➡ scagent.de/oh-my-marx/ (stable, friends) · `bin/deploy.sh` ➡ scagent.de/oh-my-marx/dev/ (/bible rm'd @1103) (🦠's fon, evy build = new version `x.y.z-dev.MMDD.HHMM`) · versionCode = minutes since 2026 ➡ dev ⬄ stable nvr "downgrade"
 
 ## 📱🍏 sharing apps w friends on ANY fon (@1103 · strix: "keepandroidopen sounds like a dead end")
@@ -222,6 +223,81 @@ _per concept 2-3 lines_
   - chose Synapse over continuwuity: known config + admin API (registration tokens, rate-limit override) · 105 MB RAM idle
   - 💬 = public 2 all Mitlesenden · no DMs/Kreise yet (③)
 - ⚠️ needs INTERNET permission + privacy page (DSGVO: what's stored, where, delete) · moderation = a real job once strangers join
+
+## 🌍 full txt translation — `bin/translate_full.py` (@1105)
+- in: DE paragraphs (`data/verses.jsonl`) + Marx's footnotes (`data/notes.jsonl`) · EN Moore/Aveling = reference only
+- out: `data/i18n_full/<lang>.jsonl`, 1 line/item `{kind v|fn, k, src=sha1(de)[:10], t, warn?}` · not wired into th app yet
+- how: batches (≤8 items · ≤2.5k chars) ➡ ollama qwen3:30b-a3b, temp 0.2, JSON schema = 1 string per id ➡ bad JSON ➡ retry ➡ missing ids redone singly
+  - glossary pins th Marxist terms per lang (Mehrwert = plusvalore / plusvalía / mais-valor / 剩余价值 …) · resumable by src hash (DE changed ➡ redone)
+  - checks per item: length ratio vs DE (per-lang window) · same `[n]` footnote markers
+- ✔️ run @1104-05: all 5 langs 1949/1949 paras + 1103/1103 fn · ~2 h/lang · ⚠️ it 125 · es 147 · pt 138 · zh 111 · ar 175 (~4 %)
+  - most warns = fn markers moved/dropped (cosmetic) · **severe ~1 %** (ratio <0.3 o >2.5, ~130 items all langs) = 2 bugs:
+  - 🐛 ratio ⇧ (eg 2,5 = 4×, 3,54 = 6×, same i all langs): DE⬄EN misaligned (EN para = several DE paras: 2004 vs 488 chars) ➡ M translates th EN extra ➡ dup txt i neighbour paras · fix: redo DE-only (no EN ref) wh EN ≫ DE
+  - 🐛 ratio ⇩ (eg V6,16 zh 0.01): stops at th 1st quote mark (`"Was äußerst sonderbar erscheint", sagt …`) ➡ fix: redo singly
+- tst: `--stats` (coverage + warns) · `--show 5 --langs it` (random DE | EN | IT) · severe list = 🤖 `--bad` (todo)
+
+## 🔑 keystore = th app's identity (@1105)
+- Android installs an update only if signed w th SAME key · ours = debug key, symlinked `~/.android/debug.keystore` ➡ `~/dotfiles/secrets/android/omm.keystore` (ST ➡ p15 + lap, git-ignored) · lose it = friends can't update (uninstall = data gone)
+- verify: `~/Android/Sdk/build-tools/*/apksigner verify --print-certs <apk> | grep SHA-256` = same as th shipped APK
+- password manager = txt: `base64 -w0 <keystore>` ➡ paste as note (~3 KB) · restore `base64 -d > omm.keystore` · debug key pw `android`, alias `androiddebugkey` · or attach th file (KeePassXC does attachments)
+- ⚠️ ST deletes propagate ➡ also 1 offline/restic copy · later: real release key + `apksigner rotate` (v3 lineage, Android 9+) · "CN=Android Debug" looks unfinished 2 secu ppl
+
+## 📦 dev ⬄ release (4 strix, new 2 apps)
+- 2 apps, 1 key · stable `de.strix.marxversion` "Oh My Marx" (red) ⬄ dev `….dev` "Oh My Marx DEV" (blue) = side by side, own data
+- `bin/deploy.sh` ➡ `/dev/` = bare Obtainium source 4 th DEV app (no webpage, @1106) · `-a` = + wireless adb now · `bin/ship.sh` ➡ /oh-my-marx/ + git tag + GitHub release w notes fr Changelog.kt (`bin/notes.py`) · `ship.sh -p` = page only · versionCode = minutes since 2026 ➡ always "newer"
+- 🔄 loop: feature on dev ➡ good ➡ bump `appVersion` + Changelog entry ➡ commit + push ➡ `ship.sh` · ship often (prototype)
+- update check (`data/Update.kt`): app start reads `version.json` ➡ `code` > installed ➡ gold banner on Heute ➡ tap = download page · no self-install (REQUEST_INSTALL_PACKAGES = scary perm)
+
+## 📨 feedback loop (@1105 · strix: "make feedback as ez as possible ➡ iterate faster")
+- 🎯 **many doors, 1 queue**: evy channel ends i **GitHub Issues** (ticket SSOT) ➡ 🤖 triages via `gh` ➡ fix ➡ release notes close th loop
+- 🔑 GitHub: **no account = no issue** (no anon/guest issues) ➡ non-devs need a door wo GitHub · Forgejo: sign-up off ➡ issues there = only us
+- ✔️ @1106 phase 1 (links, no new server — QA-first rule): page footer mailto (version prefilled) · GitHub tab ➡ issue forms 🐛/💡 + "no account? mail" · labels `needs-triage` `from-app`
+- gh cheat: `gh issue list` · `gh issue view 12` · `gh issue list -l needs-triage --json number,title,body` (4 agents) · `gh issue comment 12 -b "thx"` · `gh issue close 12` · commit "Fixes #12" ➡ auto-close on push
+- doors, friction ⇩ first:
+
+| door | who | friction | lands i |
+|--|--|--|--|
+| ⭐ in-app 💬 Feedback (⚙️ + Über) | evy1 | txt + Send · no acct, no mail app | omm_api `/feedback` ➡ priv inbox |
+| page footer 💬 btn | web visitors | same form (fetch POST) | same |
+| mail `omm@` | old-school | needs a mail app | Migadu IMAP ➡ `bin/feedback.py` |
+| GitHub issue forms | devs | GH acct | Issues direct |
+
+- in-app form: txt (only required field) · 📸 attach screenshot (prev screen, PixelCopy) · contact optional · ☑ "ok 2 post publicly on GitHub" dflt off · auto + visible: version · Android ver · lang · screen · offline ➡ queued, sent nxt start
+- 🔒 privacy (secu-aware audience): app feedback NOT auto-public ➡ priv inbox (sqlite on VPS) ➡ `bin/feedback.py pull` ➡ 🤖 drafts issue (rewords, strips names/contact) ➡ 🦠 ok ➡ `gh issue create -l from-app`
+  - 👍 nothing leaks · spam nvr hits GH · 👎 1 approve step (batch it, 1×/w o on 🔔)
+  - ⬄ alt: server posts straight 2 GH w a fine-grained PAT (issues:write, 1 repo) = 0 manual, but evy word public + a token on th VPS
+- server: `server/omm_api.py` + `POST /feedback` (rate limit per IP-hash · ≤4 KB txt · ≤1 MB img) · `GET /feedback?since=` behind a bearer token · ntfy ping 2 🦠 on new (alr run ntfy) · deploy = ops (SERVICE.md)
+
+### GitHub = ticket sys
+- **issue forms** `.github/ISSUE_TEMPLATE/`: 🐛 bug (what · expected · version · fon) · 💡 idea (problem · wish) · `config.yml` ➡ "no GitHub? use th app's 💬 Feedback o omm@"
+- **labels**: type `bug` `idea` `question` · src `from-app` `from-mail` · `needs-triage` (dflt on new) · `agent-ok` 🤖 (clear + small ➡ agent may do it alone) · `good-first-issue` · `p1`/`p2`
+- **milestones** = versions (0.8.0) ➡ `gh issue list -m 0.8.0` = th release plan
+- **Discussions** on 4 open-ended ideas/Qs ➡ Issues stay actionable only
+- close th loop: commit/PR "Fixes #12" ➡ auto-close + reporter notified · `notes.py` puts "(#12)" i release notes ➡ ppl see their wish shipped = reward 2 report again (Hooked 🔄)
+
+### 🤖 agent wflo (terminal + herdr)
+- `/triage` skill: `gh issue list -l needs-triage --json number,title,body,labels` + `bin/feedback.py pull` ➡ per item: dedupe vs open · label · prio · 1-line plan ➡ ask 🦠 only th unclear ➡ `gh issue edit` + short thx reply
+- work: `gh issue develop 12 -c` (branch) o worktree ➡ fix ➡ `gh pr create` "Fixes #12" ➡ self-merge (solo) ➡ ship
+- herdr: 1 pane runs triage daily ➡ ntfy "3 new · 1 bug p1"
+
+### todo_omm.md ⬄ Issues (scale rule)
+- now (solo, a few friends): todo_omm.md = main board · Issues = inbox 4 outside input
+- **switch** wh outside items > ~10 open o a 2nd dev joins ➡ Issues + 1 GitHub Project (Inbox · Next · Doing · Done, `gh project` CLI) = SSOT 4 product work
+- todo_omm.md then keeps only priv/ops (keystore · ops msgs · fon QA · ideas not ready 4 public) + `🔗 #12` pointers ➡ nvr copy issue txt (2 truths)
+
+### others contributing (vibe coding)
+- `CONTRIBUTING.md`: build (README § build) · 1 PR = 1 issue · tsts pass · AI-made code ok ➡ say so i th PR, u still own it
+- CI: GitHub Actions on PR = `./gradlew test assembleDebug` ➡ green b4 🦠 reads · no secrets i CI (debug build)
+- PR template: what · y (#issue) · how tstd · 📸 4 UI
+- `AGENTS.md` i repo ➡ contributors' agents get our rules 2 (lang policy · no `$var` i tr() · VPS = ops)
+
+## 🧪 QA checklist (feature tour · moved fr todo @1105 · run on evy dev b4 ship)
+- 0.7.0 👥 Kreise: tab 👥 ➡ gründen ➡ 📤 Einladen ➡ friend taps link ➡ page ➡ "In Oh My Marx öffnen" ➡ Beitreten · Amen on Heute ➡ ✔️ i th Kreis · chat ☭ · 🎟️ only when all read · 🔔 friend's msg ➡ notif ≤~1 h
+- 0.7.0 UI: card btns = 5 equal pills (Teilen quiet) · tap Marx/Heute/⚙️ when alr there = no flicker · ⚙️ ➡ Über = 📜 Quellen + 🤖 + 🔓 src · 🆕 update banner (install an older dev ➡ open ➡ banner)
+- 0.6.0 💬: ⚙️ 👥 Mitlesen ON ➡ book header "👥 N×" + "💬 Mitreden" ➡ name ➡ comment ☭ ➡ hold own = delete · Home "👥 Heute lesen N mit · M × Amen" · ⚙️ rename
+- 0.5.0 🃏: Home deck swipe ⬅ = earlier days · Amen ➡ ☭ swoosh · Marx icon/Heute = back 2 1st card · shake = red flash + buzz + KRISE · ⬇ pull = 🔮 · 📖 drag ⬅ = page turn, MEW page nrs, 🤏 font · 🔖 double-tap = bookmark + ☭ burst, gold frame · ✍️ inline note · 😇 Saint Marx on cards
+- 0.4.0 gestures: Losung popup tap ⬅➡ = days · hold = voice pause · ⬆ = Amen · ⬇ = close · 📋 copy · chapter swipe · pinch font · 🚀 long-press icon = 3 shortcuts · ⚙️ QS tile · 🎉 confetti on full Stempelkarte
+- 0.3.x: hero colours · 🎟️ Stempelkarte + 🕊️ · Teilen ➡ card preview · 🎉 12 Feiertage · 📱 widget · 🪝 notes ➡ Hooked page · 🔊 personas (1st tap 1-3 s, 2nd instant?) · zh/ar voice installed?
 
 ## icon
 - Marx (J. J. E. Mayall, London 1875, PD) · crop face ➡ sepia ➡ circle ➡ gold halo · on Parteibuch-rot

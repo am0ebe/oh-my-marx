@@ -14,6 +14,11 @@ Resumable: rerun = skips items whose German source is unchanged. Ctrl-C anytime.
   bin/translate_full.py --limit 20 --langs it         # quick test run
   bin/translate_full.py --show 5 --langs it           # 🌅 morning check: 5 random DE | EN | IT side by side
   bin/translate_full.py --stats                       # coverage + warnings per lang
+  bin/translate_full.py --bad --langs zh              # list items w a length warning (truncated / bloated)
+  bin/translate_full.py --redo-bad                    # retranslate those 1 by 1 (fixes below), keep whichever is better
+
+Length-warning causes (@1106): ⇧ bloated = DE⬄EN misaligned (EN para covers several DE paras) ➡ redo w/o EN ·
+⇩ truncated = model ended its JSON string at an ASCII quote i th source ➡ redo w „typographic“ quotes.
 
 Overnight:  nohup bin/translate_full.py > data/i18n_full/run.log 2>&1 &     then  tail -f data/i18n_full/run.log
 """
@@ -180,6 +185,61 @@ def run(lang, only, model, url, limit):
     f.close()
     print(f"✔️ {lang} done in {(time.time() - t0) / 60:.0f} min", flush=True)
 
+def ratio_bad(x):
+    return (x.get("warn") or "").startswith("length")
+
+def bad(lang):
+    src, c = source(), load(lang)
+    xs = [x for x in c.values() if ratio_bad(x)]
+    print(f"── {lang}: {len(xs)} length warnings")
+    for x in xs:
+        de, en = src.get((x["kind"], x["k"]), ("", ""))
+        print(f"  {x['kind']} {x['k']:>8} · {x['warn']} · DE {len(de)} / EN {len(en)} · {x['t'][:70]!r}")
+
+def requote(s):
+    """ASCII "…" ➡ „…“ (German typographic) so th model doesn't end its JSON string at th 1st quote"""
+    out, open_ = [], True
+    for ch in s:
+        if ch == '"':
+            out.append("„" if open_ else "“"); open_ = not open_
+        else:
+            out.append(ch)
+    return "".join(out)
+
+def redo_bad(lang, model, url):
+    src, c = source(), load(lang)
+    xs = [x for x in c.values() if ratio_bad(x)]
+    print(f"── {lang}: redo {len(xs)} items singly", flush=True)
+    fixed = 0
+    for x in xs:
+        key = (x["kind"], x["k"])
+        de, en = src[key]
+        if len(en) > 1.6 * len(de):        # EN para spans more than this DE one ➡ it misleads, drop it
+            en = ""
+        try:
+            res, _ = ask(model, url, lang, {x["k"]: (requote(de), en)})
+        except Exception as e:
+            print(f"  ⚠️ {x['k']}: {e}", flush=True); continue
+        t = res.get(x["k"])
+        if not t:
+            continue
+        w = check(lang, de, t)
+        old_r = float(x["warn"].split()[-1]); lo, hi = RATIO[lang]
+        new_r = len(t) / max(len(de), 1)
+        # keep th new one if it passes, o at least sits closer 2 th allowed window than th old one
+        dist = lambda r: max(lo - r, r - hi, 0)
+        if w is None or dist(new_r) < dist(old_r):
+            c[key] = {"kind": x["kind"], "k": x["k"], "src": x["src"], "t": t, **({"warn": w} if w else {})}
+            fixed += w is None
+        print(f"  {x['k']:>8} {old_r:.2f} ➡ {new_r:.2f} {'✔️' if w is None else '⚠️'}", flush=True)
+    # rewrite th file compact (1 line per item, no superseded duplicates)
+    tmp = OUT / f"{lang}.jsonl.tmp"        # tmp + rename ➡ a crash nvr leaves a half file (= hours o GPU)
+    with open(tmp, "w", encoding="utf-8") as f:
+        for v in c.values():
+            f.write(json.dumps(v, ensure_ascii=False) + "\n")
+    tmp.replace(OUT / f"{lang}.jsonl")
+    print(f"✔️ {lang}: {fixed}/{len(xs)} now pass", flush=True)
+
 def source():
     s = {}
     for kind, k, de, en in items(["v", "fn"]):
@@ -211,12 +271,22 @@ def main():
     ap.add_argument("--limit", type=int, default=0, help="max items per lang (test runs)")
     ap.add_argument("--show", type=int, default=0, help="print N random samples side by side, translate nothing")
     ap.add_argument("--stats", action="store_true")
+    ap.add_argument("--bad", action="store_true", help="list length-warned items")
+    ap.add_argument("--redo-bad", action="store_true", help="retranslate length-warned items 1 by 1")
     ap.add_argument("-m", "--model", default="qwen3:30b-a3b-instruct-2507-q4_K_M")
     ap.add_argument("--url", default="http://localhost:11434/api/generate")
     a = ap.parse_args()
     OUT.mkdir(parents=True, exist_ok=True)
     if a.stats:
         return stats(a.langs)
+    if a.bad:
+        for lang in a.langs:
+            bad(lang)
+        return
+    if a.redo_bad:
+        for lang in a.langs:
+            redo_bad(lang, a.model, a.url)
+        return
     if a.show:
         for lang in a.langs:
             show(lang, a.show)

@@ -1,0 +1,25 @@
+name: 🐛 Something's broken
+description: The app crashed, looks wrong, or does something odd
+labels: [bug, needs-triage]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: One or two sentences is plenty. A screenshot helps a lot (drag it in here).
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect instead?
+  - type: input
+    id: version
+    attributes:
+      label: App version
+      description: ⚙️ ➡ Über (bottom), e.g. 0.7.0
+  - type: input
+    id: phone
+    attributes:
+      label: Phone + Android version
+      placeholder: e.g. Pixel 7, Android 15
