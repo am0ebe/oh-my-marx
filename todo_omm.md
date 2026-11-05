@@ -2,9 +2,11 @@
 - Vers des Tages on 🦠's fon via own Android app
 
 ## ⏳
-- ▶ **RESUME @1105** — repo **public** github.com/am0ebe/oh-my-marx (GPL-3.0, history scrubbed o Hooked OCR) · dir `pr/omm` · Forgejo `am0/oh-my-marx` · stable **0.6.0** live · dev 0.7.0 (Kreise + pills + no-flicker + Über/Quellen) on /dev · all committed + pushed
-  - ▶ NEXT (order): 🦠 Migadu aliases `omm@` + `hey@scagent.de` (README/page/app alr say omm@!) ➡ 🦠 read th overnight translation (`bin/translate_full.py --stats` + `--show 5 --langs it`) ➡ 🦠 QA dev (update banner: install an older dev, open app ➡ 🆕 banner) ➡ `bin/ship.sh` 0.7.0
-  - 👤 blocked on strix: Migadu aliases · keystore symlink (cmd below, he cp'd it @1105) · fon QA · friends feedback
+- ▶ **RESUME @1105 (eos)** — repo **public** github.com/am0ebe/oh-my-marx (GPL-3.0, history scrubbed o Hooked OCR) · dir `pr/omm` · Forgejo `am0/oh-my-marx` · stable **0.6.0** live · dev **0.7.0-dev.1105.0129** on /dev (Kreise + pills + no-flicker + Über/Quellen + 🆕 update banner · EN page w What's new + omm@) · all committed + pushed (`f608166`+)
+  - ⚠️ live: `translate_full.py` running overnight (nohup, GPU) ➡ `data/i18n_full/*.jsonl` growing + deliberately uncommitted ➡ commit only aft it's done (`pgrep -f translate_full` = still running)
+  - ⚠️ stable page still old DE layout til `ship.sh` 0.7.0 · update banner only reaches ppl on ≥0.7.0 (0.6.0 users need 1 manual update)
+  - ▶ NEXT (order): ✔️ Migadu aliases `omm@` + `hey@scagent.de` (@1105 strix) ➡ 🦠 read th overnight translation (`bin/translate_full.py --stats` + `--show 5 --langs it`) ➡ 🦠 QA dev (update banner: install an older dev, open app ➡ 🆕 banner) ➡ `bin/ship.sh` 0.7.0
+  - 👤 blocked on strix: keystore symlink (cmd below, he cp'd it @1105) · fon QA · friends feedback
   - 🤖 aft th overnight job: `bin/translate.py --only ui` (3 new 0.7.0 strings timed out @1105 while GPU busy ➡ show EN i IT/ES/PT/ZH/AR til then) ➡ commit `data/i18n_full/` + i18n json
   - 🧹 `pr/bible/` = only a `.claude/` stub th old session re-created ➡ `rm -r ~/gopro/go/pr/bible` once no session runs there
   - ⚠️ traps: VPS = **ops-owned** (pr/ops/omm.md) ➡ omm nvr edits Caddy//srv, asks ops (msg `ops` session) · box's `/srv/omm-matrix/compose.yml` owns th synapse tag (fleet.py bumps) ➡ nvr rsync ours over it · `android/omm.properties` (reg token, git-ignored) needed 4 builds w comments/Kreise · screenshots of his fon only after asking (mem) · zsh aliases: `command mv/grep`, nvr bare `tr`
@@ -31,6 +33,7 @@
   - 🔍 alt path = existing translations: © per translator (life + 70 y, ZH 50 y) · candidates 2 verify: ES Juan B. Justo 1898 (†1928 ➡ prob PD) · ZH 郭大力/王亚南 1938 (†1976/†1969 ➡ CN PD ~2027) · IT Cantimori (†1966 ➡ © til 2036) · ES Scaron/Siglo XXI + Roces (©) · marxists.org hosting ≠ PD · 🦠 decide aft comparing quality
 - ✔️ **in-app update check** @1105 (`data/Update.kt`): each app start reads `version.json` (stable app ➡ stable page · DEV ➡ /dev/) ➡ `code` > installed versionCode ➡ gold banner on Heute ➡ tap = download page ➡ install over, data kept · no self-install (would need REQUEST_INSTALL_PACKAGES = scary perm 4 secu ppl)
   - 🔵 maybe later: in-app download + system install dialog (1 tap less, costs that permission)
+- 🔵🤖 tsts 4 th @1105 glue (refl: all 3 shipped w 0 tsts, page bug only caught by curl): `Update.check` vs a fake version.json (newer/older/garbage/offline) · `bin/notes.py` vs Changelog.kt (dev suffix ➡ base, unknown ➡ empty) · `page()` dry-run in a tmp dir ➡ assert `<h2>` + mailto + valid JSON (would've caught th `'` i `${:+}` heredoc)
 - ✔️ **release flow** @1105: `ship.sh` ➡ git tag + GitHub release w notes fr Changelog.kt (`bin/notes.py`) = archive o evy version · download page = EN, same structure as README, shows "What's new" + link 2 older releases
   - 🔄 loop: feature on dev (`deploy.sh`, ur fon) ➡ good ➡ bump `appVersion` + Changelog entry ➡ commit + push ➡ `ship.sh` · ship often (prototype)
 - 📨 **mail**: README + page + app Über = `omm@scagent.de` · 🦠 Migadu admin: alias `omm@` + `hey@` ➡ ur inbox · optional per-source tracking: `omm-gh@` on GitHub etc. ➡ filter on To: · ⚠️ GMX has no `+` sub-addressing
