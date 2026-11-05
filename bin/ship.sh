@@ -31,7 +31,7 @@ git rev-parse -q --verify "refs/tags/v$ver" >/dev/null && { echo "❌ v$ver alr 
 out=$(mktemp -d); trap 'rm -rf "$out"' EXIT
 apk="$FILE-$ver.apk"
 cp android/app/build/outputs/apk/release/app-release.apk "$out/$apk"
-page "$out" "$ver" "$apk" "" "$WEB/"
+page "$out" "$ver" "$apk" stable
 publish "$out"
 
 # GitHub release = th archive: evy version stays downloadable (bug i 0.8? grab 0.7) · notes = th in-app changelog
