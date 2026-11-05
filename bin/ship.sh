@@ -34,7 +34,8 @@ cp android/app/build/outputs/apk/release/app-release.apk "$out/$apk"
 page "$out" "$ver" "$apk" "" "$WEB/"
 publish "$out"
 
-# GitHub release (private repo 4 now ➡ friends use th VPS page · public later ➡ Obtainium can follow GitHub directly)
-gh release create "v$ver" "$out/$apk" --title "$APP $ver" --notes "$(git log -1 --format=%s)"
+# GitHub release = th archive: evy version stays downloadable (bug i 0.8? grab 0.7) · notes = th in-app changelog
+gh release create "v$ver" "$out/$apk" --title "$APP $ver" \
+    --notes "$(bin/notes.py "$ver")"$'\n\n'"Install: open $WEB/ on the phone, or download the APK below. Older versions: see all releases."
 git fetch -q --tags origin
 echo "✔️ shipped v$ver ➡ $WEB/"

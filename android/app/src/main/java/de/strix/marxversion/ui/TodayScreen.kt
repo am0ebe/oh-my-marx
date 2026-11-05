@@ -175,6 +175,16 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
 
     PullToRefreshBox(isRefreshing = false, onRefresh = { oracleNow() }) {
     Column(Modifier.fillMaxWidth().verticalScroll(scroll).padding(vertical = 12.dp)) {
+        // ── 🆕 newer version on th download page ➡ tap = open it (install over th old app, data stays) ──
+        val upd by vm.update.collectAsStateWithLifecycle()
+        upd?.let { u ->
+            Card(onClick = { ctx.startActivity(android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse(de.strix.marxversion.data.Update.page))) },
+                colors = CardDefaults.cardColors(containerColor = Gold.copy(alpha = 0.22f)),
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp).padding(bottom = 10.dp)) {
+                Text(tr("🆕 Version %s ist da — antippen zum Laden (deine Daten bleiben)", "🆕 Version %s is out — tap to download (your data stays)").f(u.version),
+                    fontSize = 14.sp, modifier = Modifier.padding(12.dp))
+            }
+        }
         // ── 🃏 th cards: 1st thing u see (Hooked: reward right at th door) ──
         CardCarousel(vm, extras, vod?.let { CardItem(it, CardItem.Kind.TODAY, 0, feast) }, doneToday, speaker, persona, jump, openChapter, amen)
         Column(Modifier.padding(horizontal = 16.dp)) {

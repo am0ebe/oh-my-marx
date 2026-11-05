@@ -3,13 +3,16 @@
 
 ## ⏳
 - ▶ **RESUME @1105** — repo **public** github.com/am0ebe/oh-my-marx (GPL-3.0, history scrubbed o Hooked OCR) · dir `pr/omm` · Forgejo `am0/oh-my-marx` · stable **0.6.0** live · dev 0.7.0 (Kreise + pills + no-flicker + Über/Quellen) on /dev · all committed + pushed
-  - ▶ NEXT (order): 🦠 read th overnight translation (`bin/translate_full.py --stats` + `--show 5 --langs it`) ➡ 🤖 in-app update check (⭐ below, BEFORE shipping 0.7.0) ➡ 🦠 QA dev ➡ `bin/ship.sh` 0.7.0 (page then shows email + src link)
-  - 👤 blocked on strix: keystore link (cmds below) · Migadu alias · fon QA · friends feedback
+  - ▶ NEXT (order): 🦠 Migadu aliases `omm@` + `hey@scagent.de` (README/page/app alr say omm@!) ➡ 🦠 read th overnight translation (`bin/translate_full.py --stats` + `--show 5 --langs it`) ➡ 🦠 QA dev (update banner: install an older dev, open app ➡ 🆕 banner) ➡ `bin/ship.sh` 0.7.0
+  - 👤 blocked on strix: Migadu aliases · keystore symlink (cmd below, he cp'd it @1105) · fon QA · friends feedback
+  - 🤖 aft th overnight job: `bin/translate.py --only ui` (3 new 0.7.0 strings timed out @1105 while GPU busy ➡ show EN i IT/ES/PT/ZH/AR til then) ➡ commit `data/i18n_full/` + i18n json
+  - 🧹 `pr/bible/` = only a `.claude/` stub th old session re-created ➡ `rm -r ~/gopro/go/pr/bible` once no session runs there
   - ⚠️ traps: VPS = **ops-owned** (pr/ops/omm.md) ➡ omm nvr edits Caddy//srv, asks ops (msg `ops` session) · box's `/srv/omm-matrix/compose.yml` owns th synapse tag (fleet.py bumps) ➡ nvr rsync ours over it · `android/omm.properties` (reg token, git-ignored) needed 4 builds w comments/Kreise · screenshots of his fon only after asking (mem) · zsh aliases: `command mv/grep`, nvr bare `tr`
 
 ## ‼️
+- 🔗 repo links: GitHub `github.com/am0ebe/oh-my-marx` = canonical (issues, releases, ppl trust it) · Forgejo `git.scagent.de/am0/oh-my-marx` = public mirror (same code, 200 anon ✔️) · ez 2 say: `scagent.de/omm` ➡ page links th src · 💡 ask ops 4 `scagent.de/omm/src` ➡ GitHub 302
 - 🦠👀 QA dev **0.7.0-dev.1104.1352** (@1104 feedback round): card btns = 5 equal pills w labels (Teilen quiet) · tap Marx/Heute/⚙️ when alr there = no flicker · bottom "runterziehen/schütteln" hint gone · ⚙️ ➡ Über = 📜 Quellen + 🤖 wh th app adds + 🔓 src link
-- 🔓 **public repo** (@1104 strix: show code 2 a privacy-aware IT guy): ✔️ ocr/ (Hooked ©) out o tree + history ➡ `re/boox/hooked/pages/` · ✔️ LICENSE GPL-3.0 · ✔️ README.md = EN dev readme (specs · build-it-urself · what leaves th fon · known gaps · sources) · DE install section on top (end-usr = DE, tech = EN) · ✔️ repo ➡ `oh-my-marx` · ✔️ public @1104
+- 🔓 **public repo** (@1104 strix: show code 2 a privacy-aware IT guy): ✔️ ocr/ (Hooked ©) out o tree + history ➡ `re/boox/hooked/pages/` · ✔️ LICENSE GPL-3.0 · ✔️ README.md all EN @1105 (install · specs · build-it-urself beginner steps · online bits casual · known gaps · sources · centaur credit) · ✔️ repo ➡ `oh-my-marx` · ✔️ public @1104
   - ✔️ Forgejo renamed + remotes updated @1105 · pre-rewrite bup: `pr/.old/bibleApp_pre-filter_1104.bundle` · old transcripts: `~/.claude/projects/-home-strix-gopro-go-pr-bible/` (mem pool now `~/dotfiles/.claude/memory/-home-strix-gopro-go-pr-omm`)
   - ⚠️ GitHub keeps th pre-rewrite commits reachable by exact SHA (unknown 2 anyone) ➡ accepted risk
 - 🦠🔑 **keystore = th app's identity**: Android installs an update only if signed w th SAME key · ours = `~/.android/debug.keystore` (only on tow) ➡ lose it = friends can't update (uninstall = data gone)
@@ -17,6 +20,7 @@
     `mkdir -p ~/dotfiles/secrets/android && mv ~/.android/debug.keystore ~/dotfiles/secrets/android/omm.keystore && ln -s ~/dotfiles/secrets/android/omm.keystore ~/.android/debug.keystore`
   - verify: build ➡ `~/Android/Sdk/build-tools/*/apksigner verify --print-certs android/app/build/outputs/apk/debug/app-debug.apk | grep SHA-256` = same as th shipped APK fr scagent.de/oh-my-marx/
   - ⚠️ ST deletes propagate ➡ also 1 offline/restic copy · lap: same `ln -s` (➡ sys: ansible task?)
+  - 🔑 password manager: keystore = binary ➡ store as text: `base64 -w0 ~/dotfiles/secrets/android/omm.keystore` ➡ paste as a note (~3 KB) · restore: `base64 -d > omm.keystore` · + its pw (debug key: store/key pw `android`, alias `androiddebugkey`) · or attach th file (KeePassXC/Bitwarden do attachments)
   - 🔵 later: real release key + `apksigner rotate` (v3 lineage, Android 9+) ➡ friends update wo reinstall · "CN=Android Debug" = looks unfinished 2 secu ppl
 - 📦⭐ **full Kapital txt i IT/ES/PT/ZH/AR** (🧪 experiment, @1105): `bin/translate_full.py` (DE source, EN ref, per-lang glossary, resumable, ⚠️ flags: length ratio + footnote markers)
   - tstd: 12 IT + 6 ZH paragraphs ✔️ read well · speed IT ~100 tok/s, ZH ~150 ➡ **~1.5-2 h/lang, ~8-9 h all 5** (2 M chars/lang: book 1.5 M + footnotes 0.5 M)
@@ -25,11 +29,11 @@
   - 🌅 morning: `bin/translate_full.py --stats` · `--show 5 --langs it` (DE | EN | IT side by side)
   - then 🤖: wire into th app (Read screen: lang ≠ DE/EN ➡ own txt + "🤖 maschinell übersetzt" badge) · update Über + README (no more "full txt only DE/EN") · APK +~10 MB (consider per-lang download later)
   - 🔍 alt path = existing translations: © per translator (life + 70 y, ZH 50 y) · candidates 2 verify: ES Juan B. Justo 1898 (†1928 ➡ prob PD) · ZH 郭大力/王亚南 1938 (†1976/†1969 ➡ CN PD ~2027) · IT Cantimori (†1966 ➡ © til 2036) · ES Scaron/Siglo XXI + Roces (©) · marxists.org hosting ≠ PD · 🦠 decide aft comparing quality
-- ⭐🤖 **in-app update check** (b4 shipping 0.7.0): friends who installed fr th page nvr hear of updates (Obtainium = extra app, most won't)
-  - app GETs `scagent.de/oh-my-marx/version.json` 1×/day (✔️ lib.sh writes it since @1105) ➡ newer ➡ banner "🆕 Version X ➡ tippen" ➡ opens th download page ➡ install over (same key = data kept)
-  - ⚙️ switch + README "what leaves th fon" row · dev app checks `/dev/version.json`
-- 📨 **feedback mail** · page now shows am0ebe@gmx.de + src link (lib.sh, live on nxt ship/deploy)
-  - 💡 scagent.de mail = **Migadu** ➡ Migadu admin: alias `omm@scagent.de` ➡ forward 2 gmx · per source `omm-web@` · `omm-app@` · `omm-gh@` (o catch-all `*@scagent.de`) ➡ GMX filter on To: = which app + which channel · ⚠️ GMX itself has no `+` sub-addressing · tst 1 mail b4 printing it
+- ✔️ **in-app update check** @1105 (`data/Update.kt`): each app start reads `version.json` (stable app ➡ stable page · DEV ➡ /dev/) ➡ `code` > installed versionCode ➡ gold banner on Heute ➡ tap = download page ➡ install over, data kept · no self-install (would need REQUEST_INSTALL_PACKAGES = scary perm 4 secu ppl)
+  - 🔵 maybe later: in-app download + system install dialog (1 tap less, costs that permission)
+- ✔️ **release flow** @1105: `ship.sh` ➡ git tag + GitHub release w notes fr Changelog.kt (`bin/notes.py`) = archive o evy version · download page = EN, same structure as README, shows "What's new" + link 2 older releases
+  - 🔄 loop: feature on dev (`deploy.sh`, ur fon) ➡ good ➡ bump `appVersion` + Changelog entry ➡ commit + push ➡ `ship.sh` · ship often (prototype)
+- 📨 **mail**: README + page + app Über = `omm@scagent.de` · 🦠 Migadu admin: alias `omm@` + `hey@` ➡ ur inbox · optional per-source tracking: `omm-gh@` on GitHub etc. ➡ filter on To: · ⚠️ GMX has no `+` sub-addressing
 - 🔵 Mitlesen opt-in prompt on 1st start (now dflt on) · 🔵 ask ops: Synapse `user_ips_max_age` shorter (dflt 28d)
 - 📚 **dev ⬄ release** (4 strix, new 2 apps): 2 apps, 1 key · stable `de.strix.marxversion` "Oh My Marx" (red) ⬄ dev `….dev` "Oh My Marx DEV" (blue) = side by side, own data
   - `bin/deploy.sh` ➡ /oh-my-marx/dev/ (evy build, only ur fon) · `bin/ship.sh` ➡ /oh-my-marx/ + GitHub release (friends) · versionCode = minutes since 2026 ➡ always "newer"

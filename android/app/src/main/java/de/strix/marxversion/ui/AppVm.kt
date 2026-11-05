@@ -23,6 +23,7 @@ import de.strix.marxversion.logic.today
 import de.strix.marxversion.logic.verseOfDay
 import de.strix.marxversion.notify.LosungWorker
 import de.strix.marxversion.notify.schedule
+import de.strix.marxversion.data.Update
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -194,9 +195,13 @@ class AppVm(app: Application) : AndroidViewModel(app) {
     val feastPreview = MutableStateFlow<Feast?>(null)
     val timePreview = MutableStateFlow<DayTime?>(null)
 
+    /** 🆕 newer version on th download page (data/Update.kt) · checked once per app start */
+    val update = MutableStateFlow<Update.Latest?>(null)
+
     init {
         // parsing ~6 MB JSON on th main thread would freeze th UI ➡ IO dispatcher
         viewModelScope.launch(Dispatchers.IO) { content.load(); _loaded.value = true; refreshWidgets(app) }
+        viewModelScope.launch { update.value = Update.check() }
     }
 
     private val pool by lazy { dailyPool(content.verses) }

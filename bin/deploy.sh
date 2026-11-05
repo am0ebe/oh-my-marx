@@ -57,6 +57,6 @@ ver=$(sed -nE 's/.*"versionName": "([^"]+)".*/\1/p' android/app/build/outputs/ap
 out=$(mktemp -d); trap 'rm -rf "$out"' EXIT
 apk="$FILE-$ver.apk"
 cp android/app/build/outputs/apk/debug/app-debug.apk "$out/$apk"
-page "$out" "$ver" "$apk" "<p class=n>🧪 <b>Dev-Kanal</b> — eigene App „Oh My Marx DEV“ neben der stabilen, neueste Baustelle, kann wackeln. Stabil: <a href=\"$WEB/\">$WEB/</a></p>" "$WEB/dev/"
+page "$out" "$ver" "$apk" "<p class=n>🧪 <b>Dev channel</b> — a separate app “Oh My Marx DEV” next to the stable one, newest work in progress, may break. Stable: <a href=\"$WEB/\">$WEB/</a></p>" "$WEB/dev/"
 publish "$out" dev
 echo "✔️ deployed $ver ➡ $WEB/dev/ · fon: Obtainium ➡ pull 2 refresh"

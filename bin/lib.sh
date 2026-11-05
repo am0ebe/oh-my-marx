@@ -10,7 +10,7 @@ ADB=$ANDROID_HOME/platform-tools/adb
 # short link 4 ppl: scagent.de/omm (+ /omm/dev) = 302 by ops' Caddy · Obtainium keeps th full URL
 WEB=https://scagent.de/oh-my-marx
 DIRS=/srv/www/oh-my-marx
-MAIL=am0ebe@gmx.de                                  # feedback addr on th page (💡 later: omm@ alias, see todo)
+MAIL=omm@scagent.de                                 # feedback addr (Migadu alias ➡ am0ebe's inbox)
 SRC=https://github.com/am0ebe/oh-my-marx
 
 # th 1 version number lives i android/app/build.gradle.kts: val appVersion = "x.y.z"
@@ -38,27 +38,39 @@ EOF
 #   page OUTDIR VERSION APKNAME CHANNEL-NOTE OBTAINIUM-URL
 page() {
     local out=$1 ver=$2 apk=$3 note=$4 url=$5
-    local mb sha; mb=$(du -m "$out/$apk" | cut -f1); sha=$(sha256sum "$out/$apk" | cut -c1-16)
+    local mb sha code news
+    mb=$(du -m "$out/$apk" | cut -f1); sha=$(sha256sum "$out/$apk" | cut -d' ' -f1)
+    code=$("$ANDROID_HOME"/build-tools/*/aapt2 dump badging "$out/$apk" 2>/dev/null | sed -nE "1s/.*versionCode='([0-9]+)'.*/\1/p")
+    news=$(bin/notes.py "$ver" --html)
+    [ -n "$news" ] && news="<h2>📜 What’s new in ${ver%%-*}</h2><ul>$news</ul>"
+    # same structure as README.md (what · install · updates · what's new · feedback · source) · English
     cat > "$out/index.html" <<EOF
-<!doctype html><html lang="de"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>$APP ☭</title>
 <style>body{font:17px/1.5 system-ui,sans-serif;max-width:34em;margin:2em auto;padding:0 16px;background:#1d1230;color:#f4ead8}
 a.b{display:block;text-align:center;background:#b3261e;color:#fff;padding:.9em;border-radius:12px;text-decoration:none;font-weight:700;margin:1.2em 0}
-code{background:#0004;padding:.1em .3em;border-radius:4px}small{opacity:.7}.n{background:#e8b93133;padding:.5em .8em;border-radius:8px}a{color:#e8b931}</style>
+h2{font-size:1.05em;margin:1.6em 0 .3em}code{background:#0004;padding:.1em .3em;border-radius:4px}small{opacity:.7}
+.n{background:#e8b93133;padding:.5em .8em;border-radius:8px}a{color:#e8b931}ul,ol{padding-left:1.3em}</style>
 <h1>☭ $APP</h1>
-<p>Marx lesen wie die Bibel: jeden Tag ein Häppchen Kapital. <small>Read Marx like the Bible.</small></p>
+<p>Read Marx like the Bible: a daily verse from <i>Das Kapital</i>, the whole book, reading plans, streaks —
+and a Hooked mode that confesses every habit trick the app plays on you. The app speaks German first (plus EN · IT · ES · PT · 中文 · عربي).</p>
 $note
-<a class="b" href="$apk">⬇️ $APP $ver herunterladen · ${mb} MB</a>
-<ol><li>APK antippen ➡ „Aus dieser Quelle zulassen“ (einmalig) ➡ Installieren</li>
-<li>Play Protect meckert evtl. („unbekannte App“) ➡ „Trotzdem installieren“</li>
-<li>Updates automatisch: App <b>Obtainium</b> ➡ ＋ ➡ URL <code>$url</code> ➡ Hinzufügen. Fertig.</li></ol>
-<p>Weitersagen: <b><a href="https://scagent.de/omm">scagent.de/omm</a></b> 🔗</p>
-<p>💬 Feedback: <a href="mailto:$MAIL?subject=Oh%20My%20Marx%20$ver">$MAIL</a> — Screenshot + ein Satz reicht 🙏</p>
-<p>🔓 Quellcode: <a href="$SRC">$SRC</a> · lieber selbst bauen statt APK vertrauen</p>
-<p><small>v$ver · $(date '+%F %H:%M') · sha256 $sha…</small></p>
+<a class="b" href="$apk">⬇️ Download $APP $ver · ${mb} MB</a>
+<ol><li>Tap the download ➡ allow installing from this source (once) ➡ <b>Install</b></li>
+<li>Play Protect may warn about an "unknown app" — normal outside the Play Store ➡ <b>Install anyway</b></li></ol>
+<h2>🆕 Updates</h2>
+<p>The app tells you when a new version is out ➡ tap ➡ install over it, your data stays.
+Prefer fully automatic? <a href="https://github.com/ImranR98/Obtainium/releases">Obtainium</a> ➡ ＋ ➡ <code>$url</code></p>
+$news
+<p><small>Older versions + all release notes: <a href="$SRC/releases">GitHub releases</a></small></p>
+<h2>💬 Feedback</h2>
+<p><a href="mailto:$MAIL?subject=Oh%20My%20Marx%20$ver">$MAIL</a> — a screenshot + one sentence is plenty 🙏 · share: <a href="https://scagent.de/omm">scagent.de/omm</a></p>
+<h2>🔓 Source</h2>
+<p><a href="$SRC">$SRC</a> · GPL-3.0 · build it yourself if you'd rather not trust an APK</p>
+<p><small>v$ver · $(date '+%F %H:%M') · sha256 ${sha:0:16}…</small></p>
 EOF
-    # 🔄 machine-readable latest version (4 a future in-app "update available" check · Obtainium ignores it)
-    printf '{"version":"%s","apk":"%s","sha256":"%s"}\n' "$ver" "$apk" "$(sha256sum "$out/$apk" | cut -d' ' -f1)" > "$out/version.json"
+    # 🆕 th app's update check (data/Update.kt) reads this: code = versionCode, compared w th installed one
+    printf '{"version":"%s","code":%s,"apk":"%s","sha256":"%s"}\n' "$ver" "${code:-0}" "$apk" "$sha" > "$out/version.json"
 }
 
 # upload 2 evy page dir (+ SUBDIR): apk 1st, page 2nd (page nvr points at a missing file) · keep newest 3 apks
