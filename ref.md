@@ -33,7 +33,8 @@ _entry page = click-thru start · details live i th linked files · design + dec
 
 ## 🌐 download page (`bin/lib.sh` `page()`)
 - Obtainium 1st · APK tabs **Stable | 🧪 Dev** (Dev tab reads `dev/version.json` live) · build-it-urself tabs GitHub | Forgejo (brand icons, `bin/icons/` = Simple Icons CC0, inline)
-- 📣 share: native sheet (fon) · copy link · QR (`qrencode` at render) · Fediverse (Share₂Fedi) · Bluesky · Telegram · WhatsApp · Reddit · mail
+- 📣 share = 1 btn ➡ panel (`<dialog>`, fon + PC): Fediverse (Share₂Fedi) · Bluesky · Telegram · Reddit · mail · WhatsApp (last) · copy link · QR (`qrencode` at render) · "More apps…" = native sheet, touch only (Signal/Matrix go thru it, no web share URL)
+- what's new = newest version open + "Older versions" fold · no emoji · same i th app (⚙️)
 - 🃏 link preview = `bin/og.png` (1200×630, OG + Twitter tags) ➡ th card Signal / Telegram / Mastodon show = th real viral lever
 - 🤖 agents: `llms.txt` + JSON-LD `MobileApplication` + `version.json` · static, no JS needed 4 content
 - `/dev/` = small page + Obtainium source 4 th DEV app (1 apk link)

@@ -7,6 +7,9 @@
   - ✔️ `ship.sh minor|patch|major` bumps itself · dev auto-labelled w NEXT version · docs [ref.md](ref.md) (wiki entry) + README § Versions
   - ✔️ page: Stable | 🧪 Dev APK tabs · GitHub/Forgejo icons · share row + QR + OG preview card (`bin/og.png`) · `llms.txt` + JSON-LD
   - ⚠️ shipped WITHOUT fon QA (🦠 asked) ➡ ▶ NEXT: 🦠 Obtainium ➡ update both apps ➡ QA: lang IT/中文/عربي ➡ 📖 book + tap a footnote + 🔊 · share a link i Signal ➡ preview card shows?
+  - ✔️ @1106 b: share panel · What's new newest-only (app + page) · EN dflt + DE 2nd · DEV top bar blue + "DEV" · annotated tags i ship.sh · 0.9.0 notes drafted · dev `0.9.0-dev.1106.1243`
+  - 🐛💬 DEV app didn't update via Obtainium (stable did) ➡ server apk ok (pkg + key checked) ➡ prob installed via adb earlier ➡ 🦠 tap Install i Obtainium / send error txt / o uninstall DEV once + reinstall via Obtainium
+  - 🔍 more langs (80 % goal): FR · RU · HI · BN · ID nxt (answer @1106 i chat)
   - 💡 viral: in-app Spruchkarte share ➡ add `scagent.de/omm` under th card img? (check wh it has now)
 - ▶ **RESUME @1106** — repo **public** github.com/am0ebe/oh-my-marx (GPL-3.0) · Forgejo mirror `am0/oh-my-marx` · stable **0.7.0** live (tag v0.7.0) · dev `0.7.0-dev.1106.0007` on `/dev`
   - ✔️ @1106 page: no ⬇️ heading · 3rd option "Or build it yourself" (GitHub | Forgejo tabs, issue link) · What's new = pane, 🤏, no emoji · footer = Feedback (mailto w version) + Share, `#feedback` anchor
