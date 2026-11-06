@@ -21,14 +21,14 @@ Every version stays downloadable under [Releases](https://github.com/am0ebe/oh-m
 
 | | |
 |---|---|
-| **version** | `0.7.0` · single source: `appVersion` in [`android/app/build.gradle.kts`](android/app/build.gradle.kts) · release notes in-app (⚙️) and on each release |
+| **version** | `0.8.0` · single source: `appVersion` in [`android/app/build.gradle.kts`](android/app/build.gradle.kts) · release notes in-app (⚙️) and on each release |
 | **platform** | Android 8.0+ (`minSdk 26`), `targetSdk`/`compileSdk 36` |
 | **stack** | Kotlin 2.4 · Jetpack Compose (Material 3) · Room · DataStore · WorkManager · kotlinx-serialization |
 | **build** | AGP 8.13 · Gradle 8.14 (wrapper) · JDK 17+ |
 | **dependencies** | AndroidX + kotlinx only. No Google Play Services, Firebase, analytics or ads. HTTP via plain `HttpURLConnection`. |
 | **permissions** | `INTERNET` · `POST_NOTIFICATIONS` (daily verse) · `VIBRATE` |
-| **languages** | German first (Marx's original). Full book text: DE + EN. App, quotes, devotionals, plans: + IT · ES · PT · 中文 · عربي (RTL) |
-| **size** | ~17 MB APK, the whole book ships inside (works offline) |
+| **languages** | German first (Marx's original) · EN (Moore/Aveling 1887) · IT · ES · PT · 中文 · عربي (RTL): everything incl. the whole book, translated from German by a local LLM (not a published edition) |
+| **size** | ~21 MB APK, the whole book ships inside (works offline) |
 | **package** | `de.strix.marxversion` · dev builds `….dev` install side by side |
 | **license** | code [GPL-3.0](LICENSE) · book texts public domain |
 
@@ -88,11 +88,32 @@ notes.md          design notes + decisions (my own shorthand)
 ```
 
 Pipeline: `fetch.py` ➡ `split.py` ➡ `align.py` (DE⬄EN) ➡ `score.py` + `rank.py` (LLM picks quotable verses) ➡
-`build.py` (app JSON) ➡ `andacht.py` (devotionals) ➡ `translate.py` (IT/ES/PT/ZH/AR) · experimental:
-`translate_full.py` (the whole book).
+`build.py` (app JSON) ➡ `andacht.py` (devotionals) ➡ `translate.py` (quotes, devotionals, UI: IT/ES/PT/ZH/AR) ➡
+`translate_full.py` + `--export` (the whole book + footnotes, ~6-9 h on a local GPU).
 
-Channels: `bin/deploy.sh` ➡ your own phone over wireless adb (separate "DEV" app, every build) ·
-`bin/ship.sh` ➡ stable page + git tag + GitHub release.
+### Versions and releases
+
+There is one version number: `val appVersion = "x.y.z"` in `android/app/build.gradle.kts`, the last shipped release.
+Nobody edits it by hand: `bin/ship.sh minor|patch|major` bumps it. Two channels, two apps on the phone:
+
+| | script | version | goes to | phone |
+|---|---|---|---|---|
+| 🧪 dev | `bin/deploy.sh` (`-a` = also install over wireless adb) | next release + `-dev.MMDD.HHMM`, e.g. `0.9.0-dev.1107.1430` | `scagent.de/oh-my-marx/dev/` (also the 🧪 Dev tab on the page) | "Oh My Marx DEV" (`….dev`) via Obtainium |
+| 📦 stable | `bin/ship.sh minor` | `0.9.0` | `scagent.de/oh-my-marx/` + git tag + GitHub release | "Oh My Marx" |
+
+Dev builds are labelled with the coming version automatically (shipped `0.8.0` ➡ dev shows `0.9.0-dev…`).
+`versionCode` = minutes since 2026-01-01, so every build counts as newer and switching channels never needs a
+downgrade. The in-app update notice only shows for people who installed the APK by hand: Obtainium, F-Droid and
+stores update the app themselves, and the DEV app never shows it.
+
+Release cycle:
+
+1. Code ➡ `bin/deploy.sh` ➡ phone: Obtainium ➡ pull to refresh ➡ **Update** on the DEV entry
+2. QA on the phone (feature tour: `notes.md` § QA checklist) ➡ fix ➡ back to 1
+3. New or changed UI strings? `bin/translate.py --only ui`
+4. Add `Release("0.9.0", …)` on top of `ui/Changelog.kt` (in-app notes, GitHub release, download page)
+5. Commit + push ➡ `bin/ship.sh minor` (features) or `patch` (fixes only): bumps, commits, pushes, tags, publishes.
+   Refuses on a dirty tree, an unpushed HEAD, a missing changelog entry or an already-shipped version
 
 ## Sources
 
@@ -102,6 +123,8 @@ Channels: `bin/deploy.sh` ➡ your own phone over wireless adb (separate "DEV" a
 - **Portrait:** J. J. E. Mayall, London 1875
 - all public domain · quote picks, devotionals and the other languages are generated with a local LLM (Qwen3);
   quotes are always Marx's verbatim sentence
+- **IT · ES · PT · 中文 · عربي:** the whole book + footnotes translated from the German by that LLM, with a glossary of
+  the standard terms per language. Not a published edition: it may stumble
 
 ## Credits & contact
 

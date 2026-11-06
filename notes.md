@@ -226,7 +226,7 @@ _per concept 2-3 lines_
 
 ## 🌍 full txt translation — `bin/translate_full.py` (@1105)
 - in: DE paragraphs (`data/verses.jsonl`) + Marx's footnotes (`data/notes.jsonl`) · EN Moore/Aveling = reference only
-- out: `data/i18n_full/<lang>.jsonl`, 1 line/item `{kind v|fn, k, src=sha1(de)[:10], t, warn?}` · not wired into th app yet
+- out: `data/i18n_full/<lang>.jsonl`, 1 line/item `{kind v|fn, k, src=sha1(de)[:10], t, warn?}` · ✔️ @1106 i th app (0.8.0): `--export` ➡ `assets/content/full_<lang>.json` (stale src ➡ left out ➡ EN) · footnote refs `[n]` repaired 2 match DE (model invented `[52]` ~4 %) · app loads only th cur lang (`ContentRepo.full`) · APK 17 ➡ 21 MB
 - how: batches (≤8 items · ≤2.5k chars) ➡ ollama qwen3:30b-a3b, temp 0.2, JSON schema = 1 string per id ➡ bad JSON ➡ retry ➡ missing ids redone singly
   - glossary pins th Marxist terms per lang (Mehrwert = plusvalore / plusvalía / mais-valor / 剩余价值 …) · resumable by src hash (DE changed ➡ redone)
   - checks per item: length ratio vs DE (per-lang window) · same `[n]` footnote markers
@@ -245,8 +245,10 @@ _per concept 2-3 lines_
 ## 📦 dev ⬄ release (4 strix, new 2 apps)
 - 2 apps, 1 key · stable `de.strix.marxversion` "Oh My Marx" (red) ⬄ dev `….dev` "Oh My Marx DEV" (blue) = side by side, own data
 - `bin/deploy.sh` ➡ `/dev/` = bare Obtainium source 4 th DEV app (no webpage, @1106) · `-a` = + wireless adb now · `bin/ship.sh` ➡ /oh-my-marx/ + git tag + GitHub release w notes fr Changelog.kt (`bin/notes.py`) · `ship.sh -p` = page only · versionCode = minutes since 2026 ➡ always "newer"
-- 🔄 loop: feature on dev ➡ good ➡ bump `appVersion` + Changelog entry ➡ commit + push ➡ `ship.sh` · ship often (prototype)
-- update check (`data/Update.kt`): app start reads `version.json` ➡ `code` > installed ➡ gold banner on Heute ➡ tap = download page · no self-install (REQUEST_INSTALL_PACKAGES = scary perm)
+- 🔄 loop @1106: dev ➡ QA ➡ Changelog entry ➡ commit + push ➡ `ship.sh minor|patch` (bumps itself) · dev auto-labelled w th NEXT version · full wflo ➡ [🔗 ref.md § 🌊](ref.md) (README § Versions = EN copy 4 devs)
+  - was: hand-bump at ship ➡ dev builds said th OLD version (0.7.0-dev while building 0.8.0) ➡ "deploy didn't bump" confusion · 🦠 @1106: "cant script include a bump w some flag"
+- 🆕 banner @1106: only hand-installed APKs (installer ≠ Obtainium/F-Droid/store, `Update.wanted`) · DEV nvr · 🦠: "obtainium tk care o this"
+- update check (`data/Update.kt`, hand-installed only ⬆): app start reads `version.json` ➡ `code` > installed ➡ gold banner on Heute ➡ tap = download page · no self-install (REQUEST_INSTALL_PACKAGES = scary perm)
 
 ## 📨 feedback loop (@1105 · strix: "make feedback as ez as possible ➡ iterate faster")
 - 🎯 **many doors, 1 queue**: evy channel ends i **GitHub Issues** (ticket SSOT) ➡ 🤖 triages via `gh` ➡ fix ➡ release notes close th loop

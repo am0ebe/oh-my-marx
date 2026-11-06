@@ -12,6 +12,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.sp
+import de.strix.marxversion.data.Full
 import de.strix.marxversion.data.Lang
 import de.strix.marxversion.data.Tr
 import de.strix.marxversion.data.t
@@ -39,6 +40,8 @@ private val scheme = lightColorScheme(
  */
 val LocalLang = staticCompositionLocalOf { Lang.DE }
 val LocalTr = staticCompositionLocalOf<Tr?> { null }
+/** whole book i th cur lang (IT/ES/PT/ZH/AR) · null = DE/EN o loading */
+val LocalFull = staticCompositionLocalOf<Full?> { null }
 
 /** DE/EN written inline · oth langs looked up by th EN string (bin/translate.py) */
 @Composable
@@ -52,10 +55,11 @@ fun tr(p: Pair<String, String>) = tr(p.first, p.second)
 fun quoted(s: String) = LocalLang.current.quote(s)
 
 @Composable
-fun MarxTheme(lang: Lang, table: Tr?, content: @Composable () -> Unit) {
+fun MarxTheme(lang: Lang, table: Tr?, full: Full? = null, content: @Composable () -> Unit) {
     CompositionLocalProvider(
         LocalLang provides lang,
         LocalTr provides table,
+        LocalFull provides full,
         // Arabic: whole layout mirrors (Rows start right) — Compose does it, we just flip th switch
         LocalLayoutDirection provides if (lang.rtl) LayoutDirection.Rtl else LayoutDirection.Ltr,
     ) {

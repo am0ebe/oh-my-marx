@@ -5,7 +5,7 @@ Experiment (@1104): can a local model give a readable full text, so IT/ES/PT/ZH/
 Source = the German original (data/verses.jsonl + data/notes.jsonl), Moore/Aveling EN given as a reference only.
 A per-language glossary pins the standard Marxist terms (Mehrwert = plusvalore / plusvalía / mais-valor / 剩余价值 …).
 
-Output (not wired into the app yet): data/i18n_full/<lang>.jsonl, one line per item
+Output: data/i18n_full/<lang>.jsonl, one line per item ➡ --export ➡ assets/content/full_<lang>.json (th app's reader, @1106)
   {"kind": "v"|"fn", "k": id, "src": sha1(de)[:10], "t": translation, "warn": "..."?}
 Resumable: rerun = skips items whose German source is unchanged. Ctrl-C anytime.
 
@@ -16,6 +16,7 @@ Resumable: rerun = skips items whose German source is unchanged. Ctrl-C anytime.
   bin/translate_full.py --stats                       # coverage + warnings per lang
   bin/translate_full.py --bad --langs zh              # list items w a length warning (truncated / bloated)
   bin/translate_full.py --redo-bad                    # retranslate those 1 by 1 (fixes below), keep whichever is better
+  bin/translate_full.py --export                      # ➡ android assets full_<lang>.json (aft any change, then build th app)
 
 Length-warning causes (@1106): ⇧ bloated = DE⬄EN misaligned (EN para covers several DE paras) ➡ redo w/o EN ·
 ⇩ truncated = model ended its JSON string at an ASCII quote i th source ➡ redo w „typographic“ quotes.
@@ -246,6 +247,40 @@ def source():
         s[(kind, k)] = (de, en)
     return s
 
+MARK = re.compile(r"\[\d+[a-z]?\]")   # same as th app's footnote-ref regex (VerseView)
+
+def fix_marks(de, t):
+    """footnote refs [N] must match th German (else tap ➡ wrong/no footnote) · ~4 % o paragraphs: model invented
+    a ref ([52] fr nowhere) o renumbered one ➡ same count = swap by position · else drop extras + append missing"""
+    dm, tm = MARK.findall(de), MARK.findall(t)
+    if dm == tm:
+        return t
+    if len(dm) == len(tm):
+        it = iter(dm)
+        return MARK.sub(lambda m: next(it), t)
+    t = MARK.sub(lambda m: m.group(0) if m.group(0) in dm else "", t)
+    t = re.sub(r"[ \t]+([.,;:!?。，；：])", r"\1", t).replace("  ", " ")
+    missing = [m for m in dm if m not in MARK.findall(t)]
+    return t + (" " + " ".join(missing) if missing else "")
+
+def export(langs):
+    """data/i18n_full/<lang>.jsonl ➡ assets/content/full_<lang>.json = {"v": {id: txt}, "fn": {"kap:n": txt}}
+    stale (German source changed since translation) ➡ left out ➡ app falls back 2 EN"""
+    assets = ROOT / "android/app/src/main/assets/content"
+    src = source()
+    for lang in langs:
+        out, stale, fixed = {"v": {}, "fn": {}}, 0, 0
+        for (kind, k), x in load(lang).items():
+            de = src.get((kind, k), ("", ""))[0]
+            if not de or x.get("src") != sha(de):
+                stale += 1; continue
+            t = fix_marks(de, x["t"]); fixed += t != x["t"]
+            out[kind][k] = t
+        f = assets / f"full_{lang}.json"
+        f.write_text(json.dumps(out, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+        print(f"{lang}: book {len(out['v'])} · footnotes {len(out['fn'])} · 🩹 refs fixed {fixed} · stale {stale}"
+              f" ➡ {f.name} {f.stat().st_size // 1024}k")
+
 def show(lang, n):
     src, c = source(), load(lang)
     for key in random.sample(sorted(c), min(n, len(c))):
@@ -273,12 +308,15 @@ def main():
     ap.add_argument("--stats", action="store_true")
     ap.add_argument("--bad", action="store_true", help="list length-warned items")
     ap.add_argument("--redo-bad", action="store_true", help="retranslate length-warned items 1 by 1")
+    ap.add_argument("--export", action="store_true", help="➡ android assets full_<lang>.json")
     ap.add_argument("-m", "--model", default="qwen3:30b-a3b-instruct-2507-q4_K_M")
     ap.add_argument("--url", default="http://localhost:11434/api/generate")
     a = ap.parse_args()
     OUT.mkdir(parents=True, exist_ok=True)
     if a.stats:
         return stats(a.langs)
+    if a.export:
+        return export(a.langs)
     if a.bad:
         for lang in a.langs:
             bad(lang)

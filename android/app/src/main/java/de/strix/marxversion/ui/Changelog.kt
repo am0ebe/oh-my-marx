@@ -29,6 +29,12 @@ import de.strix.marxversion.data.f
 data class Release(val version: String, val date: String, val items: List<Pair<String, String>>)
 
 val RELEASES = listOf(
+    Release("0.8.0", "2026-11-06", listOf(
+        T("📖 Das ganze Kapital jetzt auch auf Italienisch, Spanisch, Portugiesisch, Chinesisch und Arabisch — samt Fußnoten", "📖 The whole of Capital now also in Italian, Spanish, Portuguese, Chinese and Arabic — footnotes included"),
+        T("🔊 Vorlesen liest den Absatz in deiner Sprache", "🔊 Read aloud reads the paragraph in your language"),
+        T("🆕 Update-Hinweis nur noch, wenn du die APK selbst installiert hast — Obtainium sagt es dir sowieso", "🆕 Update notice only if you installed the APK yourself — Obtainium tells you anyway"),
+        T("🤖 Übersetzt von einem lokalen LLM aus dem Deutschen — keine veröffentlichte Ausgabe (⚙️ ➡ Über ➡ Quellen)", "🤖 Translated from German by a local LLM — not a published edition (⚙️ ➡ About ➡ Sources)"),
+    )),
     Release("0.7.0", "2026-11-04", listOf(
         T("👥 Lesekreise: gründen, Code teilen, beitreten · wer hat heute Amen gesagt · Chat", "👥 Reading circles: found, share the code, join · who said Amen today · chat"),
         T("🎟️ Gemeinsame Stempelkarte: ein Stempel nur, wenn alle gelesen haben", "🎟️ Shared stamp card: a stamp only when everyone has read"),

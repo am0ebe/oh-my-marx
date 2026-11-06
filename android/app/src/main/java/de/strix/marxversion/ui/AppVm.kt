@@ -11,6 +11,7 @@ import de.strix.marxversion.data.Matrix
 import de.strix.marxversion.data.Kreis
 import de.strix.marxversion.BuildConfig
 import de.strix.marxversion.data.DayLog
+import de.strix.marxversion.data.Full
 import de.strix.marxversion.data.Lang
 import de.strix.marxversion.data.Mark
 import de.strix.marxversion.data.ReadLog
@@ -28,10 +29,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * ViewModel = survives screen rotation · holds UI state as StateFlows.
@@ -198,10 +202,21 @@ class AppVm(app: Application) : AndroidViewModel(app) {
     /** 🆕 newer version on th download page (data/Update.kt) · checked once per app start */
     val update = MutableStateFlow<Update.Latest?>(null)
 
+    /** 📖 whole book i th cur lang (IT/ES/PT/ZH/AR) · null = DE/EN, o still loading (➡ EN meanwhile) */
+    private val _full = MutableStateFlow<Full?>(null)
+    val full: StateFlow<Full?> = _full
+
     init {
         // parsing ~6 MB JSON on th main thread would freeze th UI ➡ IO dispatcher
         viewModelScope.launch(Dispatchers.IO) { content.load(); _loaded.value = true; refreshWidgets(app) }
-        viewModelScope.launch { update.value = Update.check() }
+        // lang switch ➡ swap th full text (old one dropped 1st, so no wrong-lang paragraphs i between)
+        viewModelScope.launch {
+            settings.map { it.lang }.distinctUntilChanged().collectLatest { l ->
+                _full.value = null
+                _full.value = withContext(Dispatchers.IO) { content.full(l) }
+            }
+        }
+        viewModelScope.launch { update.value = Update.check(app) }
     }
 
     private val pool by lazy { dailyPool(content.verses) }

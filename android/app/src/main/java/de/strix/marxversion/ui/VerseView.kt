@@ -71,10 +71,26 @@ fun ref(v: Verse): String {
     return "$book ${v.id}$page"
 }
 
-/** full paragraph: only DE + EN exist (1.3 M chars/lang ➡ not machine-translated yet) */
+/** th lang th paragraph is actually shown in · IT/ES/PT/ZH/AR: own LLM translation (full_xx.json, @1106)
+ *  ➡ EN while loading o if missing ➡ DE if no EN paragraph either */
 @Composable
-fun verseText(v: Verse): String =
-    if (LocalLang.current != Lang.DE && v.en.isNotBlank()) v.en.replace(" ¶ ", "\n\n") else v.de
+fun verseLang(v: Verse): Lang {
+    val lang = LocalLang.current
+    return when {
+        lang == Lang.DE -> Lang.DE
+        lang != Lang.EN && LocalFull.current?.v?.containsKey(v.id) == true -> lang
+        v.en.isNotBlank() -> Lang.EN
+        else -> Lang.DE
+    }
+}
+
+/** full paragraph i th cur lang (see verseLang) */
+@Composable
+fun verseText(v: Verse): String = when (verseLang(v)) {
+    Lang.DE -> v.de
+    Lang.EN -> v.en.replace(" ¶ ", "\n\n")
+    else -> LocalFull.current?.v?.get(v.id) ?: v.de
+}
 
 /** th LLM-picked line · ~1/5 o all paragraphs have none (dry tables, short bridges — eg 355 i th Jahresplan) ➡ opening sentence */
 @Composable
@@ -136,12 +152,12 @@ fun VerseView(vm: AppVm, v: Verse, speaker: Speaker? = null, showActions: Boolea
     val lang = LocalLang.current
     val txt = verseText(v)
     val r = ref(v)
-    val textLang = if (lang == Lang.DE || v.en.isBlank()) Lang.DE else Lang.EN
+    val textLang = verseLang(v)   // 🔊 voice reads th lang th text is in
     val fallbackNote = when {
-        lang == Lang.EN && v.en.isBlank() -> tr("(hier kein englischer Absatz — deutsches Original:)", "(no English paragraph here — German original:)")
-        lang.ordinal > 1 && v.en.isNotBlank() -> tr("(Volltext nur auf Deutsch/Englisch — hier: Englisch)", "(full text only in German/English — showing English)")
-        lang.ordinal > 1 -> tr("(Volltext nur auf Deutsch/Englisch — hier: Deutsch)", "(full text only in German/English — showing German)")
-        else -> ""
+        textLang == lang -> ""
+        lang == Lang.EN -> tr("(hier kein englischer Absatz — deutsches Original:)", "(no English paragraph here — German original:)")
+        textLang == Lang.EN -> tr("(dieser Absatz noch nicht übersetzt — hier: Englisch)", "(this paragraph isn't translated yet — showing English)")
+        else -> tr("(dieser Absatz noch nicht übersetzt — hier: Deutsch)", "(this paragraph isn't translated yet — showing German)")
     }
     val copied = tr("📋 kopiert", "📋 copied")
 
@@ -241,8 +257,10 @@ fun VerseView(vm: AppVm, v: Verse, speaker: Speaker? = null, showActions: Boolea
 
     footnote?.let { n ->
         val note = vm.content.note(v.kap, n)
+        val own = LocalFull.current?.fn?.get("${v.kap}:$n")
         val body = when {
             note == null -> "?"
+            own != null -> own
             lang != Lang.DE && note.en.isNotBlank() -> note.en
             else -> note.de
         }

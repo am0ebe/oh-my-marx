@@ -186,6 +186,8 @@ fun SettingsScreen(vm: AppVm, askNotifPermission: () -> Unit) {
         Text(tr("🤖 Was die App obendrauf macht", "🤖 What the app adds on top"), fontWeight = FontWeight.Bold, fontSize = 13.sp)
         Text(tr("• Absätze Deutsch ⬄ Englisch automatisch zugeordnet — kann mal danebenliegen.",
             "• Paragraphs German ⬄ English paired automatically — may be off now and then."), fontSize = 13.sp)
+        Text(tr("• Italienisch, Spanisch, Portugiesisch, Chinesisch, Arabisch: das ganze Buch + Fußnoten von einem lokalen LLM (Qwen3) aus dem Deutschen übersetzt, mit einem Glossar der üblichen Fachbegriffe (Mehrwert, Ware …) — keine veröffentlichte Ausgabe, kann holpern.",
+            "• Italian, Spanish, Portuguese, Chinese, Arabic: the whole book + footnotes translated from German by a local LLM (Qwen3), with a glossary of the standard terms (surplus value, commodity …) — not a published edition, may stumble."), fontSize = 13.sp)
         Text(tr("• Zitate: ein lokales LLM (Qwen3) wählt und bewertet sie, der Wortlaut ist aber immer Marx' Originalsatz (automatisch geprüft).",
             "• Quotes: a local LLM (Qwen3) picks and rates them, but the wording is always Marx's original sentence (checked automatically)."), fontSize = 13.sp)
         Text(tr("• Andachten: vom LLM geschrieben (Deutsch + Englisch).",

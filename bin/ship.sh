@@ -6,21 +6,26 @@ cd "$(dirname "$0")/.."
 
 usage() {
     cat <<EOF
-usage: bin/ship.sh [-p|--page] [-h|--help|-?]
+usage: bin/ship.sh [patch|minor|major] [-p|--page] [-h|--help|-?]
 
   📦 release: build release APK ➡ $WEB/ (page, Obtainium follows it) + GitHub release v<version>
+  minor       0.7.0 ➡ 0.8.0 = new features  ┐ bumps fr th last shipped tag ➡ writes appVersion ➡
+  patch       0.8.0 ➡ 0.8.1 = only fixes    ├ commits "vX.Y.Z" + pushes ➡ ships
+  major       0.8.0 ➡ 1.0.0                 ┘
+  (none)      ship appVersion as it is (must not be shipped yet)
   -p --page   only re-render + upload th page (lib.sh page() changed) 4 th last shipped version · no build, no tag
 
   before:
-    1. bump  val appVersion = "x.y.z"  i android/app/build.gradle.kts  (Obtainium only sees a NEW version)
-    2. commit + push  (th tag = exactly th shipped code; script refuses otherwise)
+    1. Changelog.kt: a Release("X.Y.Z", …) entry 4 th NEW version on top (= in-app + GitHub notes)
+    2. commit + push evythg else (th tag = exactly th shipped code; script refuses otherwise)
   signed w ~/.android/debug.keystore ➡ ⚠️ lose it = friends must uninstall
-  dev builds (no commit needed): bin/deploy.sh
+  dev builds (no commit needed, version = last ship + "-dev.MMDD.HHMM"): bin/deploy.sh
 
 EOF
     tools
 }
-case "${1:-}" in -h|--help|-\?) usage; exit 0 ;; -p|--page) only_page=1 ;; "") ;; *) usage; exit 1 ;; esac
+level=""
+case "${1:-}" in -h|--help|-\?) usage; exit 0 ;; -p|--page) only_page=1 ;; patch|minor|major) level=$1 ;; "") ;; *) usage; exit 1 ;; esac
 
 if [ -n "${only_page:-}" ]; then
     # last shipped = newest v* tag · apk comes fr th server (size + sha + versionCode = exactly what ppl download)
@@ -40,7 +45,22 @@ ver=$(app_version)
 [ -n "$ver" ] || { echo "❌ no appVersion i build.gradle.kts"; exit 1; }
 [ -z "$(git status --porcelain)" ] || { echo "❌ uncommitted changes ➡ commit 1st"; exit 1; }
 git fetch -q origin && [ "$(git rev-parse HEAD)" = "$(git rev-parse origin/main)" ] || { echo "❌ HEAD ≠ origin/main ➡ push 1st"; exit 1; }
-git rev-parse -q --verify "refs/tags/v$ver" >/dev/null && { echo "❌ v$ver alr shipped ➡ bump appVersion"; exit 1; }
+
+# 🔢 bump: fr th last shipped tag (not fr appVersion ➡ "minor" twice = still 1 step)
+if [ -n "$level" ]; then
+    last=$(git tag -l 'v*' --sort=-v:refname | head -1); last=${last#v}
+    IFS=. read -r ma mi pa <<<"${last:-0.0.0}"
+    case "$level" in major) next="$((ma + 1)).0.0" ;; minor) next="$ma.$((mi + 1)).0" ;; patch) next="$ma.$mi.$((pa + 1))" ;; esac
+    if [ "$next" != "$ver" ]; then
+        [ -n "$(bin/notes.py "$next")" ] || { echo "❌ no Release(\"$next\", …) i ui/Changelog.kt ➡ write th notes 1st"; exit 1; }
+        sed -i -E "s/^val appVersion = \"[^\"]+\"/val appVersion = \"$next\"/" android/app/build.gradle.kts
+        git commit -qm "v$next" android/app/build.gradle.kts && git push -q origin main
+        echo "🔢 $ver ➡ $next (committed + pushed)"
+        ver=$next
+    fi
+fi
+git rev-parse -q --verify "refs/tags/v$ver" >/dev/null && { echo "❌ v$ver alr shipped ➡ bin/ship.sh patch|minor|major"; exit 1; }
+[ -n "$(bin/notes.py "$ver")" ] || { echo "❌ no Release(\"$ver\", …) i ui/Changelog.kt ➡ write th notes 1st"; exit 1; }
 
 (cd android && ./gradlew --offline -q assembleRelease)
 out=$(mktemp -d); trap 'rm -rf "$out"' EXIT

@@ -9,8 +9,9 @@ plugins {
     alias(libs.plugins.ksp)
 }
 
-// ⭐ th 1 version number · bump b4 bin/ship.sh · bin/lib.sh reads this line
-val appVersion = "0.7.0"
+// ⭐ th 1 version number = th last shipped (o about-to-ship) release · `bin/ship.sh minor|patch|major` bumps it
+// dev builds (bin/deploy.sh) show th NEXT one: 0.8.0 shipped ➡ 0.9.0-dev.MMDD.HHMM (-PdevBase) · bin/lib.sh reads this line
+val appVersion = "0.8.0"
 
 // 💬 Matrix registration token (git-ignored file, see .gitignore) ➡ BuildConfig · missing ➡ comments off
 val ommRegToken: String = rootProject.file("omm.properties").takeIf { it.exists() }
@@ -30,7 +31,7 @@ android {
         versionCode = (System.currentTimeMillis() / 60_000L - 29_453_760L).toInt()
         // -Pdev (bin/deploy.sh) ➡ 0.5.1-dev.1103.0215 = a new version 4 Obtainium evy minute
         versionName = if (project.hasProperty("dev"))
-            appVersion + "-dev." + LocalDateTime.now().format(DateTimeFormatter.ofPattern("MMdd.HHmm"))
+            (project.findProperty("devBase") as String? ?: appVersion) + "-dev." + LocalDateTime.now().format(DateTimeFormatter.ofPattern("MMdd.HHmm"))
         else appVersion
     }
 

@@ -3,6 +3,8 @@
   - 🚦 rule: no version bump / ship / big new feat til th current one had ≥1 QA round on th fon · big side-quests (voice, chat infra) ➡ own pr
 
 ## ⏳
+- ✔️ @1106 **0.8.0 = whole book i IT/ES/PT/ZH/AR** (`translate_full.py --export` ➡ reader · 🔊 reads cur lang · lang menu + Über/Quellen say "KI-übersetzt") · `appVersion` 0.8.0 + Changelog · dev `0.8.0-dev.1106.0133` on /dev · NOT shipped · docs: [ref.md](ref.md) (wiki entry: § 🔢 versions + § 🌊 release wflo) + README § Versions
+  - ▶ NEXT: 🦠 Obtainium DEV ➡ update ➡ QA: lang IT/中文/عربي ➡ 📖 book + tap a footnote + 🔊 · then `bin/ship.sh`
 - ▶ **RESUME @1106** — repo **public** github.com/am0ebe/oh-my-marx (GPL-3.0) · Forgejo mirror `am0/oh-my-marx` · stable **0.7.0** live (tag v0.7.0) · dev `0.7.0-dev.1106.0007` on `/dev`
   - ✔️ @1106 page: no ⬇️ heading · 3rd option "Or build it yourself" (GitHub | Forgejo tabs, issue link) · What's new = pane, 🤏, no emoji · footer = Feedback (mailto w version) + Share, `#feedback` anchor
   - ✔️ @1106 `/dev` back = bare Obtainium source (no page) · `deploy.sh` ➡ /dev · `-a` = + adb · DEV app's update banner works again

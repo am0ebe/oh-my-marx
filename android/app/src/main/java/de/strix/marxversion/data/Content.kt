@@ -58,6 +58,11 @@ data class Plan(
     val days: List<PlanDay>,
 )
 
+/** th whole book i 1 o th LLM langs (bin/translate_full.py --export ➡ full_xx.json, ~2-3 MB each)
+ *  v = verse id ➡ paragraph · fn = "kap:n" ➡ footnote · missing key ➡ caller falls back 2 EN */
+@Serializable
+data class Full(val v: Map<String, String> = emptyMap(), val fn: Map<String, String> = emptyMap())
+
 /** loads evythg once (~5 MB JSON) · lookups by id afterwards r O(1) */
 class ContentRepo(private val context: Context) {
     private val json = Json { ignoreUnknownKeys = true }
@@ -93,4 +98,19 @@ class ContentRepo(private val context: Context) {
     fun chapter(kap: String): List<Verse> = verses.filter { it.kap == kap }
     fun plan(id: String): Plan? = plans.firstOrNull { it.id == id }
     fun tr(lang: Lang): Tr? = tables[lang]
+
+    // full text: only th cur lang i memory (5 × ~2.5 MB parsed = too much 4 small fons) · DE/EN live i verses.json
+    private var fullLang: Lang? = null
+    private var fullText: Full? = null
+
+    /** blocking (parses ~2-3 MB) ➡ call off th main thread · null = DE/EN o file missing */
+    @Synchronized
+    fun full(lang: Lang): Full? {
+        if (lang == Lang.DE || lang == Lang.EN) return null
+        if (lang != fullLang) {
+            fullText = runCatching { read<Full>("full_${lang.name.lowercase()}.json") }.getOrNull()
+            fullLang = lang
+        }
+        return fullText
+    }
 }

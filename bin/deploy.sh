@@ -11,7 +11,8 @@ usage() {
     cat <<EOF
 usage: bin/deploy.sh [-a|--adb] [-q|--quiet] [-h|--help|-?]
 
-  🧪 dev build "Oh My Marx DEV", version <appVersion>-dev.MMDD.HHMM (newer evy minute), no commit needed
+  🧪 dev build "Oh My Marx DEV", version <next release>-dev.MMDD.HHMM (newer evy minute), no commit needed
+     next release = appVersion if not shipped yet, else th next minor (0.8.0 shipped ➡ 0.9.0-dev…) · nvr bump by hand
 
   (default)   ➡ $WEB/dev/  ➡ Obtainium on th fon: pull 2 refresh ➡ Update
               (once: Obtainium ➡ ＋ ➡ URL $WEB/dev/ ➡ a 2nd app next 2 th stable one)
@@ -48,7 +49,12 @@ if [ "$adb" = 1 ]; then   # check th fon 1st ➡ fail b4 a 1-min build
 fi
 
 # -Pdev ➡ versionName gets -dev.MMDD.HHMM ➡ Obtainium sees a new version
-(cd android && ./gradlew --offline -q assembleDebug -Pdev)
+# dev = test build o th NEXT release: appVersion alr shipped (tag exists) ➡ label as next minor (0.8.0 ➡ 0.9.0-dev…)
+base=$(app_version)
+if git rev-parse -q --verify "refs/tags/v$base" >/dev/null; then
+    IFS=. read -r ma mi _ <<<"$base"; base="$ma.$((mi + 1)).0"
+fi
+(cd android && ./gradlew --offline -q assembleDebug -Pdev -PdevBase="$base")
 ver=$(sed -nE 's/.*"versionName": "([^"]+)".*/\1/p' android/app/build/outputs/apk/debug/output-metadata.json | head -1)
 out=$(mktemp -d); trap 'rm -rf "$out"' EXIT
 apk="$FILE-$ver.apk"

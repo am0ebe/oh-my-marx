@@ -81,7 +81,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             val s by vm.settings.collectAsStateWithLifecycle()
             val loaded by vm.loaded.collectAsStateWithLifecycle()
-            MarxTheme(s.lang, if (loaded) vm.content.tr(s.lang) else null) {
+            val full by vm.full.collectAsStateWithLifecycle()
+            MarxTheme(s.lang, if (loaded) vm.content.tr(s.lang) else null, full) {
                 if (!loaded) Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator() }
                 else App(vm)
             }
@@ -230,8 +231,8 @@ private fun LangButton(cur: Lang, pick: (Lang) -> Unit) {
                     text = {
                         Column {
                             Text((if (l == cur) "✓ " else "    ") + l.native)
-                            // Marx's full txt exists only i DE + EN ➡ say so, don't promise Kapital i 中文
-                            if (l.ordinal > 1) Text("    " + tr("App + Zitate · Kapital-Volltext: Englisch", "app + quotes · full Capital text: English"),
+                            // 0.8.0: whole book i all 7 · IT…AR = our own LLM translation ➡ say so (not a published edition)
+                            if (l.ordinal > 1) Text("    " + tr("Ganzes Buch · KI-übersetzt aus dem Deutschen", "whole book · AI-translated from German"),
                                 fontSize = 11.sp, color = MaterialTheme.colorScheme.secondary)
                         }
                     },
