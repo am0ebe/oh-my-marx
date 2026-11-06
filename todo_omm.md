@@ -7,8 +7,10 @@
   - ✔️ @1106 page: no ⬇️ heading · 3rd option "Or build it yourself" (GitHub | Forgejo tabs, issue link) · What's new = pane, 🤏, no emoji · footer = Feedback (mailto w version) + Share, `#feedback` anchor
   - ✔️ @1106 `/dev` back = bare Obtainium source (no page) · `deploy.sh` ➡ /dev · `-a` = + adb · DEV app's update banner works again
   - ✔️ @1106 `--redo-bad`: 243/272 length warns fixed (29 left, `--bad`) · warns total 696 ➡ 453 (rest = fn markers) · ✔️ `translate.py --only ui` ➡ i18n_*.json updated (3 new 0.7.0 strings) ➡ nxt dev build has them
-  - ⚠️ uncommitted: lib/deploy/ship/notes.py · README · favicon · `.github/ISSUE_TEMPLATE/` · `data/i18n_full/` ➡ commit + push (templates only work once pushed)
-  - ▶ NEXT: 🦠 Obtainium DEV ➡ pull 2 refresh (should update now) ➡ 🦠 QA (notes.md § 🧪, top 2 lines) ➡ 📣 friends
+  - ✔️ all committed + pushed @1106 eos (issue forms live on GitHub) · 🔒 `priv/` = git-ignored scratch (scratch.md + img/) ➡ repo is PUBLIC, todo + notes too
+  - ⚠️ th dev on /dev (`.1106.0007`) was built BEFORE th UI-string translation ➡ `bin/deploy.sh` again 4 IT/ES/PT/ZH/AR
+  - ▶ NEXT: 🦠 Obtainium DEV ➡ pull 2 refresh (should update now) ➡ 🦠 QA (notes.md § 🧪, top 2 lines) ➡ 📣 friends · 🤖 smallest useful: Über "💬 omm@" ➡ tappable Feedback (‼️ below)
+  - 👤 blocked on strix: fon QA · friends feedback · KeePass keystore note · 29 leftover bad translations = `--bad` (accept o redo)
   - ⚠️ traps: VPS = **ops-owned** (pr/ops/omm.md) ➡ omm nvr edits Caddy//srv, asks ops (msg `ops` session) · box's `/srv/omm-matrix/compose.yml` owns th synapse tag (fleet.py bumps) ➡ nvr rsync ours over it · `android/omm.properties` (reg token, git-ignored) needed 4 builds w comments/Kreise · screenshots of his fon only after asking (mem) · zsh aliases: `command mv/grep`, nvr bare `tr`
 
 ## ‼️
