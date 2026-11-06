@@ -58,11 +58,18 @@ footer h2{margin:0 0 .8em}
 .r{display:grid;grid-template-columns:repeat(3,1fr);gap:.5em;max-width:20em;margin:0 auto}
 .p{display:flex;flex-direction:column;align-items:center;gap:.3em;padding:.7em .2em .55em;border:1px solid #e8b93155;border-radius:14px;background:none;
 color:#e8b931;font:inherit;font-size:.8em;text-decoration:none;cursor:pointer;white-space:nowrap}.p:hover{background:#e8b93122}.p svg{width:1.5em;height:1.5em}
-.so{display:flex;flex-wrap:wrap;justify-content:center;gap:.5em;margin:1em 0}
-.so a{display:flex;align-items:center;justify-content:center;width:2.6em;height:2.6em;border-radius:50%;background:#f4ead814;color:#f4ead8}
-.so a:hover{background:#e8b93133;color:#e8b931}.so .ic{width:1.25em;height:1.25em}
-details.q svg.qr{width:12em;height:12em;margin:.6em auto;display:block;border-radius:10px}
-.fb{margin-top:1.8em;font-size:.9em}'
+.w h3{font-size:1em;margin:.7em 0 .1em}.w summary{cursor:pointer;color:#e8b931;margin:.5em 0 .2em}
+.sb{display:inline-flex;align-items:center;gap:.5em;padding:.8em 1.6em;border-radius:12px;border:1.5px solid #e8b931;background:none;color:#e8b931;font:inherit;font-weight:700;cursor:pointer}
+.sb:hover{background:#e8b93122}
+dialog{background:#2a1d42;color:#f4ead8;border:1px solid #e8b93155;border-radius:16px;padding:1.2em 1em 1em;max-width:min(24em,calc(100vw - 32px));text-align:center}
+dialog::backdrop{background:#000a}dialog h2{margin:0 0 .4em}
+.x{position:absolute;top:.4em;right:.6em;background:none;border:0;color:#f4ead8;font-size:1.2em;cursor:pointer;opacity:.7}
+.so{display:grid;grid-template-columns:repeat(3,1fr);gap:.6em;margin:1em 0}
+.so a{display:flex;flex-direction:column;align-items:center;gap:.35em;padding:.7em .2em;border-radius:14px;background:#f4ead814;color:#f4ead8;text-decoration:none;font-size:.78em}
+.so a:hover{background:#e8b93133;color:#e8b931}.so .ic{width:1.6em;height:1.6em}
+.r2{display:flex;gap:.5em;justify-content:center}.r2 .p{flex:1;flex-direction:row;justify-content:center;font-size:.85em}
+svg.qr{width:10em;height:10em;margin:1em auto .3em;display:block;border-radius:10px}
+.fb{margin-top:1.4em;font-size:.9em}'
 
 # download page = 1 real page (stable) + <web>/dev/ = small page that's also th Obtainium source 4 th DEV app
 #   1 apk link per page (version i th file name) ➡ Obtainium's HTML source finds it
@@ -88,8 +95,15 @@ next to the normal one, with its own data. Can break. Normal install: <a href=".
 EOF
         return
     fi
+    # what's new = same as th app (⚙️): no emoji · this version open · older ones folded
+    local v old=""
     li=$(bin/notes.py "$ver" --html --plain)
-    [ -n "$li" ] && news="<section class=\"w\"><h2>What’s new in ${ver%%-*}</h2><ul>$li</ul></section>"
+    for v in $(bin/notes.py --versions); do
+        [ "$v" = "${ver%%-*}" ] && continue
+        old+="<h3>$v</h3><ul>$(bin/notes.py "$v" --html --plain)</ul>"
+    done
+    [ -n "$old" ] && old="<details><summary>Older versions</summary>$old</details>"
+    [ -n "$li" ] && news="<section class=\"w\"><h2>What’s new in ${ver%%-*}</h2><ul>$li</ul>$old</section>"
     # 🤖 agent-friendly: same facts as plain markdown (llmstxt.org convention) + JSON-LD below
     cat > "$out/llms.txt" <<EOF
 # $APP
@@ -102,7 +116,7 @@ EOF
 - APK: $WEB/$apk (sha256 $sha)
 - Latest version as JSON: $WEB/version.json
 - Install + auto-update with Obtainium: add the URL $WEB/
-- Languages: German (original), English (Moore/Aveling 1887), Italian, Spanish, Portuguese, Chinese, Arabic (whole book translated from German by a local LLM)
+- Languages: English (Moore/Aveling 1887, default), German (original), Italian, Spanish, Portuguese, Chinese, Arabic (whole book translated from German by a local LLM)
 - Source: $SRC · mirror: $FGJ
 - Release notes + older versions: $SRC/releases
 - Contact: $MAIL
@@ -135,7 +149,7 @@ EOF
 <style>$CSS</style>
 <h1>☭ $APP</h1>
 <p>Read Marx like the Bible: a daily verse from <i>Das Kapital</i>, the whole book, reading plans, streaks —
-and a Hooked mode that confesses every habit trick the app plays on you. The app speaks German first (plus EN · IT · ES · PT · 中文 · عربي).</p>
+and a Hooked mode that confesses every habit trick the app plays on you. In English, German (Marx's original), Italiano · Español · Português · 中文 · عربي.</p>
 <h2>📲 Install with Obtainium <small>(recommended: updates itself)</small></h2>
 <ol><li>Get <a href="https://github.com/ImranR98/Obtainium/releases/latest">Obtainium</a> (free, open source app updater)</li>
 <li>Tap <b>➕ Add to Obtainium</b> below ➡ <b>Add</b> ➡ <b>Install</b></li></ol>
@@ -170,34 +184,38 @@ $news
 <p><small>Older versions + all release notes: <a href="$SRC/releases">GitHub releases</a> · v$ver · $(date '+%F %H:%M') · sha256 ${sha:0:16}…</small></p>
 <footer>
 <h2>Know someone who'd read Marx on the bus? ☭</h2>
-<div class="r">
-<button class="p" id="sh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>Share</button>
-<button class="p" id="cp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy link</span></button>
-<button class="p" id="qb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3zM20 14v.01M14 20h.01M17 20h4v-3"/></svg>QR code</button>
-</div>
-<details class="q" id="qr"><summary hidden></summary>$(qrencode -t SVG --inline --svg-path -m 2 --foreground=1d1230 --background=f4ead8 "$SHORT" | sed 's/<svg /<svg class="qr" role="img" aria-label="QR code: scagent.de\/omm" /')
-<small>Scan with any phone camera: scagent.de/omm</small></details>
-<nav class="so" aria-label="Share on">
-<a href="https://s2f.kytta.dev/?text=$t" title="Mastodon, Lemmy, Misskey … (Fediverse)" rel="noopener">$(ico mastodon)</a>
-<a href="https://bsky.app/intent/compose?text=$t" title="Bluesky" rel="noopener">$(ico bluesky)</a>
-<a href="https://t.me/share/url?url=$u&amp;text=$(enc "Read Das Kapital like the Bible ☭")" title="Telegram" rel="noopener">$(ico telegram)</a>
-<a href="https://wa.me/?text=$t" title="WhatsApp" rel="noopener">$(ico whatsapp)</a>
-<a href="https://www.reddit.com/submit?url=$u&amp;title=$(enc "Oh My Marx: read Das Kapital like the Bible (free, open source Android app)")" title="Reddit" rel="noopener">$(ico reddit)</a>
-<a href="mailto:?subject=$(enc "Oh My Marx ☭")&amp;body=$t" title="Mail"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="fill:none"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg></a>
-</nav>
+<button class="sb" id="sh"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="fill:none"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg> Share $APP</button>
 <p class="fb" id="feedback">💬 Bug, idea, praise? <a href="mailto:$MAIL?subject=Oh%20My%20Marx%20$ver&amp;body=What%20happened%20or%20what%20would%20you%20like%3F%0A%0A%0A(a%20screenshot%20helps%20%E2%80%94%20version%20$ver)">$MAIL</a>
 · <a href="$SRC/issues/new/choose">GitHub issue</a></p>
 </footer>
+<!-- 📣 share panel: same on fon + PC · "More apps…" = th fon's own share sheet (Signal, Element/Matrix, …) where it exists -->
+<dialog id="sd" aria-label="Share">
+<button class="x" id="sx" aria-label="Close">✕</button>
+<h2>Share $APP</h2>
+<nav class="so">
+<a href="https://s2f.kytta.dev/?text=$t" title="Fediverse: Mastodon, Lemmy, Misskey …" rel="noopener" target="_blank">$(ico mastodon)<span>Fediverse</span></a>
+<a href="https://bsky.app/intent/compose?text=$t" title="Bluesky" rel="noopener" target="_blank">$(ico bluesky)<span>Bluesky</span></a>
+<a href="https://t.me/share/url?url=$u&amp;text=$(enc "Read Das Kapital like the Bible ☭")" title="Telegram" rel="noopener" target="_blank">$(ico telegram)<span>Telegram</span></a>
+<a href="https://www.reddit.com/submit?url=$u&amp;title=$(enc "Oh My Marx: read Das Kapital like the Bible (free, open source Android app)")" title="Reddit" rel="noopener" target="_blank">$(ico reddit)<span>Reddit</span></a>
+<a href="mailto:?subject=$(enc "Oh My Marx ☭")&amp;body=$t" title="Mail"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="fill:none"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg><span>Mail</span></a>
+<a href="https://wa.me/?text=$t" title="WhatsApp" rel="noopener" target="_blank">$(ico whatsapp)<span>WhatsApp</span></a>
+</nav>
+<div class="r2"><button class="p" id="cp"><span>📋 Copy link</span></button><button class="p" id="mo" hidden>More apps…</button></div>
+$(qrencode -t SVG --inline --svg-path -m 2 --foreground=1d1230 --background=f4ead8 "$SHORT" | sed 's/<svg /<svg class="qr" role="img" aria-label="QR code: scagent.de\/omm" /')
+<small>Scan with a phone camera · scagent.de/omm</small>
+</dialog>
 <script>
-// share: phone ➡ native share sheet (Signal, WhatsApp, … whatever is installed) · desktop ➡ copy th short link
 var U = '$SHORT', TXT = 'Read Das Kapital like the Bible ☭ a daily verse, the whole book, free & open source';
-function copy(el) { navigator.clipboard.writeText(U).then(function () { el.textContent = 'Link copied ✔'; }); }
-document.getElementById('sh').onclick = async function () {
-  try { if (navigator.share) { await navigator.share({ title: '$APP', text: TXT, url: U }); return; } } catch (e) { return; }
-  copy(document.querySelector('#cp span'));
+var d = document.getElementById('sd'), mo = document.getElementById('mo');
+document.getElementById('sh').onclick = function () { d.showModal(); };
+document.getElementById('sx').onclick = function () { d.close(); };
+d.onclick = function (e) { if (e.target === d) d.close(); };   // tap outside th panel = close
+document.getElementById('cp').onclick = function () {
+  var s = this.querySelector('span');
+  navigator.clipboard.writeText(U).then(function () { s.textContent = '✔ Copied'; }, function () { prompt('Copy this link:', U); });
 };
-document.getElementById('cp').onclick = function () { copy(this.querySelector('span')); };
-document.getElementById('qb').onclick = function () { var q = document.getElementById('qr'); q.open = !q.open; };
+// desktop Firefox/Chrome on Linux expose navigator.share but open nothing ➡ touch devices only
+if (navigator.share && matchMedia('(pointer: coarse)').matches) { mo.hidden = false; mo.onclick = function () { navigator.share({ title: '$APP', text: TXT, url: U }).catch(function () {}); }; }
 // 🧪 Dev tab: newest dev build straight fr dev/version.json (dev deploys don't re-render this page)
 fetch('dev/version.json', { cache: 'no-cache' }).then(function (r) { return r.json(); }).then(function (j) {
   var a = document.getElementById('dv'); a.href = 'dev/' + j.apk; a.textContent = '⬇️ Download DEV ' + j.version + (j.mb ? ' · ' + j.mb + ' MB' : '');

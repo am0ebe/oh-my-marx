@@ -29,6 +29,10 @@ import de.strix.marxversion.data.f
 data class Release(val version: String, val date: String, val items: List<Pair<String, String>>)
 
 val RELEASES = listOf(
+    Release("0.9.0", "2026-11-06", listOf(
+        T("🌍 Startet in der Sprache deines Handys, sonst auf Englisch · Deutsch steht an zweiter Stelle", "🌍 Starts in your phone's language, otherwise English · German comes second"),
+        T("📜 Was ist neu: nur die neueste Version, ältere auf Antippen — wie auf der Webseite", "📜 What's new: only the newest version, older ones on tap — like on the website"),
+    )),
     Release("0.8.0", "2026-11-06", listOf(
         T("📖 Das ganze Kapital jetzt auch auf Italienisch, Spanisch, Portugiesisch, Chinesisch und Arabisch — samt Fußnoten", "📖 The whole of Capital now also in Italian, Spanish, Portuguese, Chinese and Arabic — footnotes included"),
         T("🔊 Vorlesen liest den Absatz in deiner Sprache", "🔊 Read aloud reads the paragraph in your language"),
@@ -82,15 +86,20 @@ val RELEASES = listOf(
 )
 
 /** ⚙️ section: newest open, rest collapsed · marks th installed one (dev build = newer than th top release) */
+/** leading emoji off (same rule as bin/notes.py --plain) · Changelog.kt keeps them (GitHub release notes use them) */
+private val LEAD = Regex("^[^\\p{L}\\p{N}„“\"(]+")
+private fun plain(s: String) = s.replaceFirst(LEAD, "")
+
 @Composable
 fun ReleaseNotes() {
     var all by remember { mutableStateOf(false) }
     val mine = BuildConfig.VERSION_NAME
     val dev = "-dev." in mine
-    Text(tr("📜 Was ist neu", "📜 What's new"), fontWeight = FontWeight.Bold)
-    if (dev) Text(tr("🧪 Dev-Build %s — neuer als jede Release, ungetestet", "🧪 Dev build %s — newer than any release, untested").f(mine),
+    // mirrors th download page (@1106): no emoji · newest version only · tap ➡ older ones
+    Text(tr("Was ist neu", "What's new"), fontWeight = FontWeight.Bold)
+    if (dev) Text(tr("Dev-Build %s — neuer als jede Release, ungetestet", "Dev build %s — newer than any release, untested").f(mine),
         fontSize = 12.sp, color = Red)
-    (if (all) RELEASES else RELEASES.take(2)).forEach { r ->
+    (if (all) RELEASES else RELEASES.take(1)).forEach { r ->
         val here = mine == r.version || (dev && mine.startsWith(r.version))
         Column(Modifier.fillMaxWidth().padding(vertical = 4.dp)
             .then(if (here) Modifier.background(Gold.copy(alpha = 0.16f), RoundedCornerShape(8.dp)) else Modifier).padding(6.dp)) {
@@ -99,9 +108,9 @@ fun ReleaseNotes() {
                 Text("  ·  ${r.date}" + if (here) "  ·  " + tr("⬅ du hast diese", "⬅ you have this") else "",
                     fontSize = 12.sp, color = MaterialTheme.colorScheme.secondary)
             }
-            r.items.forEach { Text("• " + tr(it), fontSize = 13.sp) }
+            r.items.forEach { Text("• " + plain(tr(it)), fontSize = 13.sp) }
         }
     }
-    if (RELEASES.size > 2) Text(if (all) tr("weniger ⬆", "less ⬆") else tr("alle Versionen ⬇", "all versions ⬇"), fontSize = 12.sp, color = Blue,
+    if (RELEASES.size > 1) Text(if (all) tr("weniger ⬆", "less ⬆") else tr("Ältere Versionen ⬇", "Older versions ⬇"), fontSize = 12.sp, color = Blue,
         modifier = Modifier.clickable { all = !all }.padding(vertical = 4.dp))
 }

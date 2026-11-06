@@ -24,6 +24,17 @@ enum class Lang(
     AR("عربي", "العربية", Locale.forLanguageTag("ar"), "«", "»", rtl = true);
 
     val file get() = "i18n_${name.lowercase()}.json"
+
+    companion object {
+        /** menu order (@1106): EN 1st, DE (Marx's original) 2nd, rest · enum order stays (ordinal > 1 = LLM-translated langs) */
+        val menu = listOf(EN, DE) + entries.drop(2)
+
+        /** 1st start: th fon's language if we hv it, else EN */
+        fun system(): Lang {
+            val l = Locale.getDefault().language
+            return entries.firstOrNull { it.locale.language == l } ?: EN
+        }
+    }
     // LLM quotes sometimes carry their own marks ➡ strip them, else „"…“
     fun quote(s: String) = open + s.trim().trim('"', '\'', '„', '“', '”', '«', '»', '‚', '‘', '’') + close
 }

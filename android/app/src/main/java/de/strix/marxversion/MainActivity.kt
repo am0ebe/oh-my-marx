@@ -10,7 +10,12 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import de.strix.marxversion.ui.DevBlue
+import de.strix.marxversion.ui.IS_DEV
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -155,11 +160,20 @@ private fun App(vm: AppVm) {
         topBar = {
             TopAppBar(
                 // tap Marx (or th name) = home
+                // 🧪 DEV app: Marx on a blue disc + "DEV" (= th launcher icon) ➡ nvr confuse it w th stable one
                 navigationIcon = {
                     Image(painterResource(R.mipmap.ic_marx_fg), contentDescription = tr("Heute", "Today"),
-                        modifier = Modifier.padding(start = 4.dp).size(44.dp).clickable(onClick = home))
+                        modifier = Modifier.padding(start = 4.dp).size(44.dp)
+                            .then(if (IS_DEV) Modifier.background(DevBlue, CircleShape) else Modifier)
+                            .clickable(onClick = home))
                 },
-                title = { Text(APP_NAME, modifier = Modifier.clickable(onClick = home)) },
+                title = {
+                    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.clickable(onClick = home)) {
+                        Text(APP_NAME)
+                        if (IS_DEV) Text("DEV", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Color.White,
+                            modifier = Modifier.padding(start = 8.dp).background(DevBlue, RoundedCornerShape(6.dp)).padding(horizontal = 6.dp, vertical = 1.dp))
+                    }
+                },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.primary, titleContentColor = Color.White),
                 actions = {
                     if (s.testMode) TextButton(onClick = openHooked) { Text("🪝") }
@@ -226,7 +240,7 @@ private fun LangButton(cur: Lang, pick: (Lang) -> Unit) {
             }
         }
         DropdownMenu(open, { open = false }) {
-            Lang.entries.forEach { l ->
+            Lang.menu.forEach { l ->
                 DropdownMenuItem(
                     text = {
                         Column {

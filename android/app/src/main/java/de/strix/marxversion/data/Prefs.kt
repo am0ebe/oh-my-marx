@@ -19,7 +19,7 @@ import kotlinx.coroutines.flow.map
 private val Context.store by preferencesDataStore("settings")
 
 data class Settings(
-    val lang: Lang = Lang.DE,
+    val lang: Lang = Lang.system(),   // never picked ➡ fon lang if we hv it, else EN (@1106: EN 1st, DE 2nd)
     val notifOn: Boolean = true,
     val notifHour: Int = 8,
     val notifMinute: Int = 55,          // Mo 8:55 = 5 min b4 th Arbeitstag starts
@@ -96,7 +96,7 @@ class Prefs(private val context: Context) {
 
     val settings: Flow<Settings> = context.store.data.map { p: Preferences ->
         Settings(
-            lang = p[K.lang]?.let { runCatching { Lang.valueOf(it) }.getOrNull() } ?: Lang.DE,
+            lang = p[K.lang]?.let { runCatching { Lang.valueOf(it) }.getOrNull() } ?: Lang.system(),
             notifOn = p[K.notifOn] ?: true,
             notifHour = p[K.notifHour] ?: 8,
             notifMinute = p[K.notifMinute] ?: 55,

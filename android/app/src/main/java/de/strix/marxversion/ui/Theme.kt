@@ -12,6 +12,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.sp
+import de.strix.marxversion.BuildConfig
 import de.strix.marxversion.data.Full
 import de.strix.marxversion.data.Lang
 import de.strix.marxversion.data.Tr
@@ -38,7 +39,11 @@ private val scheme = lightColorScheme(
  * CompositionLocal = a value evy composable below can read wo passing it down by hand.
  * Here: th current language + its translation table ➡ tr("Heute", "Today") anywhere i th UI.
  */
-val LocalLang = staticCompositionLocalOf { Lang.DE }
+val LocalLang = staticCompositionLocalOf { Lang.EN }
+
+/** 🧪 DEV app (bin/deploy.sh) ➡ blue Marx disc + "DEV" i th top bar, same blue as its launcher icon (src/debug/res) */
+val IS_DEV = BuildConfig.APPLICATION_ID.endsWith(".dev")
+val DevBlue = Color(0xFF1565C0)
 val LocalTr = staticCompositionLocalOf<Tr?> { null }
 /** whole book i th cur lang (IT/ES/PT/ZH/AR) · null = DE/EN o loading */
 val LocalFull = staticCompositionLocalOf<Full?> { null }
