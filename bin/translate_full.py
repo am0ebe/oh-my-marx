@@ -35,6 +35,12 @@ LANGS = {
     "pt": "Brazilian Portuguese",
     "zh": "Simplified Chinese (mainland usage)",
     "ar": "Modern Standard Arabic",
+    "fr": "French",
+    "ru": "Russian",
+    "hi": "Hindi (Devanagari script)",
+    "bn": "Bengali (Bangla script)",
+    "ur": "Urdu (Perso-Arabic script)",
+    "id": "Indonesian",
 }
 
 # standard terms of the established Kapital translations · German ➡ target (keep consistent across 2 M chars)
@@ -72,15 +78,50 @@ TERMS = {
            "معدل فائض القيمة", "التراكم", "التراكم البدائي", "وسائل الإنتاج", "الطابع الصنمي للسلعة",
            "جيش العمل الصناعي الاحتياطي", "العمل المأجور", "التداول", "التعاون", "المانيفاكتورة", "الصناعة الكبرى",
            "العمل المجرد", "وقت العمل الضروري اجتماعيًا", "فائض القيمة المطلق / النسبي", "التركيب العضوي"],
+    # @1106 · fr = Roy/Lefebvre usage · ru = Skvortsov-Stepanov usage · hi/bn/ur/id = best effort ➡ ⚠️ native check
+    "fr": ["marchandise", "valeur d'usage", "valeur d'échange", "forme valeur", "forme équivalent", "argent", "capital",
+           "plus-value", "surtravail", "travail nécessaire", "force de travail", "journée de travail",
+           "capital constant / variable", "taux de plus-value", "accumulation", "accumulation primitive",
+           "moyens de production", "caractère fétiche de la marchandise", "armée industrielle de réserve",
+           "travail salarié", "circulation", "coopération", "manufacture", "grande industrie", "travail abstrait",
+           "temps de travail socialement nécessaire", "plus-value absolue / relative", "composition organique"],
+    "ru": ["товар", "потребительная стоимость", "меновая стоимость", "форма стоимости", "эквивалентная форма", "деньги",
+           "капитал", "прибавочная стоимость", "прибавочный труд", "необходимый труд", "рабочая сила", "рабочий день",
+           "постоянный / переменный капитал", "норма прибавочной стоимости", "накопление", "первоначальное накопление",
+           "средства производства", "фетишистский характер товара", "промышленная резервная армия", "наёмный труд",
+           "обращение", "кооперация", "мануфактура", "крупная промышленность", "абстрактный труд",
+           "общественно необходимое рабочее время", "абсолютная / относительная прибавочная стоимость",
+           "органическое строение"],
+    "hi": ["माल", "उपयोग-मूल्य", "विनिमय-मूल्य", "मूल्य-रूप", "सममूल्य रूप", "मुद्रा", "पूंजी", "अतिरिक्त मूल्य",
+           "अतिरिक्त श्रम", "आवश्यक श्रम", "श्रम-शक्ति", "कार्य-दिवस", "स्थिर / परिवर्ती पूंजी", "अतिरिक्त मूल्य की दर",
+           "संचय", "आदिम संचय", "उत्पादन के साधन", "माल की अंधपूजा", "औद्योगिक रिज़र्व सेना", "मज़दूरी-श्रम",
+           "परिचलन", "सहकारिता", "मैन्युफ़ैक्चर", "बड़े पैमाने का उद्योग", "अमूर्त श्रम",
+           "सामाजिक रूप से आवश्यक श्रम-काल", "निरपेक्ष / सापेक्ष अतिरिक्त मूल्य", "आवयविक संरचना"],
+    "bn": ["পণ্য", "ব্যবহার-মূল্য", "বিনিময়-মূল্য", "মূল্যের রূপ", "সমার্ঘ রূপ", "অর্থ", "পুঁজি", "উদ্বৃত্ত মূল্য",
+           "উদ্বৃত্ত শ্রম", "আবশ্যিক শ্রম", "শ্রমশক্তি", "শ্রম-দিবস", "স্থির / অস্থির পুঁজি", "উদ্বৃত্ত মূল্যের হার",
+           "সঞ্চয়ন", "আদিম সঞ্চয়ন", "উৎপাদনের উপকরণ", "পণ্য-পূজা", "শিল্পের মজুত বাহিনী", "মজুরি-শ্রম", "সঞ্চলন",
+           "সহযোগিতা", "ম্যানুফ্যাকচার", "বৃহৎ শিল্প", "বিমূর্ত শ্রম", "সামাজিকভাবে প্রয়োজনীয় শ্রম-সময়",
+           "পরম / আপেক্ষিক উদ্বৃত্ত মূল্য", "জৈব গঠন"],
+    "ur": ["جنس", "قدرِ استعمال", "قدرِ تبادلہ", "قدر کی شکل", "مساوی شکل", "زر", "سرمایہ", "قدرِ زائد", "زائد محنت",
+           "ضروری محنت", "قوتِ محنت", "یومِ کار", "مستقل / متغیر سرمایہ", "شرحِ قدرِ زائد", "ارتکاز", "ابتدائی ارتکاز",
+           "ذرائعِ پیداوار", "جنس کی بت پرستی", "صنعتی ریزرو فوج", "اجرتی محنت", "گردش", "تعاون", "مینوفیکچر",
+           "بڑی صنعت", "مجرد محنت", "سماجی طور پر ضروری اوقاتِ کار", "مطلق / اضافی قدرِ زائد", "نامیاتی ترکیب"],
+    "id": ["komoditas", "nilai guna", "nilai tukar", "bentuk nilai", "bentuk ekuivalen", "uang", "kapital", "nilai lebih",
+           "kerja lebih", "kerja yang diperlukan", "tenaga kerja", "hari kerja", "kapital konstan / variabel",
+           "tingkat nilai lebih", "akumulasi", "akumulasi primitif", "alat-alat produksi", "sifat fetis komoditas",
+           "tentara cadangan industri", "kerja upahan", "sirkulasi", "kooperasi", "manufaktur", "industri besar",
+           "kerja abstrak", "waktu kerja yang diperlukan secara sosial", "nilai lebih absolut / relatif",
+           "komposisi organik"],
 }
 # plausible length of a translation relative to the German (chars) ➡ outside = "warn" (truncated / runaway)
-RATIO = {"it": (0.6, 1.8), "es": (0.6, 1.8), "pt": (0.6, 1.8), "zh": (0.15, 0.8), "ar": (0.45, 1.6)}
+RATIO = {"it": (0.6, 1.8), "es": (0.6, 1.8), "pt": (0.6, 1.8), "zh": (0.15, 0.8), "ar": (0.45, 1.6),
+         "fr": (0.6, 1.9), "ru": (0.55, 1.7), "hi": (0.55, 1.9), "bn": (0.5, 1.8), "ur": (0.5, 1.8), "id": (0.65, 2.0)}
 
 STYLE = ("You are translating Karl Marx, 'Das Kapital' vol. 1 (4th German edition, 1890) into {lang}, paragraph by "
          "paragraph, for a reading app. Translate faithfully from the GERMAN original; the English (Moore/Aveling 1887) "
          "is only a reference and may be misaligned or missing. Keep Marx's register: precise, ironic, 19th-century but "
          "readable; no modernising, no summarising, no explanations, nothing left out. Rules:\n"
-         "- keep footnote markers like [52] exactly where they are\n"
+         "- keep footnote markers (a number in square brackets) exactly where they are; never add one that is not in the German\n"
          "- keep Latin/French/English quotations in the original language; text in ⟨…⟩ is an editor's German "
          "translation of such a quote ➡ translate what is inside the ⟨…⟩ into {lang}, keep the brackets\n"
          "- keep numbers, formulas (W - G - W, c + v + m), currency (£, sh., d.) and names of persons as they are\n"

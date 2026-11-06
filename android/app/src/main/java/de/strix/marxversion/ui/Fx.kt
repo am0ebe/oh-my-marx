@@ -21,6 +21,11 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.rotate
+import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.withTransform
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.window.Dialog
@@ -114,43 +119,95 @@ fun KriseFlash(onDone: () -> Unit) {
 }
 
 /**
- * ☭ swoosh (strix @1103): floats up + grows ➡ orbits on a tilted circle (out + back in, near side big / far side small = 3D)
- * w a ghost trail ➡ shrinks into th middle + gone. Played on Amen = reading day counted.
+ * ☭ Amen fx (strix @1106): hammer (fr th left) + sickle (fr th right) float in, breathing (bigger/smaller) ➡ rotate
+ * open = wind-up ➡ SMASH into each other = crossed ☭ ➡ BAM (burst lines + ring + "BAM!" + buzz) ➡ fade.
+ * Played on Amen = reading day counted. ~2.3 s.
  */
+private const val HIT = 0.62f   // impact moment (0..1)
+
+/** pose o 1 tool at time u: x offset (fraction o width, side = -1 hammer / +1 sickle) · y bob · rotation · scale */
+private fun pose(u0: Float, side: Float): FloatArray {
+    val u = u0.coerceIn(0f, 1f)
+    val bob = (sin(u * 2 * PI * 3) * 0.02).toFloat()
+    fun out3(p: Float) = 1 - (1 - p) * (1 - p) * (1 - p)
+    return when {
+        u < 0.32f -> { val p = out3(u / 0.32f)                                        // float in + breathe
+            floatArrayOf(side * lerpF(0.62f, 0.22f, p), bob, side * lerpF(80f, 20f, p), 0.85f + 0.25f * sin(p * PI.toFloat() * 2).coerceAtLeast(0f)) }
+        u < 0.52f -> { val p = out3((u - 0.32f) / 0.2f)                               // open up = wind-up
+            floatArrayOf(side * lerpF(0.22f, 0.30f, p), bob, side * lerpF(20f, 75f, p), lerpF(1f, 1.12f, p)) }
+        u < HIT -> { val p = (u - 0.52f) / (HIT - 0.52f); val e = p * p              // SMASH (accelerating)
+            floatArrayOf(side * lerpF(0.30f, 0.0f, e), 0f, side * lerpF(75f, -40f, e), 1.12f) }
+        else -> { val q = (u - HIT) / (1 - HIT)                                       // crossed ☭, punch ➡ settle
+            floatArrayOf(0f, 0f, side * -40f, 1f + 0.25f * (1 - q) * (1 - q)) }
+    }
+}
+
 @Composable
 fun SickleSwoosh(onDone: () -> Unit) {
     val done by rememberUpdatedState(onDone)
+    val ctx = LocalContext.current
     val t = remember { Animatable(0f) }
-    LaunchedEffect(Unit) { t.animateTo(1f, tween(1900, easing = LinearEasing)); done() }
+    LaunchedEffect(Unit) {
+        t.animateTo(HIT, tween((2300 * HIT).toInt(), easing = LinearEasing))
+        buzz(ctx, longArrayOf(0, 35, 30, 80))                                         // the BAM, i th hand
+        t.animateTo(1f, tween((2300 * (1 - HIT)).toInt(), easing = LinearEasing))
+        done()
+    }
+    val gold = Color(0xFFE8B931); val red = Color(0xFFE53935)
     Overlay {
-        BoxWithConstraints(Modifier.fillMaxSize()) {
-            val w = constraints.maxWidth.toFloat(); val h = constraints.maxHeight.toFloat()
-            // position + scale + spin + alpha at time u
-            fun at(u0: Float): FloatArray {
-                val u = u0.coerceIn(0f, 1f)
-                val cx = w / 2; val cy = h * 0.42f
-                return when {
-                    u < 0.2f -> { val p = u / 0.2f; val e = 1 - (1 - p) * (1 - p)
-                        floatArrayOf(cx, lerpF(h * 0.85f, cy, e), lerpF(0.4f, 2f, e), 0f, 1f) }
-                    u < 0.85f -> { val p = (u - 0.2f) / 0.65f; val th = (2.5f * 2 * PI * p).toFloat()
-                        val rr = w * 0.38f * sin(PI * p).toFloat()             // out ➡ back in
-                        val depth = cos(th)                                    // +1 = near
-                        floatArrayOf(cx + rr * sin(th), cy + rr * cos(th) * 0.45f, 2f * (0.75f + 0.35f * depth), th * 57.3f, 1f) }
-                    else -> { val p = (u - 0.85f) / 0.15f
-                        floatArrayOf(cx, cy, 2f * (1 - p), 360f * p, 1 - p) }
+        Box(Modifier.fillMaxSize()) {
+            Canvas(Modifier.fillMaxSize()) {
+                val u = t.value
+                val c = Offset(size.width / 2, size.height * 0.42f)
+                val s = size.minDimension * 0.34f                                     // tool length
+                val fade = if (u > 0.86f) 1 - (u - 0.86f) / 0.14f else 1f
+                // 💥 BAM burst behind th tools
+                if (u >= HIT) {
+                    val q = (u - HIT) / (1 - HIT)
+                    drawCircle(red.copy(alpha = 0.5f * (1 - q)), radius = s * (0.4f + 1.4f * q), center = c, style = Stroke(s * 0.06f * (1 - q) + 1f))
+                    for (k in 0 until 14) {
+                        val a = (k * 2 * PI / 14 + 0.2).toFloat()
+                        val r0 = s * (0.55f + 0.9f * q); val r1 = r0 + s * 0.45f * (1 - q)
+                        drawLine(if (k % 2 == 0) gold else Color.White, c + Offset(cos(a) * r0, sin(a) * r0), c + Offset(cos(a) * r1, sin(a) * r1),
+                            strokeWidth = s * 0.05f, cap = StrokeCap.Round, alpha = (1 - q))
+                    }
+                }
+                // ghost trail while flying (k > 0) = th swoosh
+                for (k in (if (u < HIT) 4 else 0) downTo 0) {
+                    val a = if (k == 0) 1f else (1f - k / 5f) * 0.35f
+                    val h = pose(u - k * 0.018f, -1f); val sk = pose(u - k * 0.018f, 1f)
+                    withTransform({ translate(c.x + h[0] * size.width, c.y + h[1] * size.height); rotate(h[2], Offset.Zero); scale(h[3], h[3], Offset.Zero) }) {
+                        hammer(s, gold, a * fade)
+                    }
+                    withTransform({ translate(c.x + sk[0] * size.width, c.y + sk[1] * size.height); rotate(sk[2], Offset.Zero); scale(sk[3], sk[3], Offset.Zero) }) {
+                        sickle(s, gold, a * fade)
+                    }
                 }
             }
-            for (k in 6 downTo 0) {  // k > 0 = ghost trail behind
-                val a = at(t.value - k * 0.022f)
-                Text("☭", fontSize = 56.sp, color = if (k == 0) Color(0xFFE53935) else Color(0xFFE8B931),
-                    modifier = Modifier.graphicsLayer {
-                        translationX = a[0] - 56.sp.toPx() * 0.35f; translationY = a[1] - 56.sp.toPx() * 0.6f
-                        scaleX = a[2]; scaleY = a[2]; rotationZ = a[3]
-                        alpha = a[4] * (if (k == 0) 1f else (1f - k / 7f) * 0.45f)
+            if (t.value >= HIT) {
+                val q = (t.value - HIT) / (1 - HIT)
+                Text("BAM!", color = red, fontSize = 54.sp, fontWeight = FontWeight.Black,
+                    modifier = Modifier.align(Alignment.Center).graphicsLayer {
+                        translationY = -260f; rotationZ = -8f                         // above th crossed tools
+                        val sc = if (q < 0.15f) lerpF(0.3f, 1.3f, q / 0.15f) else lerpF(1.3f, 1f, ((q - 0.15f) / 0.3f).coerceAtMost(1f))
+                        scaleX = sc; scaleY = sc; alpha = if (q > 0.7f) 1 - (q - 0.7f) / 0.3f else 1f
                     })
             }
         }
     }
+}
+
+/** 🔨 hammer, origin = grip point · head at th top (−y) */
+private fun DrawScope.hammer(s: Float, col: Color, a: Float) {
+    drawRoundRect(col, Offset(-0.06f * s, -0.36f * s), Size(0.12f * s, 0.92f * s), CornerRadius(0.05f * s), alpha = a)
+    drawRoundRect(col, Offset(-0.32f * s, -0.52f * s), Size(0.58f * s, 0.22f * s), CornerRadius(0.04f * s), alpha = a)
+}
+
+/** 🌙 sickle: blade = thick arc, handle angled down-left */
+private fun DrawScope.sickle(s: Float, col: Color, a: Float) {
+    drawArc(col, startAngle = 200f, sweepAngle = 250f, useCenter = false, topLeft = Offset(-0.42f * s, -0.58f * s),
+        size = Size(0.84f * s, 0.84f * s), style = Stroke(0.11f * s, cap = StrokeCap.Round), alpha = a)
+    drawLine(col, Offset(0f, 0.25f * s), Offset(-0.2f * s, 0.6f * s), strokeWidth = 0.13f * s, cap = StrokeCap.Round, alpha = a)
 }
 
 private fun lerpF(a: Float, b: Float, t: Float) = a + (b - a) * t

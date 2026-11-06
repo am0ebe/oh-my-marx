@@ -91,15 +91,34 @@ enum class Feast(val emoji: String, val greet: Pair<String, String>, val verse: 
  * 🌅 Tageszeit-Farben (à la Insight Timer): morning / day / evening / night ➡ gradient + greeting.
  * Hooked ch2: glue th habit 2 a routine u alr have (coffee, lunch break, clocking out).
  */
-enum class DayTime(val greet: Pair<String, String>, val colors: IntArray) {
+enum class DayTime(val greet: Pair<String, String>, val colors: IntArray, val more: List<Pair<String, String>> = emptyList()) {
     MORNING(T("Guten Morgen ☀️ — ein Vers vor der Schicht.", "Good morning ☀️ — one verse before the shift."),
-        c(0xFF6A3093, 0xFFD6577A, 0xFFF29E4C)),
+        c(0xFF6A3093, 0xFFD6577A, 0xFFF29E4C), listOf(
+            T("Kaffee ☕ und Kapital — beides wirkt am besten früh.", "Coffee ☕ and Capital — both work best early."),
+            T("Der Wecker gehört dem Chef. Die nächsten 2 Minuten dir. 🌅", "The alarm belongs to the boss. The next 2 minutes are yours. 🌅"),
+            T("Morgenandacht 🕯️ — bevor die Arbeitskraft verkauft wird.", "Morning devotion 🕯️ — before the labour-power gets sold."),
+        )),
     DAY(T("Mahlzeit 🍞 — die Pause gehört dir, nicht dem Kapital.", "Lunch break 🍞 — the pause is yours, not capital's."),
-        c(0xFF0D47A1, 0xFF1E88E5, 0xFF4FC3F7)),
+        c(0xFF0D47A1, 0xFF1E88E5, 0xFF4FC3F7), listOf(
+            T("Halbzeit 🥪 — ab jetzt ist alles Mehrarbeit.", "Halftime 🥪 — from here on it's all surplus labour."),
+            T("Kurze Pause ☕ — Marx liest sich schneller als ein Meeting.", "Short break ☕ — Marx reads faster than a meeting."),
+            T("Mittag 🍲 — zwei Minuten, die dir keiner abrechnet.", "Noon 🍲 — two minutes nobody bills you for."),
+        )),
     EVENING(T("Feierabend 🌆 — jetzt ist deine Zeit.", "Clocked out 🌆 — now it's your time."),
-        c(0xFF2B1B4F, 0xFFB3261E, 0xFFF29E4C)),
+        c(0xFF2B1B4F, 0xFFB3261E, 0xFFF29E4C), listOf(
+            T("Schicht vorbei 🌆 — die Fabriktore sind zu, das Buch ist offen.", "Shift's over 🌆 — the factory gates are shut, the book is open."),
+            T("Abend 🍷 — Zeit, deine Arbeitskraft zu reproduzieren. Und ein Vers.", "Evening 🍷 — time to reproduce your labour-power. And one verse."),
+            T("Feierabend 🛋️ — der Mehrwert ist eingestrichen, der Vers ist gratis.", "Off the clock 🛋️ — the surplus value's pocketed, the verse is free."),
+        )),
     NIGHT(T("Gute Nacht 🌙 — das Kapital schläft nie. Du schon.", "Good night 🌙 — capital never sleeps. You do."),
-        c(0xFF03061A, 0xFF0B1026, 0xFF1F2F4F));
+        c(0xFF03061A, 0xFF0B1026, 0xFF1F2F4F), listOf(
+            T("Nachtschicht? 🌙 Marx schrieb auch bis spät.", "Night shift? 🌙 Marx wrote late too."),
+            T("Noch wach 🦉 — ein Vers, dann ab in die Reproduktion.", "Still up 🦉 — one verse, then off to reproduce."),
+            T("Mitternacht 🕯️ — ein Gespenst geht um. Lies schnell.", "Midnight 🕯️ — a spectre is haunting. Read fast."),
+        ));
+
+    /** greeting changes evy day (same all day ➡ no flicker) · strix @1106: "add some diff comments th change" */
+    fun greetOn(day: java.time.LocalDate): Pair<String, String> = (listOf(greet) + more).let { it[day.dayOfYear % it.size] }
 
     companion object {
         fun at(hour: Int) = when (hour) {

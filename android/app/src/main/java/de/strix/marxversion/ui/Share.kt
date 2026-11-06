@@ -72,6 +72,7 @@ const val APP_NAME = "Oh My Marx ☭"  // @1103 (was bibleApp = YouVersion's nam
 fun kriseWord(lang: Lang) = "📉 " + when (lang) {
     Lang.DE -> "KRISE!"; Lang.EN -> "CRISIS!"; Lang.IT -> "CRISI!"; Lang.ES -> "¡CRISIS!"
     Lang.PT -> "CRISE!"; Lang.ZH -> "危机！"; Lang.AR -> "!أزمة"
+    Lang.FR -> "CRISE !"; Lang.RU -> "КРИЗИС!"; Lang.HI -> "संकट!"; Lang.BN -> "সংকট!"; Lang.UR -> "!بحران"; Lang.ID -> "KRISIS!"
 }
 
 /** 📉 crisis card palette: black ➡ blood ➡ alarm red */

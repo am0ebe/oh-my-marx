@@ -23,6 +23,12 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.clickable
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -112,9 +118,19 @@ fun CardCarousel(
             Text(label(it), fontSize = 13.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center,
                 color = if (it.kind == CardItem.Kind.KRISE) Red else MaterialTheme.colorScheme.secondary,
                 modifier = Modifier.padding(bottom = 6.dp))
+            // 🙏 Amen idiot-proof (@1106, "ppl will miss th small btn"): today's card itself = th Amen btn + a pulsing hint on it
+            val amenHere = it.kind == CardItem.Kind.TODAY && !doneToday
             Box(Modifier.fillMaxWidth().aspectRatio(1080f / 1350f).shadow(10.dp, RoundedCornerShape(16.dp)).clip(RoundedCornerShape(16.dp))
-                .background(Brush.verticalGradient(listOf(Color(0xFF2B1B4F), Color(0xFFB3261E), Color(0xFFF29E4C))))) {
+                .background(Brush.verticalGradient(listOf(Color(0xFF2B1B4F), Color(0xFFB3261E), Color(0xFFF29E4C))))
+                .then(if (amenHere) Modifier.clickable { onAmen(it.v) } else Modifier)) {
                 bmp?.let { b -> Image(b, contentDescription = q, modifier = Modifier.fillMaxWidth().aspectRatio(1080f / 1350f)) }
+                if (amenHere) {
+                    val pulse by rememberInfiniteTransition(label = "amen").animateFloat(0.55f, 1f,
+                        infiniteRepeatable(tween(900), RepeatMode.Reverse), label = "a")
+                    Text(tr("☭ Antippen = Amen", "☭ Tap = Amen"), color = Color.White, fontWeight = FontWeight.Bold, fontSize = 14.sp,
+                        modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 14.dp).graphicsLayer { alpha = pulse }
+                            .background(Red.copy(alpha = 0.85f), RoundedCornerShape(50)).padding(horizontal = 14.dp, vertical = 6.dp))
+                }
             }
         }
     }
@@ -140,9 +156,13 @@ fun CardCarousel(
             val bmp = cardBitmap(ctx, q, r, lang, cur.feast, cur.kind == CardItem.Kind.KRISE)
             shareCard(ctx, bmp, "${lang.quote(q)} — Karl Marx, $r\n$APP_NAME", shareTitle)
         }
-        if (cur.kind == CardItem.Kind.TODAY && !doneToday)
-            CardAction(null, tr("Amen", "Amen"), Red, glyph = "☭") { onAmen(cur.v) }
     }
+    // big + red + full width = can't miss it (was a 5th small pill)
+    if (cur.kind == CardItem.Kind.TODAY && !doneToday)
+        Button(onClick = { onAmen(cur.v) }, colors = ButtonDefaults.buttonColors(containerColor = Red),
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 28.dp).padding(top = 8.dp)) {
+            Text(tr("☭ Amen — heute gelesen", "☭ Amen — read today"), fontSize = 17.sp, fontWeight = FontWeight.Bold)
+        }
     Text(
         tr("⬅ wischen: frühere Losungen · ⬇ ziehen: Orakel · 📳 schütteln: Krise", "⬅ swipe: earlier verses · ⬇ pull: oracle · 📳 shake: crisis"),
         fontSize = 11.sp, color = MaterialTheme.colorScheme.secondary, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth(),

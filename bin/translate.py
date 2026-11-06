@@ -26,12 +26,19 @@ LANGS = {
     "pt": "Brazilian Portuguese",
     "zh": "Simplified Chinese (Mandarin, mainland usage)",
     "ar": "Modern Standard Arabic",
+    # @1106: + the big ones (≈ top 12 by speakers together w EN/ZH/ES/AR/PT/DE)
+    "fr": "French",
+    "ru": "Russian",
+    "hi": "Hindi (Devanagari script)",
+    "bn": "Bengali (Bangla script)",
+    "ur": "Urdu (Perso-Arabic script)",
+    "id": "Indonesian",
 }
 
 STYLE = {
     "q": "These are quotations from Karl Marx, 'Das Kapital' vol. 1 (19th-century prose). Translate faithfully from the "
          "German original (English given only as reference). Keep it a dignified, quotable Marx sentence — no modernising, "
-         "no explanations, no added quotation marks. Keep footnote markers like [52] if present.",
+         "no explanations, no added quotation marks. Keep footnote markers (a number in square brackets) if present, never add new ones.",
     "a": "These are short tongue-in-cheek 'devotionals' from a playful app that presents Marx' Kapital like a Bible app. "
          "Keep the dry, cheeky wink and the gentle Bible-app parody tone; keep the closing question. Adapt jokes so they "
          "work for native readers; keep the length.",

@@ -1,6 +1,12 @@
 package de.strix.marxversion.ui
 
 import android.widget.Toast
+import androidx.compose.foundation.Canvas
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.StrokeJoin
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.text.font.FontFamily
+import java.time.format.TextStyle
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -330,7 +336,9 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
 }
 
 /**
- * 🌅 hero (à la Insight Timer): gradient by time o day (or 🎉 feast) · greeting · 🔥 streak + chain · 🎟️ Stempelkarte.
+ * 🌅 hero (à la Insight Timer's streak widget, @1106): gradient by time o day (or 🎉 feast) · nudge title
+ * ("Save your chain!") · this week Mo–Su (✓ read · red ! = today still open · 🕊 Sabbat) · streak nr i a red star ·
+ * 🎟️ Stempelkarte (🎁 gifts · ☭ earned · red ! = today's stamp waiting) + "N more days to <rank>".
  */
 @Composable
 private fun Hero(days: List<DayLog>, feast: Feast?, dt: DayTime, hooked: Boolean) {
@@ -339,50 +347,106 @@ private fun Hero(days: List<DayLog>, feast: Feast?, dt: DayTime, hooked: Boolean
     val total = readingDays(days)
     val card = stampCard(total)
     val ranks = cardsDone(total)
+    val today = LocalDate.now()
+    val read = days.map { it.date }.toSet()
+    val doneToday = today.toString() in read
     Column(
         Modifier.fillMaxWidth().clip(RoundedCornerShape(18.dp))
             .background(Brush.verticalGradient((feast?.colors ?: dt.colors).take(3).map { Color(it) }))
             .background(Color.Black.copy(alpha = 0.15f))  // scrim: white txt stays readable on light stops
             .padding(16.dp),
     ) {
-        Text(feast?.let { it.emoji + "  " + tr(it.greet) } ?: tr(dt.greet), color = white, fontWeight = FontWeight.Bold, fontSize = 16.sp, lineHeight = 21.sp)
-        Gap(8)
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text("🔥 $st", color = white, fontSize = 34.sp, fontWeight = FontWeight.Bold)
-            Column(Modifier.padding(start = 10.dp)) {
-                Text(tr("Tage Lesekapital akkumuliert", "days of reading capital accumulated"), color = white, fontSize = 13.sp)
-                if (ranks > 0) Text(tr("Rang: %s", "Rank: %s").f(tr(rank(ranks - 1))), color = white.copy(alpha = 0.85f), fontSize = 12.sp)
+            Column(Modifier.weight(1f)) {
+                Text(if (st > 0) tr("%d Tage Lesekapital akkumuliert", "%d days of reading capital accumulated").f(st)
+                    else tr("Neue Kette, neues Glück", "New chain, fresh start"), color = white.copy(alpha = 0.9f), fontSize = 13.sp)
+                Text(when {
+                    doneToday -> tr("Heute akkumuliert ✔", "Accumulated today ✔")
+                    st > 0 -> tr("Rette deine Kette!", "Save your chain!")
+                    else -> tr("Fang heute an!", "Start today!")
+                }, color = white, fontSize = 24.sp, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Serif, lineHeight = 28.sp)
+                Gap(4)
+                Text(feast?.let { it.emoji + "  " + tr(it.greet) } ?: tr(dt.greetOn(today)), color = white.copy(alpha = 0.9f),
+                    fontSize = 13.sp, lineHeight = 17.sp)
             }
+            StreakStar(st)
         }
-        Row {
-            chain(days).forEach {
-                Text(when (it) { Cell.DONE -> "☭"; Cell.REST -> "🕊"; Cell.EMPTY -> "·" },
-                    color = white, fontSize = 16.sp, modifier = Modifier.padding(end = 3.dp))
-            }
-        }
-        if (rest.isNotEmpty()) Text(tr("🕊️ Sabbat-Joker eingelöst — 1 Ruhetag pro Woche bricht die Kette nicht.",
-            "🕊️ Sabbath joker used — 1 rest day per week doesn't break the chain."), color = white.copy(alpha = 0.85f), fontSize = 11.sp)
-        Gap(10)
-        // 🎟️ Stempelkarte: 🎁 gift · ☭ earned · ○ to go
-        Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
-            repeat(CARD) { i ->
-                Box(
-                    Modifier.size(24.dp).clip(CircleShape)
-                        .then(if (i < card.filled) Modifier.background(Gold) else Modifier.border(1.5.dp, white.copy(alpha = 0.7f), CircleShape)),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    if (i < card.gift) Text("🎁", fontSize = 11.sp)
-                    else if (i < card.filled) Text("☭", fontSize = 12.sp, color = Red, fontWeight = FontWeight.Bold)
+        Gap(12)
+        // this week, Mo ➡ Su (Insight Timer: ✓ · ! · letters)
+        val monday = today.minusDays((today.dayOfWeek.value - 1).toLong())
+        val lang = LocalLang.current
+        Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+            (0L..6L).map { monday.plusDays(it) }.forEach { d ->
+                val isRead = d.toString() in read
+                val (bg, fg, txt) = when {
+                    isRead -> Triple(white, Color(0xFF1D1230), "✓")
+                    d in rest -> Triple(white.copy(alpha = 0.85f), Color(0xFF1D1230), "🕊")
+                    d == today -> Triple(Red, white, "!")
+                    else -> Triple(white.copy(alpha = if (d.isAfter(today)) 0.16f else 0.08f), white.copy(alpha = 0.7f),
+                        d.dayOfWeek.getDisplayName(TextStyle.NARROW, lang.locale))
+                }
+                Box(Modifier.size(34.dp).clip(CircleShape).background(bg), contentAlignment = Alignment.Center) {
+                    Text(txt, color = fg, fontSize = 15.sp, fontWeight = FontWeight.Bold)
                 }
             }
         }
-        Text(tr("🎟️ Stempelkarte %d · noch %d Lesetage bis „%s“", "🎟️ Stamp card %d · %d more reading days to “%s”")
-            .f(card.no, card.left, tr(rank(ranks))), color = white, fontSize = 12.sp, modifier = Modifier.padding(top = 4.dp))
+        if (rest.isNotEmpty()) Text(tr("🕊️ Sabbat-Joker eingelöst — 1 Ruhetag pro Woche bricht die Kette nicht.",
+            "🕊️ Sabbath joker used — 1 rest day per week doesn't break the chain."), color = white.copy(alpha = 0.85f), fontSize = 11.sp,
+            modifier = Modifier.padding(top = 4.dp))
+        Gap(14)
+        // 🎟️ Stempelkarte: 🎁 gift · ☭ earned · red ! = today's stamp, still open · ○ to go
+        Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+            repeat(CARD) { i ->
+                val waiting = !doneToday && i == card.filled
+                Box(
+                    Modifier.size(24.dp).clip(CircleShape)
+                        .then(when {
+                            i < card.filled -> Modifier.background(Gold)
+                            waiting -> Modifier.background(Red)
+                            else -> Modifier.border(1.5.dp, white.copy(alpha = 0.7f), CircleShape)
+                        }),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    when {
+                        i < card.gift -> Text("🎁", fontSize = 11.sp)
+                        i < card.filled -> Text("☭", fontSize = 12.sp, color = Red, fontWeight = FontWeight.Bold)
+                        waiting -> Text("!", fontSize = 13.sp, color = white, fontWeight = FontWeight.Bold)
+                    }
+                }
+            }
+        }
+        // strix @1106: "N more days to <rank>" motivates (next-level pull) · th "Stempelkarte N" part = noise ➡ gone
+        Text(tr("noch %d Lesetage bis „%s“", "%d more reading days to “%s”").f(card.left, tr(rank(ranks))),
+            color = white, fontSize = 12.sp, modifier = Modifier.padding(top = 4.dp))
+        if (ranks > 0) Text(tr("Rang: %s", "Rank: %s").f(tr(rank(ranks - 1))), color = white.copy(alpha = 0.8f), fontSize = 11.sp)
     }
     HookNote(Hook.STREAK, hooked)
     HookNote(Hook.STAMPS, hooked)
     HookNote(Hook.SABBATH, hooked)
     HookNote(if (feast != null) Hook.FEAST else Hook.DAYTIME, hooked)
+}
+
+/** streak nr on a red star w gold rim (Insight Timer puts it i a singing bowl · we hv th Soviet star) */
+@Composable
+private fun StreakStar(n: Int) {
+    Box(Modifier.size(92.dp), contentAlignment = Alignment.Center) {
+        Canvas(Modifier.fillMaxSize()) {
+            val c = center; val ro = size.minDimension / 2f; val ri = ro * 0.42f
+            val p = Path().apply {
+                for (k in 0 until 10) {
+                    val r = if (k % 2 == 0) ro else ri
+                    val a = Math.toRadians(-90.0 + k * 36.0)
+                    val x = c.x + r * kotlin.math.cos(a).toFloat(); val y = c.y + r * kotlin.math.sin(a).toFloat()
+                    if (k == 0) moveTo(x, y) else lineTo(x, y)
+                }
+                close()
+            }
+            drawPath(p, Red)
+            drawPath(p, Gold, style = Stroke(width = 3.dp.toPx(), join = StrokeJoin.Round))
+        }
+        Text("$n", color = Color.White, fontSize = if (n < 100) 26.sp else 20.sp, fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(top = 6.dp))
+    }
 }
 
 /**

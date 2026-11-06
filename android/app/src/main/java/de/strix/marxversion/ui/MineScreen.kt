@@ -186,14 +186,14 @@ fun SettingsScreen(vm: AppVm, askNotifPermission: () -> Unit) {
         Text(tr("🤖 Was die App obendrauf macht", "🤖 What the app adds on top"), fontWeight = FontWeight.Bold, fontSize = 13.sp)
         Text(tr("• Absätze Deutsch ⬄ Englisch automatisch zugeordnet — kann mal danebenliegen.",
             "• Paragraphs German ⬄ English paired automatically — may be off now and then."), fontSize = 13.sp)
-        Text(tr("• Italienisch, Spanisch, Portugiesisch, Chinesisch, Arabisch: das ganze Buch + Fußnoten von einem lokalen LLM (Qwen3) aus dem Deutschen übersetzt, mit einem Glossar der üblichen Fachbegriffe (Mehrwert, Ware …) — keine veröffentlichte Ausgabe, kann holpern.",
-            "• Italian, Spanish, Portuguese, Chinese, Arabic: the whole book + footnotes translated from German by a local LLM (Qwen3), with a glossary of the standard terms (surplus value, commodity …) — not a published edition, may stumble."), fontSize = 13.sp)
+        Text(tr("• Alle anderen Sprachen: das ganze Buch + Fußnoten von einem lokalen LLM (Qwen3) aus dem Deutschen übersetzt, mit einem Glossar der üblichen Fachbegriffe (Mehrwert, Ware …) — keine veröffentlichte Ausgabe, kann holpern.",
+            "• All other languages: the whole book + footnotes translated from German by a local LLM (Qwen3), with a glossary of the standard terms (surplus value, commodity …) — not a published edition, may stumble."), fontSize = 13.sp)
         Text(tr("• Zitate: ein lokales LLM (Qwen3) wählt und bewertet sie, der Wortlaut ist aber immer Marx' Originalsatz (automatisch geprüft).",
             "• Quotes: a local LLM (Qwen3) picks and rates them, but the wording is always Marx's original sentence (checked automatically)."), fontSize = 13.sp)
         Text(tr("• Andachten: vom LLM geschrieben (Deutsch + Englisch).",
             "• Devotionals: written by the LLM (German + English)."), fontSize = 13.sp)
-        Text(tr("• IT · ES · PT · 中文 · عربي: App, Zitate, Andachten + Pläne maschinell übersetzt (Qwen3). Der volle Kapital-Text mit Fußnoten bleibt Deutsch + Englisch — in diesen Sprachen liest du ihn auf Englisch.",
-            "• IT · ES · PT · 中文 · عربي: app, quotes, devotionals + plans machine-translated (Qwen3). The full Capital text with footnotes stays German + English — in these languages you read it in English."), fontSize = 13.sp)
+        Text(tr("• App, Zitate, Andachten + Pläne in den anderen Sprachen: ebenfalls maschinell übersetzt (Qwen3).",
+            "• App, quotes, devotionals + plans in the other languages: machine-translated too (Qwen3)."), fontSize = 13.sp)
         Text(tr("Irrtümer vorbehalten, Marx hat immer recht.", "Errors reserved, Marx is always right."), fontSize = 13.sp, color = MaterialTheme.colorScheme.secondary)
         Gap(6)
         Text(tr("🔓 Quellcode: github.com/am0ebe/oh-my-marx (GPL-3.0) — selbst bauen statt APK vertrauen.",

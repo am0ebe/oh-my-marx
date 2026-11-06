@@ -52,6 +52,8 @@ a{color:#e8b931}ul,ol{padding-left:1.3em}
 .tb{margin-top:.6em}.tb input{display:none}.tb label{display:inline-block;padding:.35em 1em;border-radius:10px 10px 0 0;cursor:pointer;opacity:.6;background:#0003}
 .tb label .ic{margin-right:.35em}.tb input:checked+label{opacity:1;background:#f4ead81a;font-weight:700}
 .tp{display:none;background:#f4ead81a;border-radius:0 12px 12px 12px;padding:.2em 1em .8em}
+.big{margin-top:1.4em}.big .tp{padding:.3em 1.1em 1em}.big .tp h2{margin-top:1em}.big label{padding:.5em 1.2em}
+.tb label.dl{font-size:.8em;opacity:.45}.tb input:checked+label.dl{opacity:.9}
 #as:checked~#ps,#ad:checked~#pd,#tg:checked~#pg,#tf:checked~#pf{display:block}
 footer{margin-top:2.4em;padding-top:1.2em;border-top:1px solid #f4ead822;text-align:center}
 footer h2{margin:0 0 .8em}
@@ -96,11 +98,12 @@ EOF
         return
     fi
     # what's new = same as th app (⚙️): no emoji · this version open · older ones folded
-    local v old=""
+    # older = only versions BELOW this one (Changelog.kt may alr hold th nxt, unshipped release on top)
+    local v old="" past=""
     li=$(bin/notes.py "$ver" --html --plain)
     for v in $(bin/notes.py --versions); do
-        [ "$v" = "${ver%%-*}" ] && continue
-        old+="<h3>$v</h3><ul>$(bin/notes.py "$v" --html --plain)</ul>"
+        [ -n "$past" ] && old+="<h3>$v</h3><ul>$(bin/notes.py "$v" --html --plain)</ul>"
+        [ "$v" = "${ver%%-*}" ] && past=1
     done
     [ -n "$old" ] && old="<details><summary>Older versions</summary>$old</details>"
     [ -n "$li" ] && news="<section class=\"w\"><h2>What’s new in ${ver%%-*}</h2><ul>$li</ul>$old</section>"
@@ -150,35 +153,41 @@ EOF
 <h1>☭ $APP</h1>
 <p>Read Marx like the Bible: a daily verse from <i>Das Kapital</i>, the whole book, reading plans, streaks —
 and a Hooked mode that confesses every habit trick the app plays on you. In English, German (Marx's original), Italiano · Español · Português · 中文 · عربي.</p>
-<h2>📲 Install with Obtainium <small>(recommended: updates itself)</small></h2>
+<!-- 1 tab box 4 both ways in (strix @1106): Release (dflt) | dev (quiet, 4 testers) · each: 1. Obtainium 2. APK -->
+<div class="tb big">
+<input type="radio" name="a" id="as" checked><label for="as">Release $ver</label><input type="radio" name="a" id="ad"><label for="ad" class="dl">dev</label>
+<div class="tp" id="ps">
+<h2>1. Install with Obtainium <small>(recommended: updates itself)</small></h2>
 <ol><li>Get <a href="https://github.com/ImranR98/Obtainium/releases/latest">Obtainium</a> (free, open source app updater)</li>
 <li>Tap <b>➕ Add to Obtainium</b> below ➡ <b>Add</b> ➡ <b>Install</b></li></ol>
 <a class="o" href="obtainium://add/$WEB/">➕ Add to Obtainium</a>
 <p><small>Button does nothing? In Obtainium tap ＋ and paste <code>$WEB/</code></small></p>
-<h2>Or download the APK</h2>
-<div class="tb">
-<input type="radio" name="a" id="as" checked><label for="as">Stable $ver</label><input type="radio" name="a" id="ad"><label for="ad">🧪 Dev</label>
-<div class="tp" id="ps"><a class="b" href="$apk">⬇️ Download $APP $ver · ${mb} MB</a>
+<h2>2. Or download the APK</h2>
+<a class="b" href="$apk">⬇️ Download $APP $ver · ${mb} MB</a>
 <ol><li>Tap the download ➡ allow installing from this source (once) ➡ <b>Install</b></li>
 <li>Play Protect may warn about an "unknown app" — normal outside the Play Store ➡ <b>Install anyway</b></li>
 <li>The app tells you when a new version is out ➡ tap ➡ install over it, your data stays</li></ol></div>
-<div class="tp" id="pd"><p>Test builds of what's coming next, for testers and contributors. A <b>separate app</b> ("Oh My Marx DEV")
-next to the normal one, with its own data. Can break.</p>
+<div class="tp" id="pd">
+<p>Test builds of what's coming next, for testers and contributors. They install as a <b>separate app</b>
+("Oh My Marx DEV", blue icon) next to the normal one, with their own data. Can break.</p>
+<h2>1. Follow dev builds with Obtainium</h2>
+<a class="s" href="obtainium://add/$WEB/dev/">➕ Add dev builds to Obtainium</a>
+<p><small>By hand: Obtainium ➡ ＋ ➡ <code>$WEB/dev/</code></small></p>
+<h2>2. Or download the latest dev APK</h2>
 <a class="s" id="dv" href="dev/">⬇️ Latest dev build</a>
-<a class="s" href="obtainium://add/$WEB/dev/">➕ Follow dev builds in Obtainium</a>
-<p><small>By hand: Obtainium ➡ ＋ ➡ <code>$WEB/dev/</code></small></p></div>
+<p><small>Bugs: <a href="$SRC/issues/new/choose">open an issue</a></small></p></div>
 </div>
 <h2>Or build it yourself</h2>
 <p>Open source (GPL-3.0): read the code and build the APK on your own machine instead of trusting ours.
 Step-by-step guide in the README, no Android experience needed.</p>
 <div class="tb">
-<input type="radio" name="t" id="tg" checked><label for="tg">$(ico github)GitHub</label><input type="radio" name="t" id="tf"><label for="tf">$(ico forgejo)Forgejo</label>
+<input type="radio" name="t" id="tf" checked><label for="tf">$(ico forgejo)Forgejo</label><input type="radio" name="t" id="tg"><label for="tg">$(ico github)GitHub</label>
+<div class="tp" id="pf"><a class="s" href="$FGJ">$(ico forgejo) Source on Forgejo</a>
+<p><code>git clone $FGJ.git</code></p>
+<p><small>Same code, on our own server in Germany (self-hosted <a href="https://forgejo.org">Forgejo</a>, no Microsoft). No sign-up there: issues go to GitHub or by mail.</small></p></div>
 <div class="tp" id="pg"><a class="s" href="$SRC">$(ico github) Source on GitHub</a>
 <p><code>git clone $SRC</code></p>
 <p><small>Bug or idea and a GitHub account? <a href="$SRC/issues/new/choose">Open an issue</a> · all: <a href="$SRC/issues">issues</a> · <a href="$SRC/releases">releases</a></small></p></div>
-<div class="tp" id="pf"><a class="s" href="$FGJ">$(ico forgejo) Source on Forgejo</a>
-<p><code>git clone $FGJ.git</code></p>
-<p><small>Same code, mirrored on our own server in Germany (self-hosted <a href="https://forgejo.org">Forgejo</a>, no Microsoft). No sign-up there: issues go to GitHub or by mail.</small></p></div>
 </div>
 $news
 <p><small>Older versions + all release notes: <a href="$SRC/releases">GitHub releases</a> · v$ver · $(date '+%F %H:%M') · sha256 ${sha:0:16}…</small></p>

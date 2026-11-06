@@ -21,13 +21,20 @@ enum class Lang(
     ES("ES", "Español", Locale.forLanguageTag("es-ES"), "«", "»"),
     PT("PT", "Português", Locale.forLanguageTag("pt-BR"), "“", "”"),
     ZH("中文", "中文", Locale.SIMPLIFIED_CHINESE, "“", "”"),
-    AR("عربي", "العربية", Locale.forLanguageTag("ar"), "«", "»", rtl = true);
+    AR("عربي", "العربية", Locale.forLanguageTag("ar"), "«", "»", rtl = true),
+    // @1106: th big ones ➡ ~top 12 by speakers together w th above
+    FR("FR", "Français", Locale.FRENCH, "« ", " »"),
+    RU("RU", "Русский", Locale.forLanguageTag("ru"), "«", "»"),
+    HI("हिंदी", "हिन्दी", Locale.forLanguageTag("hi"), "“", "”"),
+    BN("বাংলা", "বাংলা", Locale.forLanguageTag("bn"), "“", "”"),
+    UR("اردو", "اردو", Locale.forLanguageTag("ur"), "“", "”", rtl = true),
+    ID("ID", "Bahasa Indonesia", Locale.forLanguageTag("id"), "“", "”");
 
     val file get() = "i18n_${name.lowercase()}.json"
 
     companion object {
-        /** menu order (@1106): EN 1st, DE (Marx's original) 2nd, rest · enum order stays (ordinal > 1 = LLM-translated langs) */
-        val menu = listOf(EN, DE) + entries.drop(2)
+        /** menu order (@1106): EN 1st, DE (Marx's original) 2nd, then by speakers · enum order stays (ordinal > 1 = LLM-translated) */
+        val menu = listOf(EN, DE, ZH, HI, ES, FR, AR, BN, PT, RU, UR, ID, IT)
 
         /** 1st start: th fon's language if we hv it, else EN */
         fun system(): Lang {
