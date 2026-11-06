@@ -9,7 +9,11 @@
   - ⚠️ shipped WITHOUT fon QA (🦠 asked) ➡ ▶ NEXT: 🦠 Obtainium ➡ update both apps ➡ QA: lang IT/中文/عربي ➡ 📖 book + tap a footnote + 🔊 · share a link i Signal ➡ preview card shows?
   - ✔️ @1106 b: share panel · What's new newest-only (app + page) · EN dflt + DE 2nd · DEV top bar blue + "DEV" · annotated tags i ship.sh · 0.9.0 notes drafted · dev `0.9.0-dev.1106.1243`
   - 🐛💬 DEV app didn't update via Obtainium (stable did) ➡ server apk ok (pkg + key checked) ➡ prob installed via adb earlier ➡ 🦠 tap Install i Obtainium / send error txt / o uninstall DEV once + reinstall via Obtainium
-  - 🔍 more langs (80 % goal): FR · RU · HI · BN · ID nxt (answer @1106 i chat)
+  - ⏳ @1106 c: **6 new langs fr ru id hi bn ur** translating i th background on tow (~1 h UI/quotes + ~12 h whole book) ➡ logs `data/translate_6langs.log` · `data/i18n_full/run_6langs.log` ➡ when done: `translate.py --only ui` (all 11, picks up strings added mid-run) ➡ commit data + assets ➡ deploy · glossaries hi/bn/ur/id = best effort ➡ 👤 native check
+  - ✔️ @1106 c: Hero = Insight-Timer style (week row ✓/!/letters · "Rette deine Kette!" · red star nr · ! on today's stamp · no `☭···` row · rotating greetings) · Amen = tap today's card + big red btn · hammer + sickle BAM fx · plan colours · page Release|dev box + Forgejo 1st · dev `0.9.0-dev.1106.1742`
+  - ⚠️ page meta says "7 languages" ➡ update at 0.9.0 ship (lib.sh og/meta description)
+  - 💡 lang packs (only if APK > ~30 MB; now ~0.85 MB/lang compressed ➡ 13 langs ≈ 21 MB): ship EN+DE, other `full_xx.json.gz` on th VPS ➡ download on lang pick ➡ filesDir + sha256 fr version.json · offline-first caveat · plan i chat @1106
+  - 🎮 badges / Orden (Tractive-style, 🦠 imgs `img/IMG_20261104_*`): plan i chat @1106 ➡ 🦠 go/no-go b4 code
   - 💡 viral: in-app Spruchkarte share ➡ add `scagent.de/omm` under th card img? (check wh it has now)
 - ▶ **RESUME @1106** — repo **public** github.com/am0ebe/oh-my-marx (GPL-3.0) · Forgejo mirror `am0/oh-my-marx` · stable **0.7.0** live (tag v0.7.0) · dev `0.7.0-dev.1106.0007` on `/dev`
   - ✔️ @1106 page: no ⬇️ heading · 3rd option "Or build it yourself" (GitHub | Forgejo tabs, issue link) · What's new = pane, 🤏, no emoji · footer = Feedback (mailto w version) + Share, `#feedback` anchor
