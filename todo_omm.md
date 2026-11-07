@@ -17,6 +17,16 @@
 - 🦠 QA stable 0.8.0 (shipped wo fon QA): Obtainium ➡ update ➡ lang IT/中文/عربي ➡ 📖 book + footnote + 🔊 · Signal link ➡ preview card?
 
 ## ‼️
+- 🦠 **QA notes @1108** (scrap):
+  - 📜 "Was ist neu" ➡ alle Release-Notes: scrollable box, not 1 huge list · T: only show th last version's notes? (simpler)
+  - 💬 feedback box: ❌ link 2 web page ➡ straight 2 GitHub issue o mail (open it directly, 0 friction) · later: in-app msg (= 🔵 phase 2)
+  - ✂️ prefs bottom: rm th app ads + slop + references
+  - 🔘 1 row o 🤏 icon buttons: 🌐 web page · 📤 share · 💬 feedback — clean, side by side
+  - ✍️ credit line ➡ "proudly vibe-coded by a centaur — half hu, half agent" + keep th polemic bit · rm specifics (who · hw · translations)
+- 📨⭐ **user feedback log** — 1st real users = gold ➡ `feedback.md` (who · wh · date) · 🔑 most imp signal
+  - M: "share" unclear (share wh? th app?) ➡ didn't try · auto Signal/oth share ✔️ · loved shake (didn't K possible) · playful · Tagesflow + Ahnen anim "fetzig" · "Mahlzeit…" note hit right while eating (time-of-day ✔️) · übersichtlich · 12 MB = good code · Marxoskop nice
+  - M2 (dev): uneasy w a precompiled APK ➡ wants source ➡ link GitHub/Forgejo src visibly
+  - Jan (dev): liked th AI-slop-w-creative-funny-msg plans
 - 🦠 **QA notes @1107 (dev 1902)** — ✔️ 1+2 done i dev `2017`, rest open:
   - ✔️ hi/bn book missing = full_xx.json not exported yet (changelog ran ahead) ➡ exported · ur book still translating ➡ changelog says "(Urdu: book coming)" til then
   - ✔️ lang switch flashed EN 1st (new book parsed aft th switch) ➡ book loads 1st, then 1 jump (AppVm.loadFull)
@@ -53,6 +63,11 @@
 ## 📆
 
 ## 🔵
+- 📄 **README ⬄ scagent.de/omm out o sync** ➡ README mirrors page (Obtainium 1st ➡ direct DL ➡ src Forgejo + GH) · rm iPhone line (o say: not planned, hard + 💰) · 🔑 T: 1 SSOT ➡ gen both (md + html) = pattern 4 ALL docs (wiki · kb · pr scaffold) ⬄ kb
+- 🎮 gamify: Tamagotchi-style Marx avatar + xp · starts weak/fragile ➡ fit on streak · pick ur avatar · xfer 2 oth apps (cali!)
+- 🎄 holiday imgs/msgs: + political holidays + remembrance days, ~evy 1-2 w (Marx as Santa…) ⬄ merge w "Feiertage 2" below
+- 💡 app ideas: zuletzt gelesen/angeguckt · who's online (Matrix · Lesekreis) · events/Termine near u (⚠️ location implications) · personalize (Hooked: user invests data · usage analytics) · notif toggle (Android may alr do it)
+- 🔑 **cross-app insights board**: extract L fr evy app we build (omm · cali · …) ➡ shared ⬄ vibe++/kb
 - 🩹 /dev wo settings: hand-pasted URL (no ➕) ➡ Obtainium partial APK hash = same 4 evy build ➡ stuck · fix = mk th APK's 1st bytes differ per build (hacky) o tell testers "➕ only"
 - 💡 viral: in-app Spruchkarte share ➡ `scagent.de/omm` under th card img? (check wh it has now)
 - 💡 lang packs (only if APK > ~30 MB): ship EN+DE, oth `full_xx.json.gz` on VPS ➡ download on lang pick (sha256 fr version.json)
