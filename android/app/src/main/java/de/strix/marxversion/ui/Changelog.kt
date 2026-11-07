@@ -31,7 +31,7 @@ import de.strix.marxversion.data.f
 data class Release(val version: String, val date: String, val items: List<Pair<String, String>>)
 
 val RELEASES = listOf(
-    Release("0.9.0", "2026-11-06", listOf(
+    Release("0.9.0", "2026-11-08", listOf(
         T("🌍 6 neue Sprachen: Französisch, Russisch, Hindi, Bengalisch, Urdu, Indonesisch — das ganze Buch inklusive", "🌍 6 new languages: French, Russian, Hindi, Bengali, Urdu, Indonesian — the whole book included"),
         T("🎖️ 23 Orden zum Verdienen — vom „Ersten Mehrwert“ bis „Hat's wirklich gelesen“, ein paar davon geheim (Mein Kapital)", "🎖️ 23 medals to earn — from “First surplus value” to “Actually read it”, a few of them secret (My Capital)"),
         T("🔥 Neue Streak-Karte: deine Woche auf einen Blick, „Rette deine Kette!“, Streak im roten Stern", "🔥 New streak card: your week at a glance, “Save your chain!”, streak in a red star"),
@@ -40,6 +40,8 @@ val RELEASES = listOf(
         T("🎨 Lesepläne in Farbe", "🎨 Reading plans in colour"),
         T("🌍 Startet in der Sprache deines Handys, sonst auf Englisch · Deutsch steht an zweiter Stelle", "🌍 Starts in your phone's language, otherwise English · German comes second"),
         T("📜 Was ist neu: nur die neueste Version, ältere auf Antippen — wie auf der Webseite", "📜 What's new: only the newest version, older ones on tap — like on the website"),
+        T("💬 Feedback-Knopf unter ⚙️ ➡ Über: Bug, Idee oder Lob direkt an uns", "💬 Feedback button under ⚙️ ➡ About: bug, idea or praise straight to us"),
+        T("🌍 Sprachwechsel springt direkt in die neue Sprache (kein kurzes Englisch mehr dazwischen)", "🌍 Switching language jumps straight to the new one (no brief English in between)"),
     )),
     Release("0.8.0", "2026-11-06", listOf(
         T("📖 Das ganze Kapital jetzt auch auf Italienisch, Spanisch, Portugiesisch, Chinesisch und Arabisch — samt Fußnoten", "📖 The whole of Capital now also in Italian, Spanish, Portuguese, Chinese and Arabic — footnotes included"),

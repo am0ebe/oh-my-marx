@@ -27,7 +27,7 @@ Every version stays downloadable under [Releases](https://github.com/am0ebe/oh-m
 | **build** | AGP 8.13 · Gradle 8.14 (wrapper) · JDK 17+ |
 | **dependencies** | AndroidX + kotlinx only. No Google Play Services, Firebase, analytics or ads. HTTP via plain `HttpURLConnection`. |
 | **permissions** | `INTERNET` · `POST_NOTIFICATIONS` (daily verse) · `VIBRATE` |
-| **languages** | English (Moore/Aveling 1887; default, or your phone's language if listed) · German (Marx's original) · IT · ES · PT · 中文 · عربي (RTL): everything incl. the whole book, translated from German by a local LLM (not a published edition) |
+| **languages** | English (Moore/Aveling 1887; default, or your phone's language if listed) · German (Marx's original) · IT · ES · PT · 中文 · عربي (RTL) · FR · RU · हिन्दी · বাংলা · اردو (RTL) · ID: everything incl. the whole book, translated from German by a local LLM (not a published edition) |
 | **size** | ~21 MB APK, the whole book ships inside (works offline) |
 | **package** | `de.strix.marxversion` · dev builds `….dev` install side by side |
 | **license** | code [GPL-3.0](LICENSE) · book texts public domain |

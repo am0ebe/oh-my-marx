@@ -2079,3 +2079,5 @@
 {"kind": "ui", "k": "⚠️ Newer dev build out: %s ➡ Obtainium", "src": "⚠️ Neuerer Dev-Build da: %s ➡ Obtainium\u0000⚠️ Newer dev build out: %s ➡ Obtainium", "t": "⚠️ 新版开发版已发布：%s ➡ 获取之物"}
 {"kind": "ui", "k": "✔️ newest dev build", "src": "✔️ neuester Dev-Build\u0000✔️ newest dev build", "t": "✔️ 最新版开发版"}
 {"kind": "ui", "k": "💬 Feedback: bug, idea, praise ➡", "src": "💬 Feedback: Bug, Idee, Lob ➡\u0000💬 Feedback: bug, idea, praise ➡", "t": "💬 反馈：报错、建议、赞美 ➡"}
+{"kind": "ui", "k": "💬 Feedback button under ⚙️ ➡ About: bug, idea or praise straight to us", "src": "💬 Feedback-Knopf unter ⚙️ ➡ Über: Bug, Idee oder Lob direkt an uns\u0000💬 Feedback button under ⚙️ ➡ About: bug, idea or praise straight to us", "t": "💬 点击 ⚙️ ➡ 关于 中的反馈按钮：直接向我们报告错误、提出建议或送上赞美"}
+{"kind": "ui", "k": "🌍 Switching language jumps straight to the new one (no brief English in between)", "src": "🌍 Sprachwechsel springt direkt in die neue Sprache (kein kurzes Englisch mehr dazwischen)\u0000🌍 Switching language jumps straight to the new one (no brief English in between)", "t": "🌍 切换语言将直接跳转至目标语言（不再中间夹杂短暂的英文）"}

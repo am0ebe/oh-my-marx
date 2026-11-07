@@ -137,7 +137,7 @@ EOF
 - APK: $WEB/$apk (sha256 $sha)
 - Latest version as JSON: $WEB/version.json
 - Install + auto-update with Obtainium: add the URL $WEB/
-- Languages: English (Moore/Aveling 1887, default), German (original), Italian, Spanish, Portuguese, Chinese, Arabic (whole book translated from German by a local LLM)
+- Languages: English (Moore/Aveling 1887, default), German (original), Italian, Spanish, Portuguese, Chinese, Arabic, French, Russian, Hindi, Bengali, Urdu, Indonesian (whole book translated from German by a local LLM)
 - Source: $SRC · mirror: $FGJ
 - Release notes + older versions: $SRC/releases
 - Contact: $MAIL
@@ -153,10 +153,10 @@ EOF
     cat > "$out/index.html" <<EOF
 <!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>$APP ☭</title>
-<meta name="description" content="Read Das Kapital like the Bible: a daily verse from Marx, the whole book in 7 languages, reading plans, streaks. Free, open source Android app.">
+<meta name="description" content="Read Das Kapital like the Bible: a daily verse from Marx, the whole book in 13 languages, reading plans, streaks. Free, open source Android app.">
 <meta property="og:type" content="website"><meta property="og:site_name" content="$APP"><meta property="og:url" content="$WEB/">
 <meta property="og:title" content="$APP ☭ Read Das Kapital like the Bible">
-<meta property="og:description" content="A daily verse from Marx, the whole book in 7 languages, reading plans, streaks. Free and open source, for Android.">
+<meta property="og:description" content="A daily verse from Marx, the whole book in 13 languages, reading plans, streaks. Free and open source, for Android.">
 <meta property="og:image" content="$WEB/og.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Karl Marx with a halo: Oh My Marx, read Das Kapital like the Bible"><meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/png" href="favicon.png"><link rel="apple-touch-icon" href="favicon.png">
@@ -164,7 +164,7 @@ EOF
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"MobileApplication","name":"$APP",
 "description":"Karl Marx's Das Kapital vol. 1 as a daily verse, bible-app style","operatingSystem":"Android 8.0+",
 "applicationCategory":"BookApplication","softwareVersion":"$ver","fileSize":"${mb} MB","downloadUrl":"$WEB/$apk","installUrl":"$WEB/",
-"inLanguage":["de","en","it","es","pt","zh","ar"],"license":"https://www.gnu.org/licenses/gpl-3.0.html","isAccessibleForFree":true,
+"inLanguage":["de","en","it","es","pt","zh","ar","fr","ru","hi","bn","ur","id"],"license":"https://www.gnu.org/licenses/gpl-3.0.html","isAccessibleForFree":true,
 "offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"},"author":{"@type":"Person","name":"am0ebe"},
 "sameAs":["$SRC","$FGJ"],"image":"$WEB/og.png"}</script>
 <style>$CSS</style>
