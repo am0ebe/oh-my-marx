@@ -69,11 +69,14 @@ cp android/app/build/outputs/apk/release/app-release.apk "$out/$apk"
 page "$out" "$ver" "$apk"
 publish "$out"
 
-# 🏷️ annotated tag on th shipped commit (notes inside ➡ `git show v0.8.0`) · local + pushed (Forgejo mirror gets it 2)
+# 🏷️ annotated tag on th shipped commit (notes inside ➡ `git show v0.8.0`) · local + pushed
+# remotes @1107 (go/pr/ops/repos.md): origin = Forgejo · gh = GitHub (push-mirror fr Forgejo, once set up)
+#   ➡ tag goes 2 gh directly 2: `--verify-tag` needs it on GitHub now, not whenever th mirror syncs
 git tag -a "v$ver" -m "$APP $ver"$'\n\n'"$(bin/notes.py "$ver")"
 git push -q origin "v$ver"
+git push -q gh "v$ver"
 # GitHub release = th archive: evy version stays downloadable (bug i 0.8? grab 0.7) · notes = th in-app changelog
-gh release create "v$ver" "$out/$apk" --verify-tag --title "$APP $ver" \
+gh release create "v$ver" "$out/$apk" --repo am0ebe/oh-my-marx --verify-tag --title "$APP $ver" \
     --notes "$(bin/notes.py "$ver")"$'\n\n'"Install: open $WEB/ on the phone, or download the APK below. Older versions: see all releases."
 git fetch -q --tags origin
 echo "✔️ shipped v$ver ➡ $WEB/"
