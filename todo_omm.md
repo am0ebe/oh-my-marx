@@ -10,7 +10,7 @@
     - optional (real version names instead o hash): fon browser `scagent.de/oh-my-marx/dev/` ➡ ➕ ➡ Import (overwrites, no delete)
     - still no update shown ➡ tell me th DEV entry's "latest version" string
   - ✔️ translations done @1108 (d4af9eb): all 6 new langs whole book (hi + ur 1948/1949) · redo-bad · ui all 11 · dev `1108.0026` deployed
-  - ▶ **0.9.0 ship path**: 👤 strix fon QA dev `0026` (list below + hi/bn/ur book + lang switch) ➡ fix page meta "7 languages" ➡ `ship.sh minor` (GitHub mirror live)
+  - ✔️ **0.9.0 shipped @1108** (fa72cd0): 13 langs, whole book · page + GitHub release v0.9.0 · strix QA'd dev `0026` ✔️ ➡ nxt = QA notes @1107 below (‼️)
   - ⚠️ traps: **remotes @1107** origin = Forgejo only · `gh` = GitHub fetch-only (push DISABLED) · ✔️ push-mirror live @1107 (gh/main = origin/main fa9a8ae) ➡ `ship.sh` can tag again · `data/i18n_full/{hi,bn}.jsonl` untracked on purpose (partial) · zsh: `tr` alias, bare `===` · page meta "7 languages" ➡ fix at 0.9.0 ship
   - 👤 strix: entry fix ☝️ · fon QA dev: Orden grid + popup · streak card · Amen tap · impact fx · plans · `MarxDialog` · FR/RU/ID book · DEV-status line i ⚙️ What's new · native check hi/bn/ur/id glossary · 29 bad translations (`--bad`) · KeePass keystore note
   - ⚠️ VPS = **ops-owned** (pr/ops/omm.md) ➡ ask ops (msg `ops`), nvr edit Caddy//srv · `/srv/omm-matrix/compose.yml` owns synapse tag · `android/omm.properties` (reg token) needed 4 comments/Kreise · fon screenshots only aft asking (mem)
