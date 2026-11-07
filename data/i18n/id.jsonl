@@ -2038,3 +2038,8 @@
 {"kind": "ui", "k": "For the cause!", "src": "Für die Sache!\u0000For the cause!", "t": "Untuk perjuangan!"}
 {"kind": "ui", "k": "Day complete!", "src": "Tag geschafft!\u0000Day complete!", "t": "Hari beres!"}
 {"kind": "ui", "k": "Cancel", "src": "Abbrechen\u0000Cancel", "t": "Batal"}
+{"kind": "ui", "k": "🌍 6 new languages: French, Russian, Hindi, Bengali, Urdu, Indonesian — the whole book included (Urdu: book coming)", "src": "🌍 6 neue Sprachen: Französisch, Russisch, Hindi, Bengalisch, Urdu, Indonesisch — das ganze Buch inklusive (Urdu: Buch folgt)\u0000🌍 6 new languages: French, Russian, Hindi, Bengali, Urdu, Indonesian — the whole book included (Urdu: book coming)", "t": "🌍 6 bahasa baru: Prancis, Rusia, Hindi, Bengali, Urdu, Indonesia — seluruh buku termasuk (Urdu: buku segera hadir)"}
+{"kind": "ui", "k": "Dev build %s — untested", "src": "Dev-Build %s — ungetestet\u0000Dev build %s — untested", "t": "Dev-Build %s — belum diuji"}
+{"kind": "ui", "k": "⚠️ Newer dev build out: %s ➡ Obtainium", "src": "⚠️ Neuerer Dev-Build da: %s ➡ Obtainium\u0000⚠️ Newer dev build out: %s ➡ Obtainium", "t": "⚠️ Dev-Build terbaru sudah ada: %s ➡ Obtainium"}
+{"kind": "ui", "k": "✔️ newest dev build", "src": "✔️ neuester Dev-Build\u0000✔️ newest dev build", "t": "✔️ Dev-Build terbaru"}
+{"kind": "ui", "k": "💬 Feedback: bug, idea, praise ➡", "src": "💬 Feedback: Bug, Idee, Lob ➡\u0000💬 Feedback: bug, idea, praise ➡", "t": "💬 Umpan balik: bug, ide, pujian ➡"}

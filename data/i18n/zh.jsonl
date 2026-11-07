@@ -2074,3 +2074,8 @@
 {"kind": "ui", "k": "Found", "src": "Gründen\u0000Found", "t": "创立"}
 {"kind": "ui", "k": "For the cause!", "src": "Für die Sache!\u0000For the cause!", "t": "为事业干杯！"}
 {"kind": "ui", "k": "Day complete!", "src": "Tag geschafft!\u0000Day complete!", "t": "今日任务完成！"}
+{"kind": "ui", "k": "🌍 6 new languages: French, Russian, Hindi, Bengali, Urdu, Indonesian — the whole book included (Urdu: book coming)", "src": "🌍 6 neue Sprachen: Französisch, Russisch, Hindi, Bengalisch, Urdu, Indonesisch — das ganze Buch inklusive (Urdu: Buch folgt)\u0000🌍 6 new languages: French, Russian, Hindi, Bengali, Urdu, Indonesian — the whole book included (Urdu: book coming)", "t": "🌍 新增6种语言：法语、俄语、印地语、孟加拉语、乌尔都语、印尼语 — 全书包含在内（乌尔都语：书待续）"}
+{"kind": "ui", "k": "Dev build %s — untested", "src": "Dev-Build %s — ungetestet\u0000Dev build %s — untested", "t": "开发版 %s — 未经测试"}
+{"kind": "ui", "k": "⚠️ Newer dev build out: %s ➡ Obtainium", "src": "⚠️ Neuerer Dev-Build da: %s ➡ Obtainium\u0000⚠️ Newer dev build out: %s ➡ Obtainium", "t": "⚠️ 新版开发版已发布：%s ➡ 获取之物"}
+{"kind": "ui", "k": "✔️ newest dev build", "src": "✔️ neuester Dev-Build\u0000✔️ newest dev build", "t": "✔️ 最新版开发版"}
+{"kind": "ui", "k": "💬 Feedback: bug, idea, praise ➡", "src": "💬 Feedback: Bug, Idee, Lob ➡\u0000💬 Feedback: bug, idea, praise ➡", "t": "💬 反馈：报错、建议、赞美 ➡"}
