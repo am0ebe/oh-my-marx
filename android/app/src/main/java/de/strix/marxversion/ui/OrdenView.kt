@@ -92,22 +92,19 @@ fun OrdenSection(earned: Set<Orden>, hooked: Boolean) {
     HookNote(Hook.ORDEN, hooked)
     open?.let { o ->
         val have = o in earned
-        AlertDialog(
-            onDismissRequest = { open = null },
-            confirmButton = { TextButton(onClick = { open = null }) { Text("☭") } },
+        MarxDialog({ open = null },
+            title = if (have || !o.hidden) tr(o.title) else "???",
             icon = {
                 Box(Modifier.clip(RoundedCornerShape(16.dp)).background(Brush.verticalGradient(listOf(Color(0xFF2B1B4F), Color(0xFF7A1A14))))
                     .border(2.dp, if (have) Gold else Color(0xFFB9B2A6), RoundedCornerShape(16.dp)).padding(12.dp)) { Medal(o, have, 72.dp) }
             },
-            title = { Text(if (have || !o.hidden) tr(o.title) else "???", textAlign = TextAlign.Center) },
-            text = {
-                Text(when {
-                    have -> tr(o.how)
-                    o.hidden -> tr("Geheimer Orden. Lies weiter, dann findest du ihn.", "Secret medal. Keep reading and you'll find it.")
-                    else -> tr("Noch nicht verdient: ", "Not earned yet: ") + tr(o.how)
-                }, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
-            },
-        )
+        ) {
+            Text(when {
+                have -> tr(o.how)
+                o.hidden -> tr("Geheimer Orden. Lies weiter, dann findest du ihn.", "Secret medal. Keep reading and you'll find it.")
+                else -> tr("Noch nicht verdient: ", "Not earned yet: ") + tr(o.how)
+            }, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
+        }
     }
 }
 
@@ -115,11 +112,10 @@ fun OrdenSection(earned: Set<Orden>, hooked: Boolean) {
 @Composable
 fun NewOrdenDialog(new: List<Orden>, onDone: () -> Unit) {
     Confetti {}   // 1st = behind th dialog (removes itself aft 1.8 s)
-    AlertDialog(
-        onDismissRequest = onDone,
-        confirmButton = { TextButton(onClick = onDone) { Text(tr("Für die Sache! ☭", "For the cause! ☭")) } },
-        title = { Text(if (new.size == 1) tr("🎖️ Neuer Orden!", "🎖️ New medal!") else tr("🎖️ %d neue Orden!", "🎖️ %d new medals!").f(new.size)) },
-        text = {
+    MarxDialog(onDone,
+        title = if (new.size == 1) tr("🎖️ Neuer Orden!", "🎖️ New medal!") else tr("🎖️ %d neue Orden!", "🎖️ %d new medals!").f(new.size),
+        actions = { androidx.compose.material3.Button(onClick = onDone, modifier = Modifier.fillMaxWidth()) { Text(tr("Für die Sache!", "For the cause!"), fontSize = 16.sp) } },
+    ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
                 // medals on a dark "velvet cushion" (gold on th white dialog looked washed out @1107)
                 Column(horizontalAlignment = Alignment.CenterHorizontally,
@@ -137,6 +133,5 @@ fun NewOrdenDialog(new: List<Orden>, onDone: () -> Unit) {
                 Text(tr("Alle Orden: Mein Kapital", "All medals: My Capital"), fontSize = 12.sp,
                     color = MaterialTheme.colorScheme.secondary, modifier = Modifier.padding(top = 8.dp))
             }
-        },
-    )
+    }
 }

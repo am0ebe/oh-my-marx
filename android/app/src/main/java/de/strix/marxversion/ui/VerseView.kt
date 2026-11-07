@@ -218,7 +218,7 @@ fun VerseView(vm: AppVm, v: Verse, speaker: Speaker? = null, showActions: Boolea
                 placeholder = { Text(tr("Deine Randnotiz …", "Your margin note …")) },
                 keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences))
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-                TextButton(onClick = { editNote = false }) { Text("☭", fontSize = 18.sp) }  // ☭ = close (strix: use it more)
+                TextButton(onClick = { editNote = false }) { Text(tr("Abbrechen", "Cancel")) }  // inline, not a window ➡ words (@1107)
                 TextButton(onClick = { vm.note(v.id, draft); editNote = false }) { Text(tr("Speichern", "Save")) }
             }
         } else mark?.note?.let {
@@ -264,12 +264,9 @@ fun VerseView(vm: AppVm, v: Verse, speaker: Speaker? = null, showActions: Boolea
             lang != Lang.DE && note.en.isNotBlank() -> note.en
             else -> note.de
         }
-        AlertDialog(
-            onDismissRequest = { footnote = null },
-            confirmButton = { TextButton(onClick = { footnote = null }) { Text("☭", fontSize = 20.sp) } },
-            title = { Text(tr("Fußnote", "Footnote") + " $n") },
-            text = { Text(body, fontFamily = FontFamily.Serif) },
-        )
+        MarxDialog({ footnote = null }, title = tr("Fußnote", "Footnote") + " $n") {
+            Text(body, fontFamily = FontFamily.Serif, fontSize = 16.sp, lineHeight = 23.sp)
+        }
     }
 }
 

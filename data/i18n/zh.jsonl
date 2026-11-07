@@ -2071,3 +2071,6 @@
 {"kind": "ui", "k": "🎖️ %d new medals!", "src": "🎖️ %d neue Orden!\u0000🎖️ %d new medals!", "t": "🎖️ %d 枚新勋章！"}
 {"kind": "ui", "k": "All medals: My Capital", "src": "Alle Orden: Mein Kapital\u0000All medals: My Capital", "t": "全部勋章：我的资本"}
 {"kind": "ui", "k": "Shift done", "src": "Schicht erledigt\u0000Shift done", "t": "班次完成"}
+{"kind": "ui", "k": "Found", "src": "Gründen\u0000Found", "t": "创立"}
+{"kind": "ui", "k": "For the cause!", "src": "Für die Sache!\u0000For the cause!", "t": "为事业干杯！"}
+{"kind": "ui", "k": "Day complete!", "src": "Tag geschafft!\u0000Day complete!", "t": "今日任务完成！"}

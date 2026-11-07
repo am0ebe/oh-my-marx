@@ -149,7 +149,7 @@ fun KreiseScreen(vm: AppVm, open: (Int) -> Unit) {
             Button(onClick = {
                 busy = true; msg = null
                 vm.createKreis(newName, me) { c -> busy = false; if (c == null) msg = failed else { newName = ""; msg = created.f(c) } }
-            }, enabled = !busy && newName.isNotBlank() && me != null, modifier = Modifier.padding(start = 8.dp)) { Text("☭") }
+            }, enabled = !busy && newName.isNotBlank() && me != null, modifier = Modifier.padding(start = 8.dp)) { Text(tr("Gründen", "Found")) }  // ☭ = close only (@1107)
         }
         Gap(12)
         Text(tr("🔑 Mit Code beitreten", "🔑 Join with a code"), fontWeight = FontWeight.Bold)
@@ -258,7 +258,7 @@ fun KreisDetail(vm: AppVm, i: Int, back: () -> Unit) {
                     keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences))
                 if (busy) CircularProgressIndicator(Modifier.padding(start = 8.dp))
                 else Button(onClick = { busy = true; vm.kreisSay(k.room, draft) { ok -> busy = false; if (ok) draft = "" } },
-                    enabled = draft.isNotBlank(), modifier = Modifier.padding(start = 8.dp)) { Text("☭") }
+                    enabled = draft.isNotBlank(), modifier = Modifier.padding(start = 8.dp)) { Text(tr("Senden", "Send")) }
             }
             Row {
                 TextButton(onClick = { vm.loadKreis(k.room) }) { Text(tr("🔄 Aktualisieren", "🔄 Refresh")) }

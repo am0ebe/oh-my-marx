@@ -2034,3 +2034,7 @@
 {"kind": "ui", "k": "Save your chain!", "src": "Rette deine Kette!\u0000Save your chain!", "t": "আপনার শৃঙ্খল বাঁচান!"}
 {"kind": "ui", "k": "Start today!", "src": "Fang heute an!\u0000Start today!", "t": "আজই শুরু করুন!"}
 {"kind": "ui", "k": "%d more reading days to “%s”", "src": "noch %d Lesetage bis „%s“\u0000%d more reading days to “%s”", "t": "আরও %d পাঠের দিন লাগবে “%s” পর্যন্ত"}
+{"kind": "ui", "k": "Found", "src": "Gründen\u0000Found", "t": "প্রতিষ্ঠা করুন"}
+{"kind": "ui", "k": "For the cause!", "src": "Für die Sache!\u0000For the cause!", "t": "কারণের জন্য!"}
+{"kind": "ui", "k": "Day complete!", "src": "Tag geschafft!\u0000Day complete!", "t": "দিন শেষ!"}
+{"kind": "ui", "k": "Cancel", "src": "Abbrechen\u0000Cancel", "t": "বাতিল করুন"}

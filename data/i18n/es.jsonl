@@ -2072,3 +2072,6 @@
 {"kind": "ui", "k": "🎖️ %d new medals!", "src": "🎖️ %d neue Orden!\u0000🎖️ %d new medals!", "t": "🎖️ ¡%d nuevas medallas!"}
 {"kind": "ui", "k": "All medals: My Capital", "src": "Alle Orden: Mein Kapital\u0000All medals: My Capital", "t": "Todas las medallas: Mi Capital"}
 {"kind": "ui", "k": "Shift done", "src": "Schicht erledigt\u0000Shift done", "t": "Turno completado"}
+{"kind": "ui", "k": "Found", "src": "Gründen\u0000Found", "t": "Fundar"}
+{"kind": "ui", "k": "For the cause!", "src": "Für die Sache!\u0000For the cause!", "t": "¡Por la causa!"}
+{"kind": "ui", "k": "Day complete!", "src": "Tag geschafft!\u0000Day complete!", "t": "¡Día completado!"}

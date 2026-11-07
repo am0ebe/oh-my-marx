@@ -6,6 +6,7 @@ import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -91,20 +92,15 @@ fun Wheel(count: Int, value: Int, label: (Int) -> String, onChange: (Int) -> Uni
 fun TimeWheelDialog(hour: Int, minute: Int, onDismiss: () -> Unit, onPick: (Int, Int) -> Unit) {
     var h by remember { mutableIntStateOf(hour) }
     var m by remember { mutableIntStateOf(minute) }
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        confirmButton = { TextButton(onClick = { onPick(h, m) }) { Text("OK") } },
-        dismissButton = { TextButton(onClick = onDismiss) { Text("☭", fontSize = 22.sp, color = Red) } },  // ☭ = close (strix @1103)
-        text = {
-            // clocks read left➡right evywhere, also i Arabic
-            CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
-                // always 24 h: 2 wheels 00-23 : 00-59 (strix @1103: no AM/PM, even if th fon is set 2 12 h)
-                Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                    Wheel(24, h, { "%02d".format(it) }, { h = it }, Modifier.weight(1f))
-                    Text(":", fontSize = 24.sp, modifier = Modifier.width(12.dp), textAlign = TextAlign.Center)
-                    Wheel(60, m, { "%02d".format(it) }, { m = it }, Modifier.weight(1f))
-                }
+    MarxDialog(onDismiss, actions = { androidx.compose.material3.Button(onClick = { onPick(h, m) }) { Text("OK") } }) {
+        // clocks read left➡right evywhere, also i Arabic
+        CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+            // always 24 h: 2 wheels 00-23 : 00-59 (strix @1103: no AM/PM, even if th fon is set 2 12 h)
+            Row(Modifier.fillMaxWidth().padding(top = 28.dp), verticalAlignment = Alignment.CenterVertically) {
+                Wheel(24, h, { "%02d".format(it) }, { h = it }, Modifier.weight(1f))
+                Text(":", fontSize = 24.sp, modifier = Modifier.width(12.dp), textAlign = TextAlign.Center)
+                Wheel(60, m, { "%02d".format(it) }, { m = it }, Modifier.weight(1f))
             }
-        },
-    )
+        }
+    }
 }

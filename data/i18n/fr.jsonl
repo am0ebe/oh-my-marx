@@ -2034,3 +2034,7 @@
 {"kind": "ui", "k": "Save your chain!", "src": "Rette deine Kette!\u0000Save your chain!", "t": "Sauve ta chaîne !"}
 {"kind": "ui", "k": "Start today!", "src": "Fang heute an!\u0000Start today!", "t": "Commence aujourd'hui !"}
 {"kind": "ui", "k": "%d more reading days to “%s”", "src": "noch %d Lesetage bis „%s“\u0000%d more reading days to “%s”", "t": "encore %d jour(s) de lecture avant « %s »"}
+{"kind": "ui", "k": "Found", "src": "Gründen\u0000Found", "t": "Fonder"}
+{"kind": "ui", "k": "For the cause!", "src": "Für die Sache!\u0000For the cause!", "t": "Pour la cause !"}
+{"kind": "ui", "k": "Day complete!", "src": "Tag geschafft!\u0000Day complete!", "t": "Jour réussi !"}
+{"kind": "ui", "k": "Cancel", "src": "Abbrechen\u0000Cancel", "t": "Annuler"}

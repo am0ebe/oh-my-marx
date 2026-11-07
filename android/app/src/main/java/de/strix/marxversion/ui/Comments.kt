@@ -61,8 +61,12 @@ fun CommentsSheet(vm: AppVm, kap: String, page: Int?, onDismiss: () -> Unit) {
 
     ModalBottomSheet(onDismissRequest = onDismiss, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)) {
         Column(Modifier.fillMaxWidth().padding(horizontal = 16.dp).imePadding().navigationBarsPadding()) {
-            Text(tr("💬 Seite %s", "💬 Page %s").f(page?.toString() ?: "—") + "  ·  " + tr("Kap. %s", "Ch. %s").f(kap),
-                fontWeight = FontWeight.Bold, fontSize = 17.sp)
+            // ☭ close top-right, like evy window (MarxDialog) @1107
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(tr("💬 Seite %s", "💬 Page %s").f(page?.toString() ?: "—") + "  ·  " + tr("Kap. %s", "Ch. %s").f(kap),
+                    fontWeight = FontWeight.Bold, fontSize = 17.sp, modifier = Modifier.weight(1f))
+                CloseButton(onDismiss)
+            }
             Text(tr("Was denkst du? Frag, widersprich, erzähl aus deinem Alltag.", "What do you think? Ask, disagree, tell from your own life."),
                 fontSize = 12.sp, color = MaterialTheme.colorScheme.secondary)
             LazyColumn(Modifier.fillMaxWidth().heightIn(max = 420.dp).padding(vertical = 8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -104,7 +108,6 @@ fun CommentsSheet(vm: AppVm, kap: String, page: Int?, onDismiss: () -> Unit) {
             if (failed) Text(tr("⚠️ Ging nicht — Internet? Nochmal versuchen.", "⚠️ Didn't work — internet? Try again."), color = Red, fontSize = 12.sp)
             Text(tr("Eigenen Kommentar lange drücken = löschen · öffentlich für alle Mitlesenden", "Hold your own comment = delete · public to everyone reading along"),
                 fontSize = 10.sp, color = MaterialTheme.colorScheme.secondary, modifier = Modifier.padding(bottom = 8.dp))
-            TextButton(onClick = onDismiss, modifier = Modifier.align(Alignment.End)) { Text("☭", fontSize = 20.sp, color = Red) }
         }
     }
 }

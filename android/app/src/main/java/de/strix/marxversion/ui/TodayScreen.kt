@@ -301,11 +301,10 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
         Gap(40)
 
         if (celebrate) {
-            AlertDialog(
-                onDismissRequest = { celebrate = false; rankUp = null },
-                confirmButton = { TextButton(onClick = { celebrate = false; rankUp = null }) { Text("☭") } },
-                title = { Text(if (rankUp != null) tr("🏅 Stempelkarte voll!", "🏅 Stamp card full!") else tr("Tag geschafft! ☭", "Day complete! ☭")) },
-                text = {
+            if (rankUp != null) Confetti {}  // 🎉 full card = paper rain, 1st = behind th dialog
+            MarxDialog({ celebrate = false; rankUp = null },
+                title = if (rankUp != null) tr("🏅 Stempelkarte voll!", "🏅 Stamp card full!") else tr("Tag geschafft!", "Day complete!"),
+            ) {
                     Column {
                         rankUp?.let {
                             Text(tr("Neuer Rang:", "New rank:"))
@@ -322,9 +321,7 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
                         if (rankUp != null) HookNote(Hook.STAMPS, s.testMode)
                         HookNote(Hook.NEXT, s.testMode)
                     }
-                },
-            )
-            if (rankUp != null) Confetti {}  // 🎉 full card = paper rain on top
+            }
         }
     }
     }  // inner padded Column
@@ -482,7 +479,7 @@ fun CardDialog(
                 modifier = Modifier.weight(1f)) {
                 Icon(painterResource(R.drawable.ic_share), null, Modifier.size(20.dp)); Text("  " + tr("Teilen", "Share"), fontSize = 17.sp)
             }
-            TextButton(onClick = onDismiss) { Text("☭", fontSize = 24.sp, color = Red) }
+            CloseButton(onDismiss, Modifier.padding(start = 10.dp), size = 44.dp)
         } else
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly, verticalAlignment = Alignment.CenterVertically) {
             TextButton(onClick = { shareCard(ctx, bmp.asAndroidBitmap(), "${lang.quote(q)} — Karl Marx, $r\n$APP_NAME", shareTitle) }) {
@@ -494,7 +491,7 @@ fun CardDialog(
             CopyIcon("${lang.quote(q)}\n— Karl Marx, $r", fg)
             if (openChapter != null) TextButton(onClick = { openChapter(v.kap, v.id) }) { Text("📖") }
             if (onAmen != null) Button(onClick = onAmen) { Text(tr("Amen ☭", "Amen ☭")) }
-            else TextButton(onClick = onDismiss) { Text("☭", fontSize = 22.sp, color = if (fg == Color.White) fg else Red) }
+            else CloseButton(onDismiss, tint = if (fg == Color.White) fg else Red)
         }
     }
     if (full) {

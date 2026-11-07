@@ -2069,3 +2069,6 @@
 {"kind": "ui", "k": "🎖️ %d new medals!", "src": "🎖️ %d neue Orden!\u0000🎖️ %d new medals!", "t": "🎖️ %d وسام جديد!"}
 {"kind": "ui", "k": "All medals: My Capital", "src": "Alle Orden: Mein Kapital\u0000All medals: My Capital", "t": "جميع الوسامات: كِتَابي الرئيسي"}
 {"kind": "ui", "k": "Shift done", "src": "Schicht erledigt\u0000Shift done", "t": "الدورة انتهت"}
+{"kind": "ui", "k": "Found", "src": "Gründen\u0000Found", "t": "أسس"}
+{"kind": "ui", "k": "For the cause!", "src": "Für die Sache!\u0000For the cause!", "t": "من أجل القضية!"}
+{"kind": "ui", "k": "Day complete!", "src": "Tag geschafft!\u0000Day complete!", "t": "اليوم ناجح!"}
