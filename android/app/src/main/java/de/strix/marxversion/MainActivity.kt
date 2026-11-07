@@ -86,7 +86,7 @@ class MainActivity : ComponentActivity() {
             val s by vm.settings.collectAsStateWithLifecycle()
             val loaded by vm.loaded.collectAsStateWithLifecycle()
             val full by vm.full.collectAsStateWithLifecycle()
-            MarxTheme(s.lang, if (loaded) vm.content.tr(s.lang) else null, full) {
+            MarxTheme(s.lang, if (loaded) vm.content.tr(s.lang) else null, full?.takeIf { it.first == s.lang }?.second) {
                 if (!loaded) Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator() }
                 else App(vm)
             }

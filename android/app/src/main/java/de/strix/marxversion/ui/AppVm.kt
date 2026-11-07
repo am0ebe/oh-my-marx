@@ -208,19 +208,21 @@ class AppVm(app: Application) : AndroidViewModel(app) {
     /** 🆕 newer version on th download page (data/Update.kt) · checked once per app start */
     val update = MutableStateFlow<Update.Latest?>(null)
 
-    /** 📖 whole book i th cur lang (IT/ES/PT/ZH/AR) · null = DE/EN, o still loading (➡ EN meanwhile) */
-    private val _full = MutableStateFlow<Full?>(null)
-    val full: StateFlow<Full?> = _full
+    /** 📖 whole book i th LLM langs, paired w its lang (MainActivity only passes it on if th lang matches) · Full null = DE/EN
+     *  🐛 @1107 was: lang switch ➡ old book dropped ➡ EN shown while th new 2-5 MB parsed ➡ "switches 2 EN 1st"
+     *  now setLang loads th new book 1st, then flips th lang ➡ 1 jump straight 2 th picked lang */
+    private val _full = MutableStateFlow<Pair<Lang, Full?>?>(null)
+    val full: StateFlow<Pair<Lang, Full?>?> = _full
+    private suspend fun loadFull(l: Lang) {
+        if (_full.value?.first != l) _full.value = l to withContext(Dispatchers.IO) { content.full(l) }
+    }
 
     init {
         // parsing ~6 MB JSON on th main thread would freeze th UI ➡ IO dispatcher
         viewModelScope.launch(Dispatchers.IO) { content.load(); _loaded.value = true; refreshWidgets(app) }
-        // lang switch ➡ swap th full text (old one dropped 1st, so no wrong-lang paragraphs i between)
+        // app start (+ any lang change not via setLang) ➡ load th book 4 th saved lang · no-op if setLang alr did
         viewModelScope.launch {
-            settings.map { it.lang }.distinctUntilChanged().collectLatest { l ->
-                _full.value = null
-                _full.value = withContext(Dispatchers.IO) { content.full(l) }
-            }
+            settings.map { it.lang }.distinctUntilChanged().collectLatest { l -> loadFull(l) }
         }
         viewModelScope.launch { update.value = Update.check(app) }
     }
@@ -292,7 +294,7 @@ class AppVm(app: Application) : AndroidViewModel(app) {
     }
 
     fun startPlan(id: String) = viewModelScope.launch { marx.prefs.startPlan(id, today()) }
-    fun setLang(l: Lang) = viewModelScope.launch { marx.prefs.setLang(l); widgets() }
+    fun setLang(l: Lang) = viewModelScope.launch { loadFull(l); marx.prefs.setLang(l); widgets() }
     fun setTestMode(on: Boolean) = viewModelScope.launch { marx.prefs.setTestMode(on) }
     fun setPersona(p: Persona) = viewModelScope.launch { marx.prefs.setPersona(p.name) }
     fun setReadScale(s: Float) = viewModelScope.launch { marx.prefs.setReadScale(s.coerceIn(0.7f, 2f)) }

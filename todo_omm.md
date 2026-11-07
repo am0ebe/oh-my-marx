@@ -16,6 +16,20 @@
 - 🦠 QA stable 0.8.0 (shipped wo fon QA): Obtainium ➡ update ➡ lang IT/中文/عربي ➡ 📖 book + footnote + 🔊 · Signal link ➡ preview card?
 
 ## ‼️
+- 🦠 **QA notes @1107 (dev 1902)** — ✔️ 1+2 done i dev `2017`, rest open:
+  - ✔️ hi/bn book missing = full_xx.json not exported yet (changelog ran ahead) ➡ exported · ur book still translating ➡ changelog says "(Urdu: book coming)" til then
+  - ✔️ lang switch flashed EN 1st (new book parsed aft th switch) ➡ book loads 1st, then 1 jump (AppVm.loadFull)
+  - 🔊 voice: 1 sober dflt, rm th oth voices (cringe) · real voices = own pr (pr/audio, see 🔵) · must pronounce th lang
+  - 🐛 share btn lags ➡ y?
+  - 🐛 1st share: badge + animation fire while th share sheet is still open + even on cancel ➡ fire aft a real share (o drop th claim)
+  - 🎲 crisis-proof medal: needs more shakes (ppl shake a lot, too ez)
+  - 📖 Read = look like a book: physical pages, page-turn · chapter jump = flip many pages at once
+  - ⏰ can't turn off th daily verse ➡ 🔍 how bible apps etc time it: fixed ti · user-set · smart? · T: ready all day + nudge
+  - 🧩 widgets: rm evythg aft "omm" i th widget names/descr (streak color…) ➡ it shows, no need 2 write it
+  - 🏠 Home tab tap ➡ scroll 2 top (not remembered pos) · streak widget at th top
+  - ✂️ rm th "Mitlesen / read along" note
+  - ❓ name entry: 1st comment ask? dflt = random Marxist name (gender-equal)? ➡ then accounts? (name + Kreis later)
+  - 🔮 Marxoskop: mk it look + appealing · tiles w icons per topic, tappable
 - 🦠📣 send **scagent.de/omm** 2 2-3 friends (0.6.0 ppl need 1 manual update, banner only fr ≥0.7.0)
 - 📨⭐ **feedback** — phase 1 = links only, no new server (plan: notes.md § 📨)
   - ✔️ page: mail (fast) + GitHub issue link · Forgejo = code only (sign-up off ➡ no issues there)
