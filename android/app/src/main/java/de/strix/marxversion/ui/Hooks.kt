@@ -36,6 +36,10 @@ enum class Hook(val txt: Pair<String, String>) {
         "🪝 Endowed Progress — 2 Kapitel geschenkt, damit du dich näher am Ziel fühlst (Autowaschkarten-Studie: +82 % Abschluss).",
         "🪝 Endowed progress — 2 chapters for free so you feel closer to the goal (car-wash card study: +82 % completion).",
     )),
+    ORDEN(T(
+        "🪝 Belohnung des Selbst + Zielgradient (Hooked Kap. 4) — Orden kosten nichts und fühlen sich nach Leistung an. Je näher der nächste, desto schneller liest du. Marx würde sagen: Fetischcharakter der Medaille.",
+        "🪝 Reward of the self + goal gradient (Hooked ch. 4) — medals cost nothing and feel like achievement. The closer the next one, the faster you read. Marx would say: the fetish character of the medal.",
+    )),
     INVESTMENT(T(
         "🪝 Investment / IKEA-Effekt (Hooked Kap. 5) — jede Markierung macht die App für dich wertvoller. Deine Arbeit, vergegenständlicht.",
         "🪝 Investment / IKEA effect (Hooked ch. 5) — every highlight makes the app more valuable to you. Your labour, objectified.",

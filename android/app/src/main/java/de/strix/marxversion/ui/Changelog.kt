@@ -31,6 +31,7 @@ data class Release(val version: String, val date: String, val items: List<Pair<S
 val RELEASES = listOf(
     Release("0.9.0", "2026-11-06", listOf(
         T("🌍 6 neue Sprachen: Französisch, Russisch, Hindi, Bengalisch, Urdu, Indonesisch — das ganze Buch inklusive", "🌍 6 new languages: French, Russian, Hindi, Bengali, Urdu, Indonesian — the whole book included"),
+        T("🎖️ 23 Orden zum Verdienen — vom „Ersten Mehrwert“ bis „Hat's wirklich gelesen“, ein paar davon geheim (Mein Kapital)", "🎖️ 23 medals to earn — from “First surplus value” to “Actually read it”, a few of them secret (My Capital)"),
         T("🔥 Neue Streak-Karte: deine Woche auf einen Blick, „Rette deine Kette!“, Streak im roten Stern", "🔥 New streak card: your week at a glance, “Save your chain!”, streak in a red star"),
         T("☭ Amen: einfach die heutige Karte antippen (oder den großen roten Knopf)", "☭ Amen: just tap today's card (or the big red button)"),
         T("💥 Amen-Animation: Hammer und Sichel krachen zusammen", "💥 Amen animation: hammer and sickle smash together"),

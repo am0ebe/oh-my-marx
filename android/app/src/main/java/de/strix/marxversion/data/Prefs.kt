@@ -121,4 +121,16 @@ class Prefs(private val context: Context) {
     suspend fun startPlan(id: String, date: String) = context.store.edit {
         it[K.activePlan] = id; it[K.planStart] = date
     }
+
+    // 🎖️ Orden (logic/Orden.kt): th few things th DB doesn't alr know + which medals were alr announced
+    private object O {
+        val flags = stringSetPreferencesKey("orden_flags")   // "night" · "founder" · "invite" · "krise" · "sabbath"
+        val shares = intPreferencesKey("orden_shares")
+        val shown = stringSetPreferencesKey("orden_shown")   // announced (so "new medal!" pops once)
+    }
+    data class OrdenState(val flags: Set<String>, val shares: Int, val shown: Set<String>?)
+    val orden: Flow<OrdenState> = context.store.data.map { OrdenState(it[O.flags].orEmpty(), it[O.shares] ?: 0, it[O.shown]) }
+    suspend fun flag(f: String) = context.store.edit { it[O.flags] = it[O.flags].orEmpty() + f }
+    suspend fun shared() = context.store.edit { it[O.shares] = (it[O.shares] ?: 0) + 1 }
+    suspend fun ordenShown(ids: Set<String>) = context.store.edit { it[O.shown] = it[O.shown].orEmpty() + ids }
 }

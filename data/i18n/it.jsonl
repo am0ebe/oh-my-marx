@@ -2011,3 +2011,64 @@
 {"kind": "ui", "k": "Save your chain!", "src": "Rette deine Kette!\u0000Save your chain!", "t": "Salva la tua catena!"}
 {"kind": "ui", "k": "Start today!", "src": "Fang heute an!\u0000Start today!", "t": "Inizia oggi!"}
 {"kind": "ui", "k": "%d more reading days to “%s”", "src": "noch %d Lesetage bis „%s“\u0000%d more reading days to “%s”", "t": "ancora %d giorni di lettura fino a “%s”"}
+{"kind": "ui", "k": "Reading", "src": "Lesen\u0000Reading", "t": "Lettura"}
+{"kind": "ui", "k": "The book", "src": "Das Buch\u0000The book", "t": "Il Libro"}
+{"kind": "ui", "k": "Comrades", "src": "Genossen\u0000Comrades", "t": "Compagni"}
+{"kind": "ui", "k": "Secret", "src": "Geheim\u0000Secret", "t": "Segreto"}
+{"kind": "ui", "k": "First surplus value", "src": "Erster Mehrwert\u0000First surplus value", "t": "Primo plusvalore"}
+{"kind": "ui", "k": "Your first reading day.", "src": "Dein erster Lesetag.\u0000Your first reading day.", "t": "Il tuo primo giorno di lettura."}
+{"kind": "ui", "k": "Stakhanovite week", "src": "Stachanow-Woche\u0000Stakhanovite week", "t": "Settimana dello Stakhanov"}
+{"kind": "ui", "k": "Read 7 days in a row.", "src": "7 Tage in Folge gelesen.\u0000Read 7 days in a row.", "t": "Letto 7 giorni di fila."}
+{"kind": "ui", "k": "Five-year plan in 30 days", "src": "Fünfjahresplan in 30 Tagen\u0000Five-year plan in 30 days", "t": "Piano quinquennale in 30 giorni"}
+{"kind": "ui", "k": "30 reading days in total.", "src": "30 Lesetage insgesamt.\u000030 reading days in total.", "t": "30 giorni di lettura in totale."}
+{"kind": "ui", "k": "Continuous production", "src": "Ununterbrochene Produktion\u0000Continuous production", "t": "Produzione continua"}
+{"kind": "ui", "k": "Read 30 days in a row.", "src": "30 Tage in Folge gelesen.\u0000Read 30 days in a row.", "t": "Letto 30 giorni di fila."}
+{"kind": "ui", "k": "Hero of Labour", "src": "Held der Arbeit\u0000Hero of Labour", "t": "Eroe del Lavoro"}
+{"kind": "ui", "k": "100 reading days in total.", "src": "100 Lesetage insgesamt.\u0000100 reading days in total.", "t": "100 giorni di lettura in totale."}
+{"kind": "ui", "k": "Order of Capital", "src": "Orden des Kapitals\u0000Order of Capital", "t": "Ordine del Capitale"}
+{"kind": "ui", "k": "365 reading days. A whole year of surplus labour — for yourself.", "src": "365 Lesetage. Ein ganzes Jahr Mehrarbeit — für dich.\u0000365 reading days. A whole year of surplus labour — for yourself.", "t": "365 giorni di lettura. Un anno intero di pluslavoro — per te."}
+{"kind": "ui", "k": "Value-form veteran", "src": "Wertform-Veteran\u0000Value-form veteran", "t": "Veterano della forma valore"}
+{"kind": "ui", "k": "Read all of chapter 1. Respect.", "src": "Kapitel 1 komplett gelesen. Respekt.\u0000Read all of chapter 1. Respect.", "t": "Capitolo 1 letto tutto. Rispetto."}
+{"kind": "ui", "k": "The normal working day", "src": "Normalarbeitstag\u0000The normal working day", "t": "Giorno lavorativo normale"}
+{"kind": "ui", "k": "All of chapter 8: the working day.", "src": "Kapitel 8 komplett: der Arbeitstag.\u0000All of chapter 8: the working day.", "t": "Capitolo 8 completo: il giorno di lavoro."}
+{"kind": "ui", "k": "Dripping with blood and dirt", "src": "Blut- und schmutztriefend\u0000Dripping with blood and dirt", "t": "Zuppe di sangue e fango"}
+{"kind": "ui", "k": "All of chapter 24: so-called primitive accumulation.", "src": "Kapitel 24 komplett: die ursprüngliche Akkumulation.\u0000All of chapter 24: so-called primitive accumulation.", "t": "Capitolo 24 completo: l'accumulazione primitiva."}
+{"kind": "ui", "k": "Plan overfulfilled", "src": "Plan übererfüllt\u0000Plan overfulfilled", "t": "Piano superato"}
+{"kind": "ui", "k": "Finished a reading plan to its last day.", "src": "Einen Leseplan bis zum letzten Tag geschafft.\u0000Finished a reading plan to its last day.", "t": "Completato un piano di lettura fino all'ultimo giorno."}
+{"kind": "ui", "k": "My capital grows", "src": "Mein Kapital wächst\u0000My capital grows", "t": "Il mio capitale cresce"}
+{"kind": "ui", "k": "10 highlights, notes or bookmarks.", "src": "10 Markierungen, Notizen oder Lesezeichen.\u000010 highlights, notes or bookmarks.", "t": "10 evidenziature, note o segnalibri."}
+{"kind": "ui", "k": "Actually read it", "src": "Hat's wirklich gelesen\u0000Actually read it", "t": "L'ha davvero letto"}
+{"kind": "ui", "k": "All of Capital, vol. 1. Every paragraph.", "src": "Das ganze Kapital, Band 1. Jeder Absatz.\u0000All of Capital, vol. 1. Every paragraph.", "t": "Tutto il Capitale, vol. 1. Ogni paragrafo."}
+{"kind": "ui", "k": "Propagandist", "src": "Propagandist\u0000Propagandist", "t": "Propagandista"}
+{"kind": "ui", "k": "Shared your first verse card.", "src": "Deine erste Spruchkarte geteilt.\u0000Shared your first verse card.", "t": "Condiviso la tua prima cartolina di citazione."}
+{"kind": "ui", "k": "Agitprop department", "src": "Agitprop-Abteilung\u0000Agitprop department", "t": "Reparto agitprop"}
+{"kind": "ui", "k": "Shared 10 verse cards.", "src": "10 Spruchkarten geteilt.\u0000Shared 10 verse cards.", "t": "Condivise 10 cartoline di citazione."}
+{"kind": "ui", "k": "Comrade", "src": "Genosse\u0000Comrade", "t": "Compagno"}
+{"kind": "ui", "k": "In a reading circle.", "src": "In einem Lesekreis.\u0000In a reading circle.", "t": "In un circolo di lettura."}
+{"kind": "ui", "k": "Cell leader", "src": "Zellenleiter\u0000Cell leader", "t": "Capo cellula"}
+{"kind": "ui", "k": "Founded a reading circle.", "src": "Einen Lesekreis gegründet.\u0000Founded a reading circle.", "t": "Fondato un circolo di lettura."}
+{"kind": "ui", "k": "Agitator", "src": "Agitator\u0000Agitator", "t": "Agitatore"}
+{"kind": "ui", "k": "Invited someone to your reading circle.", "src": "Jemanden in deinen Lesekreis eingeladen.\u0000Invited someone to your reading circle.", "t": "Ha invitato qualcuno al tuo circolo di lettura."}
+{"kind": "ui", "k": "May Day", "src": "Erster Mai\u0000May Day", "t": "Primo maggio"}
+{"kind": "ui", "k": "Read on May 1st.", "src": "Am 1. Mai gelesen.\u0000Read on May 1st.", "t": "Letto il primo maggio."}
+{"kind": "ui", "k": "Karl's birthday", "src": "Karls Geburtstag\u0000Karl's birthday", "t": "Il compleanno di Carlo"}
+{"kind": "ui", "k": "Read on May 5th (*1818).", "src": "Am 5. Mai gelesen (*1818).\u0000Read on May 5th (*1818).", "t": "Letto il 5 maggio (*1818)."}
+{"kind": "ui", "k": "Fetish detox", "src": "Fetisch-Detox\u0000Fetish detox", "t": "Detossificazione del feticismo"}
+{"kind": "ui", "k": "Read on Black Friday instead of shopping.", "src": "Am Black Friday gelesen statt geshoppt.\u0000Read on Black Friday instead of shopping.", "t": "Letto il Venerdì Nero invece di fare shopping."}
+{"kind": "ui", "k": "Night shift", "src": "Nachtschicht\u0000Night shift", "t": "Turno di notte"}
+{"kind": "ui", "k": "Read between midnight and 4 am.", "src": "Zwischen Mitternacht und 4 Uhr gelesen.\u0000Read between midnight and 4 am.", "t": "Letto tra mezzanotte e le 4 del mattino."}
+{"kind": "ui", "k": "Kept the Sabbath", "src": "Sabbat gehalten\u0000Kept the Sabbath", "t": "Osservato il sabato"}
+{"kind": "ui", "k": "Used the Sabbath joker — rest is class struggle too.", "src": "Den Sabbat-Joker eingelöst — Ruhe ist auch Klassenkampf.\u0000Used the Sabbath joker — rest is class struggle too.", "t": "Usato il joker del sabato — anche il riposo è lotta di classe."}
+{"kind": "ui", "k": "Crisis-proof", "src": "Krisenfest\u0000Crisis-proof", "t": "Resistente alle crisi"}
+{"kind": "ui", "k": "Shook the phone and caused a crisis.", "src": "Das Handy geschüttelt und eine Krise ausgelöst.\u0000Shook the phone and caused a crisis.", "t": "Scosso il telefono e scatenato una crisi."}
+{"kind": "ui", "k": "🎖️ 23 medals to earn — from “First surplus value” to “Actually read it”, a few of them secret (My Capital)", "src": "🎖️ 23 Orden zum Verdienen — vom „Ersten Mehrwert“ bis „Hat's wirklich gelesen“, ein paar davon geheim (Mein Kapital)\u0000🎖️ 23 medals to earn — from “First surplus value” to “Actually read it”, a few of them secret (My Capital)", "t": "🎖️ 23 medaglie da guadagnare — dal «Primo plusvalore» al «L’ha davvero letto», alcune segrete (Il mio Capitale)"}
+{"kind": "ui", "k": "Send", "src": "Senden\u0000Send", "t": "Invia"}
+{"kind": "ui", "k": "🪝 Reward of the self + goal gradient (Hooked ch. 4) — medals cost nothing and feel like achievement. The closer the next one, the faster you read. Marx would say: the fetish character of the medal.", "src": "🪝 Belohnung des Selbst + Zielgradient (Hooked Kap. 4) — Orden kosten nichts und fühlen sich nach Leistung an. Je näher der nächste, desto schneller liest du. Marx würde sagen: Fetischcharakter der Medaille.\u0000🪝 Reward of the self + goal gradient (Hooked ch. 4) — medals cost nothing and feel like achievement. The closer the next one, the faster you read. Marx would say: the fetish character of the medal.", "t": "🪝 Ricompensa del sé + gradiente obiettivo (Hooked Cap. 4) — le medaglie non costano niente e danno l’effetto di un successo. Più sei vicino alla successiva, più leggi in fretta. Marx direbbe: il carattere feticistico della medaglia."}
+{"kind": "ui", "k": "🎖️ Medals  %d / %d", "src": "🎖️ Orden  %d / %d\u0000🎖️ Medals  %d / %d", "t": "🎖️ Medaglie %d / %d"}
+{"kind": "ui", "k": "Secret medal. Keep reading and you'll find it.", "src": "Geheimer Orden. Lies weiter, dann findest du ihn.\u0000Secret medal. Keep reading and you'll find it.", "t": "Medaglia segreta. Continua a leggere e la troverai."}
+{"kind": "ui", "k": "Not earned yet: ", "src": "Noch nicht verdient: \u0000Not earned yet: ", "t": "Ancora non guadagnato:"}
+{"kind": "ui", "k": "For the cause! ☭", "src": "Für die Sache! ☭\u0000For the cause! ☭", "t": "Per la causa! ☭"}
+{"kind": "ui", "k": "🎖️ New medal!", "src": "🎖️ Neuer Orden!\u0000🎖️ New medal!", "t": "🎖️ Nuova medaglia!"}
+{"kind": "ui", "k": "🎖️ %d new medals!", "src": "🎖️ %d neue Orden!\u0000🎖️ %d new medals!", "t": "🎖️ %d nuove medaglie!"}
+{"kind": "ui", "k": "All medals: My Capital", "src": "Alle Orden: Mein Kapital\u0000All medals: My Capital", "t": "Tutte le medaglie: Il mio Capitale"}
+{"kind": "ui", "k": "Shift done", "src": "Schicht erledigt\u0000Shift done", "t": "Turno finito"}

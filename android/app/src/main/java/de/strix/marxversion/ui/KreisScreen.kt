@@ -208,6 +208,7 @@ fun KreisDetail(vm: AppVm, i: Int, back: () -> Unit) {
                 Text(k.code, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold, fontSize = 18.sp, color = Red)
                 TextButton(onClick = {
                     ctx.startActivity(Intent.createChooser(Intent(Intent.ACTION_SEND).setType("text/plain").putExtra(Intent.EXTRA_TEXT, invite), inviteTitle))
+                    vm.flag("invite")   // 🎖️ Agitator
                 }) { Text(tr("📤 Einladen", "📤 Invite")) }
             }
             Gap(8)

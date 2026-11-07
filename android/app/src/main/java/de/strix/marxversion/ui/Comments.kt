@@ -99,7 +99,7 @@ fun CommentsSheet(vm: AppVm, kap: String, page: Int?, onDismiss: () -> Unit) {
                 else Button(onClick = {
                     busy = true; failed = false
                     vm.postComment(kap, page, draft, name ?: newName) { ok -> busy = false; if (ok) draft = "" else failed = true }
-                }, enabled = canSend, modifier = Modifier.padding(start = 8.dp)) { Text("☭") }
+                }, enabled = canSend, modifier = Modifier.padding(start = 8.dp)) { Text(tr("Senden", "Send")) }  // ☭ = close only (2× ☭ was confusing @1107)
             }
             if (failed) Text(tr("⚠️ Ging nicht — Internet? Nochmal versuchen.", "⚠️ Didn't work — internet? Try again."), color = Red, fontSize = 12.sp)
             Text(tr("Eigenen Kommentar lange drücken = löschen · öffentlich für alle Mitlesenden", "Hold your own comment = delete · public to everyone reading along"),

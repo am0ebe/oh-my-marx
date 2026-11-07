@@ -28,6 +28,7 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import de.strix.marxversion.R
+import de.strix.marxversion.MarxApp
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
@@ -161,10 +162,13 @@ fun shareCard(ctx: Context, bmp: Bitmap, text: String, chooserTitle: String) {
     val send = Intent(Intent.ACTION_SEND).apply {
         type = "image/png"
         putExtra(Intent.EXTRA_STREAM, uri)
-        putExtra(Intent.EXTRA_TEXT, text)
+        // 📣 evy shared card carries th short link (viral loop: card ➡ "what app is that?" ➡ link)
+        putExtra(Intent.EXTRA_TEXT, if ("scagent.de" in text) text else "$text · https://scagent.de/omm")
         addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
     }
     ctx.startActivity(Intent.createChooser(send, chooserTitle))
+    // 🎖️ Propagandist / Agitprop count (opening th sheet counts; Android doesn't tell us if it was sent)
+    (ctx.applicationContext as? MarxApp)?.let { app -> app.scope.launch { app.prefs.shared() } }
 }
 
 fun copyText(ctx: Context, text: String) {

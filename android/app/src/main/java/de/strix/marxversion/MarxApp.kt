@@ -14,6 +14,8 @@ class MarxApp : Application() {
     val content by lazy { ContentRepo(this) }
     val db by lazy { MarxDb.create(this) }
     val prefs by lazy { Prefs(this) }
+    /** fire-and-forget writes fr non-composable spots (shareCard counts 4 th 🎖️ Orden) */
+    val scope = kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.SupervisorJob() + kotlinx.coroutines.Dispatchers.IO)
 
     override fun onCreate() {
         super.onCreate()

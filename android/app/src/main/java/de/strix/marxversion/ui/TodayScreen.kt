@@ -155,7 +155,7 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
     val scope = rememberCoroutineScope()
     val roast: () -> Unit = {
         vm.content.verses.filter { it.polemic && it.quoteDe.isNotBlank() }.randomOrNull()?.let {
-            vm.addCard(CardItem(it, CardItem.Kind.KRISE)); kriseFx = true; scope.launch { scroll.animateScrollTo(0) }
+            vm.addCard(CardItem(it, CardItem.Kind.KRISE)); kriseFx = true; vm.flag("krise"); scope.launch { scroll.animateScrollTo(0) }
         }
     }
     val oracleCard: (Verse?) -> Unit = { v -> v?.let { vm.addCard(CardItem(it, CardItem.Kind.ORAKEL)); scope.launch { scroll.animateScrollTo(0) } } }
@@ -361,7 +361,7 @@ private fun Hero(days: List<DayLog>, feast: Feast?, dt: DayTime, hooked: Boolean
                 Text(if (st > 0) tr("%d Tage Lesekapital akkumuliert", "%d days of reading capital accumulated").f(st)
                     else tr("Neue Kette, neues Glück", "New chain, fresh start"), color = white.copy(alpha = 0.9f), fontSize = 13.sp)
                 Text(when {
-                    doneToday -> tr("Heute akkumuliert ✔", "Accumulated today ✔")
+                    doneToday -> tr("Schicht erledigt", "Shift done")   // ✓ lives i th week row · "akkumuliert" only once (@1107)
                     st > 0 -> tr("Rette deine Kette!", "Save your chain!")
                     else -> tr("Fang heute an!", "Start today!")
                 }, color = white, fontSize = 24.sp, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Serif, lineHeight = 28.sp)

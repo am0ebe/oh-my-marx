@@ -30,6 +30,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flowOn
+import de.strix.marxversion.logic.Orden
+import de.strix.marxversion.logic.Stats
+import de.strix.marxversion.logic.bestStreak
+import de.strix.marxversion.logic.streakInfo
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
@@ -154,7 +160,7 @@ class AppVm(app: Application) : AndroidViewModel(app) {
         repeat(3) {
             val code = Matrix.newCode()
             Matrix.createKreis(s, name.trim(), code)?.let { room ->
-                marx.prefs.addKreis(Kreis(room, code, name.trim())); loadKreis(room); return@launch done(code)
+                marx.prefs.addKreis(Kreis(room, code, name.trim())); marx.prefs.flag("founder"); loadKreis(room); return@launch done(code)
             }
         }
         done(null)
@@ -246,13 +252,37 @@ class AppVm(app: Application) : AndroidViewModel(app) {
 
     /** "Tag geschafft! ☭" */
     fun dayDone(planId: String, planDay: Int, verseIds: List<String>) = viewModelScope.launch {
+        nightCheck()
         marx.db.logs().day(DayLog(today(), planId, planDay))
         read(verseIds)
         widgets()
     }
 
+    // ── 🎖️ Orden (logic/Orden.kt): recomputed whenever reading/marks/circles/counters change ──
+    val orden: StateFlow<Set<Orden>> = combine(combine(days, _loaded) { d, _ -> d }, readIds, marks, kreise, marx.prefs.orden) { d, read, m, k, o ->
+        if (!content.loaded) return@combine emptySet()
+        val dates = d.map { java.time.LocalDate.parse(it.date) }.toSet()
+        val (st, rest) = streakInfo(d)
+        val chapters = content.chapters.map { it.kap }.filter { kap -> content.chapter(kap).let { v -> v.isNotEmpty() && v.all { it.id in read } } }.toSet()
+        val plansDone = content.plans.count { p -> d.filter { it.planId == p.id }.map { it.planDay }.distinct().size >= p.days.size }
+        Orden.earned(Stats(
+            dates = dates, streak = st, best = maxOf(st, bestStreak(dates)),
+            chaptersDone = chapters, bookDone = content.verses.all { it.id in read }, plansDone = plansDone,
+            marks = m.count { it.highlight != null || it.note != null || it.bookmark }, shares = o.shares, kreise = k.size,
+            flags = o.flags + if (rest.isNotEmpty()) setOf("sabbath") else emptySet(),
+        ))
+    }.flowOn(Dispatchers.Default).stateIn(viewModelScope, SharingStarted.Eagerly, emptySet())
+
+    /** earned but not announced yet ➡ "Neuer Orden!" dialog (MainActivity) */
+    val newOrden: StateFlow<List<Orden>> = combine(orden, marx.prefs.orden) { e, o -> e.filter { it.name !in o.shown.orEmpty() } }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+    fun ordenSeen(o: List<Orden>) = viewModelScope.launch { marx.prefs.ordenShown(o.map { it.name }.toSet()) }
+    fun flag(f: String) = viewModelScope.launch { marx.prefs.flag(f) }
+    private suspend fun nightCheck() { if (java.time.LocalTime.now().hour < 4) marx.prefs.flag("night") }
+
     /** "Amen ☭" on th Losung = th tiny habit: 1 verse read counts as a reading day (Fogg: ability > motivation) */
     fun amen(verseId: String) = viewModelScope.launch {
+        nightCheck()
         marx.db.logs().day(DayLog(today(), "losung", 0))
         read(listOf(verseId))
         popupDone()

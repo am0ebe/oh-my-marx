@@ -13,7 +13,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import de.strix.marxversion.ui.DevBlue
 import de.strix.marxversion.ui.IS_DEV
 import androidx.compose.foundation.layout.Box
@@ -160,20 +159,14 @@ private fun App(vm: AppVm) {
         topBar = {
             TopAppBar(
                 // tap Marx (or th name) = home
-                // 🧪 DEV app: Marx on a blue disc + "DEV" (= th launcher icon) ➡ nvr confuse it w th stable one
+                // 🧪 DEV app: Marx on a blue disc (= its launcher icon) ➡ nvr confuse it w th stable one
                 navigationIcon = {
                     Image(painterResource(R.mipmap.ic_marx_fg), contentDescription = tr("Heute", "Today"),
                         modifier = Modifier.padding(start = 4.dp).size(44.dp)
                             .then(if (IS_DEV) Modifier.background(DevBlue, CircleShape) else Modifier)
                             .clickable(onClick = home))
                 },
-                title = {
-                    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.clickable(onClick = home)) {
-                        Text(APP_NAME)
-                        if (IS_DEV) Text("DEV", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Color.White,
-                            modifier = Modifier.padding(start = 8.dp).background(DevBlue, RoundedCornerShape(6.dp)).padding(horizontal = 6.dp, vertical = 1.dp))
-                    }
-                },
+                title = { Text(APP_NAME, modifier = Modifier.clickable(onClick = home)) },   // DEV = blue disc only (@1107)
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.primary, titleContentColor = Color.White),
                 actions = {
                     if (s.testMode) TextButton(onClick = openHooked) { Text("🪝") }
@@ -225,6 +218,12 @@ private fun App(vm: AppVm) {
     LaunchedEffect(forcePopup) {
         if (forcePopup) { nav.go("today"); vm.homeJump.value++; vm.popupDone() }
     }
+
+    // 🎖️ new medal(s) ➡ 1 dialog · waits out th Amen BAM (~2.3 s) so they don't pile up
+    val newOrden by vm.newOrden.collectAsStateWithLifecycle()
+    var showOrden by remember { mutableStateOf<List<de.strix.marxversion.logic.Orden>>(emptyList()) }
+    LaunchedEffect(newOrden) { if (newOrden.isNotEmpty()) { kotlinx.coroutines.delay(2600); showOrden = newOrden } }
+    if (showOrden.isNotEmpty()) de.strix.marxversion.ui.NewOrdenDialog(showOrden) { vm.ordenSeen(showOrden); showOrden = emptyList() }
     }
 }
 

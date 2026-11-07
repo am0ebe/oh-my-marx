@@ -46,6 +46,9 @@ fun MineScreen(vm: AppVm, openChapter: (String, String) -> Unit) {
             Text(tr("Deine vergegenständlichte Lesearbeit. Unveräußerlich — Export kommt noch.",
                 "Your objectified reading labour. Inalienable — export coming."), fontSize = 12.sp, color = MaterialTheme.colorScheme.secondary)
             HookNote(Hook.INVESTMENT, s.testMode)
+            val orden by vm.orden.collectAsStateWithLifecycle()
+            OrdenSection(orden, s.testMode)
+            Gap(10)
             if (marks.isEmpty()) Text("\n" + tr("Noch nichts akkumuliert. Tipp auf einen Vers ➡ Markieren — ursprüngliche Akkumulation beginnt klein.",
                 "Nothing accumulated yet. Tap a verse ➡ Highlight — primitive accumulation starts small."))
         }
