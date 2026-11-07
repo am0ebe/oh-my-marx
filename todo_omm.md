@@ -3,37 +3,15 @@
   - 🚦 rule: no version bump / ship / big new feat til th current one had ≥1 QA round on th fon · big side-quests (voice, chat infra) ➡ own pr
 
 ## ⏳
-- ▶ **RESUME @1107 eos** — stable **0.8.0** live (tag v0.8.0, also on Forgejo) · dev `0.9.0-dev.1107.0503` on /dev · all committed + pushed (omm 4572d35+)
-  - ✔️ works (built + unit tsts green, ❌ fon-QA'd): Orden · new Hero · Amen tap + big btn · hammer/sickle impact (flash + sparks, no txt) · plan colours · `MarxDialog` (1 style, ☭ close top-right) · freeze fix (Confetti self-removes) · EN dflt
-  - ▶ **NEXT = 🐛 Obtainium DEV won't UPDATE** (fresh install via btn ✔️, update ❌ — tried A: regex `OhMyMarx-(.+)\.apk` + `$1` on th entry · B: delete + re-add via page btn w regex + `APKLinkHash`). Proven so far: bare URL = partial-APK-hash = identical across builds (1st 1 MB byte-equal) — but th regex fix ALSO fails ➡ cause still unknown
-    - nxt probes: get th entry's **latest ⬄ installed** strings fr strix (screenshot) · Obtainium logs (⚙️ ➡ logs) · is `versionDetection` reconciling installed (`0.9.0-dev.X`) 2 latest? · does th stable entry update (0.8.0 ➡ nxt)? · try Obtainium on an emulator (Android SDK alr on tow) = own tst rig · fallback: give DEV builds a **plain numeric version** (versionName `0.9.0.1107` / use versionCode as version) if Obtainium's version compare chokes on `-dev.MMDD.HHMM`
-    - code: `bin/lib.sh` `oblink()` · Obtainium src read: html.dart · apps_provider_lifecycle.dart · version_service.dart · pages/app.dart (btn = `installed != latest`)
-  - 👤 strix: Obtainium entry screenshot / logs · fon QA list (below) · native check hi/bn/ur/id glossary
-  - ⏳ bg on tow: `translate_full` chain (bn ~53 % @0505, ur after, then redo-bad + export) ➡ when done: `translate.py --only ui` (all 11) ➡ commit `data/i18n_full/{hi,bn,ur}.jsonl` + `assets/content/full_{hi,bn,ur}.json` ➡ deploy · ⚠️ `data/i18n_full/hi.jsonl` + `bn.jsonl` untracked on purpose (partial)
-  - ⚠️ traps: zsh i this shell: `tr` alias + bare `---`/`=====` print "not found" · no word-split o `$VAR` ➡ use `bash -c` 4 multi-cmd/bg chains · page meta "7 languages" ➡ fix at 0.9.0 ship
-- ✔️ @1106 **0.8.0 SHIPPED** = whole book i IT/ES/PT/ZH/AR (reader · footnotes · 🔊) · banner only 4 hand-installed APKs · dev `0.9.0-dev.1106.1211` on /dev
-  - ✔️ `ship.sh minor|patch|major` bumps itself · dev auto-labelled w NEXT version · docs [ref.md](ref.md) (wiki entry) + README § Versions
-  - ✔️ page: Stable | 🧪 Dev APK tabs · GitHub/Forgejo icons · share row + QR + OG preview card (`bin/og.png`) · `llms.txt` + JSON-LD
-  - ⚠️ shipped WITHOUT fon QA (🦠 asked) ➡ ▶ NEXT: 🦠 Obtainium ➡ update both apps ➡ QA: lang IT/中文/عربي ➡ 📖 book + tap a footnote + 🔊 · share a link i Signal ➡ preview card shows?
-  - ✔️ @1106 b: share panel · What's new newest-only (app + page) · EN dflt + DE 2nd · DEV top bar blue + "DEV" · annotated tags i ship.sh · 0.9.0 notes drafted · dev `0.9.0-dev.1106.1243`
-  - 🐛💬 DEV app didn't update via Obtainium (stable did) ➡ server apk ok (pkg + key checked) ➡ prob installed via adb earlier ➡ 🦠 tap Install i Obtainium / send error txt / o uninstall DEV once + reinstall via Obtainium
-  - ⏳ @1106 c: **6 new langs fr ru id hi bn ur** translating i th background on tow (~1 h UI/quotes + ~12 h whole book) ➡ logs `data/translate_6langs.log` · `data/i18n_full/run_6langs.log` ➡ when done: `translate.py --only ui` (all 11, picks up strings added mid-run) ➡ commit data + assets ➡ deploy · glossaries hi/bn/ur/id = best effort ➡ 👤 native check
-  - ✔️ @1106 c: Hero = Insight-Timer style (week row ✓/!/letters · "Rette deine Kette!" · red star nr · ! on today's stamp · no `☭···` row · rotating greetings) · Amen = tap today's card + big red btn · hammer + sickle BAM fx · plan colours · page Release|dev box + Forgejo 1st · dev `0.9.0-dev.1106.1742`
-  - ⚠️ page meta says "7 languages" ➡ update at 0.9.0 ship (lib.sh og/meta description)
-  - 💡 lang packs (only if APK > ~30 MB; now ~0.85 MB/lang compressed ➡ 13 langs ≈ 21 MB): ship EN+DE, other `full_xx.json.gz` on th VPS ➡ download on lang pick ➡ filesDir + sha256 fr version.json · offline-first caveat · plan i chat @1106
-  - ✔️ @1107 🎖️ **Orden** (🦠 "all yes"): 23 medals, `logic/Orden.kt` (pure, tested) + `ui/OrdenView.kt` (grid i Mein Kapital + "Neuer Orden!" popup 2.6 s aft Amen) · counters i Prefs (shares · flags · shown) · dev `0.9.0-dev.1107.0415`
-  - ✔️ @1107 fr · ru · id whole book i th app · hi/bn/ur still running (hi ~45 % @0415) ➡ chain ends w redo-bad + export ➡ then commit `data/i18n_full/{hi,bn,ur}.jsonl` + assets + deploy
-  - ▶ 🦠 QA dev: Orden grid + popup (existing users get a batch at once) · streak card · Amen tap · BAM · plans · FR/RU/ID book
-  - 💡 viral: in-app Spruchkarte share ➡ add `scagent.de/omm` under th card img? (check wh it has now)
-- ▶ **RESUME @1106** — repo **public** github.com/am0ebe/oh-my-marx (GPL-3.0) · Forgejo mirror `am0/oh-my-marx` · stable **0.7.0** live (tag v0.7.0) · dev `0.7.0-dev.1106.0007` on `/dev`
-  - ✔️ @1106 page: no ⬇️ heading · 3rd option "Or build it yourself" (GitHub | Forgejo tabs, issue link) · What's new = pane, 🤏, no emoji · footer = Feedback (mailto w version) + Share, `#feedback` anchor
-  - ✔️ @1106 `/dev` back = bare Obtainium source (no page) · `deploy.sh` ➡ /dev · `-a` = + adb · DEV app's update banner works again
-  - ✔️ @1106 `--redo-bad`: 243/272 length warns fixed (29 left, `--bad`) · warns total 696 ➡ 453 (rest = fn markers) · ✔️ `translate.py --only ui` ➡ i18n_*.json updated (3 new 0.7.0 strings) ➡ nxt dev build has them
-  - ✔️ all committed + pushed @1106 eos (issue forms live on GitHub) · 🔒 `priv/` = git-ignored scratch (scratch.md + img/) ➡ repo is PUBLIC, todo + notes too
-  - ⚠️ th dev on /dev (`.1106.0007`) was built BEFORE th UI-string translation ➡ `bin/deploy.sh` again 4 IT/ES/PT/ZH/AR
-  - ▶ NEXT: 🦠 Obtainium DEV ➡ pull 2 refresh (should update now) ➡ 🦠 QA (notes.md § 🧪, top 2 lines) ➡ 📣 friends · 🤖 smallest useful: Über "💬 omm@" ➡ tappable Feedback (‼️ below)
-  - 👤 blocked on strix: fon QA · friends feedback · KeePass keystore note · 29 leftover bad translations = `--bad` (accept o redo)
-  - ⚠️ traps: VPS = **ops-owned** (pr/ops/omm.md) ➡ omm nvr edits Caddy//srv, asks ops (msg `ops` session) · box's `/srv/omm-matrix/compose.yml` owns th synapse tag (fleet.py bumps) ➡ nvr rsync ours over it · `android/omm.properties` (reg token, git-ignored) needed 4 builds w comments/Kreise · screenshots of his fon only after asking (mem) · zsh aliases: `command mv/grep`, nvr bare `tr`
+- ▶ **RESUME @1107 eos2** — stable **0.8.0** live · dev `0.9.0-dev.1107.1302` on /dev · all committed + pushed 2 Forgejo (omm 06bc09b)
+  - ✔️ verified: Obtainium cause = th DEV entry on fon is on **defaults** (regex empty · Partial APK hash · reconcile off — strix screenshots 12:27 `/opt/pix_fon/pictures/Screenshots`) ➡ hash o identical 1st bytes = nvr updates. Our ➕ link's settings r fine (Obtainium import keeps them, src read) — th entry just wasn't made by it
+  - ▶ **NEXT = 👤 strix fixes th entry** ➡ A: delete entry ➡ fon browser `scagent.de/oh-my-marx/dev/` ➡ ➕ ➡ "Import app" dialog ✔️ · o B: by hand regex `OhMyMarx-(.+)\.apk` · group `$1` · Reconcile ON ➡ pull ➡ Update 2 `1302` ➡ then QA (below)
+    - no Import dialog on ➕ ➡ th deeplink is th bug (browser?) ➡ probe that nxt
+  - ⏳ bg on tow: `translate_full` chain (bn 56 % @1248, ur aft, then redo-bad + export) ➡ then `translate.py --only ui` (all 11 · also picks up th new DEV-status strings) ➡ commit `data/i18n_full/{hi,bn,ur}.jsonl` + `assets/content/full_{hi,bn,ur}.json` ➡ deploy
+  - ⚠️ traps: **remotes @1107** origin = Forgejo only · `gh` = GitHub fetch-only (push DISABLED) ➡ GitHub main frozen at d119ae6 til ops' push-mirror is live (ops pings) ➡ **don't `ship.sh` b4** (waits ≤120 s 4 th tag on gh, else fails) · `data/i18n_full/{hi,bn}.jsonl` untracked on purpose (partial) · zsh: `tr` alias, bare `===` · page meta "7 languages" ➡ fix at 0.9.0 ship
+  - 👤 strix: entry fix ☝️ · fon QA dev: Orden grid + popup · streak card · Amen tap · impact fx · plans · `MarxDialog` · FR/RU/ID book · DEV-status line i ⚙️ What's new · native check hi/bn/ur/id glossary · 29 bad translations (`--bad`) · KeePass keystore note
+  - ⚠️ VPS = **ops-owned** (pr/ops/omm.md) ➡ ask ops (msg `ops`), nvr edit Caddy//srv · `/srv/omm-matrix/compose.yml` owns synapse tag · `android/omm.properties` (reg token) needed 4 comments/Kreise · fon screenshots only aft asking (mem)
+- 🦠 QA stable 0.8.0 (shipped wo fon QA): Obtainium ➡ update ➡ lang IT/中文/عربي ➡ 📖 book + footnote + 🔊 · Signal link ➡ preview card?
 
 ## ‼️
 - 🦠📣 send **scagent.de/omm** 2 2-3 friends (0.6.0 ppl need 1 manual update, banner only fr ≥0.7.0)
@@ -58,6 +36,9 @@
 ## 📆
 
 ## 🔵
+- 🩹 /dev wo settings: hand-pasted URL (no ➕) ➡ Obtainium partial APK hash = same 4 evy build ➡ stuck · fix = mk th APK's 1st bytes differ per build (hacky) o tell testers "➕ only"
+- 💡 viral: in-app Spruchkarte share ➡ `scagent.de/omm` under th card img? (check wh it has now)
+- 💡 lang packs (only if APK > ~30 MB): ship EN+DE, oth `full_xx.json.gz` on VPS ➡ download on lang pick (sha256 fr version.json)
 - 💡 🦠 @1106: "can tk ludites passage >> 4 ai marxoscope..." (Luddites passage, Kap. 13 Maschinerie ➡ Marxoskop card about AI?) >> this pix up on AI as new tek where ppl are scared or it disrupts society with how tekk like trains/coal disrupted society 2 marx time. so it REALLY fits well. we shd build on this and emphasize this. while staying winky ;)
 - 🔊⭐ **realistic persona voices** ➡ own engine i **pr/audio** (reusable: omm · pod · …) · omm = 1st consumer · plan notes.md § voice 🗺️ (A Chatterbox pre-render on tow ➡ C distill 2 Piper ~20-60 MB) · ref voice = 🦠/consenting friend · 🚫 real Merz (impression = ok)
 - 🎨⭐ **design pass fr `pr/des/`** (17 screenshots o another app) ➡ themes · widgets · layouts ➡ 🤖 1st: go thru th shots w 🦠, list what 2 steal
@@ -76,6 +57,8 @@
 - 🦠 P3 habit test 2w · 🤖 aft QA: rm page fotos (boox proc step 8)
 
 ## ✔️
+- ✔️ @1107: Obtainium DEV cause found (entry on defaults) · DEV app honest build status (dev/version.json) · remotes split (origin = Forgejo, gh fetch-only) + ship.sh waits 4 mirror · Orden · Hero · Amen · MarxDialog · freeze fix · fr/ru/id whole book
+- ✔️ @1106: 0.8.0 shipped (whole book IT/ES/PT/ZH/AR) · ship.sh self-bump · page Stable|Dev tabs + share + OG card + llms.txt · `--redo-bad` 243/272 · repo public + `priv/`
 - ✔️ @1105: 🔓 repo public (GPL-3.0 · Hooked OCR out o tree + history ➡ `re/boox/hooked/pages/` · README all EN · renamed `oh-my-marx` · Forgejo mirror) · bup `pr/.old/bibleApp_pre-filter_1104.bundle` · ⚠️ GH keeps old SHAs reachable = accepted risk
 - ✔️ @1105: 🆕 update check (`data/Update.kt`) · release flow (ship.sh ➡ tag + GH release, `notes.py`) · page EN + What's new + footer btns + favicon · /dev rm'd (deploy = adb) · Migadu `omm@` + `hey@` · keystore symlink · 🌍 full Kapital ➡ 5 langs overnight · `pr/bible/` rm'd
 - ✔️ dev 0.7.0 @1104: 👥 Lesekreise (5th tab): gründen w 6-char code (no look-alikes) · beitreten by code · 📤 invite text · today ✔️ per person (Amen ➡ `de.ohmymarx.amen` event i evy Kreis) · 🎟️ shared card (day counts only if all read) · chat · leave · e2e tstd on live server w 2 throwaway users · 3 tests · ⚠️ not E2E-encrypted (said i th UI) · 0.6.0 shipped + scagent.de/omm short link (ops)
