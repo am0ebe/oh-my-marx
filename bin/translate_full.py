@@ -116,6 +116,9 @@ TERMS = {
 # plausible length of a translation relative to the German (chars) ➡ outside = "warn" (truncated / runaway)
 RATIO = {"it": (0.6, 1.8), "es": (0.6, 1.8), "pt": (0.6, 1.8), "zh": (0.15, 0.8), "ar": (0.45, 1.6),
          "fr": (0.6, 1.9), "ru": (0.55, 1.7), "hi": (0.55, 1.9), "bn": (0.5, 1.8), "ur": (0.5, 1.8), "id": (0.65, 2.0)}
+# tokens per OUTPUT char (Qwen3 tokenizer, measured @1107 via prompt_eval_count) ➡ output cap i ask()
+#   ur 0.67 (de 0.27) · unmeasured langs ➡ 1.0 = generous, still stops a runaway ~3× sooner than th 16k ctx
+TPC = {"ur": 0.67}
 
 STYLE = ("You are translating Karl Marx, 'Das Kapital' vol. 1 (4th German edition, 1890) into {lang}, paragraph by "
          "paragraph, for a reading app. Translate faithfully from the GERMAN original; the English (Moore/Aveling 1887) "
@@ -151,8 +154,13 @@ def ask(model, url, lang, batch):
     prompt = (STYLE.format(lang=LANGS[lang], glossary=glossary) +
               f"\n\nReturn a JSON object mapping each id to its {LANGS[lang]} translation only.\n\n" +
               json.dumps(payload, ensure_ascii=False, indent=1))
+    # 🐛 @1107: no output cap ➡ a runaway (model repeats itself) ran til th 16k ctx was full = 18m43s per call, then
+    #   "Unterminated string" + th same again on retry ➡ ~90 % o ur GPU time wasted · cap = th longest sane answer:
+    #   de chars × max length ratio × tokens per output char (TPC, measured) × 1.5 slack + JSON keys
+    de_chars = sum(len(de) for de, _ in batch.values())
+    cap = int(de_chars * RATIO[lang][1] * TPC.get(lang, 1.0) * 1.5) + 64 * len(batch) + 256
     body = {"model": model, "prompt": prompt, "format": schema, "stream": False, "keep_alive": "30m",
-            "options": {"temperature": 0.2, "num_ctx": 16384}}
+            "options": {"temperature": 0.2, "num_ctx": 16384, "num_predict": cap}}
     req = urllib.request.Request(url, data=json.dumps(body).encode(), headers={"Content-Type": "application/json"})
     r = json.load(urllib.request.urlopen(req, timeout=1800))
     out = json.loads(r["response"])
