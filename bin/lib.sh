@@ -50,7 +50,10 @@ oblink() {
     python3 - "$@" <<'PY'
 import json, sys, urllib.parse
 pkg, url, name = sys.argv[1:4]
-settings = {"versionExtractionRegEx": r"OhMyMarx-(.+)\.apk", "matchGroupToUse": "$1", "versionDetection": True}
+# fallback if th regex ever misses: hash th LINK (has th version i it), not th 1st bytes o th APK (identical across
+# our builds ➡ Obtainium's dflt "partial APK hash" nvr changes = "no update", proven @1107)
+settings = {"versionExtractionRegEx": r"OhMyMarx-(.+)\.apk", "matchGroupToUse": "$1", "versionDetection": True,
+            "defaultPseudoVersioningMethod": "APKLinkHash"}
 app = {"id": pkg, "url": url, "author": "am0ebe", "name": name, "preferredApkIndex": 0,
        "additionalSettings": json.dumps(settings), "overrideSource": None}
 print("obtainium://app/" + urllib.parse.quote(json.dumps(app), safe=""))

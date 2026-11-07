@@ -38,6 +38,8 @@ _entry page = click-thru start · details live i th linked files · design + dec
 - 🃏 link preview = `bin/og.png` (1200×630, OG + Twitter tags) ➡ th card Signal / Telegram / Mastodon show = th real viral lever
 - 🤖 agents: `llms.txt` + JSON-LD `MobileApplication` + `version.json` · static, no JS needed 4 content
 - `/dev/` = small page + Obtainium source 4 th DEV app (1 apk link)
+- ⚠️ **Obtainium trap** (@1107): pasting th bare URL ➡ HTML source w/o version regex ➡ "version" = hash o th APK's 1st bytes ➡ **identical across our builds** (checked: 1st 1 MB o 2 dev APKs byte-equal) ➡ nvr sees an update, Install greyed
+  - fix: version regex `OhMyMarx-(.+)\.apk` (+ match group `$1`) i th app's Obtainium settings · th page's ➕ buttons carry it (`oblink` i `bin/lib.sh`, + `APKLinkHash` fallback)
 
 ## ⭐ most important parts
 | part | Y it matters | doc |
