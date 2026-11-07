@@ -3,6 +3,14 @@
   - 🚦 rule: no version bump / ship / big new feat til th current one had ≥1 QA round on th fon · big side-quests (voice, chat infra) ➡ own pr
 
 ## ⏳
+- ▶ **RESUME @1107 eos** — stable **0.8.0** live (tag v0.8.0, also on Forgejo) · dev `0.9.0-dev.1107.0503` on /dev · all committed + pushed (omm 4572d35+)
+  - ✔️ works (built + unit tsts green, ❌ fon-QA'd): Orden · new Hero · Amen tap + big btn · hammer/sickle impact (flash + sparks, no txt) · plan colours · `MarxDialog` (1 style, ☭ close top-right) · freeze fix (Confetti self-removes) · EN dflt
+  - ▶ **NEXT = 🐛 Obtainium DEV won't UPDATE** (fresh install via btn ✔️, update ❌ — tried A: regex `OhMyMarx-(.+)\.apk` + `$1` on th entry · B: delete + re-add via page btn w regex + `APKLinkHash`). Proven so far: bare URL = partial-APK-hash = identical across builds (1st 1 MB byte-equal) — but th regex fix ALSO fails ➡ cause still unknown
+    - nxt probes: get th entry's **latest ⬄ installed** strings fr strix (screenshot) · Obtainium logs (⚙️ ➡ logs) · is `versionDetection` reconciling installed (`0.9.0-dev.X`) 2 latest? · does th stable entry update (0.8.0 ➡ nxt)? · try Obtainium on an emulator (Android SDK alr on tow) = own tst rig · fallback: give DEV builds a **plain numeric version** (versionName `0.9.0.1107` / use versionCode as version) if Obtainium's version compare chokes on `-dev.MMDD.HHMM`
+    - code: `bin/lib.sh` `oblink()` · Obtainium src read: html.dart · apps_provider_lifecycle.dart · version_service.dart · pages/app.dart (btn = `installed != latest`)
+  - 👤 strix: Obtainium entry screenshot / logs · fon QA list (below) · native check hi/bn/ur/id glossary
+  - ⏳ bg on tow: `translate_full` chain (bn ~53 % @0505, ur after, then redo-bad + export) ➡ when done: `translate.py --only ui` (all 11) ➡ commit `data/i18n_full/{hi,bn,ur}.jsonl` + `assets/content/full_{hi,bn,ur}.json` ➡ deploy · ⚠️ `data/i18n_full/hi.jsonl` + `bn.jsonl` untracked on purpose (partial)
+  - ⚠️ traps: zsh i this shell: `tr` alias + bare `---`/`=====` print "not found" · no word-split o `$VAR` ➡ use `bash -c` 4 multi-cmd/bg chains · page meta "7 languages" ➡ fix at 0.9.0 ship
 - ✔️ @1106 **0.8.0 SHIPPED** = whole book i IT/ES/PT/ZH/AR (reader · footnotes · 🔊) · banner only 4 hand-installed APKs · dev `0.9.0-dev.1106.1211` on /dev
   - ✔️ `ship.sh minor|patch|major` bumps itself · dev auto-labelled w NEXT version · docs [ref.md](ref.md) (wiki entry) + README § Versions
   - ✔️ page: Stable | 🧪 Dev APK tabs · GitHub/Forgejo icons · share row + QR + OG preview card (`bin/og.png`) · `llms.txt` + JSON-LD
