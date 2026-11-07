@@ -57,6 +57,20 @@ android {
     }
 }
 
+// 🔢 Obtainium trap fix (@1107): an Obtainium entry on DEFAULTS (URL pasted by hand, no version regex) "versions" th
+//   APK by a hash o its 1st 1024 bytes only (Obtainium lib/providers/apps_provider.dart checkPartialDownloadHash) =
+//   1st zip entry META-INF/…/app-metadata.properties + start o th library dex ➡ identical evy build ➡ nvr an update.
+//   stamp versionName + versionCode into that 1st entry ➡ its CRC i th zip header changes per build ➡ new hash ➡
+//   any entry updates (➕ link w regex o not) · check: bin/deploy.sh compares th 1st 1 KiB vs th live APK
+val ommStamp = "${android.defaultConfig.versionName} ${android.defaultConfig.versionCode}"
+tasks.matching { it.name.matches(Regex("write.+AppMetadata")) }.configureEach {
+    inputs.property("ommStamp", ommStamp)   // new stamp ➡ task reruns (not UP-TO-DATE / fr cache)
+    doLast {
+        outputs.files.asFileTree.filter { it.name == "app-metadata.properties" }
+            .forEach { it.appendText("ommBuild=$ommStamp\n") }
+    }
+}
+
 kotlin {
     // must match compileOptions ⬆ (Java + Kotlin bytecode target)
     compilerOptions { jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17) }

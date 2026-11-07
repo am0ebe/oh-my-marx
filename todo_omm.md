@@ -5,8 +5,10 @@
 ## ⏳
 - ▶ **RESUME @1107 eos2** — stable **0.8.0** live · dev `0.9.0-dev.1107.1302` on /dev · all committed + pushed 2 Forgejo (omm 06bc09b)
   - ✔️ verified: Obtainium cause = th DEV entry on fon is on **defaults** (regex empty · Partial APK hash · reconcile off — strix screenshots 12:27 `/opt/pix_fon/pictures/Screenshots`) ➡ hash o identical 1st bytes = nvr updates. Our ➕ link's settings r fine (Obtainium import keeps them, src read) — th entry just wasn't made by it
-  - ▶ **NEXT = 👤 strix fixes th entry** ➡ A: delete entry ➡ fon browser `scagent.de/oh-my-marx/dev/` ➡ ➕ ➡ "Import app" dialog ✔️ · o B: by hand regex `OhMyMarx-(.+)\.apk` · group `$1` · Reconcile ON ➡ pull ➡ Update 2 `1302` ➡ then QA (below)
-    - no Import dialog on ➕ ➡ th deeplink is th bug (browser?) ➡ probe that nxt
+  - ✔️ **Obtainium DEV solved 4 good @1107** (ref.md § trap): build stamps version into th APK's 1st zip entry ➡ even th defaults entry sees evy deploy · deploy.sh guard · live = `0.9.0-dev.1107.1902`
+  - ▶ **NEXT = 👤 strix, once**: Obtainium ➡ pull 2 refresh ➡ DEV shows `1902` ➡ **Update** (Obtainium = installer now ➡ later ones can bg-update) ➡ then QA (below)
+    - optional (real version names instead o hash): fon browser `scagent.de/oh-my-marx/dev/` ➡ ➕ ➡ Import (overwrites, no delete)
+    - still no update shown ➡ tell me th DEV entry's "latest version" string
   - ⏳ bg on tow: `translate_full` chain (bn 56 % @1248, ur aft, then redo-bad + export) ➡ then `translate.py --only ui` (all 11 · also picks up th new DEV-status strings) ➡ commit `data/i18n_full/{hi,bn,ur}.jsonl` + `assets/content/full_{hi,bn,ur}.json` ➡ deploy
   - ⚠️ traps: **remotes @1107** origin = Forgejo only · `gh` = GitHub fetch-only (push DISABLED) ➡ GitHub main frozen at d119ae6 til ops' push-mirror is live (ops pings) ➡ **don't `ship.sh` b4** (waits ≤120 s 4 th tag on gh, else fails) · `data/i18n_full/{hi,bn}.jsonl` untracked on purpose (partial) · zsh: `tr` alias, bare `===` · page meta "7 languages" ➡ fix at 0.9.0 ship
   - 👤 strix: entry fix ☝️ · fon QA dev: Orden grid + popup · streak card · Amen tap · impact fx · plans · `MarxDialog` · FR/RU/ID book · DEV-status line i ⚙️ What's new · native check hi/bn/ur/id glossary · 29 bad translations (`--bad`) · KeePass keystore note

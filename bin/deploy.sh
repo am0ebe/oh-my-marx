@@ -14,10 +14,11 @@ usage: bin/deploy.sh [-a|--adb] [-q|--quiet] [-h|--help|-?]
   🧪 dev build "Oh My Marx DEV", version <next release>-dev.MMDD.HHMM (newer evy minute), no commit needed
      next release = appVersion if not shipped yet, else th next minor (0.8.0 shipped ➡ 0.9.0-dev…) · nvr bump by hand
 
-  (default)   ➡ $WEB/dev/  ➡ Obtainium on th fon: pull 2 refresh ➡ Update
-              (once: Obtainium ➡ ＋ ➡ URL $WEB/dev/ ➡ a 2nd app next 2 th stable one)
+  (default)   ➡ $WEB/dev/  ➡ Obtainium on th fon: pull 2 refresh ➡ Update (o bg auto-update)
+              (once: fon browser $WEB/dev/ ➡ ➕ ➡ Import · o Obtainium ＋ ➡ paste th URL: works too since @1107)
   -a --adb    + install th same apk over wireless adb right now (home wifi, opens th app)
   -q --quiet  w -a: install only, don't open th app (u r using th fon)
+  --qr        only print a QR o $WEB/dev/ (fon camera ➡ page ➡ ➕) + th raw obtainium:// link, no build
 
   wireless adb once: fon ➡ Developer options ➡ Wireless debugging ➡ "Pair w code"
                      ➡ adb pair IP:PORT  (then it reconnects by itself via mDNS)
@@ -33,6 +34,7 @@ for a in "$@"; do
         -h|--help|-\?) usage; exit 0 ;;
         -a|--adb) adb=1 ;;
         -q|--quiet) launch=0 ;;
+        --qr) qrencode -t ansiutf8 -m 2 "$WEB/dev/"; echo "$WEB/dev/"; echo; oblink $PKG "$WEB/dev/" "$APP DEV"; exit 0 ;;
         *) usage; exit 1 ;;
     esac
 done
@@ -59,6 +61,13 @@ ver=$(sed -nE 's/.*"versionName": "([^"]+)".*/\1/p' android/app/build/outputs/ap
 out=$(mktemp -d); trap 'rm -rf "$out"' EXIT
 apk="$FILE-$ver.apk"
 cp android/app/build/outputs/apk/debug/app-debug.apk "$out/$apk"
+# 🔢 guard: an Obtainium entry on defaults only sees th hash o th 1st 1 KiB (build.gradle.kts § ommStamp) ➡ same as live = fon nvr updates
+live=$(curl -sf --max-time 10 "$WEB/dev/version.json" | sed -nE 's/.*"apk":"([^"]+)".*/\1/p') || true
+if [ -n "$live" ] && [ "$live" != "$apk" ]; then
+    if [ "$(curl -sf --max-time 20 -r 0-1023 "$WEB/dev/$live" | sha256sum)" = "$(head -c 1024 "$out/$apk" | sha256sum)" ]; then
+        echo "🐛 1st 1 KiB = same as live $live ➡ Obtainium (defaults) won't see an update · ommStamp broke? (build.gradle.kts)"; exit 1
+    fi
+fi
 page "$out" "$ver" "$apk" dev
 publish "$out" dev
 echo "✔️ $ver ➡ $WEB/dev/ · fon: Obtainium ➡ pull 2 refresh"
