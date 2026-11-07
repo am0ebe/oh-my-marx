@@ -12,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -20,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import de.strix.marxversion.BuildConfig
 import de.strix.marxversion.data.T
+import de.strix.marxversion.data.Update
 import de.strix.marxversion.data.f
 
 /**
@@ -103,8 +105,18 @@ fun ReleaseNotes() {
     val dev = "-dev." in mine
     // mirrors th download page (@1106): no emoji · newest version only · tap ➡ older ones
     Text(tr("Was ist neu", "What's new"), fontWeight = FontWeight.Bold)
-    if (dev) Text(tr("Dev-Build %s — neuer als jede Release, ungetestet", "Dev build %s — newer than any release, untested").f(mine),
-        fontSize = 12.sp, color = Red)
+    if (dev) {
+        // honest DEV status (@1107): "newer than any release" lied when Obtainium was stuck on an old build
+        val latest by produceState<Update.Latest?>(null) { value = Update.devLatest() }
+        val l = latest
+        Text(tr("Dev-Build %s — ungetestet", "Dev build %s — untested").f(mine), fontSize = 12.sp, color = Red)
+        when {
+            l == null -> {}
+            l.code > BuildConfig.VERSION_CODE -> Text(tr("⚠️ Neuerer Dev-Build da: %s ➡ Obtainium", "⚠️ Newer dev build out: %s ➡ Obtainium").f(l.version),
+                fontSize = 12.sp, color = Red, fontWeight = FontWeight.Bold)
+            else -> Text(tr("✔️ neuester Dev-Build", "✔️ newest dev build"), fontSize = 12.sp, color = MaterialTheme.colorScheme.secondary)
+        }
+    }
     (if (all) RELEASES else RELEASES.take(1)).forEach { r ->
         val here = mine == r.version || (dev && mine.startsWith(r.version))
         Column(Modifier.fillMaxWidth().padding(vertical = 4.dp)

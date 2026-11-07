@@ -36,15 +36,23 @@ object Update {
         return UPDATERS.none { by.startsWith(it) }
     }
 
+    /** 🧪 DEV app only: newest build on <web>/dev/ (null = offline / not DEV) · th app says honestly if it's stale (@1107) */
+    suspend fun devLatest(): Latest? = withContext(Dispatchers.IO) {
+        if (!BuildConfig.APPLICATION_ID.endsWith(".dev")) return@withContext null
+        runCatching { fetch(page + "dev/version.json") }.getOrNull()
+    }
+
+    private fun fetch(url: String): Latest {
+        val c = URL(url).openConnection() as HttpURLConnection
+        c.connectTimeout = 5000; c.readTimeout = 5000
+        c.setRequestProperty("Cache-Control", "no-cache")
+        val o = c.inputStream.bufferedReader().use { JSONObject(it.readText()) }
+        return Latest(o.getString("version"), o.optInt("code"))
+    }
+
     /** newer than what's installed ➡ Latest, else null */
     suspend fun check(ctx: Context): Latest? = withContext(Dispatchers.IO) {
         if (!wanted(ctx)) return@withContext null
-        runCatching {
-            val c = URL(page + "version.json").openConnection() as HttpURLConnection
-            c.connectTimeout = 5000; c.readTimeout = 5000
-            c.setRequestProperty("Cache-Control", "no-cache")
-            val o = c.inputStream.bufferedReader().use { JSONObject(it.readText()) }
-            Latest(o.getString("version"), o.optInt("code")).takeIf { it.code > BuildConfig.VERSION_CODE }
-        }.getOrNull()
+        runCatching { fetch(page + "version.json").takeIf { it.code > BuildConfig.VERSION_CODE } }.getOrNull()
     }
 }
