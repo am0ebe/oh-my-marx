@@ -70,11 +70,16 @@ page "$out" "$ver" "$apk"
 publish "$out"
 
 # 🏷️ annotated tag on th shipped commit (notes inside ➡ `git show v0.8.0`) · local + pushed
-# remotes @1107 (go/pr/ops/repos.md): origin = Forgejo · gh = GitHub (push-mirror fr Forgejo, once set up)
-#   ➡ tag goes 2 gh directly 2: `--verify-tag` needs it on GitHub now, not whenever th mirror syncs
+# remotes @1107 (go/pr/ops/repos.md): origin = Forgejo (only push target) · gh = GitHub, fetch-only
+#   GitHub gets code + tags via th Forgejo push-mirror (on evy push) ➡ wait til th tag lands there, `--verify-tag` needs it
 git tag -a "v$ver" -m "$APP $ver"$'\n\n'"$(bin/notes.py "$ver")"
 git push -q origin "v$ver"
-git push -q gh "v$ver"
+echo "⏳ waiting 4 th Forgejo ➡ GitHub mirror 2 carry v$ver (≤120 s)"
+deadline=$((SECONDS + 120))
+until git ls-remote --exit-code gh "refs/tags/v$ver" >/dev/null 2>&1; do
+    [ $SECONDS -lt $deadline ] || { echo "❌ v$ver not on GitHub aftr 120 s ➡ mirror down? (ops: repo mirror oh-my-marx) · page + Forgejo tag alr live, rerun only th gh release step"; exit 1; }
+    sleep 5
+done
 # GitHub release = th archive: evy version stays downloadable (bug i 0.8? grab 0.7) · notes = th in-app changelog
 gh release create "v$ver" "$out/$apk" --repo am0ebe/oh-my-marx --verify-tag --title "$APP $ver" \
     --notes "$(bin/notes.py "$ver")"$'\n\n'"Install: open $WEB/ on the phone, or download the APK below. Older versions: see all releases."
