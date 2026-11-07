@@ -15,6 +15,8 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -65,8 +67,11 @@ fun Confetti(onDone: () -> Unit) {
     val t = remember { Animatable(0f) }
     val bits = remember { List(110) { Bit(Random.nextFloat(), 0.6f + Random.nextFloat() * 0.9f, Random.nextFloat() - 0.5f,
         Random.nextFloat() * 720f - 360f, CONFETTI.random(), 8f + Random.nextFloat() * 10f) } }
-    LaunchedEffect(Unit) { t.animateTo(1f, tween(1800, easing = LinearEasing)); done() }
-    Dialog(onDismissRequest = {}, properties = DialogProperties(usePlatformDefaultWidth = false, decorFitsSystemWindows = false)) {
+    // 🐛 @1107: th overlay is a full-screen Dialog ➡ if it outlives th animation it eats evy touch (= "app frozen",
+    // happened w `Confetti {}` i th Orden popup) ➡ it removes itself, whatever th caller does
+    var alive by remember { mutableStateOf(true) }
+    LaunchedEffect(Unit) { t.animateTo(1f, tween(1800, easing = LinearEasing)); alive = false; done() }
+    if (alive) Dialog(onDismissRequest = {}, properties = DialogProperties(usePlatformDefaultWidth = false, decorFitsSystemWindows = false)) {
         (LocalView.current.parent as? DialogWindowProvider)?.window?.setDimAmount(0f)  // no grey scrim
         Canvas(Modifier.fillMaxSize()) {
             bits.forEach { b ->
@@ -120,10 +125,11 @@ fun KriseFlash(onDone: () -> Unit) {
 
 /**
  * ☭ Amen fx (strix @1106): hammer (fr th left) + sickle (fr th right) float in, breathing (bigger/smaller) ➡ rotate
- * open = wind-up ➡ SMASH into each other = crossed ☭ ➡ BAM (burst lines + ring + "BAM!" + buzz) ➡ fade.
+ * open = wind-up ➡ SMASH into each other = crossed ☭ ➡ impact (white flash + sparks + burst lines + ring + buzz, no txt) ➡ fade.
  * Played on Amen = reading day counted. ~2.3 s.
  */
 private const val HIT = 0.62f   // impact moment (0..1)
+private class Spark(val angle: Float, val speed: Float, val gold: Boolean)
 
 /** pose o 1 tool at time u: x offset (fraction o width, side = -1 hammer / +1 sickle) · y bob · rotation · scale */
 private fun pose(u0: Float, side: Float): FloatArray {
@@ -154,6 +160,7 @@ fun SickleSwoosh(onDone: () -> Unit) {
         done()
     }
     val gold = Color(0xFFE8B931); val red = Color(0xFFE53935)
+    val sparks = remember { List(36) { Spark((Random.nextFloat() * 2 * PI).toFloat(), 0.4f + Random.nextFloat() * 0.8f, Random.nextBoolean()) } }
     Overlay {
         Box(Modifier.fillMaxSize()) {
             Canvas(Modifier.fillMaxSize()) {
@@ -161,9 +168,15 @@ fun SickleSwoosh(onDone: () -> Unit) {
                 val c = Offset(size.width / 2, size.height * 0.42f)
                 val s = size.minDimension * 0.34f                                     // tool length
                 val fade = if (u > 0.86f) 1 - (u - 0.86f) / 0.14f else 1f
-                // 💥 BAM burst behind th tools
+                // 💥 impact burst behind th tools (no "BAM!" txt @1107: just th explosion)
                 if (u >= HIT) {
                     val q = (u - HIT) / (1 - HIT)
+                    if (q < 0.12f) drawCircle(Color.White.copy(alpha = 0.55f * (1 - q / 0.12f)), radius = s * 2.2f, center = c)   // flash
+                    sparks.forEach { sp ->                                                                                  // sparks fly out
+                        val r = s * (0.3f + sp.speed * 2.2f * q)
+                        val p = c + Offset(cos(sp.angle) * r, sin(sp.angle) * r + q * q * s * 0.6f)   // + a bit o gravity
+                        drawCircle(if (sp.gold) gold else red, radius = s * 0.035f * (1 - q) + 1f, center = p, alpha = 1 - q)
+                    }
                     drawCircle(red.copy(alpha = 0.5f * (1 - q)), radius = s * (0.4f + 1.4f * q), center = c, style = Stroke(s * 0.06f * (1 - q) + 1f))
                     for (k in 0 until 14) {
                         val a = (k * 2 * PI / 14 + 0.2).toFloat()
@@ -183,15 +196,6 @@ fun SickleSwoosh(onDone: () -> Unit) {
                         sickle(s, gold, a * fade)
                     }
                 }
-            }
-            if (t.value >= HIT) {
-                val q = (t.value - HIT) / (1 - HIT)
-                Text("BAM!", color = red, fontSize = 54.sp, fontWeight = FontWeight.Black,
-                    modifier = Modifier.align(Alignment.Center).graphicsLayer {
-                        translationY = -260f; rotationZ = -8f                         // above th crossed tools
-                        val sc = if (q < 0.15f) lerpF(0.3f, 1.3f, q / 0.15f) else lerpF(1.3f, 1f, ((q - 0.15f) / 0.3f).coerceAtMost(1f))
-                        scaleX = sc; scaleY = sc; alpha = if (q > 0.7f) 1 - (q - 0.7f) / 0.3f else 1f
-                    })
             }
         }
     }

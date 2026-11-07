@@ -41,6 +41,22 @@ EOF
 ico() { sed -e 's/<title>[^<]*<\/title>//' -e 's/<svg /<svg class="ic" aria-hidden="true" /' "bin/icons/$1.svg"; }
 enc() { python3 -c 'import sys, urllib.parse; print(urllib.parse.quote(sys.argv[1], safe=""))' "$1"; }
 
+# ➕ Obtainium "add app" link WITH settings (@1107): plain obtainium://add/URL ➡ HTML source w/o a version regex =
+#   no version detection, only an APK hash ➡ breaks once th app was installed by hand/adb ("shows new version, can't
+#   install"). th regex reads th version fr th file name (OhMyMarx-0.9.0-dev.1107.0415.apk) = exactly th installed
+#   versionName ➡ Obtainium compares real versions. Format = Obtainium's own export (lib/pages/apps.dart).
+#   oblink PKG URL NAME
+oblink() {
+    python3 - "$@" <<'PY'
+import json, sys, urllib.parse
+pkg, url, name = sys.argv[1:4]
+settings = {"versionExtractionRegEx": r"OhMyMarx-(.+)\.apk", "matchGroupToUse": "$1", "versionDetection": True}
+app = {"id": pkg, "url": url, "author": "am0ebe", "name": name, "preferredApkIndex": 0,
+       "additionalSettings": json.dumps(settings), "overrideSource": None}
+print("obtainium://app/" + urllib.parse.quote(json.dumps(app), safe=""))
+PY
+}
+
 # shared look (stable page + /dev/) · tabs = CSS-only (radio + :checked), no JS
 CSS='body{font:17px/1.5 system-ui,sans-serif;max-width:34em;margin:2em auto;padding:0 16px;background:#1d1230;color:#f4ead8}
 a.b,a.o,a.s{display:block;text-align:center;padding:.9em;border-radius:12px;text-decoration:none;font-weight:700;margin:1em 0}
@@ -91,7 +107,7 @@ page() {
 <p>Test build of what's coming next, for testers and contributors. It installs as a <b>separate app</b> ("Oh My Marx DEV")
 next to the normal one, with its own data. Can break. Normal install: <a href="../">$WEB/</a></p>
 <a class="b" href="$apk">⬇️ Download DEV $ver · ${mb} MB</a>
-<a class="o" href="obtainium://add/$WEB/dev/">➕ Follow dev builds in Obtainium</a>
+<a class="o" href="$(oblink de.strix.marxversion.dev "$WEB/dev/" "$APP DEV")">➕ Follow dev builds in Obtainium</a>
 <p><small>$(date '+%F %H:%M') · sha256 ${sha:0:16}… · bugs: <a href="$SRC/issues/new/choose">issues</a></small></p>
 EOF
         return
@@ -159,8 +175,8 @@ and a Hooked mode that confesses every habit trick the app plays on you. In Engl
 <h2>1. Install with Obtainium <small>(recommended: updates itself)</small></h2>
 <ol><li>Get <a href="https://github.com/ImranR98/Obtainium/releases/latest">Obtainium</a> (free, open source app updater)</li>
 <li>Tap <b>➕ Add to Obtainium</b> below ➡ <b>Add</b> ➡ <b>Install</b></li></ol>
-<a class="o" href="obtainium://add/$WEB/">➕ Add to Obtainium</a>
-<p><small>Button does nothing? In Obtainium tap ＋ and paste <code>$WEB/</code></small></p>
+<a class="o" href="$(oblink de.strix.marxversion "$WEB/" "$APP")">➕ Add to Obtainium</a>
+<p><small>Button does nothing? In Obtainium tap ＋ and paste <code>$WEB/</code>, and under <i>Version string extraction regular expression</i> enter <code>OhMyMarx-(.+)\.apk</code></small></p>
 <h2>2. Or download the APK</h2>
 <a class="b" href="$apk">⬇️ Download $APP $ver · ${mb} MB</a>
 <ol><li>Tap the download ➡ allow installing from this source (once) ➡ <b>Install</b></li>
@@ -172,8 +188,8 @@ and a Hooked mode that confesses every habit trick the app plays on you. In Engl
 <h2>1. Install with Obtainium <small>(updates itself)</small></h2>
 <ol><li>Get <a href="https://github.com/ImranR98/Obtainium/releases/latest">Obtainium</a></li>
 <li>Tap <b>➕ Add to Obtainium</b> below ➡ <b>Add</b> ➡ <b>Install</b></li></ol>
-<a class="o" href="obtainium://add/$WEB/dev/">➕ Add to Obtainium</a>
-<p><small>Button does nothing? In Obtainium tap ＋ and paste <code>$WEB/dev/</code></small></p>
+<a class="o" href="$(oblink de.strix.marxversion.dev "$WEB/dev/" "$APP DEV")">➕ Add to Obtainium</a>
+<p><small>Button does nothing? In Obtainium tap ＋ and paste <code>$WEB/dev/</code>, and under <i>Version string extraction regular expression</i> enter <code>OhMyMarx-(.+)\.apk</code></small></p>
 <h2>2. Or download the APK</h2>
 <a class="b" id="dv" href="dev/">⬇️ Download latest dev build</a>
 <ol><li>Same steps as a release: allow this source (once) ➡ <b>Install</b></li>
