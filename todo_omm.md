@@ -18,7 +18,7 @@
 - 📨⭐ **feedback** — phase 1 = links only, no new server (plan: notes.md § 📨)
   - ✔️ page: mail (fast) + GitHub issue link · Forgejo = code only (sign-up off ➡ no issues there)
   - ✔️ GitHub: issue forms 🐛 + 💡 + "no account? mail" (`.github/ISSUE_TEMPLATE/`, live aft push) · labels `needs-triage` `from-app`
-  - 🤖📦 app ⚙️ ➡ Über: "💬 omm@" = plain txt now ➡ tappable "💬 Feedback" ➡ opens `scagent.de/oh-my-marx/#feedback` (o mailto w version + fon prefilled) · 🤏 change, next dev
+  - ✔️ app ⚙️ ➡ Über: tappable "💬 Feedback" ➡ `Update.page + #feedback` (MineScreen.kt, compiles) @1107 · ⏳ i nxt dev deploy · new string ➡ `translate.py --only ui` (queued aft chain)
   - 🤖🛠️ `/triage` skill: `gh issue list -l needs-triage` + Migadu inbox ➡ label · dedupe · draft reply · mail-feedback ➡ `gh issue create -l from-app` (reworded, no names)
   - 🔵 phase 2 (aft QA rounds): in-app form ➡ `POST /feedback` (omm_api) ➡ priv inbox ➡ triage · CONTRIBUTING · CI
 - 📦⭐ **full txt IT/ES/PT/ZH/AR** (✔️ translated · not i th app yet · how + tst: notes.md § 🌍)

@@ -172,7 +172,12 @@ fun SettingsScreen(vm: AppVm, askNotifPermission: () -> Unit) {
         Gap(6)
         Text(tr("🤖 Stolz gevibecodet von einem Zentauren: am0ebe (Mensch, will) + Claude Opus 5.5 in Claude Code (Anthropic, tippt). Übersetzungen: Qwen3, lokal auf einer RTX 3090 Ti. Entfremdete Arbeit, vollautomatisiert. Die Produktionsmittel gehören trotzdem uns.",
             "🤖 Proudly vibe-coded by a centaur: am0ebe (human, wants) + Claude Opus 5.5 in Claude Code (Anthropic, types). Translations: Qwen3, local on an RTX 3090 Ti. Alienated labour, fully automated. The means of production are still ours."), fontSize = 13.sp)
-        Text("💬 omm@scagent.de", fontSize = 13.sp)
+        val ctx = androidx.compose.ui.platform.LocalContext.current
+        // 📨 page § feedback = mail (version prefilled) + GitHub issue forms · bin/lib.sh page()
+        TextButton(onClick = { runCatching { ctx.startActivity(android.content.Intent(android.content.Intent.ACTION_VIEW,
+            android.net.Uri.parse(de.strix.marxversion.data.Update.page + "#feedback"))) } }) {
+            Text(tr("💬 Feedback: Bug, Idee, Lob ➡", "💬 Feedback: bug, idea, praise ➡"), fontSize = 13.sp)
+        }
         Gap(6)
         // 📜 sources ⬄ what we (app / LLM) put on top · keep i sync w README.md § Sources
         Gap(6)
