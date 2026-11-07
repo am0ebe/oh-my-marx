@@ -13,7 +13,9 @@
   - ✔️ @1106 c: Hero = Insight-Timer style (week row ✓/!/letters · "Rette deine Kette!" · red star nr · ! on today's stamp · no `☭···` row · rotating greetings) · Amen = tap today's card + big red btn · hammer + sickle BAM fx · plan colours · page Release|dev box + Forgejo 1st · dev `0.9.0-dev.1106.1742`
   - ⚠️ page meta says "7 languages" ➡ update at 0.9.0 ship (lib.sh og/meta description)
   - 💡 lang packs (only if APK > ~30 MB; now ~0.85 MB/lang compressed ➡ 13 langs ≈ 21 MB): ship EN+DE, other `full_xx.json.gz` on th VPS ➡ download on lang pick ➡ filesDir + sha256 fr version.json · offline-first caveat · plan i chat @1106
-  - 🎮 badges / Orden (Tractive-style, 🦠 imgs `img/IMG_20261104_*`): plan i chat @1106 ➡ 🦠 go/no-go b4 code
+  - ✔️ @1107 🎖️ **Orden** (🦠 "all yes"): 23 medals, `logic/Orden.kt` (pure, tested) + `ui/OrdenView.kt` (grid i Mein Kapital + "Neuer Orden!" popup 2.6 s aft Amen) · counters i Prefs (shares · flags · shown) · dev `0.9.0-dev.1107.0415`
+  - ✔️ @1107 fr · ru · id whole book i th app · hi/bn/ur still running (hi ~45 % @0415) ➡ chain ends w redo-bad + export ➡ then commit `data/i18n_full/{hi,bn,ur}.jsonl` + assets + deploy
+  - ▶ 🦠 QA dev: Orden grid + popup (existing users get a batch at once) · streak card · Amen tap · BAM · plans · FR/RU/ID book
   - 💡 viral: in-app Spruchkarte share ➡ add `scagent.de/omm` under th card img? (check wh it has now)
 - ▶ **RESUME @1106** — repo **public** github.com/am0ebe/oh-my-marx (GPL-3.0) · Forgejo mirror `am0/oh-my-marx` · stable **0.7.0** live (tag v0.7.0) · dev `0.7.0-dev.1106.0007` on `/dev`
   - ✔️ @1106 page: no ⬇️ heading · 3rd option "Or build it yourself" (GitHub | Forgejo tabs, issue link) · What's new = pane, 🤏, no emoji · footer = Feedback (mailto w version) + Share, `#feedback` anchor
