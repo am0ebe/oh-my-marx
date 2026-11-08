@@ -50,6 +50,7 @@
 ## 📆
 
 ## 🔵
+- 🤖 🩹 **lint baseline** (CI @1108, `android/app/lint-baseline.xml`): 4 err known ➡ fix + `./gradlew updateLintBaseline` · `LosungTile.kt:25` deprecated `startActivityAndCollapse(Intent)` (false alarm: SDK<34 branch only ➡ `@SuppressLint("StartActivityAndCollapseDeprecated")`) · `ReadScreen.kt:197` unused BoxWithConstraints scope · `app_name` not translated "en" ×2 (➡ `translatable="false"`) · + 29 warn
 - 📄 **README ⬄ scagent.de/omm out o sync** ➡ README mirrors page (Obtainium 1st ➡ direct DL ➡ src Forgejo + GH) · rm iPhone line (o say: not planned, hard + 💰) · 🔑 T: 1 SSOT ➡ gen both (md + html) = pattern 4 ALL docs (wiki · kb · pr scaffold) ⬄ kb
 - 🎮 gamify: Tamagotchi-style Marx avatar + xp · starts weak/fragile ➡ fit on streak · pick ur avatar · xfer 2 oth apps (cali!)
 - 🎄 holiday imgs/msgs: + political holidays + remembrance days, ~evy 1-2 w (Marx as Santa…) ⬄ merge w "Feiertage 2" below
