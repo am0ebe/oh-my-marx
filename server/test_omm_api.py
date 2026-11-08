@@ -9,7 +9,7 @@ import urllib.error
 import urllib.request
 
 sys.path.insert(0, os.path.dirname(__file__))
-import omm_api  # noqa: E402
+import omm_api
 
 
 class Api(unittest.TestCase):
@@ -66,7 +66,7 @@ class Api(unittest.TestCase):
     def test_rejects_junk(self):
         self.assertEqual(self.post("/v1/read", {"token": "short", "keys": ["p:1"]})[0], 400)
         self.assertEqual(self.post("/v1/read", {"token": self.A, "keys": ["DROP TABLE"]})[0], 400)
-        self.assertEqual(self.post("/v1/read", {"token": self.A, "keys": ["p:%d" % i for i in range(30)]})[0], 400)
+        self.assertEqual(self.post("/v1/read", {"token": self.A, "keys": [f"p:{i}" for i in range(30)]})[0], 400)
         self.assertEqual(self.post("/v1/nope", {"token": self.A})[0], 404)
 
     def test_rate_limit(self):

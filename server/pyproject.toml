@@ -1,0 +1,3 @@
+# CI cfg only (am0/ci app.yml reads it: bandit -c pyproject.toml) · omm_api = stdlib, nothing 2 install
+[tool.bandit]
+exclude_dirs = ["test_omm_api.py"]   # tsts hit a local throwaway server w fake tokens

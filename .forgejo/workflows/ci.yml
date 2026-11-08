@@ -1,0 +1,16 @@
+# CI — shared gates fr am0/ci (go/pr/ops/apps_platform.md P1) · @261108 · runs on th VPS runner
+#   server/  = omm-api: gitleaks · ruff · bandit · pip-audit · pytest+cov · img canary + trivy
+#   android/ = gradle lint (only errs NOT i app/lint-baseline.xml) + unit tsts + release build
+#              verify only: no reg token, throwaway key ➡ th CI apk is nvr shipped (bin/ship.sh stays manual)
+# red ➡ ntfy alerts · log: `cilog` (ops)
+name: ci
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  ci:
+    uses: am0/ci/.forgejo/workflows/app.yml@android
+    with: {name: omm, dir: server, req: requirements-dev.txt, src: ".", cov: 85, image: true, android: android}
+    secrets: inherit

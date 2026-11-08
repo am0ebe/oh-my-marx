@@ -14,7 +14,7 @@ import urllib.parse
 import urllib.request
 
 HS = "http://localhost:8008"
-KAPS = "V1 V2 V3 V4 V5 V6 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25".split()
+KAPS = [f"V{i}" for i in range(1, 7)] + [str(i) for i in range(1, 26)]
 
 
 def call(method, path, body=None, token=None):
@@ -22,8 +22,8 @@ def call(method, path, body=None, token=None):
     req.add_header("Content-Type", "application/json")
     if token:
         req.add_header("Authorization", "Bearer " + token)
-    try:
-        with urllib.request.urlopen(req) as r:
+    try:  # HS = fixed localhost URL, no user scheme (B310)
+        with urllib.request.urlopen(req) as r:  # nosec B310
             return r.status, json.loads(r.read() or b"{}")
     except urllib.error.HTTPError as e:
         return e.code, json.loads(e.read() or b"{}")
@@ -31,7 +31,8 @@ def call(method, path, body=None, token=None):
 
 code, r = call("POST", "/_matrix/client/v3/login",
                {"type": "m.login.password", "identifier": {"type": "m.id.user", "user": "ommadmin"}, "password": os.environ["OMM_ADMIN_PW"]})
-assert code == 200, r
+if code != 200:
+    raise SystemExit(r)
 tok = r["access_token"]
 
 # admin creates 31 rooms in a row ➡ lift its own rate limit (users keep th normal one)
@@ -40,12 +41,15 @@ call("POST", "/_synapse/admin/v1/users/@ommadmin:scagent.de/override_ratelimit",
 # 🎟️ registration token 4 th app
 path = "/data/omm_reg_token"
 if os.path.exists(path):
-    reg = open(path).read().strip()
+    with open(path) as f:
+        reg = f.read().strip()
 else:
     code, r = call("POST", "/_synapse/admin/v1/registration_tokens/new", {}, tok)
-    assert code == 200, r
+    if code != 200:
+        raise SystemExit(r)
     reg = r["token"]
-    open(path, "w").write(reg)
+    with open(path, "w") as f:
+        f.write(reg)
 print("REG_TOKEN", reg)
 
 # 📖 chapter rooms

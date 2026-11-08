@@ -55,6 +55,11 @@ android {
         compose = true
         buildConfig = true  // BuildConfig.VERSION_NAME ➡ About screen
     }
+    // 🧹 CI gate (am0/ci app.yml `android`, @1108): errs known at onboarding live i th baseline ➡ only NEW ones fail
+    //   fix one ➡ regen: ./gradlew updateLintBaseline · list ➡ todo_omm.md
+    lint {
+        baseline = file("lint-baseline.xml")
+    }
 }
 
 // 🔢 Obtainium trap fix (@1107): an Obtainium entry on DEFAULTS (URL pasted by hand, no version regex) "versions" th

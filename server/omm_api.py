@@ -92,8 +92,8 @@ class Store:
     def stats(self, keys: list[str]) -> dict:
         day = today()
         with self.lock:
-            q = ",".join("?" * len(keys))
-            reads = dict(self.db.execute(f"SELECT key, n FROM reads WHERE key IN ({q})", keys).fetchall()) if keys else {}
+            q = ",".join("?" * len(keys))  # f-string below = only "?" placeholders, values bound ➡ B608 false alarm
+            reads = dict(self.db.execute(f"SELECT key, n FROM reads WHERE key IN ({q})", keys).fetchall()) if keys else {}  # nosec B608
             amen = (self.db.execute("SELECT n FROM amen WHERE day = ?", (day,)).fetchone() or (0,))[0]
             readers = self.db.execute("SELECT COUNT(*) FROM seen WHERE day = ? AND key = '_any'", (day,)).fetchone()[0]
         return {"reads": reads, "amen_today": amen, "readers_today": readers}
@@ -190,7 +190,8 @@ def serve(db: str, host: str, port: int) -> ThreadingHTTPServer:
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(description="Oh My Marx community counter")
     ap.add_argument("--db", default="omm.db")
-    ap.add_argument("--host", default="0.0.0.0")
+    # 0.0.0.0 = container port, Caddy fronts it (B104)
+    ap.add_argument("--host", default="0.0.0.0")  # nosec B104
     ap.add_argument("--port", type=int, default=8000)
     a = ap.parse_args()
     print(f"omm_api on {a.host}:{a.port} · db {a.db}", flush=True)
