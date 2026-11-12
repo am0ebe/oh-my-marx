@@ -6,6 +6,7 @@ body:
     id: wish
     attributes:
       label: What would you like?
+      description: Free text, any length. Optional extras - app version, a screenshot or sketch.
     validations:
       required: true
   - type: textarea
