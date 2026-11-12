@@ -84,7 +84,7 @@ fun KreiseScreen(vm: AppVm, open: (Int) -> Unit) {
     LaunchedEffect(kreise.size) { kreise.forEach { vm.loadKreis(it.room) } }
 
     Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp)) {
-        Text(tr("👥 Lesekreise", "👥 Reading circles"), fontSize = 22.sp, fontWeight = FontWeight.Bold)
+        Text(tr("Lesekreise", "Reading circles"), fontSize = 22.sp, fontWeight = FontWeight.Bold)   // sweep r4: no emoji, like evy oth screen title
         Text(tr("Lies mit Freund:innen: wer hat heute Amen gesagt, ein gemeinsamer Chat und eine Stempelkarte, die sich nur füllt, wenn alle gelesen haben. Solidarität statt Wettbewerb.",
             "Read with friends: who said Amen today, a shared chat and a stamp card that only fills when everyone has read. Solidarity, not competition."),
             fontSize = 13.sp, color = MaterialTheme.colorScheme.secondary)

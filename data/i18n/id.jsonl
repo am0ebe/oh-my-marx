@@ -2098,3 +2098,11 @@
 {"kind": "ui", "k": "Day complete! ✔️", "src": "Tag geschafft! ✔️\u0000Day complete! ✔️", "t": "Hari beres! ✔️"}
 {"kind": "ui", "k": "Marx quote of the day", "src": "Marx-Zitat des Tages\u0000Marx quote of the day", "t": "Kutipan Marx Harian"}
 {"kind": "ui", "k": "Reading-room name", "src": "Lesesaal-Name\u0000Reading-room name", "t": "Nama Ruang Baca"}
+{"kind": "ui", "k": "Quote of the day", "src": "Zitat des Tages\u0000Quote of the day", "t": "Kutipan Harian"}
+{"kind": "ui", "k": "Reading circles", "src": "Lesekreise\u0000Reading circles", "t": "Kelompok Baca"}
+{"kind": "ui", "k": "%d notes · %d bookmarks", "src": "%d Notizen · %d Lesezeichen\u0000%d notes · %d bookmarks", "t": "%d catatan · %d tanda baca"}
+{"kind": "ui", "k": "Nothing accumulated yet. Tap a passage ➡ Bookmark or Note — primitive accumulation starts small.", "src": "Noch nichts akkumuliert. Tipp auf einen Absatz ➡ Lesezeichen o Notiz — ursprüngliche Akkumulation beginnt klein.\u0000Nothing accumulated yet. Tap a passage ➡ Bookmark or Note — primitive accumulation starts small.", "t": "Belum ada yang terakumulasi. Ketuk ayat ➡ Tanda baca atau Catatan — akumulasi awal dimulai kecil."}
+{"kind": "ui", "k": "on the house 🎁", "src": "geschenkt 🎁\u0000on the house 🎁", "t": "gratis 🎁"}
+{"kind": "ui", "k": "already lived (you do work, right?)", "src": "schon gelebt (du arbeitest ja)\u0000already lived (you do work, right?)", "t": "sudah hidup (kamu kan bekerja, kan?)"}
+{"kind": "ui", "k": "👥 also post to the reading room — as %s", "src": "👥 auch im Lesesaal posten — als %s\u0000👥 also post to the reading room — as %s", "t": "👥 juga posting di ruang baca — sebagai %s"}
+{"kind": "ui", "k": "Nothing accumulated yet. Tap a passage ➡ Bookmark or Note — primitive accumulation starts small.", "src": "Noch nichts akkumuliert. Tipp auf einen Absatz ➡ Lesezeichen oder Notiz — ursprüngliche Akkumulation beginnt klein.\u0000Nothing accumulated yet. Tap a passage ➡ Bookmark or Note — primitive accumulation starts small.", "t": "Belum ada yang dikumpulkan. Ketuk ayat ➡ Tandai atau Catatan — akumulasi awal dimulai kecil."}

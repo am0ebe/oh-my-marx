@@ -110,7 +110,7 @@ fun CardCarousel(
         val it = item(i) ?: return@HorizontalPager
         val q = verseQuote(it.v)
         val r = ref(it.v)
-        // card bitmap off th main thread (StaticLayout + 1080×1350 px) ➡ swiping stays smooth
+        // card bitmap off th main thread (StaticLayout + CARD_W×CARD_H px) ➡ swiping stays smooth
         val arch = archTitle(it)
         val bmp by produceState<ImageBitmap?>(null, it.key, lang, q, arch) {
             value = withContext(Dispatchers.Default) { cardBitmap(ctx, q, r, lang, it.feast, it.kind == CardItem.Kind.KRISE, arch).asImageBitmap() }
@@ -123,19 +123,13 @@ fun CardCarousel(
             if (arch == null) Text(label(it), fontSize = 13.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center,
                 color = if (it.kind == CardItem.Kind.KRISE) Red else MaterialTheme.colorScheme.secondary,
                 modifier = Modifier.padding(bottom = 6.dp))
-            // 🙏 Amen idiot-proof (@1106, "ppl will miss th small btn"): today's card itself = th Amen btn + a pulsing hint on it
+            // 🙏 today's card itself = th Amen btn (@1106) · th pulsing "☭ Tap = Amen" pill on it rm'd @1113 (QA r4 shots: it sat
+            //   on th ref line o th shorter card · r1: "amen 2 times") ➡ th 1 visible Amen = th big red btn under th actions
             val amenHere = it.kind == CardItem.Kind.TODAY && !doneToday
-            Box(Modifier.fillMaxWidth().aspectRatio(1080f / 1350f).shadow(10.dp, RoundedCornerShape(16.dp)).clip(RoundedCornerShape(16.dp))
+            Box(Modifier.fillMaxWidth().aspectRatio(CARD_RATIO).shadow(10.dp, RoundedCornerShape(16.dp)).clip(RoundedCornerShape(16.dp))
                 .background(Brush.verticalGradient(listOf(Color(0xFF2B1B4F), Color(0xFFB3261E), Color(0xFFF29E4C))))
                 .then(if (amenHere) Modifier.clickable { onAmen(it.v) } else Modifier)) {
-                bmp?.let { b -> Image(b, contentDescription = q, modifier = Modifier.fillMaxWidth().aspectRatio(1080f / 1350f)) }
-                if (amenHere) {
-                    val pulse by rememberInfiniteTransition(label = "amen").animateFloat(0.55f, 1f,
-                        infiniteRepeatable(tween(900), RepeatMode.Reverse), label = "a")
-                    Text(tr("☭ Antippen = Amen", "☭ Tap = Amen"), color = Color.White, fontWeight = FontWeight.Bold, fontSize = 14.sp,
-                        modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 14.dp).graphicsLayer { alpha = pulse }
-                            .background(Red.copy(alpha = 0.85f), RoundedCornerShape(50)).padding(horizontal = 14.dp, vertical = 6.dp))
-                }
+                bmp?.let { b -> Image(b, contentDescription = q, modifier = Modifier.fillMaxWidth().aspectRatio(CARD_RATIO)) }
             }
         }
     }
@@ -188,7 +182,9 @@ fun appShareMsg() = tr("Ich lese Das Kapital jeden Tag ein Stück — mit Oh My 
 /** 🔘 1 card action: soft-tinted circle (tint @8 % + hairline ring) + label underneath · icon xor glyph · also used on th Read page */
 @Composable
 fun CardAction(icon: Int?, label: String, tint: Color, glyph: String? = null, onClick: () -> Unit) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.width(64.dp)) {
+    // sweep r4: label tappable too (was: only th 46 dp circle ➡ taps on "In book" did nothing)
+    Column(horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.width(64.dp).clip(RoundedCornerShape(12.dp)).clickable(onClick = onClick)) {
         Surface(onClick = onClick, shape = CircleShape, color = tint.copy(alpha = 0.08f),
             border = BorderStroke(1.dp, tint.copy(alpha = 0.22f)), modifier = Modifier.size(46.dp)) {
             Box(contentAlignment = Alignment.Center) {
@@ -200,10 +196,10 @@ fun CardAction(icon: Int?, label: String, tint: Color, glyph: String? = null, on
     }
 }
 
-/** 🌈 title set i th card's arch: today only (feast ➡ its greeting) · null = no arch */
+/** 🌈 title set i th card's arch (above th saint): today only (feast ➡ its greeting) · null = no arch · QA r4: no "Marx" (he's on it) */
 @Composable
 fun archTitle(c: CardItem): String? =
-    if (c.kind != CardItem.Kind.TODAY) null else c.feast?.let { tr(it.greet) } ?: tr("Marx-Zitat des Tages", "Marx quote of the day")
+    if (c.kind != CardItem.Kind.TODAY) null else c.feast?.let { tr(it.greet) } ?: tr("Zitat des Tages", "Quote of the day")
 
 @Composable
 private fun label(c: CardItem): String = when (c.kind) {

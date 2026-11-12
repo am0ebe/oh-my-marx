@@ -91,15 +91,17 @@ fun ReadScreen(vm: AppVm, openChapter: (String) -> Unit) {
             item {
                 val key = if (c.kap.startsWith("V")) "V" else c.kap
                 val label = when {
-                    key == "V" -> tr(" · geschenkt 🎁", " · on the house 🎁")
-                    key == "8" -> tr(" · schon gelebt (du arbeitest ja)", " · already lived (you do work, right?)")
+                    key == "V" -> tr("geschenkt 🎁", "on the house 🎁")
+                    key == "8" -> tr("schon gelebt (du arbeitest ja)", "already lived (you do work, right?)")
                     else -> ""
                 }
                 Row(Modifier.fillMaxWidth().clickable { openChapter(c.kap) }.padding(vertical = 8.dp)) {
                     Text(if (done[key] == true) "✔️ " else "○ ", fontSize = 15.sp)
                     Column {
                         Text(chapterTitle(c), fontSize = 15.sp)
-                        Text((c.page?.let { tr("S. %d", "p. %d").f(it) } ?: "") + label, fontSize = 11.sp, color = MaterialTheme.colorScheme.secondary)
+                        // sweep r4: no dangling " · " when a preface has no page
+                        Text(listOfNotNull(c.page?.let { tr("S. %d", "p. %d").f(it) }, label.ifBlank { null }).joinToString(" · "),
+                            fontSize = 11.sp, color = MaterialTheme.colorScheme.secondary)
                     }
                 }
                 HorizontalDivider()
@@ -141,6 +143,9 @@ fun ChapterScreen(vm: AppVm, kap: String, focus: String?, @Suppress("UNUSED_PARA
         pages.indexOfFirst { p -> p.verses.any { it.id == focus } }.takeIf { it >= 0 } ?: pages.indexOfFirst { it.kap == kap }.coerceAtLeast(0)
     }
     var index by remember(start) { mutableIntStateOf(start) }
+    // ✨ "Im Buch" (Today card) landed on `focus` ➡ that passage pulses once · turned away = done (no re-flash on return)
+    var flashId by remember(focus) { mutableStateOf(focus) }
+    LaunchedEffect(index) { if (index != start) flashId = null }
     val turn = remember { Animatable(0f) }   // < 0 = current page turning away (fwd) · > 0 = previous page turning back
     val scope = rememberCoroutineScope()
     val s by vm.settings.collectAsStateWithLifecycle()
@@ -199,7 +204,7 @@ fun ChapterScreen(vm: AppVm, kap: String, focus: String?, @Suppress("UNUSED_PARA
             // under: th page revealed (fwd: nxt page · back: current) · shadow fades as th turning page leaves
             val under = if (t < 0) index + 1 else index
             val over = if (t < 0) index else if (t > 0) index - 1 else -1
-            key(under) { Page(vm, pages[under], speaker, under, pages.size, Modifier.fillMaxSize()) { talk = pages[under] } }
+            key(under) { Page(vm, pages[under], speaker, under, pages.size, Modifier.fillMaxSize(), flashId) { talk = pages[under] } }
             // fwd: covered at th start (dark) ➡ revealed (light) · back: gets covered (light ➡ dark)
             if (t != 0f) Box(Modifier.fillMaxSize().background(Color.Black.copy(alpha = 0.35f * if (t < 0) 1f + t else t)))
             if (over >= 0) key(over) {
@@ -209,7 +214,7 @@ fun ChapterScreen(vm: AppVm, kap: String, focus: String?, @Suppress("UNUSED_PARA
                     transformOrigin = TransformOrigin(0f, 0.5f)
                     rotationY = angle
                     cameraDistance = cam
-                }) { talk = pages[over] }
+                }, null) { talk = pages[over] }
             }
         }
     }
@@ -217,7 +222,7 @@ fun ChapterScreen(vm: AppVm, kap: String, focus: String?, @Suppress("UNUSED_PARA
 
 /** 1 sheet o old paper: running head (chapter · MEW page) · paragraphs · folio at th bottom */
 @Composable
-private fun Page(vm: AppVm, p: BookPage, speaker: Speaker, i: Int, n: Int, modifier: Modifier, onTalk: () -> Unit) {
+private fun Page(vm: AppVm, p: BookPage, speaker: Speaker, i: Int, n: Int, modifier: Modifier, flashId: String?, onTalk: () -> Unit) {
     val chapter = vm.content.chapters.firstOrNull { it.kap == p.kap }
     val reads by vm.pageReads.collectAsStateWithLifecycle()
     val s by vm.settings.collectAsStateWithLifecycle()
@@ -244,27 +249,12 @@ private fun Page(vm: AppVm, p: BookPage, speaker: Speaker, i: Int, n: Int, modif
             p.verses.forEachIndexed { k, v ->
                 val prev = p.verses.getOrNull(k - 1)
                 if (v.secTitle.isNotBlank() && v.sec != prev?.sec) SectionTitle(v.secTitle)
-                VerseView(vm, v, speaker)
+                VerseView(vm, v, speaker, flash = v.id == flashId)
                 Gap(4)
             }
-            Gap(12)
-            // 📤 same 2 share pills as on Today (QA r3): this page's card (1st verse w a quote) · th app
-            var card by remember { mutableStateOf(false) }
-            var appPanel by remember { mutableStateOf(false) }
-            val cardVerse = p.verses.firstOrNull { it.quoteDe.isNotBlank() || it.quoteEn.isNotBlank() } ?: p.verses.first()
-            Row(Modifier.fillMaxWidth().padding(bottom = 8.dp), horizontalArrangement = androidx.compose.foundation.layout.Arrangement.Center) {
-                CardAction(de.strix.marxversion.R.drawable.ic_share, tr("Karte teilen", "Share card"), INK) { card = true }
-                CardAction(de.strix.marxversion.R.drawable.ic_send, tr("App teilen", "Share app"), INK) { appPanel = true }
-            }
-            if (card) CardDialog(vm, cardVerse, tr("🌅 Spruchkarte", "🌅 Verse card"), null, onDismiss = { card = false }, shareOnly = true)
-            if (appPanel) ShareAppPanel(appShareMsg()) { appPanel = false }
-            // 💬 end o th page = th natural moment 2 talk about it (Mitlesen on)
-            if (talkOn) OutlinedButton(onClick = onTalk, modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.outlinedButtonColors(contentColor = INK)) {
-                Text(if (talkCount == 0) tr("💬 Mitreden — sei die/der Erste zu dieser Seite", "💬 Join in — be the first on this page")
-                    else tr("💬 %d Kommentare zu dieser Seite", "💬 %d comments on this page").f(talkCount))
-            }
-            Gap(8)
+            // QA r4: no share pills (r3) + no "Mitreden" btn down here = pure Marx page · writing = tap a passage ➡ ✍️ Notiz
+            //   (👥 chip there posts it 2 th Lesesaal) · reading oth's = 💬 N i th running head
+            Gap(20)
             Text("— ${p.page ?: (i + 1)} —", fontSize = 12.sp, color = INK.copy(alpha = 0.55f), fontFamily = FontFamily.Serif,
                 textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
             if (i == 0 || i == n - 1) Text(

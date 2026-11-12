@@ -2132,3 +2132,11 @@
 {"kind": "ui", "k": "Day complete! ✔️", "src": "Tag geschafft! ✔️\u0000Day complete! ✔️", "t": "Dia completo! ✔️"}
 {"kind": "ui", "k": "Marx quote of the day", "src": "Marx-Zitat des Tages\u0000Marx quote of the day", "t": "Citação Marx do Dia"}
 {"kind": "ui", "k": "Reading-room name", "src": "Lesesaal-Name\u0000Reading-room name", "t": "Nome da Sala de Leitura"}
+{"kind": "ui", "k": "Quote of the day", "src": "Zitat des Tages\u0000Quote of the day", "t": "Citação do dia"}
+{"kind": "ui", "k": "Reading circles", "src": "Lesekreise\u0000Reading circles", "t": "Círculos de leitura"}
+{"kind": "ui", "k": "%d notes · %d bookmarks", "src": "%d Notizen · %d Lesezeichen\u0000%d notes · %d bookmarks", "t": "%d anotações · %d favoritos"}
+{"kind": "ui", "k": "Nothing accumulated yet. Tap a passage ➡ Bookmark or Note — primitive accumulation starts small.", "src": "Noch nichts akkumuliert. Tipp auf einen Absatz ➡ Lesezeichen o Notiz — ursprüngliche Akkumulation beginnt klein.\u0000Nothing accumulated yet. Tap a passage ➡ Bookmark or Note — primitive accumulation starts small.", "t": "Nada acumulado ainda. Toque em um trecho ➡ Favorito ou anotação — a acumulação primitiva começa pequena."}
+{"kind": "ui", "k": "on the house 🎁", "src": "geschenkt 🎁\u0000on the house 🎁", "t": "grátis 🎁"}
+{"kind": "ui", "k": "already lived (you do work, right?)", "src": "schon gelebt (du arbeitest ja)\u0000already lived (you do work, right?)", "t": "já vivido (você trabalha, né?)"}
+{"kind": "ui", "k": "👥 also post to the reading room — as %s", "src": "👥 auch im Lesesaal posten — als %s\u0000👥 also post to the reading room — as %s", "t": "👥 também poste na sala de leitura — como %s"}
+{"kind": "ui", "k": "Nothing accumulated yet. Tap a passage ➡ Bookmark or Note — primitive accumulation starts small.", "src": "Noch nichts akkumuliert. Tipp auf einen Absatz ➡ Lesezeichen oder Notiz — ursprüngliche Akkumulation beginnt klein.\u0000Nothing accumulated yet. Tap a passage ➡ Bookmark or Note — primitive accumulation starts small.", "t": "Nada acumulado ainda. Toque um trecho ➡ Favorito ou Anotação — a acumulação primitiva começa pequena."}

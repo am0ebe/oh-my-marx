@@ -66,8 +66,8 @@ import de.strix.marxversion.ui.KreiseScreen
 import de.strix.marxversion.ui.KreisDetail
 import de.strix.marxversion.ui.LocalOpenHooked
 import androidx.compose.runtime.CompositionLocalProvider
-import de.strix.marxversion.ui.LosungPopup
 import de.strix.marxversion.ui.MarxTheme
+import de.strix.marxversion.ui.tapOutsideNote
 import de.strix.marxversion.ui.MineScreen
 import de.strix.marxversion.ui.PlanDetail
 import de.strix.marxversion.ui.PlansScreen
@@ -154,8 +154,12 @@ private fun App(vm: AppVm) {
     val openKreise by vm.openKreise.collectAsStateWithLifecycle()
     LaunchedEffect(openKreise) { if (openKreise > 0) nav.go("kreis") }
 
+    val focusMgr = androidx.compose.ui.platform.LocalFocusManager.current
+    val slop = androidx.compose.ui.platform.LocalViewConfiguration.current.touchSlop
     CompositionLocalProvider(LocalOpenHooked provides openHooked) {
     Scaffold(
+        // ✍️ tap outside an open margin note = save it (ui/VerseView.kt NoteFocus)
+        modifier = Modifier.tapOutsideNote(focusMgr, slop),
         topBar = {
             TopAppBar(
                 // tap Marx (or th name) = home
@@ -171,7 +175,9 @@ private fun App(vm: AppVm) {
                 actions = {
                     if (s.testMode) TextButton(onClick = openHooked) { Text("🪝") }
                     LangButton(s.lang) { vm.setLang(it) }
-                    TextButton(onClick = { nav.open("settings") }) { Text("⚙️") }
+                    androidx.compose.material3.IconButton(onClick = { nav.open("settings") }) {
+                        Icon(painterResource(R.drawable.ic_settings), tr("Einstellungen", "Settings"), tint = Color.White)
+                    }
                 },
             )
         },

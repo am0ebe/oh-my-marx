@@ -2135,3 +2135,11 @@
 {"kind": "ui", "k": "Day complete! ✔️", "src": "Tag geschafft! ✔️\u0000Day complete! ✔️", "t": "¡Día completado! ✔️"}
 {"kind": "ui", "k": "Marx quote of the day", "src": "Marx-Zitat des Tages\u0000Marx quote of the day", "t": "Cita de Marx del día"}
 {"kind": "ui", "k": "Reading-room name", "src": "Lesesaal-Name\u0000Reading-room name", "t": "Nombre del salón de lectura"}
+{"kind": "ui", "k": "Quote of the day", "src": "Zitat des Tages\u0000Quote of the day", "t": "Cita del día"}
+{"kind": "ui", "k": "Reading circles", "src": "Lesekreise\u0000Reading circles", "t": "Círculos de lectura"}
+{"kind": "ui", "k": "%d notes · %d bookmarks", "src": "%d Notizen · %d Lesezeichen\u0000%d notes · %d bookmarks", "t": "%d notas · %d marcadores"}
+{"kind": "ui", "k": "Nothing accumulated yet. Tap a passage ➡ Bookmark or Note — primitive accumulation starts small.", "src": "Noch nichts akkumuliert. Tipp auf einen Absatz ➡ Lesezeichen o Notiz — ursprüngliche Akkumulation beginnt klein.\u0000Nothing accumulated yet. Tap a passage ➡ Bookmark or Note — primitive accumulation starts small.", "t": "Aún nada acumulado. Toca un pasaje ➡ marcador o nota — la acumulación primitiva empieza pequeña."}
+{"kind": "ui", "k": "on the house 🎁", "src": "geschenkt 🎁\u0000on the house 🎁", "t": "regalado 🎁"}
+{"kind": "ui", "k": "already lived (you do work, right?)", "src": "schon gelebt (du arbeitest ja)\u0000already lived (you do work, right?)", "t": "ya vivido (trabajas, ¿no?)"}
+{"kind": "ui", "k": "👥 also post to the reading room — as %s", "src": "👥 auch im Lesesaal posten — als %s\u0000👥 also post to the reading room — as %s", "t": "👥 también publicar en la sala de lectura — como %s"}
+{"kind": "ui", "k": "Nothing accumulated yet. Tap a passage ➡ Bookmark or Note — primitive accumulation starts small.", "src": "Noch nichts akkumuliert. Tipp auf einen Absatz ➡ Lesezeichen oder Notiz — ursprüngliche Akkumulation beginnt klein.\u0000Nothing accumulated yet. Tap a passage ➡ Bookmark or Note — primitive accumulation starts small.", "t": "Nada acumulado aún. Toque un pasaje ➡ Marcar o anotar — la acumulación primitiva empieza pequeña."}

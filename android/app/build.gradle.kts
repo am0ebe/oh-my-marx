@@ -60,6 +60,15 @@ android {
     lint {
         baseline = file("lint-baseline.xml")
     }
+    // 📸 headless screenshots (QA r4 @1113, no KVM ➡ no emulator): Robolectric native graphics renders th real app
+    //   ./gradlew testDebugUnitTest --tests '*ShotsTest*' -Pshots ➡ app/build/shots/*.png · wo -Pshots th test skips
+    testOptions {
+        unitTests.isIncludeAndroidResources = true
+        unitTests.all { t ->
+            t.systemProperty("shots", if (project.hasProperty("shots")) "1" else "")
+            t.systemProperty("shotsDir", layout.buildDirectory.dir("shots").get().asFile.path)
+        }
+    }
 }
 
 // 🔢 Obtainium trap fix (@1107): an Obtainium entry on DEFAULTS (URL pasted by hand, no version regex) "versions" th
@@ -107,4 +116,9 @@ dependencies {
 
     testImplementation(libs.junit)
     testImplementation("org.json:json:20240303")  // android.jar stubs throw on JVM ➡ real org.json for MatrixTest
+    // 📸 ShotsTest (see testOptions)
+    testImplementation("org.robolectric:robolectric:4.16")
+    testImplementation(platform(libs.compose.bom))
+    testImplementation("androidx.compose.ui:ui-test-junit4")
+    debugImplementation("androidx.compose.ui:ui-test-manifest")
 }

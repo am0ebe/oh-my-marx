@@ -85,11 +85,11 @@ private val KRISE_COLORS = intArrayOf(0xFF000000.toInt(), 0xFF3A0000.toInt(), 0x
 /**
  * feast ≠ null ➡ 🎉 Sondermotiv: its colours + its emoji next 2 th saint · krise ➡ 📉 black/red, crashing chart, no halo
  * evy normal card: 😇 Saint Marx (halo + beard = res/drawable/ic_launcher_fg) on top
- * title ≠ null ➡ set i a gentle arch under th saint (QA r3 @1112: "Marx quote of th day" lives IN th card, not as a line above it)
- * no sun disc (QA r3: occluded txt · share = exactly wh was seen)
+ * title ≠ null ➡ set i a gentle arch ABOVE th saint's halo (QA r4 @1113: "Quote of th day" crowns th face · r3 had it under)
+ * no sun disc (QA r3: occluded txt · share = exactly wh was seen) · no app-name line (QA r4: name + link ride i th share txt)
  */
 fun cardBitmap(ctx: Context, quote: String, ref: String, lang: Lang, feast: Feast? = null, krise: Boolean = false, title: String? = null): Bitmap {
-    val w = 1080; val h = 1350
+    val w = CARD_W; val h = CARD_H
     val bmp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
     val c = Canvas(bmp)
     // Kalenderspruch-Sonnenuntergang (or th feast's palette / crisis)
@@ -99,6 +99,8 @@ fun cardBitmap(ctx: Context, quote: String, ref: String, lang: Lang, feast: Feas
             floatArrayOf(0f, 0.45f, 0.8f, 1f), Shader.TileMode.CLAMP)
     }
     c.drawRect(0f, 0f, w.toFloat(), h.toFloat(), bg)
+    // saint box = 280 px · w/ an arch title it moves down so th arch sits above th halo (halo = y 17..27 o th 108 viewport)
+    val saintTop = if (title != null) 85 else 10
     if (krise) {
         // 📉 jagged crash line across th card + "KRISE!" header
         val line = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE; strokeWidth = 14f; color = 0x66FFFFFF; strokeJoin = Paint.Join.ROUND }
@@ -117,12 +119,12 @@ fun cardBitmap(ctx: Context, quote: String, ref: String, lang: Lang, feast: Feas
     } else {
         // 😇 Saint Marx (vector: halo + hair + beard)
         ContextCompat.getDrawable(ctx, R.drawable.ic_launcher_fg)?.apply {
-            setBounds(w / 2 - 140, 0, w / 2 + 140, 280)
+            setBounds(w / 2 - 140, saintTop, w / 2 + 140, saintTop + 280)
             draw(c)
         }
         feast?.let { f ->
-            Paint(Paint.ANTI_ALIAS_FLAG).apply { textSize = 110f }.let { p ->  // colour emoji render fine i drawText
-                c.drawText(f.emoji, w / 2f + 160f, 190f, p)
+            Paint(Paint.ANTI_ALIAS_FLAG).apply { textSize = 100f }.let { p ->  // colour emoji render fine i drawText
+                c.drawText(f.emoji, w / 2f + 150f, saintTop + 190f, p)
             }
         }
     }
@@ -132,23 +134,25 @@ fun cardBitmap(ctx: Context, quote: String, ref: String, lang: Lang, feast: Feas
         typeface = Typeface.create(Typeface.SERIF, Typeface.BOLD_ITALIC)
         setShadowLayer(8f, 0f, 3f, 0x99000000.toInt())
     }
-    // 🌈 title arch: top o a big circle (r 900) just under th saint · shrink til it fits ~50° o arc
+    // 🌈 title arch: top o a circle (r 600) peaking at y 95 = just above th halo, ends ~70 px lower · shrink til it fits 56°
     title?.let { t ->
-        val r = 900f; val top = 345f; val sweep = 50f
-        val arc = android.graphics.Path().apply { addArc(android.graphics.RectF(w / 2f - r, top, w / 2f + r, top + 2 * r), 270f - sweep / 2, sweep) }
+        val r = 600f; val peak = 95f; val sweep = 56f
+        val arc = android.graphics.Path().apply { addArc(android.graphics.RectF(w / 2f - r, peak, w / 2f + r, peak + 2 * r), 270f - sweep / 2, sweep) }
         val p = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            color = 0xFFFFE9A8.toInt(); typeface = Typeface.create(Typeface.SERIF, Typeface.BOLD); letterSpacing = 0.12f
+            color = 0xFFFFE9A8.toInt(); typeface = Typeface.create(Typeface.SERIF, Typeface.BOLD); letterSpacing = 0.14f
             setShadowLayer(10f, 0f, 3f, 0xAA000000.toInt())
         }
         val label = t.uppercase()
         val len = (Math.PI * r * sweep / 180).toFloat()
-        var ts = 46f
+        var ts = 48f
         do { p.textSize = ts; ts -= 2f } while (p.measureText(label) > len && ts > 24f)
         c.drawTextOnPath(label, arc, (len - p.measureText(label)) / 2f, 0f, p)
     }
-    val room = if (title != null) h * 0.4f else h * 0.5f
-    val minTop = if (title != null) 430f else 290f
-    val mid = if (title != null) h * 0.5f else h * 0.46f
+    // quote room: under th saint ➡ above th ref line
+    val minTop = saintTop + 290f
+    val refY = h - 80f
+    val room = refY - 70f - minTop
+    val mid = (minTop + refY - 50f) / 2f
 
     val txt = lang.quote(quote)
     var size = 64f
@@ -158,7 +162,7 @@ fun cardBitmap(ctx: Context, quote: String, ref: String, lang: Lang, feast: Feas
         layout = StaticLayout.Builder.obtain(txt, 0, txt.length, tp, w - 160)
             .setAlignment(Layout.Alignment.ALIGN_CENTER).setLineSpacing(0f, 1.15f).build()
         size -= 4f
-    } while (layout.height > room && size > 28f)  // room: below th saint (290) / th arch (430) ➡ above th ref (0.76 h)
+    } while (layout.height > room && size > 28f)
     if (layout.height > room) {
         // still 2 long at th smallest size (a whole paragraph) ➡ as many lines as fit, then "…"
         val lines = (room / (layout.height.toFloat() / layout.lineCount)).toInt().coerceAtLeast(1)
@@ -170,11 +174,14 @@ fun cardBitmap(ctx: Context, quote: String, ref: String, lang: Lang, feast: Feas
 
     val small = TextPaint(tp).apply { textSize = 40f; typeface = Typeface.create(Typeface.SERIF, Typeface.NORMAL) }
     val by = "— Karl Marx, $ref"
-    c.drawText(by, w / 2f - small.measureText(by) / 2f, h * 0.76f, small)
-    small.textSize = 30f
-    c.drawText(APP_NAME, w / 2f - small.measureText(APP_NAME) / 2f, h - 50f, small)
+    c.drawText(by, w / 2f - small.measureText(by) / 2f, refY, small)
     return bmp
 }
+
+/** 🃏 card size · QA r4 @1113: less high (was 1080×1350 w ~320 px empty under th ref) · evy card view uses CARD_RATIO */
+const val CARD_W = 1080
+const val CARD_H = 1200
+const val CARD_RATIO = CARD_W.toFloat() / CARD_H
 
 /** link on evy shared thing (viral loop: card ➡ "what app is that?" ➡ link) */
 const val APP_LINK = "https://scagent.de/oh-my-marx/"

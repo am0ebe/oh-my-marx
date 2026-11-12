@@ -2098,3 +2098,11 @@
 {"kind": "ui", "k": "Day complete! ✔️", "src": "Tag geschafft! ✔️\u0000Day complete! ✔️", "t": "দিনটি শেষ! ✔️"}
 {"kind": "ui", "k": "Marx quote of the day", "src": "Marx-Zitat des Tages\u0000Marx quote of the day", "t": "দিনের মার্ক্স উক্তি"}
 {"kind": "ui", "k": "Reading-room name", "src": "Lesesaal-Name\u0000Reading-room name", "t": "পাঠাগারের নাম"}
+{"kind": "ui", "k": "Quote of the day", "src": "Zitat des Tages\u0000Quote of the day", "t": "দিনের উদ্ধৃতি"}
+{"kind": "ui", "k": "Reading circles", "src": "Lesekreise\u0000Reading circles", "t": "পাঠ বৃত্ত"}
+{"kind": "ui", "k": "%d notes · %d bookmarks", "src": "%d Notizen · %d Lesezeichen\u0000%d notes · %d bookmarks", "t": "%d নোট · %d বুকমার্ক"}
+{"kind": "ui", "k": "Nothing accumulated yet. Tap a passage ➡ Bookmark or Note — primitive accumulation starts small.", "src": "Noch nichts akkumuliert. Tipp auf einen Absatz ➡ Lesezeichen o Notiz — ursprüngliche Akkumulation beginnt klein.\u0000Nothing accumulated yet. Tap a passage ➡ Bookmark or Note — primitive accumulation starts small.", "t": "এখনো কিছু সঞ্চিত হয়নি। একটি অংশে ট্যাপ ➡ বুকমার্ক বা নোট — মৌলিক সঞ্চয় ছোট থেকে শুরু হয়।"}
+{"kind": "ui", "k": "on the house 🎁", "src": "geschenkt 🎁\u0000on the house 🎁", "t": "উপহার 🎁"}
+{"kind": "ui", "k": "already lived (you do work, right?)", "src": "schon gelebt (du arbeitest ja)\u0000already lived (you do work, right?)", "t": "ইতিমধ্যে জীবিত (তুমি কাজ করো, তাই না?)"}
+{"kind": "ui", "k": "👥 also post to the reading room — as %s", "src": "👥 auch im Lesesaal posten — als %s\u0000👥 also post to the reading room — as %s", "t": "👥 পাঠ কক্ষেও পোস্ট করো — হিসাবে %s"}
+{"kind": "ui", "k": "Nothing accumulated yet. Tap a passage ➡ Bookmark or Note — primitive accumulation starts small.", "src": "Noch nichts akkumuliert. Tipp auf einen Absatz ➡ Lesezeichen oder Notiz — ursprüngliche Akkumulation beginnt klein.\u0000Nothing accumulated yet. Tap a passage ➡ Bookmark or Note — primitive accumulation starts small.", "t": "এখনও কিছু সঞ্চয় হয়নি। একটি অংশে ট্যাপ করুন ➡ বুকমার্ক বা নোট — মৌলিক সঞ্চয় ছোট থেকে শুরু হয়।"}

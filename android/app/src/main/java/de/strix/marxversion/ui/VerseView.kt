@@ -8,6 +8,22 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.focus.FocusManager
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.layout.boundsInRoot
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.input.pointer.PointerEventPass
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.relocation.bringIntoViewRequester
+import androidx.compose.material3.FilterChip
+import androidx.compose.runtime.DisposableEffect
+import kotlinx.coroutines.delay
+import de.strix.marxversion.data.f
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
@@ -94,11 +110,15 @@ fun verseText(v: Verse): String = when (verseLang(v)) {
 
 /** th LLM-picked line · ~1/5 o all paragraphs have none (dry tables, short bridges — eg 355 i th Jahresplan) ➡ opening sentence */
 @Composable
-fun verseQuote(v: Verse): String = when (LocalLang.current) {
-    Lang.DE -> v.quoteDe
-    Lang.EN -> v.quoteEn.ifBlank { v.quoteDe }
-    else -> LocalTr.current?.q?.get(v.id) ?: v.quoteEn.ifBlank { v.quoteDe }
-}.ifBlank { opening(verseText(v)) }
+fun verseQuote(v: Verse): String {
+    // 🐛 QA r4 (shots): no EN quote ➡ was th DE quote on an EN card · now: opening line o th paragraph i th shown lang; DE only if no EN paragraph
+    val en = v.quoteEn.ifBlank { if (v.en.isBlank()) v.quoteDe else "" }
+    return when (LocalLang.current) {
+        Lang.DE -> v.quoteDe
+        Lang.EN -> en
+        else -> LocalTr.current?.q?.get(v.id) ?: en
+    }.ifBlank { opening(verseText(v)) }
+}
 
 /** 1st sentence (≥ 40 chars so "Ad 1." isn't it), max ~220 chars, footnote marks gone */
 fun opening(t: String): String {
@@ -136,20 +156,52 @@ fun chapterTitle(c: Chapter) = when (LocalLang.current) {
 }
 
 /**
- * 1 Vers. Tap it ➡ action bar (like th bible app): highlight · bookmark · note · copy · share · listen.
+ * ✍️ tap outside th open note = save (QA r4) · Compose doesn't blur a text field on a tap elsewhere ➡ th editor registers
+ * its bounds here, th root (MainActivity) watches taps (Initial pass, nothing consumed) + clears focus on 1 outside ➡ editor commits
+ */
+object NoteFocus { var bounds: Rect? = null }
+
+/** root modifier: a tap (not a drag) outside th open note editor ➡ clear focus */
+fun Modifier.tapOutsideNote(focus: FocusManager, slop: Float): Modifier = pointerInput(Unit) {
+    awaitEachGesture {
+        val down = awaitFirstDown(requireUnconsumed = false, pass = PointerEventPass.Initial)
+        val b = NoteFocus.bounds ?: return@awaitEachGesture
+        var moved = 0f
+        var last: Offset
+        do {
+            val ev = awaitPointerEvent(PointerEventPass.Initial)
+            last = ev.changes.first().position
+            moved = maxOf(moved, (last - down.position).getDistance())
+        } while (ev.changes.any { it.pressed })
+        if (moved < slop && !b.contains(down.position)) focus.clearFocus()
+    }
+}
+
+/**
+ * 1 Vers. Tap it ➡ action bar (like th bible app): listen · bookmark · note · copy (QA r4: 🔊 left like evywhere, no share i th reader).
+ * ✍️ Notiz = th 1 way 2 write on a passage: private by dflt · 👥 chip = also post it 2 th page's Lesesaal (Mitlesen on)
  * Footnote refs [52] r clickable ➡ dialog w th note (Marx' footnotes = where th roasts live).
+ * flash = "Im Buch" landed here ➡ scroll into view + pulse 2× so th eye finds it (QA r4)
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun VerseView(vm: AppVm, v: Verse, speaker: Speaker? = null, showActions: Boolean = true) {
+fun VerseView(vm: AppVm, v: Verse, speaker: Speaker? = null, showActions: Boolean = true, flash: Boolean = false) {
     val mark by vm.mark(v.id).collectAsStateWithLifecycle(null)
     val settings by vm.settings.collectAsStateWithLifecycle()
     val ctx = LocalContext.current
     var footnote by remember { mutableStateOf<String?>(null) }
     var editNote by remember { mutableStateOf(false) }
     var open by remember { mutableStateOf(false) }
-    var card by remember { mutableStateOf(false) }
     val lang = LocalLang.current
+    val glow = remember { Animatable(0f) }
+    val into = remember { BringIntoViewRequester() }
+    LaunchedEffect(flash) {
+        if (!flash) return@LaunchedEffect
+        delay(300)  // page laid out 1st
+        into.bringIntoView(Rect(0f, 0f, 1f, 1e5f))   // taller than th page ➡ scroll aligns th passage's TOP 2 th top (dflt = just peek in at th bottom)
+        repeat(2) { glow.animateTo(1f, tween(320)); glow.animateTo(0.3f, tween(320)) }
+        glow.animateTo(0f, tween(1200))
+    }
     val txt = verseText(v)
     val r = ref(v)
     val textLang = verseLang(v)   // 🔊 voice reads th lang th text is in
@@ -165,6 +217,7 @@ fun VerseView(vm: AppVm, v: Verse, speaker: Speaker? = null, showActions: Boolea
     val marked = mark?.bookmark == true || mark?.note != null || mark?.highlight != null
     val bg = if (marked) Gold.copy(alpha = 0.16f) else Color.Transparent
     val frame = when {
+        glow.value > 0f -> Modifier.border(2.dp, Red.copy(alpha = glow.value), RoundedCornerShape(6.dp))
         open -> Modifier.border(1.dp, MaterialTheme.colorScheme.tertiary, RoundedCornerShape(6.dp))
         marked -> Modifier.border(1.5.dp, Gold.copy(alpha = 0.8f), RoundedCornerShape(6.dp))
         else -> Modifier
@@ -176,7 +229,8 @@ fun VerseView(vm: AppVm, v: Verse, speaker: Speaker? = null, showActions: Boolea
     val scope = rememberCoroutineScope()
     Box {
     Column(
-        Modifier.fillMaxWidth().clip(RoundedCornerShape(6.dp)).background(bg).then(frame)
+        Modifier.fillMaxWidth().bringIntoViewRequester(into).clip(RoundedCornerShape(6.dp)).background(bg)
+            .background(Gold.copy(alpha = 0.45f * glow.value)).then(frame)
             .then(if (showActions) Modifier.combinedClickable(
                 onClick = { open = !open },
                 // double-tap = 🔖 bookmark on/off · on ➡ ☭ burst
@@ -210,16 +264,36 @@ fun VerseView(vm: AppVm, v: Verse, speaker: Speaker? = null, showActions: Boolea
         }
         Text(annotated, fontFamily = FontFamily.Serif, fontSize = 16.sp * scale, lineHeight = 23.sp * scale)
         // ✍️ margin note: shown inline · tap it (or Notiz) = edit right here, no popup
+        // QA r4: no Save/Cancel words · tap outside = save (empty = nothing / note gone) · 🤏 ★ = discard
         if (editNote) {
             var draft by remember { mutableStateOf(mark?.note ?: "") }
+            var public by remember { mutableStateOf(false) }
+            var hadFocus by remember { mutableStateOf(false) }
+            var closed by remember { mutableStateOf(false) }
             val focus = remember { FocusRequester() }
             LaunchedEffect(Unit) { focus.requestFocus() }
-            OutlinedTextField(draft, { draft = it }, minLines = 2, modifier = Modifier.fillMaxWidth().padding(top = 6.dp).focusRequester(focus),
-                placeholder = { Text(tr("Deine Randnotiz …", "Your margin note …")) },
-                keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences))
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-                TextButton(onClick = { editNote = false }) { Text(tr("Abbrechen", "Cancel")) }  // inline, not a window ➡ words (@1107)
-                TextButton(onClick = { vm.note(v.id, draft); editNote = false }) { Text(tr("Speichern", "Save")) }
+            DisposableEffect(Unit) { onDispose { NoteFocus.bounds = null } }
+            val pubName = vm.mxName.collectAsStateWithLifecycle().value ?: vm.suggestedName
+            val commit = {
+                if (!closed) {
+                    closed = true
+                    val t = draft.trim()
+                    if (t != (mark?.note ?: "")) vm.note(v.id, t)   // blank ➡ vm drops th note
+                    if (public && t.isNotBlank()) vm.postComment(v.kap, v.page, "¶ ${v.id} — $t", pubName) {}
+                    editNote = false
+                }
+            }
+            Column(Modifier.fillMaxWidth().padding(top = 6.dp).onGloballyPositioned { NoteFocus.bounds = it.boundsInRoot() }) {
+                OutlinedTextField(draft, { draft = it }, minLines = 2,
+                    modifier = Modifier.fillMaxWidth().focusRequester(focus).onFocusChanged {
+                        if (it.isFocused) hadFocus = true else if (hadFocus) commit()
+                    },
+                    placeholder = { Text(tr("Deine Randnotiz …", "Your margin note …")) },
+                    trailingIcon = { CloseButton({ closed = true; editNote = false }, size = 26.dp) },
+                    keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences))
+                // 👥 same note, also public on this page (Mitlesen on) = th old "Mitreden" btn, now at th passage (QA r4: 1 pattern)
+                if (settings.community && vm.commentsAvailable) FilterChip(selected = public, onClick = { public = !public },
+                    label = { Text(tr("👥 auch im Lesesaal posten — als %s", "👥 also post to the reading room — as %s").f(pubName), fontSize = 12.sp) })
             }
         } else mark?.note?.let {
             Text("✍️ $it", fontSize = 13.sp, color = MaterialTheme.colorScheme.secondary,
@@ -228,17 +302,16 @@ fun VerseView(vm: AppVm, v: Verse, speaker: Speaker? = null, showActions: Boolea
 
         if (showActions && open) {
             Row(Modifier.fillMaxWidth().padding(top = 6.dp)) {
+                if (speaker != null) Action(R.drawable.ic_volume, if (speaker.speaking) tr("Stopp", "Stop") else tr("Vorlesen", "Listen"),
+                    if (speaker.speaking) Red else MaterialTheme.colorScheme.secondary) {
+                    speaker.say(txt, textLang, Persona.of(settings.persona))
+                }
                 Action(if (mark?.bookmark == true) R.drawable.ic_bookmark else R.drawable.ic_bookmark_border,
                     tr("Lesezeichen", "Bookmark"), if (mark?.bookmark == true) Red else MaterialTheme.colorScheme.secondary) { vm.bookmark(v.id) }
                 Action(R.drawable.ic_note, tr("Notiz", "Note"), if (mark?.note != null) Red else MaterialTheme.colorScheme.secondary) { editNote = !editNote }
                 Action(R.drawable.ic_copy, tr("Kopieren", "Copy")) {
                     copyText(ctx, "${lang.quote(txt)}\n— Karl Marx, $r")
                     android.widget.Toast.makeText(ctx, copied, android.widget.Toast.LENGTH_SHORT).show()
-                }
-                Action(R.drawable.ic_share, tr("Teilen", "Share")) { card = true }  // ➡ colourful card preview 1st
-                if (speaker != null) Action(R.drawable.ic_volume, if (speaker.speaking) tr("Stopp", "Stop") else tr("Vorlesen", "Listen"),
-                    if (speaker.speaking) Red else MaterialTheme.colorScheme.secondary) {
-                    speaker.say(txt, textLang, Persona.of(settings.persona))
                 }
             }
         }
@@ -249,11 +322,6 @@ fun VerseView(vm: AppVm, v: Verse, speaker: Speaker? = null, showActions: Boolea
         scaleX = 0.4f + 1.4f * t; scaleY = scaleX; alpha = 1f - t
     })
     }
-
-    // 🌅 Teilen ➡ card preview w just 1 big Share btn (🔊 + 📋 alr sit i th verse's menu)
-    // card text = exactly th paragraph u see (was: th LLM quote ➡ "different text than i th snippet", strix @1103)
-    if (card) CardDialog(vm, v, tr("🌅 Spruchkarte", "🌅 Verse card"), null, onDismiss = { card = false }, shareOnly = true,
-        text = txt.replace(Regex("\\s*\\[\\d+[a-z]?]"), "").replace(Regex("\\s+"), " ").trim())
 
     footnote?.let { n ->
         val note = vm.content.note(v.kap, n)

@@ -49,16 +49,17 @@ fun MineScreen(vm: AppVm, openChapter: (String, String) -> Unit) {
     LazyColumn(Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
         item {
             Text(tr("Mein Kapital", "My Capital"), fontSize = 22.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(top = 12.dp))
-            Text(tr("%d Markierungen · %d Notizen · %d Lesezeichen", "%d highlights · %d notes · %d bookmarks")
-                .f(marks.count { it.highlight != null }, marks.count { it.note != null }, marks.count { it.bookmark }), fontSize = 13.sp)
+            // sweep r4: highlighter is gone fr th verse menu ➡ count only wh u can still make (old highlights still tint their verse)
+            Text(tr("%d Notizen · %d Lesezeichen", "%d notes · %d bookmarks")
+                .f(marks.count { it.note != null }, marks.count { it.bookmark }), fontSize = 13.sp)
             Text(tr("Deine vergegenständlichte Lesearbeit. Unveräußerlich — Export kommt noch.",
                 "Your objectified reading labour. Inalienable — export coming."), fontSize = 12.sp, color = MaterialTheme.colorScheme.secondary)
             HookNote(Hook.INVESTMENT, s.testMode)
             val orden by vm.orden.collectAsStateWithLifecycle()
             OrdenSection(orden, s.testMode)
             Gap(10)
-            if (marks.isEmpty()) Text("\n" + tr("Noch nichts akkumuliert. Tipp auf einen Vers ➡ Markieren — ursprüngliche Akkumulation beginnt klein.",
-                "Nothing accumulated yet. Tap a verse ➡ Highlight — primitive accumulation starts small."))
+            if (marks.isEmpty()) Text("\n" + tr("Noch nichts akkumuliert. Tipp auf einen Absatz ➡ Lesezeichen oder Notiz — ursprüngliche Akkumulation beginnt klein.",
+                "Nothing accumulated yet. Tap a passage ➡ Bookmark or Note — primitive accumulation starts small."))
         }
         if (marks.any { it.bookmark }) item {
             Text(tr("🔖 Lesezeichen", "🔖 Bookmarks"), fontSize = 16.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(top = 8.dp))

@@ -18,6 +18,24 @@ _SDD: code says **wh** · th file says **y** · drift = a bug · fmt ➡ `pr/vib
 - 🔥 hot files (1 owner at a ti — fan-out lanes nvr split these): `assets/content/i18n_*.json` + `data/i18n/*.jsonl` (translate pass = fan-in only) · `android/app/build.gradle.kts` (version) · `ui/Changelog.kt` · `res/values*/strings.xml` · `TodayScreen.kt` · `MineScreen.kt` · `Share.kt`
 
 ## 🧾 decisions (newest on top)
+### D-019 @1113 · headless screenshots = Robolectric native graphics (`ShotsTest`, -Pshots) · ✔️
+- **ctx**: am0 r4: "design keeps slipping thru ➡ compare screens side by side" · no /dev/kvm on tow ➡ emulator ❌ · fon screencap = private (memory)
+- **dc**: `test/…/ShotsTest.kt` drives th real MainActivity (tabs · chapter · verse menu · note · settings · In book) + cardBitmap variants ➡ `app/build/shots/*.png` · skipped i normal `testDebugUnitTest`
+- **y**: real app, real Compose, 20 s, no device · catches overlaps/stale copy before am0's fon
+- **alt**: emulator (no KVM) · Paparazzi (lib modules only) · Roborazzi (extra plugin, same engine)
+- **ck**: `./gradlew testDebugUnitTest --tests '*ShotsTest*' -Pshots` · ⚠️ Robolectric fonts: newer emoji (🪝) = tofu, ignore
+### D-018 @1113 · no share i th reader: verse menu = 🔊 · 🔖 · ✍️ · 📋 · page share pills gone · ✔️
+- **ctx**: QA r1 "2 boxes i each other look weird · drop sharing here?" · r4 "rm share from th Read page" · r4 "Listen on th LEFT"
+- **dc**: rm verse-menu Teilen (also on Today's plan verses = same menu) + r3's 2 pills at page end · `CardDialog` + `LosungPopup` deleted (dead) · 🔊 1st i evy action row
+- **y**: Read = pure Marx · sharing lives on th Today card (Karte teilen · App teilen)
+- **alt**: keep verse share on Today plan only (❌ 2 dif menus) · 💬 am0 may want it back
+- **ck**: grep `CardDialog` = 0 · VerseView Action order
+### D-017 @1113 · writing on th book = 1 pattern: tap passage ➡ ✍️ Notiz (inline) · 👥 chip = also public · ✔️
+- **ctx**: r4: upper "Notiz" + lower "comment on this page" = same function, 2 looks ➡ merge · note editor: tap outside = save, empty = cancel, small X, no Save/Cancel words
+- **dc**: rm page-end "Mitreden" btn · inline editor: tap outside (root watcher `tapOutsideNote`) = commit · ★ (CloseButton, app-wide close) = discard · blank = no note/note gone · Mitlesen on ➡ chip "👥 auch im Lesesaal posten — als <name>" posts "¶ <id> — txt" 2 th page's room · reading oth's = 💬 N i th running head ➡ sheet
+- **y**: 1 entry, 1 composer, privacy = 1 toggle · comment keeps its passage ref
+- **alt**: 2 btns side by side i th menu (Notiz · Kommentar) · Matrix field 4 verse id (later, if threads per passage wanted)
+- **ck**: VerseView `NoteFocus` · ReadScreen has no OutlinedButton · ★ not ✕ = r1 rule "red star closes" — 💬 am0 said "small X"
 ### D-016 @1112 · public name = "Lesesaal-Name", prefilled random comrade name, saves on blur · ✔️ (label 💬 am0 may swap)
 - **ctx**: QA r3: "Your name" label dull · empty field = friction · Save btn = extra step
 - **dc**: label "Lesesaal-Name / Reading-room name" · prefill = socialist thinker 1st name + movement year (Rosa 1871 …), 1 per app run · ⚙️ field saves on blur/Done only if changed
