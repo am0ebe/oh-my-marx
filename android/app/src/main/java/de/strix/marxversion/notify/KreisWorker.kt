@@ -43,7 +43,7 @@ private const val NOTIF_NUDGE = 21
 private val NEW_MSG = T("👥 %s · %s: %s", "👥 %s · %s: %s")
 private val MORE = T("(+%d weitere)", "(+%d more)")
 private val NUDGE_T = T("👥 Dein Lesekreis hat heute gelesen", "👥 Your reading circle read today")
-private val NUDGE_X = T("%s — du noch nicht. Ein Vers reicht ☭", "%s — not you yet. One verse is enough ☭")
+private val NUDGE_X = T("%s — magst du dazukommen? Ein Vers reicht.", "%s — want to join in? One verse is enough.")
 
 class KreisWorker(ctx: Context, params: WorkerParameters) : CoroutineWorker(ctx, params) {
     override suspend fun doWork(): Result {

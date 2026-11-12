@@ -162,7 +162,9 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
     val scope = rememberCoroutineScope()
     val roast: () -> Unit = {
         vm.content.verses.filter { it.polemic && it.quoteDe.isNotBlank() }.randomOrNull()?.let {
-            vm.addCard(CardItem(it, CardItem.Kind.KRISE)); kriseFx = true; vm.flag("krise"); scope.launch { scroll.animateScrollTo(0) }
+            vm.addCard(CardItem(it, CardItem.Kind.KRISE)); kriseFx = true
+            if (de.strix.marxversion.logic.Orden.KRISE !in vm.orden.value) vm.flag("krise:" + System.currentTimeMillis())   // 1 flag per shake, stops once earned
+ scope.launch { scroll.animateScrollTo(0) }
         }
     }
     val oracleCard: (Verse?) -> Unit = { v -> v?.let { vm.addCard(CardItem(it, CardItem.Kind.ORAKEL)); scope.launch { scroll.animateScrollTo(0) } } }
@@ -404,10 +406,10 @@ private fun Hero(days: List<DayLog>, feast: Feast?, dt: DayTime, hooked: Boolean
         Row(verticalAlignment = Alignment.CenterVertically) {
             Column(Modifier.weight(1f)) {
                 Text(if (st > 0) tr("%d Tage Lesekapital akkumuliert", "%d days of reading capital accumulated").f(st)
-                    else tr("Neue Kette, neues Glück", "New chain, fresh start"), color = white.copy(alpha = 0.9f), fontSize = 13.sp)
+                    else tr("Schön, dass du da bist", "Good to see you"), color = white.copy(alpha = 0.9f), fontSize = 13.sp)
                 Text(when {
                     doneToday -> tr("Schicht erledigt", "Shift done")   // ✓ lives i th week row · "akkumuliert" only once (@1107)
-                    st > 0 -> tr("Rette deine Kette!", "Save your chain!")
+                    st > 0 -> tr("Weiter geht's!", "Keep it rolling!")
                     else -> tr("Fang heute an!", "Start today!")
                 }, color = white, fontSize = 24.sp, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Serif, lineHeight = 28.sp)
                 Gap(4)
@@ -453,8 +455,7 @@ private fun Hero(days: List<DayLog>, feast: Feast?, dt: DayTime, hooked: Boolean
                     contentAlignment = Alignment.Center,
                 ) {
                     when {
-                        i < card.gift -> Text("🎁", fontSize = 11.sp)
-                        i < card.filled -> Text("☭", fontSize = 12.sp, color = Red, fontWeight = FontWeight.Bold)
+                        i < card.filled -> Text("☭", fontSize = 12.sp, color = Red, fontWeight = FontWeight.Bold)   // gift stamps = same ☭ (@1112, was 🎁)
                         waiting -> Text("!", fontSize = 13.sp, color = white, fontWeight = FontWeight.Bold)
                     }
                 }
