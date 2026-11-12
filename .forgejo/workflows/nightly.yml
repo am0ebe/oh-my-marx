@@ -1,0 +1,14 @@
+# NIGHTLY — live-box sweep fr am0/ci (go/pr/ops/apps_platform.md P1) · @261112
+#   trivy + pip-audit on th omm-api image RUNNING on th VPS + /v1/health · red ➡ ntfy
+#   th daily PATCHING o omm-api = fleet.py `build` tier, not a CI job here
+name: nightly
+on:
+  schedule:
+    - cron: '15 3 * * *'      # after demo's 03:00 (serial runner) · before th 03:30 bup pull
+  workflow_dispatch:
+
+jobs:
+  nightly:
+    uses: am0/ci/.forgejo/workflows/nightly.yml@main   # ➡ @v1 once am0 moves th tag
+    with: {name: omm, image: "omm-api:local", health: "https://scagent.de/omm/api/v1/health"}  # no host port ➡ via Caddy
+    secrets: inherit
