@@ -174,13 +174,14 @@ fun SettingsScreen(vm: AppVm, askNotifPermission: () -> Unit) {
         val ctx = androidx.compose.ui.platform.LocalContext.current
         // 🔘 🤏 icon row: 🌐 page · 📤 share th app · 💬 feedback = mail straight 2 us (version prefilled, 0 web hops)
         val pageUrl = de.strix.marxversion.data.Update.page
-        val shareTxt = tr("Marx lesen wie die Bibel — Oh My Marx ☭ ", "Read Marx like the Bible — Oh My Marx ☭ ") + pageUrl
+        val shareTxt = tr("Marx lesen wie die Bibel — Oh My Marx ☭", "Read Marx like the Bible — Oh My Marx ☭")   // ShareAppPanel adds APP_LINK
+        var sharePanel by remember { mutableStateOf(false) }
+        if (sharePanel) ShareAppPanel(shareTxt) { sharePanel = false }
         val ver = BuildConfig.VERSION_NAME
         val mailBody = tr("Was ist passiert / was wünschst du dir?\n\n\n(Version %s — ein Screenshot hilft)", "What happened / what would you like?\n\n\n(version %s — a screenshot helps)").f(ver)
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)) {
             IconBtn("🌐", tr("Webseite", "Web page")) { runCatching { ctx.startActivity(android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse(pageUrl))) } }
-            IconBtn("📤", tr("App teilen", "Share the app")) { runCatching { ctx.startActivity(android.content.Intent.createChooser(
-                android.content.Intent(android.content.Intent.ACTION_SEND).setType("text/plain").putExtra(android.content.Intent.EXTRA_TEXT, shareTxt), null)) } }
+            IconBtn("📤", tr("App teilen", "Share the app")) { sharePanel = true }
             IconBtn("💬", tr("Feedback: Bug, Idee, Lob", "Feedback: bug, idea, praise")) { runCatching { ctx.startActivity(android.content.Intent(android.content.Intent.ACTION_SENDTO, android.net.Uri.parse("mailto:")).apply {
                 putExtra(android.content.Intent.EXTRA_EMAIL, arrayOf("omm@scagent.de"))
                 putExtra(android.content.Intent.EXTRA_SUBJECT, "Oh My Marx $ver")

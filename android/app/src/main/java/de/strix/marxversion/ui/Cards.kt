@@ -38,6 +38,9 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.produceState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -160,9 +163,10 @@ fun CardCarousel(
     }
     // 📤 motivated moment: today's reading done ➡ 1 quiet "share th app" (link scagent.de/omm) · no new screen
     val appMsg = tr("Ich lese Das Kapital jeden Tag ein Stück — mit Oh My Marx ☭", "I read Das Kapital a bit every day — with Oh My Marx ☭")
-    val appTitle = tr("App teilen", "Share app")
+    var sharePanel by remember { mutableStateOf(false) }
+    if (sharePanel) ShareAppPanel(appMsg) { sharePanel = false }
     if (doneToday && cur.kind == CardItem.Kind.TODAY)
-        TextButton(onClick = { shareApp(ctx, appMsg, appTitle) }, modifier = Modifier.padding(top = 2.dp)) {
+        TextButton(onClick = { sharePanel = true }, modifier = Modifier.padding(top = 2.dp)) {
             Text(tr("📤 Diese App teilen", "📤 Share this app"), fontSize = 14.sp, fontWeight = FontWeight.Bold)
         }
     // big + red + full width = can't miss it (was a 5th small pill)
