@@ -152,11 +152,19 @@ fun CardCarousel(
             if (Build.VERSION.SDK_INT < 33) Toast.makeText(ctx, copied, Toast.LENGTH_SHORT).show()
         }
         CardAction(R.drawable.ic_book, tr("Im Buch", "In book"), Blue) { openChapter(cur.v.kap, cur.v.id) }
-        CardAction(R.drawable.ic_share, tr("Teilen", "Share"), Blue) {
-            val bmp = cardBitmap(ctx, q, r, lang, cur.feast, cur.kind == CardItem.Kind.KRISE)
-            shareCard(ctx, bmp, "${lang.quote(q)} — Karl Marx, $r\n$APP_NAME", shareTitle)
+        // label says WHAT (QA @1112: "share wh?") · render + PNG off th main thread (was th lag)
+        CardAction(R.drawable.ic_share, tr("Karte teilen", "Share card"), Blue) {
+            shareCard(ctx, { cardBitmap(ctx, q, r, lang, cur.feast, cur.kind == CardItem.Kind.KRISE) },
+                "${lang.quote(q)} — Karl Marx, $r\n$APP_NAME", shareTitle)
         }
     }
+    // 📤 motivated moment: today's reading done ➡ 1 quiet "share th app" (link scagent.de/omm) · no new screen
+    val appMsg = tr("Ich lese Das Kapital jeden Tag ein Stück — mit Oh My Marx ☭", "I read Das Kapital a bit every day — with Oh My Marx ☭")
+    val appTitle = tr("App teilen", "Share app")
+    if (doneToday && cur.kind == CardItem.Kind.TODAY)
+        TextButton(onClick = { shareApp(ctx, appMsg, appTitle) }, modifier = Modifier.padding(top = 2.dp)) {
+            Text(tr("📤 Diese App teilen", "📤 Share this app"), fontSize = 14.sp, fontWeight = FontWeight.Bold)
+        }
     // big + red + full width = can't miss it (was a 5th small pill)
     if (cur.kind == CardItem.Kind.TODAY && !doneToday)
         Button(onClick = { onAmen(cur.v) }, colors = ButtonDefaults.buttonColors(containerColor = Red),

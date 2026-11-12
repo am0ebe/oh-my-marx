@@ -2,7 +2,10 @@ package de.strix.marxversion.ui
 
 import android.content.ClipData
 import android.content.ClipboardManager
+import android.app.PendingIntent
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.IntentFilter
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -154,21 +157,64 @@ fun cardBitmap(ctx: Context, quote: String, ref: String, lang: Lang, feast: Feas
     return bmp
 }
 
-fun shareCard(ctx: Context, bmp: Bitmap, text: String, chooserTitle: String) {
-    val dir = File(ctx.cacheDir, "share").apply { mkdirs() }
-    val f = File(dir, "marx.png")
-    f.outputStream().use { bmp.compress(Bitmap.CompressFormat.PNG, 100, it) }
-    val uri = FileProvider.getUriForFile(ctx, ctx.packageName + ".files", f)
-    val send = Intent(Intent.ACTION_SEND).apply {
-        type = "image/png"
-        putExtra(Intent.EXTRA_STREAM, uri)
-        // 📣 evy shared card carries th short link (viral loop: card ➡ "what app is that?" ➡ link)
-        putExtra(Intent.EXTRA_TEXT, if ("scagent.de" in text) text else "$text · https://scagent.de/omm")
-        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+/** link on evy shared thing (viral loop: card ➡ "what app is that?" ➡ link) */
+const val APP_LINK = "https://scagent.de/omm"
+
+/** th receiver 4 th last share sheet · only 1 alive: a cancelled sheet never calls back ➡ drop it on th nxt share */
+private var chosenReceiver: BroadcastReceiver? = null
+
+/**
+ * 📤 open th share sheet · 🎖️ count (Orden / 1st-share badge) ONLY when th user picks a target
+ * Android tells us via createChooser(IntentSender) ➡ cancel = no callback = no count (QA @1112: badge fired w sheet still open)
+ * ⚠️ "picked a target" ≠ "sent" (user can still back out inside th target app) — closest Android lets us K
+ */
+private fun launchChooser(ctx: Context, send: Intent, title: String) {
+    val app = ctx.applicationContext
+    chosenReceiver?.let { runCatching { app.unregisterReceiver(it) } }
+    val action = app.packageName + ".SHARE_CHOSEN"
+    val rec = object : BroadcastReceiver() {
+        override fun onReceive(c: Context, i: Intent) {
+            runCatching { app.unregisterReceiver(this) }
+            if (chosenReceiver === this) chosenReceiver = null
+            (app as? MarxApp)?.let { a -> a.scope.launch { a.prefs.shared() } }
+        }
     }
-    ctx.startActivity(Intent.createChooser(send, chooserTitle))
-    // 🎖️ Propagandist / Agitprop count (opening th sheet counts; Android doesn't tell us if it was sent)
-    (ctx.applicationContext as? MarxApp)?.let { app -> app.scope.launch { app.prefs.shared() } }
+    chosenReceiver = rec
+    ContextCompat.registerReceiver(app, rec, IntentFilter(action), ContextCompat.RECEIVER_NOT_EXPORTED)
+    val flags = PendingIntent.FLAG_UPDATE_CURRENT or (if (Build.VERSION.SDK_INT >= 31) PendingIntent.FLAG_MUTABLE else 0)
+    val pi = PendingIntent.getBroadcast(app, 0, Intent(action).setPackage(app.packageName), flags)
+    ctx.startActivity(Intent.createChooser(send, title, pi.intentSender))
+}
+
+/**
+ * 🐢 QA @1112 "share btn lags": render (StaticLayout 1080×1350) + PNG-compress (~1 MB) ran on th MAIN thread at th tap ➡ frozen UI.
+ * Now: both on Dispatchers.Default, only startActivity back on main.
+ */
+fun shareCard(ctx: Context, make: () -> Bitmap, text: String, chooserTitle: String) {
+    val app = ctx.applicationContext as? MarxApp ?: return
+    app.scope.launch(Dispatchers.Default) {
+        val bmp = make()
+        val dir = File(ctx.cacheDir, "share").apply { mkdirs() }
+        val f = File(dir, "marx.png")
+        f.outputStream().use { bmp.compress(Bitmap.CompressFormat.PNG, 100, it) }
+        val uri = FileProvider.getUriForFile(ctx, ctx.packageName + ".files", f)
+        val send = Intent(Intent.ACTION_SEND).apply {
+            type = "image/png"
+            putExtra(Intent.EXTRA_STREAM, uri)
+            putExtra(Intent.EXTRA_TEXT, if ("scagent.de" in text) text else "$text · $APP_LINK")
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        }
+        withContext(Dispatchers.Main) { launchChooser(ctx, send, chooserTitle) }
+    }
+}
+
+/** same, bitmap alr there (popup) — still compresses off-main */
+fun shareCard(ctx: Context, bmp: Bitmap, text: String, chooserTitle: String) = shareCard(ctx, { bmp }, text, chooserTitle)
+
+/** 📤 "share th app" (text + link, no image) · counts like a card share once a target is picked */
+fun shareApp(ctx: Context, text: String, chooserTitle: String) {
+    val send = Intent(Intent.ACTION_SEND).apply { type = "text/plain"; putExtra(Intent.EXTRA_TEXT, "$text $APP_LINK") }
+    launchChooser(ctx, send, chooserTitle)
 }
 
 fun copyText(ctx: Context, text: String) {
