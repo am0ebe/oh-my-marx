@@ -3,10 +3,11 @@
   - 🚦 rule: no version bump / ship / big new feat til th current one had ≥1 QA round on th fon · big side-quests (voice, chat infra) ➡ own pr
 
 ## ⏳
-- ▶ **RESUME @1112 eos** — QA r1 + r2 + r3 built on main `7fa1036` (pushed, tsts + build green) · stable still 0.9.0 · r2 deployed 2 DEV by am0, **r3 NOT deployed** · board = [qa_1112.md](qa_1112.md) · y ➡ [arch.md](arch.md) D-014..016
-  - ▶ **NEXT** = 👤 am0 `bin/deploy.sh` ➡ fon QA r3 (card arch title on 🤏 fon · 6 pills fit · Read-page share pills · name saves on blur) ➡ then 🤖 build D3 (Amen ➡ reading snippet bottom = D-015) as 1st 🎨 item
-  - 👤 strix: Changelog 0.9.1 wording (L2 left it) · name label (D-016 alts) · 💬 qa_1112 Q2 Mitlesen · Q5-7 · stray `pr/omm/▐qq` (PATH env fragment, typo'd redirect?) ➡ rm? · native check hi/bn/ur/id · KeePass keystore note
-  - ⚠️ traps: origin = Forgejo (only push target) · `gh` = GitHub fetch-only, mirror carries it (ship.sh waits ≤120 s) · gradle needs `JAVA_HOME=~/.local/opt/jdk21` (lib.sh sets it) · zsh `tr` alias, bare `===` · VPS = ops-owned (pr/ops/omm.md), nvr edit Caddy//srv · `android/omm.properties` (reg token) needed 4 comments/Kreise · fon screenshots only aft asking
+- ▶ **RESUME @1113 eos** — QA r1-r4 built on main `34028b3` (pushed, tsts + build green) · stable still 0.9.0 · **r3 + r4 NOT deployed** · board = [qa_1112.md](qa_1112.md) § r4 (built + 9 sweep Qs) · y ➡ [arch.md](arch.md) D-014..019
+  - ▶ **NEXT** = 👤 am0 `bin/deploy.sh` ➡ fon QA r4 (card arch above face · note tap-outside save + ★ discard · In book pulse · 👥 chip) ➡ answer sweep Qs 1-9 ➡ 🤖 build D3 (Amen ➡ reading snippet bottom = D-015) as 1st 🎨 item
+  - 📸 b4 handing any UI change 2 am0: `./gradlew testDebugUnitTest --tests '*ShotsTest*' -Pshots --rerun` ➡ `android/app/build/shots/` ➡ montage + look (D-019)
+  - 👤 strix: Changelog 0.9.1 wording · name label (D-016 alts) · ★ vs ✕ on note (D-017) · verse share gone on Today too (D-018) · 💬 qa_1112 Q2 Mitlesen · Q5-7 · stray `pr/omm/▐qq` ➡ rm? · native check hi/bn/ur/id · KeePass keystore note
+  - ⚠️ traps: origin = Forgejo (only push target) · `gh` = GitHub fetch-only, mirror carries it (ship.sh waits ≤120 s) · gradle needs `JAVA_HOME=~/.local/opt/jdk21` (lib.sh sets it) · zsh `tr` alias, bare `===` · gradle test cached aft deleting shots ➡ `--rerun` · VPS = ops-owned (pr/ops/omm.md), nvr edit Caddy//srv · `android/omm.properties` (reg token) needed 4 comments/Kreise · fon screenshots only aft asking
 
 ## ‼️
 - ⭐🧪 **QA sprint 0.9.x** — r1-r3 ⚡ done (fan-out lanes, 0 conflicts) · left ➡ [qa_1112.md](qa_1112.md): 🎨 10 design proposals (D1 landing · D2 book look · D3 Amen ➡ snippet · D4 auto-scroll feed …) · 🔍 5 research (Duolingo · YouVersion share · Fogg txt · Luddites/AI plan · feedback) · 💬 open Qs

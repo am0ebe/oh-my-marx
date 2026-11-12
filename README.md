@@ -49,6 +49,7 @@ git clone https://github.com/am0ebe/oh-my-marx && cd oh-my-marx/android
 export ANDROID_HOME=~/Android/Sdk      # where your SDK lives
 ./gradlew testDebugUnitTest            # unit tests (content, streak logic, circles, voice DSP)
 ./gradlew assembleDebug                # ➡ app/build/outputs/apk/debug/app-debug.apk
+./gradlew testDebugUnitTest --tests '*ShotsTest*' -Pshots --rerun   # headless screenshots (Robolectric) ➡ app/build/shots/
 adb install app/build/outputs/apk/debug/app-debug.apk
 ```
 
