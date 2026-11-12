@@ -3,34 +3,14 @@
   - 🚦 rule: no version bump / ship / big new feat til th current one had ≥1 QA round on th fon · big side-quests (voice, chat infra) ➡ own pr
 
 ## ⏳
-- ▶ **RESUME @1108 eos** — stable **0.9.0** live (13 langs, whole book) · GitHub release v0.9.0 · Obtainium DEV + stable update by themselves · all committed + pushed (omm dd8cc02+)
-  - ▶ **NEXT** = QA notes ‼️ ⬇ (@1108 scrap + @1107 rest) ➡ 🤖 start w th ⚡ ones: About row (🌐 📤 💬 icon btns · Feedback ➡ GitHub issue/mail direct) · rm ads/slop/refs + "Mitlesen" note · credit line · widget names · Home ➡ scroll top + streak on top ➡ `deploy.sh` ➡ 👤 fon QA
-  - 👤 strix: pick o th QA list wh's nxt · native check hi/bn/ur/id · KeePass keystore note
+- ▶ **RESUME @1112 eos** — QA r1 + r2 + r3 built on main `7fa1036` (pushed, tsts + build green) · stable still 0.9.0 · r2 deployed 2 DEV by am0, **r3 NOT deployed** · board = [qa_1112.md](qa_1112.md) · y ➡ [arch.md](arch.md) D-014..016
+  - ▶ **NEXT** = 👤 am0 `bin/deploy.sh` ➡ fon QA r3 (card arch title on 🤏 fon · 6 pills fit · Read-page share pills · name saves on blur) ➡ then 🤖 build D3 (Amen ➡ reading snippet bottom = D-015) as 1st 🎨 item
+  - 👤 strix: Changelog 0.9.1 wording (L2 left it) · name label (D-016 alts) · 💬 qa_1112 Q2 Mitlesen · Q5-7 · stray `pr/omm/▐qq` (PATH env fragment, typo'd redirect?) ➡ rm? · native check hi/bn/ur/id · KeePass keystore note
   - ⚠️ traps: origin = Forgejo (only push target) · `gh` = GitHub fetch-only, mirror carries it (ship.sh waits ≤120 s) · gradle needs `JAVA_HOME=~/.local/opt/jdk21` (lib.sh sets it) · zsh `tr` alias, bare `===` · VPS = ops-owned (pr/ops/omm.md), nvr edit Caddy//srv · `android/omm.properties` (reg token) needed 4 comments/Kreise · fon screenshots only aft asking
 
 ## ‼️
-- ⭐🧪 **QA sprint 0.9.x** (bin @1112: QA @1108 + @1107 rest + Mi feedback) — 4 lanes = 🔀 fan-out (disjoint screens) · 1 `deploy.sh` + 👤 fon QA at fan-in · plan ➡ `pr/m8/plan_fanout.md`
-  - **A 📖 reading plan rework** ⭐ (Mi: "Leseplan haut nicht hin" = real-user 🐛)
-    - 🐛 not continuous: same page shown 2× ➡ fix + tst
-    - reward missing ➡ plan shd train regular L (Mi) · streak = reading-plan days, not quote-click? (2nd "done" looks meagre next 2 th big streak widget) ➡ 💬 am0 discuss b4 build
-    - evy1 i a plan by dflt · rm th "tomorrow … sentence" aft today's done (clock-out)
-    - design: not bland ➡ bounding boxes · font · formatting · fits next 2 streak widget + quote o th day
-    - streak widget "shd show 2 at start" ❓ am0: meaning?
-    - Stempelkarte: 2 filled = traction (keep) · icon = same ☭ symbol, not 🎁
-  - **B ⚙️ About + prefs cleanup** (QA @1108, ⚡)
-    - 📜 "Was ist neu": scrollable box, not 1 huge list · T: only last version's notes?
-    - 💬 feedback: straight 2 GitHub issue o mail, 0 friction
-    - 🔘 1 row 🤏 icon btns: 🌐 page · 📤 share · 💬 feedback · ✂️ rm app ads + slop + refs · ✂️ rm "Mitlesen" note
-    - ✍️ credit ➡ "proudly vibe-coded by a centaur — half hu, half agent" + keep polemic bit · rm who/hw/translations
-    - 🧩 widget names/descr: rm evythg aft "omm"
-  - **C 🏠 Home + share**
-    - Home tab tap ➡ scroll top · streak widget on top · 👍 most-used ctrls i right-thumb zone (Mi)
-    - 📤 share: 2 users confused (M + Mi: share wh?) ➡ "share th app" as hot trigger at motivated moments · o omit
-    - 🐛 share btn lags · 🐛 1st-share badge fires while sheet open / on cancel ➡ only aft real share
-  - **D 🎨 tone + rewards** (Mi)
-    - less ☭: Marx = lens 2 understand capitalism, not THE 1 utopia (non-hardcore users) · Orden = too real-socialism/authoritarian ➡ oth awards
-    - ⚠️ negative conditioning ("u missed a day") felt bad ➡ reframe positive
-    - 🎲 crisis medal needs more shakes · 🔊 voice: 1 sober dflt, rm oth (cringe, Mi agrees)
+- ⭐🧪 **QA sprint 0.9.x** — r1-r3 ⚡ done (fan-out lanes, 0 conflicts) · left ➡ [qa_1112.md](qa_1112.md): 🎨 10 design proposals (D1 landing · D2 book look · D3 Amen ➡ snippet · D4 auto-scroll feed …) · 🔍 5 research (Duolingo · YouVersion share · Fogg txt · Luddites/AI plan · feedback) · 💬 open Qs
+  - ❓ streak widget "shd show 2 at start" = ? (still unanswered)
   - **later** (needs design, not this sprint): 📖 Read = real book look + page flip · ⏰ daily verse can't be turned off (🔍 bible apps' timing) · ❓ name entry · 🔮 Marxoskop tiles · 🔓 Lesekreis progressive disclosure (unlock aft ~1 month, Mi) · 🏷️ quotes off-topic sometimes ➡ manual sort per cat · ⬆️ update nag ("stops working fr date X") + in-app APK DL ⬄ Obtainium
 - 📨⭐ **user feedback** — 1st real users = gold · 🔑 most imp signal
   - **log** ➡ `feedback.md` (who · wh · date)
@@ -93,6 +73,7 @@
 - 🦠 P3 habit test 2w · 🤖 aft QA: rm page fotos (boox proc step 8)
 
 ## ✔️
+- ✔️ @1112: QA sprint r1-r3 (3 fan-ins: plan continuity · About cleanup · share panel + ★ close · Abzeichen + tone · arch title card · Lesesaal-Name) · arch.md SDD (D-001..016) · qa_1112 triage · r2 test lanes (lint · Update · Matrix · bin)
 - ✔️ @1108: **0.9.0 shipped** (13 langs whole book · fr ru hi bn ur id) · Obtainium DEV fixed 4 good (ommStamp, any entry updates) + deploy guard + `--qr` · translate_full output cap (ur 30 h ➡ 1.8 h) · lang switch no EN flash · Feedback btn · GitHub mirror live
 - ✔️ @1107: Obtainium DEV cause found (entry on defaults) · DEV app honest build status (dev/version.json) · remotes split (origin = Forgejo, gh fetch-only) + ship.sh waits 4 mirror · Orden · Hero · Amen · MarxDialog · freeze fix · fr/ru/id whole book
 - ✔️ @1106: 0.8.0 shipped (whole book IT/ES/PT/ZH/AR) · ship.sh self-bump · page Stable|Dev tabs + share + OG card + llms.txt · `--redo-bad` 243/272 · repo public + `priv/`
