@@ -42,6 +42,13 @@ class OrdenTest {
         assertFalse(Orden.INVITE in e)
     }
 
+    @Test fun kriseNeedsManyShakes() {
+        fun shakes(n: Int) = (1..n).map { "krise:$it" }.toSet()
+        assertFalse(Orden.KRISE in Orden.earned(Stats(flags = setOf("krise"))))                     // old 1-shake flag
+        assertFalse(Orden.KRISE in Orden.earned(Stats(flags = shakes(Orden.KRISE_SHAKES - 1))))
+        assertTrue(Orden.KRISE in Orden.earned(Stats(flags = shakes(Orden.KRISE_SHAKES))))
+    }
+
     @Test fun everyMedalHasTextAndUniqueEmojiPerGroup() {
         Orden.entries.forEach { assertTrue(it.title.first.isNotBlank() && it.how.second.isNotBlank()) }
         Orden.entries.groupBy { it.group }.values.forEach { g -> assertEquals(g.size, g.map { it.emoji }.toSet().size) }

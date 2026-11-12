@@ -208,7 +208,12 @@ enum class Persona(val label: Pair<String, String>, val pitch: Float, val rate: 
     NORMAL(T("🙂 Nüchtern", "🙂 Sober"), 1f, 1f),
     MASCHINE(T("🤖 Maschinerie (Kap. 13)", "🤖 Machinery (ch. 13)"), 1.5f, 1.2f);
 
-    companion object { fun of(name: String) = entries.firstOrNull { it.name == name } ?: GOTTVATER }
+    companion object {
+        /** @1112 (Mi: cringe): only th sober voice r offered · th rest stays i th code (hidden, not deleted) */
+        val picker = listOf(NORMAL)
+        /** stored name ➡ voice · hidden/unknown (e.g. old dflt GOTTVATER) ➡ sober */
+        fun of(name: String) = picker.firstOrNull { it.name == name } ?: NORMAL
+    }
 }
 
 class Speaker(ctx: Context) {

@@ -50,7 +50,7 @@ fun Medal(o: Orden, have: Boolean, size: Dp = 56.dp) {
             val w = this.size.width; val h = this.size.height
             val l = Path().apply { moveTo(0f, 0f); lineTo(w * 0.5f, 0f); lineTo(w * 0.62f, h); lineTo(w * 0.18f, h); close() }
             val r = Path().apply { moveTo(w * 0.5f, 0f); lineTo(w, 0f); lineTo(w * 0.82f, h); lineTo(w * 0.38f, h); close() }
-            drawPath(l, if (have) Red else grey)
+            drawPath(l, if (have) Blue else grey)   // @1112: blue/gold ribbon (red = too Soviet)
             drawPath(r, if (have) Gold else grey.copy(alpha = 0.7f))
             drawLine(Color.White.copy(alpha = 0.5f), Offset(w * 0.5f, 0f), Offset(w * 0.5f, h * 0.9f), strokeWidth = 2f)
         }
@@ -69,7 +69,7 @@ fun Medal(o: Orden, have: Boolean, size: Dp = 56.dp) {
 @Composable
 fun OrdenSection(earned: Set<Orden>, hooked: Boolean) {
     var open by remember { mutableStateOf<Orden?>(null) }
-    Text(tr("🎖️ Orden  %d / %d", "🎖️ Medals  %d / %d").f(earned.size, Orden.entries.size), fontWeight = FontWeight.Bold, fontSize = 17.sp,
+    Text(tr("🏅 Abzeichen  %d / %d", "🏅 Badges  %d / %d").f(earned.size, Orden.entries.size), fontWeight = FontWeight.Bold, fontSize = 17.sp,
         modifier = Modifier.padding(top = 16.dp))
     OrdenGroup.entries.forEach { g ->
         Text(tr(g.label), fontSize = 12.sp, color = MaterialTheme.colorScheme.secondary, modifier = Modifier.padding(top = 10.dp, bottom = 4.dp))
@@ -95,13 +95,13 @@ fun OrdenSection(earned: Set<Orden>, hooked: Boolean) {
         MarxDialog({ open = null },
             title = if (have || !o.hidden) tr(o.title) else "???",
             icon = {
-                Box(Modifier.clip(RoundedCornerShape(16.dp)).background(Brush.verticalGradient(listOf(Color(0xFF2B1B4F), Color(0xFF7A1A14))))
+                Box(Modifier.clip(RoundedCornerShape(16.dp)).background(Brush.verticalGradient(listOf(Color(0xFF2B1B4F), Color(0xFF14284A))))
                     .border(2.dp, if (have) Gold else Color(0xFFB9B2A6), RoundedCornerShape(16.dp)).padding(12.dp)) { Medal(o, have, 72.dp) }
             },
         ) {
             Text(when {
                 have -> tr(o.how)
-                o.hidden -> tr("Geheimer Orden. Lies weiter, dann findest du ihn.", "Secret medal. Keep reading and you'll find it.")
+                o.hidden -> tr("Geheimes Abzeichen. Lies weiter, dann findest du es.", "Secret badge. Keep reading and you'll find it.")
                 else -> tr("Noch nicht verdient: ", "Not earned yet: ") + tr(o.how)
             }, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
         }
@@ -113,14 +113,14 @@ fun OrdenSection(earned: Set<Orden>, hooked: Boolean) {
 fun NewOrdenDialog(new: List<Orden>, onDone: () -> Unit) {
     Confetti {}   // 1st = behind th dialog (removes itself aft 1.8 s)
     MarxDialog(onDone,
-        title = if (new.size == 1) tr("🎖️ Neuer Orden!", "🎖️ New medal!") else tr("🎖️ %d neue Orden!", "🎖️ %d new medals!").f(new.size),
-        actions = { androidx.compose.material3.Button(onClick = onDone, modifier = Modifier.fillMaxWidth()) { Text(tr("Für die Sache!", "For the cause!"), fontSize = 16.sp) } },
+        title = if (new.size == 1) tr("🏅 Neues Abzeichen!", "🏅 New badge!") else tr("🏅 %d neue Abzeichen!", "🏅 %d new badges!").f(new.size),
+        actions = { androidx.compose.material3.Button(onClick = onDone, modifier = Modifier.fillMaxWidth()) { Text(tr("Weiter so!", "Keep going!"), fontSize = 16.sp) } },
     ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
                 // medals on a dark "velvet cushion" (gold on th white dialog looked washed out @1107)
                 Column(horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.clip(RoundedCornerShape(16.dp))
-                        .background(Brush.verticalGradient(listOf(Color(0xFF2B1B4F), Color(0xFF7A1A14))))
+                        .background(Brush.verticalGradient(listOf(Color(0xFF2B1B4F), Color(0xFF14284A))))
                         .border(2.dp, Gold, RoundedCornerShape(16.dp)).padding(horizontal = 18.dp, vertical = 12.dp)) {
                     new.take(6).chunked(3).forEach { row ->
                         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) { row.forEach { Medal(it, true, 52.dp) } }
@@ -130,7 +130,7 @@ fun NewOrdenDialog(new: List<Orden>, onDone: () -> Unit) {
                 Text(names.joinToString(" · ") + if (new.size > 6) " …" else "",
                     textAlign = TextAlign.Center, fontWeight = FontWeight.Bold, modifier = Modifier.padding(top = 10.dp))
                 if (new.size == 1) Text(tr(new[0].how), textAlign = TextAlign.Center, fontSize = 13.sp, modifier = Modifier.padding(top = 4.dp))
-                Text(tr("Alle Orden: Mein Kapital", "All medals: My Capital"), fontSize = 12.sp,
+                Text(tr("Alle Abzeichen: Mein Kapital", "All badges: My Capital"), fontSize = 12.sp,
                     color = MaterialTheme.colorScheme.secondary, modifier = Modifier.padding(top = 8.dp))
             }
     }

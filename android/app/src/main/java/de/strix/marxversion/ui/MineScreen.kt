@@ -97,12 +97,10 @@ fun SettingsScreen(vm: AppVm, askNotifPermission: () -> Unit) {
         val sample = tr("Das Kapital ist verstorbne Arbeit, die sich nur vampyrmäßig belebt.",
             "Capital is dead labour, that, vampire-like, only lives by sucking living labour.")
         FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-            Persona.entries.forEach { p ->
-                FilterChip(selected = s.persona == p.name, onClick = { vm.setPersona(p); speaker.sample(sample, lang, p) }, label = { Text(tr(p.label)) })
+            Persona.picker.forEach { p ->
+                FilterChip(selected = Persona.of(s.persona) == p, onClick = { vm.setPersona(p); speaker.sample(sample, lang, p) }, label = { Text(tr(p.label)) })
             }
         }
-        Text(tr("Heilig = die Android-Stimme 2–3× in verschiedenen Tonhöhen übereinander (Oktave drunter = Autorität, drüber = Chor) + Kirchenhall, auf dem Handy gerechnet. Erstes Abspielen dauert 1–3 s, danach sofort.",
-            "Holy = the Android voice stacked 2–3× at different pitches (octave below = authority, above = choir) + church reverb, computed on the phone. First play takes 1–3 s, then instant."), fontSize = 12.sp, color = MaterialTheme.colorScheme.secondary)
         Gap(8)
         HorizontalDivider()
 
