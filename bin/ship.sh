@@ -45,6 +45,8 @@ ver=$(app_version)
 [ -n "$ver" ] || { echo "❌ no appVersion i build.gradle.kts"; exit 1; }
 [ -z "$(git status --porcelain)" ] || { echo "❌ uncommitted changes ➡ commit 1st"; exit 1; }
 git fetch -q origin && [ "$(git rev-parse HEAD)" = "$(git rev-parse origin/main)" ] || { echo "❌ HEAD ≠ origin/main ➡ push 1st"; exit 1; }
+# 🌐 evy Lang.menu lang needs i18n_xx.json + full_xx.json (0.9.0 claimed ur/hi/bn b4 th book existed) ➡ b4 bump/commit/tag
+bin/check_langs.py || exit 1
 
 # 🔢 bump: fr th last shipped tag (not fr appVersion ➡ "minor" twice = still 1 step)
 if [ -n "$level" ]; then
