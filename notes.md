@@ -3,6 +3,8 @@
 _Marx' Kapital Bd.1 i bite-sized daily verses, w bible-app mechanics + Augenzwinkern · 1st Android app = L project_
 _raw idea: [plan.md](plan.md) · full plan @1028: `~/.claude/plans/read-plan-md-for-floofy-eich.md` · todo: [todo_omm.md](todo_omm.md) · dir/repo renamed bible ➡ `pr/omm` · `github.com/am0ebe/oh-my-marx` @1104 (app id `de.strix.marxversion` unchanged)_
 
+_🧾 arch + decision log (y, alt, ck) ➡ [arch.md](arch.md) · "decided @1028" below = early snapshot_
+
 ## 🎯 goals
 1. strix actually gets thru Kapital — habit, not willpower
 2. apply **Hooked** L hands-on ➡ [hooked.md § 7 Bible App](../../re/boox/hooked/hooked.md#7-case-studies)
