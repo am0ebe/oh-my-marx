@@ -106,4 +106,5 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
 
     testImplementation(libs.junit)
+    testImplementation("org.json:json:20240303")  // android.jar stubs throw on JVM ➡ real org.json for MatrixTest
 }
