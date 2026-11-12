@@ -2081,3 +2081,41 @@
 {"kind": "ui", "k": "💬 Feedback: bug, idea, praise ➡", "src": "💬 Feedback: Bug, Idee, Lob ➡\u0000💬 Feedback: bug, idea, praise ➡", "t": "💬 反馈：报错、建议、赞美 ➡"}
 {"kind": "ui", "k": "💬 Feedback button under ⚙️ ➡ About: bug, idea or praise straight to us", "src": "💬 Feedback-Knopf unter ⚙️ ➡ Über: Bug, Idee oder Lob direkt an uns\u0000💬 Feedback button under ⚙️ ➡ About: bug, idea or praise straight to us", "t": "💬 点击 ⚙️ ➡ 关于 中的反馈按钮：直接向我们报告错误、提出建议或送上赞美"}
 {"kind": "ui", "k": "🌍 Switching language jumps straight to the new one (no brief English in between)", "src": "🌍 Sprachwechsel springt direkt in die neue Sprache (kein kurzes Englisch mehr dazwischen)\u0000🌍 Switching language jumps straight to the new one (no brief English in between)", "t": "🌍 切换语言将直接跳转至目标语言（不再中间夹杂短暂的英文）"}
+{"kind": "ui", "k": "Together", "src": "Gemeinsam\u0000Together", "t": "共同"}
+{"kind": "ui", "k": "Seven-day week", "src": "Siebentagewoche\u0000Seven-day week", "t": "七日周期"}
+{"kind": "ui", "k": "Monthly wage", "src": "Monatslohn\u0000Monthly wage", "t": "月薪"}
+{"kind": "ui", "k": "Non-stop operation", "src": "Nonstop-Betrieb\u0000Non-stop operation", "t": "不间断运行"}
+{"kind": "ui", "k": "Bookworm", "src": "Bücherwurm\u0000Bookworm", "t": "书虫"}
+{"kind": "ui", "k": "Annual surplus", "src": "Jahresmehrwert\u0000Annual surplus", "t": "年度剩余价值"}
+{"kind": "ui", "k": "Reading plan mastered", "src": "Leseplan gemeistert\u0000Reading plan mastered", "t": "阅读计划已达成"}
+{"kind": "ui", "k": "Verse messenger", "src": "Spruchbote\u0000Verse messenger", "t": "箴言使者"}
+{"kind": "ui", "k": "Printing press", "src": "Druckerpresse\u0000Printing press", "t": "印刷机"}
+{"kind": "ui", "k": "Fellow reader", "src": "Mitleser:in\u0000Fellow reader", "t": "同读人"}
+{"kind": "ui", "k": "Circle founder", "src": "Kreisgründer:in\u0000Circle founder", "t": "圈子创始人"}
+{"kind": "ui", "k": "Host", "src": "Gastgeber:in\u0000Host", "t": "主人"}
+{"kind": "ui", "k": "Used the Sabbath joker — rest is part of the work.", "src": "Den Sabbat-Joker eingelöst — Ruhe gehört dazu.\u0000Used the Sabbath joker — rest is part of the work.", "t": "已使用安息日代币——休息也是工作的一部分。"}
+{"kind": "ui", "k": "Shook the phone 15× — you caused a whole crisis.", "src": "Das Handy 15× geschüttelt — du hast eine ganze Krise ausgelöst.\u0000Shook the phone 15× — you caused a whole crisis.", "t": "摇晃手机15次——你引发了一场全面危机。"}
+{"kind": "ui", "k": "%s — want to join in? One verse is enough.", "src": "%s — magst du dazukommen? Ein Vers reicht.\u0000%s — want to join in? One verse is enough.", "t": "%s — 要不要来凑个热闹？一句就够了。"}
+{"kind": "ui", "k": "Share card", "src": "Karte teilen\u0000Share card", "t": "分享卡片"}
+{"kind": "ui", "k": "I read Das Kapital a bit every day — with Oh My Marx ☭", "src": "Ich lese Das Kapital jeden Tag ein Stück — mit Oh My Marx ☭\u0000I read Das Kapital a bit every day — with Oh My Marx ☭", "t": "我每天用Oh My Marx ☭ 读一点《资本论》"}
+{"kind": "ui", "k": "Share app", "src": "App teilen\u0000Share app", "t": "分享应用"}
+{"kind": "ui", "k": "📤 Share this app", "src": "📤 Diese App teilen\u0000📤 Share this app", "t": "📤 分享此应用"}
+{"kind": "ui", "k": "🏅 23 badges to earn — from “First surplus value” to “Actually read it”, a few of them secret (My Capital)", "src": "🏅 23 Abzeichen zum Verdienen — vom „Ersten Mehrwert“ bis „Hat's wirklich gelesen“, ein paar davon geheim (Mein Kapital)\u0000🏅 23 badges to earn — from “First surplus value” to “Actually read it”, a few of them secret (My Capital)", "t": "🏅 23个徽章待收集——从“首个剩余价值”到“真读完了”，有几个是秘密的（我的资本）"}
+{"kind": "ui", "k": "🪝 Reward of the self + goal gradient (Hooked ch. 4) — badges cost nothing and feel like achievement. The closer the next one, the faster you read. Marx would say: the fetish character of the medal.", "src": "🪝 Belohnung des Selbst + Zielgradient (Hooked Kap. 4) — Abzeichen kosten nichts und fühlen sich nach Leistung an. Je näher der nächste, desto schneller liest du. Marx würde sagen: Fetischcharakter der Medaille.\u0000🪝 Reward of the self + goal gradient (Hooked ch. 4) — badges cost nothing and feel like achievement. The closer the next one, the faster you read. Marx would say: the fetish character of the medal.", "t": "🪝 自我奖励 + 目标梯度（上瘾篇第4章）——徽章不花一分钱，却像真有成就。越接近下一个，读得越快。马克思会说：勋章的拜物教特质。"}
+{"kind": "ui", "k": "Long-press the home screen ➡ Widgets ➡ Oh My Marx", "src": "Homescreen lang drücken ➡ Widgets ➡ Oh My Marx\u0000Long-press the home screen ➡ Widgets ➡ Oh My Marx", "t": "长按主页 ➡ 小部件 ➡ 我的马克思"}
+{"kind": "ui", "k": "🤖 Proudly vibe-coded by a centaur — half human, half agent. Alienated labour, fully automated. The means of production are still ours.", "src": "🤖 Stolz gevibecodet von einem Zentauren — halb Mensch, halb Agent. Entfremdete Arbeit, vollautomatisiert. Die Produktionsmittel gehören trotzdem uns.\u0000🤖 Proudly vibe-coded by a centaur — half human, half agent. Alienated labour, fully automated. The means of production are still ours.", "t": "🤖 由半人半机的独角兽自豪编码——人类与代理的结合体。异化劳动，全自动。生产资料仍归我们所有。"}
+{"kind": "ui", "k": "Read Marx like the Bible — Oh My Marx ☭ ", "src": "Marx lesen wie die Bibel — Oh My Marx ☭ \u0000Read Marx like the Bible — Oh My Marx ☭ ", "t": "像读圣经一样读马克思——我的马克思 ☭"}
+{"kind": "ui", "k": "What happened / what would you like?\n\n\n(version %s — a screenshot helps)", "src": "Was ist passiert / was wünschst du dir?\n\n\n(Version %s — ein Screenshot hilft)\u0000What happened / what would you like?\n\n\n(version %s — a screenshot helps)", "t": "出了啥问题 / 你希望怎样？\n\n\n（版本 %s —— 截图有帮助）"}
+{"kind": "ui", "k": "Web page", "src": "Webseite\u0000Web page", "t": "网页"}
+{"kind": "ui", "k": "Share the app", "src": "App teilen\u0000Share the app", "t": "分享应用"}
+{"kind": "ui", "k": "Feedback: bug, idea, praise", "src": "Feedback: Bug, Idee, Lob\u0000Feedback: bug, idea, praise", "t": "反馈：漏洞、想法、夸奖"}
+{"kind": "ui", "k": "🏅 Badges  %d / %d", "src": "🏅 Abzeichen  %d / %d\u0000🏅 Badges  %d / %d", "t": "🏅 徽章 %d / %d"}
+{"kind": "ui", "k": "Secret badge. Keep reading and you'll find it.", "src": "Geheimes Abzeichen. Lies weiter, dann findest du es.\u0000Secret badge. Keep reading and you'll find it.", "t": "隐藏徽章。继续读下去，就会找到它。"}
+{"kind": "ui", "k": "🏅 New badge!", "src": "🏅 Neues Abzeichen!\u0000🏅 New badge!", "t": "🏅 新徽章！"}
+{"kind": "ui", "k": "🏅 %d new badges!", "src": "🏅 %d neue Abzeichen!\u0000🏅 %d new badges!", "t": "🏅 %d 个新徽章！"}
+{"kind": "ui", "k": "Keep going!", "src": "Weiter so!\u0000Keep going!", "t": "继续加油！"}
+{"kind": "ui", "k": "All badges: My Capital", "src": "Alle Abzeichen: Mein Kapital\u0000All badges: My Capital", "t": "全部徽章：我的资本"}
+{"kind": "ui", "k": "Plan overfulfilled!", "src": "Plan übererfüllt!\u0000Plan overfulfilled!", "t": "计划超额完成！"}
+{"kind": "ui", "k": "📚 Pick the next plan", "src": "📚 Nächsten Plan wählen\u0000📚 Pick the next plan", "t": "📚 选择下一个计划"}
+{"kind": "ui", "k": "Good to see you", "src": "Schön, dass du da bist\u0000Good to see you", "t": "欢迎回来，真好"}
+{"kind": "ui", "k": "Keep it rolling!", "src": "Weiter geht's!\u0000Keep it rolling!", "t": "继续冲！"}
