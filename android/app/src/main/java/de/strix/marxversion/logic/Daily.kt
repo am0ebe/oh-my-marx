@@ -74,6 +74,13 @@ fun stampCard(totalDays: Int): StampCard =
     if (totalDays < CARD - GIFT) StampCard(1, totalDays + GIFT, GIFT)
     else (totalDays - (CARD - GIFT)).let { r -> StampCard(2 + r / CARD, r % CARD, 0) }
 
+/** 📖 plan day 2 show today: today's logged day · else last done + 1 · null = plan finished (nvr repeat th last page) */
+fun planIndex(done: List<DayLog>, planSize: Int, now: String = today()): Int? {
+    done.firstOrNull { it.date == now }?.let { return it.planDay.coerceIn(0, planSize - 1) }
+    val next = (done.maxOfOrNull { it.planDay } ?: -1) + 1
+    return if (next >= planSize) null else next
+}
+
 /** distinct days w any reading (plan day or Losung "Amen") */
 fun readingDays(days: List<DayLog>) = days.map { it.date }.distinct().size
 
