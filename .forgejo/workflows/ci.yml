@@ -11,6 +11,6 @@ on:
 
 jobs:
   ci:
-    uses: am0/ci/.forgejo/workflows/app.yml@android
+    uses: am0/ci/.forgejo/workflows/app.yml@v1   # cross-repo ➡ am0/ci must stay public
     with: {name: omm, dir: server, req: requirements-dev.txt, src: ".", cov: 85, image: true, android: android}
     secrets: inherit
