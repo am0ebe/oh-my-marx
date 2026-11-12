@@ -34,6 +34,10 @@ import de.strix.marxversion.data.f
 data class Release(val version: String, val date: String, val items: List<Pair<String, String>>)
 
 val RELEASES = listOf(
+    Release("0.9.1", "2026-11-12", listOf(
+        T("⚙️ Über: nur noch die neueste Version, schlichter Abspann, Symbolreihe mittig", "⚙️ About: newest version only, simpler credits, centred icon row"),
+        T("🔖 Lesezeichen mit eigener Überschrift", "🔖 Bookmarks with their own heading"),
+    )),
     Release("0.9.0", "2026-11-08", listOf(
         T("🌍 6 neue Sprachen: Französisch, Russisch, Hindi, Bengalisch, Urdu, Indonesisch — das ganze Buch inklusive", "🌍 6 new languages: French, Russian, Hindi, Bengali, Urdu, Indonesian — the whole book included"),
         T("🏅 23 Abzeichen zum Verdienen — vom „Ersten Mehrwert“ bis „Hat's wirklich gelesen“, ein paar davon geheim (Mein Kapital)", "🏅 23 badges to earn — from “First surplus value” to “Actually read it”, a few of them secret (My Capital)"),
@@ -98,7 +102,16 @@ val RELEASES = listOf(
     )),
 )
 
-/** ⚙️ section: newest open, rest collapsed · marks th installed one (dev build = newer than th top release) */
+/** version compare on x.y.z (suffix like -dev.* ignored) */
+private fun ver(v: String) = v.substringBefore("-").split(".").map { it.toIntOrNull() ?: 0 }
+fun versionNewer(a: String, b: String): Boolean {
+    val x = ver(a); val y = ver(b)
+    for (i in 0 until maxOf(x.size, y.size)) { val d = x.getOrElse(i) { 0 } - y.getOrElse(i) { 0 }; if (d != 0) return d > 0 }
+    return false
+}
+/** ⏳ next, unshipped release = top entry newer than th installed base · DEV builds only (stable ➡ null) */
+fun pendingRelease(mine: String, dev: Boolean): Release? = RELEASES.firstOrNull()?.takeIf { dev && versionNewer(it.version, mine) }
+
 /** leading emoji off (same rule as bin/notes.py --plain) · Changelog.kt keeps them (GitHub release notes use them) */
 private val LEAD = Regex("^[^\\p{L}\\p{N}„“\"(]+")
 private fun plain(s: String) = s.replaceFirst(LEAD, "")
@@ -107,7 +120,8 @@ private fun plain(s: String) = s.replaceFirst(LEAD, "")
 fun ReleaseNotes() {
     val mine = BuildConfig.VERSION_NAME
     val dev = "-dev." in mine
-    // mirrors th download page (@1106): no emoji · newest version only · tap ➡ older ones
+    val pending = pendingRelease(mine, dev)
+    val shown = RELEASES.first { it !== pending }
     Text(tr("Was ist neu", "What's new"), fontWeight = FontWeight.Bold)
     if (dev) {
         // honest DEV status (@1107): "newer than any release" lied when Obtainium was stuck on an old build
@@ -121,21 +135,17 @@ fun ReleaseNotes() {
             else -> Text(tr("✔️ neuester Dev-Build", "✔️ newest dev build"), fontSize = 12.sp, color = MaterialTheme.colorScheme.secondary)
         }
     }
-    // 1 scrollable box (max 320dp) w ALL releases · newest open · older = tap header
-    Column(Modifier.fillMaxWidth().heightIn(max = 320.dp).verticalScroll(rememberScrollState())) {
-        RELEASES.forEachIndexed { idx, r ->
-            val here = mine == r.version || (dev && mine.startsWith(r.version))
-            var open by remember { mutableStateOf(idx == 0) }
-            Column(Modifier.fillMaxWidth().padding(vertical = 4.dp)
-                .then(if (here) Modifier.background(Gold.copy(alpha = 0.16f), RoundedCornerShape(8.dp)) else Modifier).padding(6.dp)) {
-                Row(Modifier.fillMaxWidth().clickable { open = !open }.padding(vertical = 2.dp)) {
-                    Text("v${r.version}", fontWeight = FontWeight.Bold, fontSize = 13.sp)
-                    Text("  ·  ${r.date}" + if (here) "  ·  " + tr("⬅ du hast diese", "⬅ you have this") else "",
-                        fontSize = 12.sp, color = MaterialTheme.colorScheme.secondary, modifier = Modifier.weight(1f))
-                    Text(if (open) "⬆" else "⬇", fontSize = 12.sp, color = Blue)
-                }
-                if (open) r.items.forEach { Text("• " + plain(tr(it)), fontSize = 13.sp) }
-            }
+    // ⏳ DEV only: preview of th next release
+    if (pending != null) {
+        Column(Modifier.fillMaxWidth().padding(vertical = 4.dp)
+            .background(Blue.copy(alpha = 0.12f), RoundedCornerShape(8.dp)).padding(8.dp)) {
+            Text(tr("⏳ In Arbeit", "⏳ In progress") + " · v${pending.version}", fontWeight = FontWeight.Bold, fontSize = 13.sp)
+            pending.items.forEach { Text("• " + plain(tr(it)), fontSize = 13.sp) }
         }
+    }
+    // last released version only — no older fold, no scroll box
+    Column(Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
+        Text("v${shown.version}  ·  ${shown.date}", fontWeight = FontWeight.Bold, fontSize = 13.sp)
+        shown.items.forEach { Text("• " + plain(tr(it)), fontSize = 13.sp) }
     }
 }

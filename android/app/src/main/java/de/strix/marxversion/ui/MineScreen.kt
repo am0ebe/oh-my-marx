@@ -55,6 +55,9 @@ fun MineScreen(vm: AppVm, openChapter: (String, String) -> Unit) {
             if (marks.isEmpty()) Text("\n" + tr("Noch nichts akkumuliert. Tipp auf einen Vers ➡ Markieren — ursprüngliche Akkumulation beginnt klein.",
                 "Nothing accumulated yet. Tap a verse ➡ Highlight — primitive accumulation starts small."))
         }
+        if (marks.any { it.bookmark }) item {
+            Text(tr("🔖 Lesezeichen", "🔖 Bookmarks"), fontSize = 16.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(top = 8.dp))
+        }
         items(marks, key = { it.verseId }) { m ->
             vm.content.verse(m.verseId)?.let { v ->
                 Column(Modifier.fillMaxWidth().clickable { openChapter(v.kap, v.id) }.padding(vertical = 8.dp)) {
@@ -121,6 +124,8 @@ fun SettingsScreen(vm: AppVm, askNotifPermission: () -> Unit) {
         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(vertical = 8.dp)) {
             Column(Modifier.weight(1f)) {
                 Text(tr("👥 Mitlesen", "👥 Read along"))
+                Text(tr("anonym: zeigt, wie viele diese Seite heute lesen + schaltet Kommentare frei",
+                    "anonymous: shows how many read this page today + unlocks comments"), fontSize = 12.sp, color = MaterialTheme.colorScheme.secondary)
             }
             Switch(s.community, { vm.setCommunity(it) })
         }
@@ -164,15 +169,15 @@ fun SettingsScreen(vm: AppVm, askNotifPermission: () -> Unit) {
         Text(tr("Über", "About"), fontWeight = FontWeight.Bold)
         Text("$APP_NAME · " + tr("Version %s", "Version %s").f(BuildConfig.VERSION_NAME), fontSize = 13.sp, color = MaterialTheme.colorScheme.secondary)
         Gap(6)
-        Text(tr("🤖 Stolz gevibecodet von einem Zentauren — halb Mensch, halb Agent. Entfremdete Arbeit, vollautomatisiert. Die Produktionsmittel gehören trotzdem uns.",
-            "🤖 Proudly vibe-coded by a centaur — half human, half agent. Alienated labour, fully automated. The means of production are still ours."), fontSize = 13.sp)
+        Text(tr("🤖 Stolz vibe-gecodet mit Claude Opus + Sonnet. Entfremdete Arbeit, vollautomatisiert. Die Produktionsmittel gehören trotzdem uns.",
+            "🤖 Proudly vibe-coded with Claude Opus + Sonnet. Alienated labour, fully automated. The means of production are still ours."), fontSize = 13.sp)
         val ctx = androidx.compose.ui.platform.LocalContext.current
         // 🔘 🤏 icon row: 🌐 page · 📤 share th app · 💬 feedback = mail straight 2 us (version prefilled, 0 web hops)
         val pageUrl = de.strix.marxversion.data.Update.page
         val shareTxt = tr("Marx lesen wie die Bibel — Oh My Marx ☭ ", "Read Marx like the Bible — Oh My Marx ☭ ") + pageUrl
         val ver = BuildConfig.VERSION_NAME
         val mailBody = tr("Was ist passiert / was wünschst du dir?\n\n\n(Version %s — ein Screenshot hilft)", "What happened / what would you like?\n\n\n(version %s — a screenshot helps)").f(ver)
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)) {
             IconBtn("🌐", tr("Webseite", "Web page")) { runCatching { ctx.startActivity(android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse(pageUrl))) } }
             IconBtn("📤", tr("App teilen", "Share the app")) { runCatching { ctx.startActivity(android.content.Intent.createChooser(
                 android.content.Intent(android.content.Intent.ACTION_SEND).setType("text/plain").putExtra(android.content.Intent.EXTRA_TEXT, shareTxt), null)) } }
@@ -183,8 +188,7 @@ fun SettingsScreen(vm: AppVm, askNotifPermission: () -> Unit) {
             }) } }
         }
         Gap(6)
-        Text(tr("🔓 Quellcode: github.com/am0ebe/oh-my-marx (GPL-3.0) — selbst bauen statt APK vertrauen.",
-            "🔓 Source code: github.com/am0ebe/oh-my-marx (GPL-3.0) — build it yourself instead of trusting the APK."), fontSize = 13.sp)
+        Text("🔓 GPL-3.0", fontSize = 13.sp)
     }
 
     if (pickTime) TimeWheelDialog(s.notifHour, s.notifMinute, onDismiss = { pickTime = false }) { h, m ->
