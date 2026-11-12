@@ -38,7 +38,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -155,7 +154,7 @@ fun ChapterScreen(vm: AppVm, kap: String, focus: String?, @Suppress("UNUSED_PARA
     talk?.let { p -> CommentsSheet(vm, p.kap, p.page) { talk = null } }
 
     CompositionLocalProvider(LocalReadScale provides scale) {
-        BoxWithConstraints(
+        Box(
             Modifier.fillMaxSize().background(Color(0xFF2A1E14))  // th desk under th book
                 .pointerInput(Unit) {  // 🤏 pinch (Initial pass: before th page scrolls)
                     awaitEachGesture {

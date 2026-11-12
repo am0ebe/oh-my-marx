@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- system-shown txt only (launcher, widget picker, shortcuts, QS tile) · in-app txt = tr("de", "en") + assets/content/i18n_xx.json -->
-    <string name="app_name">Oh My Marx</string>
+    <string name="app_name" translatable="false">Oh My Marx</string>
     <!-- 🚀 long-press th launcher icon (res/xml/shortcuts.xml) -->
     <string name="sc_losung">Losung</string>
     <string name="sc_losung_long">☭ Heutige Marx-Losung</string>
