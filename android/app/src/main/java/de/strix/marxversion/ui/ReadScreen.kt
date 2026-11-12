@@ -248,6 +248,16 @@ private fun Page(vm: AppVm, p: BookPage, speaker: Speaker, i: Int, n: Int, modif
                 Gap(4)
             }
             Gap(12)
+            // 📤 same 2 share pills as on Today (QA r3): this page's card (1st verse w a quote) · th app
+            var card by remember { mutableStateOf(false) }
+            var appPanel by remember { mutableStateOf(false) }
+            val cardVerse = p.verses.firstOrNull { it.quoteDe.isNotBlank() || it.quoteEn.isNotBlank() } ?: p.verses.first()
+            Row(Modifier.fillMaxWidth().padding(bottom = 8.dp), horizontalArrangement = androidx.compose.foundation.layout.Arrangement.Center) {
+                CardAction(de.strix.marxversion.R.drawable.ic_share, tr("Karte teilen", "Share card"), INK) { card = true }
+                CardAction(de.strix.marxversion.R.drawable.ic_send, tr("App teilen", "Share app"), INK) { appPanel = true }
+            }
+            if (card) CardDialog(vm, cardVerse, tr("🌅 Spruchkarte", "🌅 Verse card"), null, onDismiss = { card = false }, shareOnly = true)
+            if (appPanel) ShareAppPanel(appShareMsg()) { appPanel = false }
             // 💬 end o th page = th natural moment 2 talk about it (Mitlesen on)
             if (talkOn) OutlinedButton(onClick = onTalk, modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.outlinedButtonColors(contentColor = INK)) {

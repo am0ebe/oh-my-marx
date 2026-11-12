@@ -85,8 +85,10 @@ private val KRISE_COLORS = intArrayOf(0xFF000000.toInt(), 0xFF3A0000.toInt(), 0x
 /**
  * feast ≠ null ➡ 🎉 Sondermotiv: its colours + its emoji next 2 th saint · krise ➡ 📉 black/red, crashing chart, no halo
  * evy normal card: 😇 Saint Marx (halo + beard = res/drawable/ic_launcher_fg) on top
+ * title ≠ null ➡ set i a gentle arch under th saint (QA r3 @1112: "Marx quote of th day" lives IN th card, not as a line above it)
+ * no sun disc (QA r3: occluded txt · share = exactly wh was seen)
  */
-fun cardBitmap(ctx: Context, quote: String, ref: String, lang: Lang, feast: Feast? = null, krise: Boolean = false, sun: Boolean = true): Bitmap {
+fun cardBitmap(ctx: Context, quote: String, ref: String, lang: Lang, feast: Feast? = null, krise: Boolean = false, title: String? = null): Bitmap {
     val w = 1080; val h = 1350
     val bmp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
     val c = Canvas(bmp)
@@ -113,8 +115,7 @@ fun cardBitmap(ctx: Context, quote: String, ref: String, lang: Lang, feast: Feas
         val t = kriseWord(lang)
         c.drawText(t, w / 2f - head.measureText(t) / 2f, 190f, head)
     } else {
-        // sun + 😇 Saint Marx (vector: halo + hair + beard)
-        if (sun) c.drawCircle(w / 2f, h * 0.86f, 170f, Paint().apply { color = 0xCCFFE9A8.toInt() })
+        // 😇 Saint Marx (vector: halo + hair + beard)
         ContextCompat.getDrawable(ctx, R.drawable.ic_launcher_fg)?.apply {
             setBounds(w / 2 - 140, 0, w / 2 + 140, 280)
             draw(c)
@@ -131,6 +132,24 @@ fun cardBitmap(ctx: Context, quote: String, ref: String, lang: Lang, feast: Feas
         typeface = Typeface.create(Typeface.SERIF, Typeface.BOLD_ITALIC)
         setShadowLayer(8f, 0f, 3f, 0x99000000.toInt())
     }
+    // 🌈 title arch: top o a big circle (r 900) just under th saint · shrink til it fits ~50° o arc
+    title?.let { t ->
+        val r = 900f; val top = 345f; val sweep = 50f
+        val arc = android.graphics.Path().apply { addArc(android.graphics.RectF(w / 2f - r, top, w / 2f + r, top + 2 * r), 270f - sweep / 2, sweep) }
+        val p = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = 0xFFFFE9A8.toInt(); typeface = Typeface.create(Typeface.SERIF, Typeface.BOLD); letterSpacing = 0.12f
+            setShadowLayer(10f, 0f, 3f, 0xAA000000.toInt())
+        }
+        val label = t.uppercase()
+        val len = (Math.PI * r * sweep / 180).toFloat()
+        var ts = 46f
+        do { p.textSize = ts; ts -= 2f } while (p.measureText(label) > len && ts > 24f)
+        c.drawTextOnPath(label, arc, (len - p.measureText(label)) / 2f, 0f, p)
+    }
+    val room = if (title != null) h * 0.4f else h * 0.5f
+    val minTop = if (title != null) 430f else 290f
+    val mid = if (title != null) h * 0.5f else h * 0.46f
+
     val txt = lang.quote(quote)
     var size = 64f
     var layout: StaticLayout
@@ -139,15 +158,15 @@ fun cardBitmap(ctx: Context, quote: String, ref: String, lang: Lang, feast: Feas
         layout = StaticLayout.Builder.obtain(txt, 0, txt.length, tp, w - 160)
             .setAlignment(Layout.Alignment.ALIGN_CENTER).setLineSpacing(0f, 1.15f).build()
         size -= 4f
-    } while (layout.height > h * 0.5 && size > 28f)  // room: below th saint (290) ➡ above th ref (0.76 h)
-    if (layout.height > h * 0.5) {
+    } while (layout.height > room && size > 28f)  // room: below th saint (290) / th arch (430) ➡ above th ref (0.76 h)
+    if (layout.height > room) {
         // still 2 long at th smallest size (a whole paragraph) ➡ as many lines as fit, then "…"
-        val lines = (h * 0.5f / (layout.height.toFloat() / layout.lineCount)).toInt().coerceAtLeast(1)
+        val lines = (room / (layout.height.toFloat() / layout.lineCount)).toInt().coerceAtLeast(1)
         layout = StaticLayout.Builder.obtain(txt, 0, txt.length, tp, w - 160)
             .setAlignment(Layout.Alignment.ALIGN_CENTER).setLineSpacing(0f, 1.15f)
             .setMaxLines(lines).setEllipsize(android.text.TextUtils.TruncateAt.END).build()
     }
-    c.save(); c.translate(80f, (h * 0.46f - layout.height / 2f).coerceAtLeast(290f)); layout.draw(c); c.restore()
+    c.save(); c.translate(80f, (mid - layout.height / 2f).coerceAtLeast(minTop)); layout.draw(c); c.restore()
 
     val small = TextPaint(tp).apply { textSize = 40f; typeface = Typeface.create(Typeface.SERIF, Typeface.NORMAL) }
     val by = "— Karl Marx, $ref"

@@ -18,6 +18,12 @@ _SDD: code says **wh** · th file says **y** · drift = a bug · fmt ➡ `pr/vib
 - 🔥 hot files (1 owner at a ti — fan-out lanes nvr split these): `assets/content/i18n_*.json` + `data/i18n/*.jsonl` (translate pass = fan-in only) · `android/app/build.gradle.kts` (version) · `ui/Changelog.kt` · `res/values*/strings.xml` · `TodayScreen.kt` · `MineScreen.kt` · `Share.kt`
 
 ## 🧾 decisions (newest on top)
+### D-016 @1112 · public name = "Lesesaal-Name", prefilled random comrade name, saves on blur · ✔️ (label 💬 am0 may swap)
+- **ctx**: QA r3: "Your name" label dull · empty field = friction · Save btn = extra step
+- **dc**: label "Lesesaal-Name / Reading-room name" · prefill = socialist thinker 1st name + movement year (Rosa 1871 …), 1 per app run · ⚙️ field saves on blur/Done only if changed
+- **y**: am0 r3 ask · label fits D-014 reading-room theme · no Lenin/Stalin/Mao (D-014: lens, not regime)
+- **alt**: Genoss:in (gendered/party-ish) · Kampfname (militant) · Name / Username (generic) ➡ am0 picks if he prefers
+- **ck**: `nameLabel()` + `comradeName()` i `ui/Comments.kt` · `NameTest.kt`
 ### D-015 @1112 · streak = Amen (ez 1 tap), placed under th reading snippet · ✔️ (not built) · amended @1112
 - **ctx**: streak counted quote Amen; plan "done" looked meagre next 2 it (Mi) · options a any day · b plan days · c hybrid
 - **dc**: Amen = th streak action, stays ez (1 tap, no read-gate / timer) · 1 place: bottom o th reading snippet (rm card + hover dup) ➡ th investment (Hooked/IKEA) = actually reading a bit

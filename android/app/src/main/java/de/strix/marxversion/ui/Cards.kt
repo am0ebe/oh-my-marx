@@ -111,14 +111,16 @@ fun CardCarousel(
         val q = verseQuote(it.v)
         val r = ref(it.v)
         // card bitmap off th main thread (StaticLayout + 1080×1350 px) ➡ swiping stays smooth
-        val bmp by produceState<ImageBitmap?>(null, it.key, lang, q) {
-            value = withContext(Dispatchers.Default) { cardBitmap(ctx, q, r, lang, it.feast, it.kind == CardItem.Kind.KRISE, sun = false).asImageBitmap() }
+        val arch = archTitle(it)
+        val bmp by produceState<ImageBitmap?>(null, it.key, lang, q, arch) {
+            value = withContext(Dispatchers.Default) { cardBitmap(ctx, q, r, lang, it.feast, it.kind == CardItem.Kind.KRISE, arch).asImageBitmap() }
         }
         // neighbours shrink + fade a bit = "deck o cards" feel
         val off = abs((pager.currentPage - i) + pager.currentPageOffsetFraction).coerceIn(0f, 1f)
         Column(Modifier.graphicsLayer { scaleX = lerp(1f, 0.9f, off); scaleY = scaleX; alpha = lerp(1f, 0.6f, off) },
             horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(label(it), fontSize = 13.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center,
+            // today: th title lives i th card's arch (QA r3) ➡ no line above · oth cards keep their label
+            if (arch == null) Text(label(it), fontSize = 13.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center,
                 color = if (it.kind == CardItem.Kind.KRISE) Red else MaterialTheme.colorScheme.secondary,
                 modifier = Modifier.padding(bottom = 6.dp))
             // 🙏 Amen idiot-proof (@1106, "ppl will miss th small btn"): today's card itself = th Amen btn + a pulsing hint on it
@@ -147,6 +149,8 @@ fun CardCarousel(
     val haptic = LocalHapticFeedback.current
     val copied = tr("📋 Kopiert", "📋 Copied")
     val shareTitle = tr("Spruchkarte teilen", "Share verse card")
+    val curArch = archTitle(cur)
+    var sharePanel by remember { mutableStateOf(false) }
     Row(Modifier.fillMaxWidth().padding(top = 10.dp), horizontalArrangement = Arrangement.SpaceEvenly, verticalAlignment = Alignment.Top) {
         CardAction(R.drawable.ic_volume, tr("Vorlesen", "Listen"), if (speaker.speaking) Red else Blue) { speaker.say(q, lang, persona) }
         CardAction(R.drawable.ic_copy, tr("Kopieren", "Copy"), Blue) {
@@ -156,19 +160,15 @@ fun CardCarousel(
         }
         CardAction(R.drawable.ic_book, tr("Im Buch", "In book"), Blue) { openChapter(cur.v.kap, cur.v.id) }
         // label says WHAT (QA @1112: "share wh?") · render + PNG off th main thread (was th lag)
+        // share = exactly th card u see (same arch title, no sun)
         CardAction(R.drawable.ic_share, tr("Karte teilen", "Share card"), Blue) {
-            shareCard(ctx, { cardBitmap(ctx, q, r, lang, cur.feast, cur.kind == CardItem.Kind.KRISE) },
+            shareCard(ctx, { cardBitmap(ctx, q, r, lang, cur.feast, cur.kind == CardItem.Kind.KRISE, curArch) },
                 "${lang.quote(q)} — Karl Marx, $r\n$APP_NAME", shareTitle)
         }
+        // 📤 share th app = same pill, right next 2 it (QA r3: streamline, was a loose txt btn aft Amen)
+        CardAction(R.drawable.ic_send, tr("App teilen", "Share app"), Blue) { sharePanel = true }
     }
-    // 📤 motivated moment: today's reading done ➡ 1 quiet "share th app" (link scagent.de/omm) · no new screen
-    val appMsg = tr("Ich lese Das Kapital jeden Tag ein Stück — mit Oh My Marx ☭", "I read Das Kapital a bit every day — with Oh My Marx ☭")
-    var sharePanel by remember { mutableStateOf(false) }
-    if (sharePanel) ShareAppPanel(appMsg) { sharePanel = false }
-    if (doneToday && cur.kind == CardItem.Kind.TODAY)
-        TextButton(onClick = { sharePanel = true }, modifier = Modifier.padding(top = 2.dp)) {
-            Text(tr("📤 Diese App teilen", "📤 Share this app"), fontSize = 14.sp, fontWeight = FontWeight.Bold)
-        }
+    if (sharePanel) ShareAppPanel(appShareMsg()) { sharePanel = false }
     // big + red + full width = can't miss it (was a 5th small pill)
     if (cur.kind == CardItem.Kind.TODAY && !doneToday)
         Button(onClick = { onAmen(cur.v) }, colors = ButtonDefaults.buttonColors(containerColor = Red),
@@ -181,9 +181,13 @@ fun CardCarousel(
     )
 }
 
-/** 🔘 1 card action: soft-tinted circle (tint @8 % + hairline ring) + label underneath · icon xor glyph */
+/** 📤 1 "share th app" txt 4 evy entry (Today pill · Read page · About) · ShareAppPanel adds th link */
 @Composable
-private fun CardAction(icon: Int?, label: String, tint: Color, glyph: String? = null, onClick: () -> Unit) {
+fun appShareMsg() = tr("Ich lese Das Kapital jeden Tag ein Stück — mit Oh My Marx ☭", "I read Das Kapital a bit every day — with Oh My Marx ☭")
+
+/** 🔘 1 card action: soft-tinted circle (tint @8 % + hairline ring) + label underneath · icon xor glyph · also used on th Read page */
+@Composable
+fun CardAction(icon: Int?, label: String, tint: Color, glyph: String? = null, onClick: () -> Unit) {
     Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.width(64.dp)) {
         Surface(onClick = onClick, shape = CircleShape, color = tint.copy(alpha = 0.08f),
             border = BorderStroke(1.dp, tint.copy(alpha = 0.22f)), modifier = Modifier.size(46.dp)) {
@@ -195,6 +199,11 @@ private fun CardAction(icon: Int?, label: String, tint: Color, glyph: String? = 
         Text(label, fontSize = 11.sp, color = tint.copy(alpha = 0.85f), maxLines = 1, modifier = Modifier.padding(top = 3.dp))
     }
 }
+
+/** 🌈 title set i th card's arch: today only (feast ➡ its greeting) · null = no arch */
+@Composable
+fun archTitle(c: CardItem): String? =
+    if (c.kind != CardItem.Kind.TODAY) null else c.feast?.let { tr(it.greet) } ?: tr("Marx-Zitat des Tages", "Marx quote of the day")
 
 @Composable
 private fun label(c: CardItem): String = when (c.kind) {

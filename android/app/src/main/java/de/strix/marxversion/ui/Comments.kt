@@ -46,6 +46,15 @@ import de.strix.marxversion.data.f
  * No account yet ➡ 1st thing = "how do u want 2 be called?" ➡ th account is made w th 1st comment.
  * Hold ur own comment = delete.
  */
+/** 👤 th public name label (QA r3 @1112: not "Dein Name") · alts 4 am0: Genoss:in · Kampfname · Name · Username */
+@Composable
+fun nameLabel() = tr("Lesesaal-Name", "Reading-room name")
+
+/** 🎲 default name: a socialist thinker's 1st name + a year o th movement (no Lenin/Stalin/Mao — D-014: lens, not regime) */
+fun comradeName(rnd: kotlin.random.Random = kotlin.random.Random): String =
+    listOf("Rosa", "Clara", "Jenny", "Eleanor", "Friedrich", "Antonio", "Alexandra", "Walter", "Bertolt", "Angela", "Ernst", "Louise", "Paul", "Flora")
+        .random(rnd) + " " + listOf(1848, 1867, 1871, 1918, 1968).random(rnd)
+
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun CommentsSheet(vm: AppVm, kap: String, page: Int?, onDismiss: () -> Unit) {
@@ -54,7 +63,7 @@ fun CommentsSheet(vm: AppVm, kap: String, page: Int?, onDismiss: () -> Unit) {
     val me by produceState<String?>(null, name) { value = vm.myUserId() }
     val list = all[kap].orEmpty().filter { it.page == page }
     var draft by remember { mutableStateOf("") }
-    var newName by remember { mutableStateOf("") }
+    var newName by remember { mutableStateOf(vm.suggestedName) }
     var busy by remember { mutableStateOf(false) }
     var failed by remember { mutableStateOf(false) }
     LaunchedEffect(kap) { vm.loadComments(kap) }
@@ -91,7 +100,7 @@ fun CommentsSheet(vm: AppVm, kap: String, page: Int?, onDismiss: () -> Unit) {
             if (name == null) {
                 // 1st time: pick a name (= th Matrix account, made on send)
                 OutlinedTextField(newName, { newName = it }, singleLine = true, modifier = Modifier.fillMaxWidth(),
-                    label = { Text(tr("Dein Name hier (z. B. Rosa)", "Your name here (e.g. Rosa)")) },
+                    label = { Text(nameLabel()) },
                     keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Words))
             } else Text(tr("👤 du schreibst als %s", "👤 you write as %s").f(name!!), fontSize = 11.sp, color = MaterialTheme.colorScheme.secondary)
             Row(verticalAlignment = Alignment.CenterVertically) {

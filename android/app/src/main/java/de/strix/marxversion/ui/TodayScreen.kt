@@ -508,6 +508,7 @@ fun CardDialog(
     onOlder: (() -> Unit)? = null, onNewer: (() -> Unit)? = null, storyLabel: String? = null,
     shareOnly: Boolean = false,  // fr a verse's Teilen: just 1 big Share btn + ☭ close
     text: String? = null,        // what goes on th card · null = th verse's quote (fr a verse's Teilen: th paragraph itself)
+    arch: String? = null,        // ≠ null ➡ title set i th card's arch, no title line above (QA r3)
 ) {
     val s by vm.settings.collectAsStateWithLifecycle()
     val ctx = LocalContext.current
@@ -518,7 +519,7 @@ fun CardDialog(
     val speaker = rememberSpeaker()
     val q = text ?: verseQuote(v).ifBlank { verseText(v).take(240).substringBeforeLast(' ') + " …" }
     val r = ref(v)
-    val bmp = remember(q, r, lang, feast) { cardBitmap(ctx, q, r, lang, feast).asImageBitmap() }
+    val bmp = remember(q, r, lang, feast, arch) { cardBitmap(ctx, q, r, lang, feast, title = arch).asImageBitmap() }
     val shareTitle = tr("Spruchkarte teilen", "Share verse card")
     val persona = Persona.of(s.persona)
     LaunchedEffect(q, lang, persona) { speaker.prerender(q, lang, persona) }  // 🔊 tap = instant
@@ -566,7 +567,7 @@ fun CardDialog(
                     Modifier.fillMaxSize().systemBarsPadding().padding(horizontal = 20.dp, vertical = 12.dp),
                     horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.SpaceEvenly,
                 ) {
-                    Text(title, color = Color.White, fontSize = 22.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center)
+                    if (arch == null) Text(title, color = Color.White, fontSize = 22.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center)
                     storyLabel?.let { Text(it, color = Color.White.copy(alpha = 0.75f), fontSize = 12.sp, textAlign = TextAlign.Center) }
                     var held by remember { mutableStateOf(false) }
                     Image(bmp, contentDescription = q, modifier = Modifier.fillMaxWidth().aspectRatio(1080f / 1350f)
@@ -592,8 +593,7 @@ fun CardDialog(
     Dialog(onDismissRequest = onDismiss, properties = DialogProperties(usePlatformDefaultWidth = false)) {
         Card(Modifier.fillMaxWidth().padding(20.dp)) {
             Column(Modifier.padding(12.dp)) {
-                Text(title, fontWeight = FontWeight.Bold, modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
-                Gap(8)
+                if (arch == null) { Text(title, fontWeight = FontWeight.Bold, modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center); Gap(8) }
                 Image(bmp, contentDescription = q, modifier = Modifier.fillMaxWidth().aspectRatio(1080f / 1350f).clip(RoundedCornerShape(12.dp)))
                 hooks()
                 buttons(Blue)
@@ -632,8 +632,9 @@ fun LosungPopup(vm: AppVm, openChapter: (String, String) -> Unit) {
         title = when {
             back > 0 -> tr("📜 Losung von %s", "📜 Verse from %s").f(ago)
             feast != null -> feast.emoji + " " + tr(feast.greet)
-            else -> tr("✨ Deine Marx-Losung für heute", "✨ Your Marx verse for today")
+            else -> tr("Marx-Zitat des Tages", "Marx quote of the day")
         },
+        arch = if (back == 0) feast?.let { tr(it.greet) } ?: tr("Marx-Zitat des Tages", "Marx quote of the day") else null,
         feast = feast,
         onDismiss = { vm.popupDone() },
         openChapter = { k, id -> vm.popupDone(); openChapter(k, id) },

@@ -26,6 +26,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.material3.IconButton
@@ -132,15 +137,17 @@ fun SettingsScreen(vm: AppVm, askNotifPermission: () -> Unit) {
         // 💬 comments: name = what others see (account is made w ur 1st comment, lives only on this fon)
         if (s.community) {
             val mx by vm.mxName.collectAsStateWithLifecycle()
-            mx?.let { cur ->
-                var edit by remember { mutableStateOf(false) }
-                var draft by remember(cur) { mutableStateOf(cur) }
-                if (!edit) TextButton(onClick = { edit = true }) { Text(tr("👤 Dein Name: %s ✏️", "👤 Your name: %s ✏️").f(cur)) }
-                else Row(verticalAlignment = Alignment.CenterVertically) {
-                    OutlinedTextField(draft, { draft = it }, singleLine = true, modifier = Modifier.weight(1f))
-                    TextButton(onClick = { vm.rename(draft); edit = false }) { Text(tr("Speichern", "Save")) }
-                }
-            }
+            // QA r3: always editable · prefilled w a random comrade name · saves on blur / Done only if changed (no Save btn)
+            val start = mx ?: vm.suggestedName
+            var draft by remember(start) { mutableStateOf(start) }
+            var focused by remember { mutableStateOf(false) }
+            val focus = androidx.compose.ui.platform.LocalFocusManager.current
+            fun commit() { val n = draft.trim(); if (n.isNotEmpty() && n != mx && (mx != null || n != vm.suggestedName)) vm.rename(n) else if (n.isEmpty()) draft = start }
+            OutlinedTextField(draft, { draft = it }, singleLine = true, modifier = Modifier.fillMaxWidth()
+                .onFocusChanged { f -> if (focused && !f.isFocused) commit(); focused = f.isFocused },
+                label = { Text(nameLabel()) },
+                keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Words, imeAction = ImeAction.Done),
+                keyboardActions = KeyboardActions(onDone = { focus.clearFocus() }))
         }
         HookNote(Hook.SOCIAL, s.testMode)
         HorizontalDivider()

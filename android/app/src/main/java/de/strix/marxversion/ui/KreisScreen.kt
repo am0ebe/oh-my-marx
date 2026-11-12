@@ -73,7 +73,7 @@ fun KreiseScreen(vm: AppVm, open: (Int) -> Unit) {
     val name by vm.mxName.collectAsStateWithLifecycle()
     val members by vm.kreisMembers.collectAsStateWithLifecycle()
     val tl by vm.kreisTimeline.collectAsStateWithLifecycle()
-    var myName by remember { mutableStateOf("") }
+    var myName by remember { mutableStateOf(vm.suggestedName) }
     var newName by remember { mutableStateOf("") }
     var code by remember { mutableStateOf("") }
     var busy by remember { mutableStateOf(false) }
@@ -101,7 +101,7 @@ fun KreiseScreen(vm: AppVm, open: (Int) -> Unit) {
                     Text(tr("📨 Einladung in einen Lesekreis", "📨 Invitation to a reading circle"), fontWeight = FontWeight.Bold)
                     Text(pc, fontFamily = FontFamily.Monospace, fontSize = 22.sp, fontWeight = FontWeight.Bold, color = Red)
                     if (name == null) OutlinedTextField(myName, { myName = it }, singleLine = true, modifier = Modifier.fillMaxWidth(),
-                        label = { Text(tr("Dein Name (z. B. Rosa)", "Your name (e.g. Rosa)")) },
+                        label = { Text(nameLabel()) },
                         keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Words))
                     Row {
                         Button(onClick = {
@@ -136,7 +136,7 @@ fun KreiseScreen(vm: AppVm, open: (Int) -> Unit) {
         // name (= Matrix account, shared w comments) only th 1st time
         if (name == null) {
             OutlinedTextField(myName, { myName = it }, singleLine = true, modifier = Modifier.fillMaxWidth(),
-                label = { Text(tr("Dein Name (z. B. Rosa)", "Your name (e.g. Rosa)")) },
+                label = { Text(nameLabel()) },
                 keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Words))
             Gap(8)
         }

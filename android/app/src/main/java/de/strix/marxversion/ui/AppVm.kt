@@ -135,6 +135,9 @@ class AppVm(app: Application) : AndroidViewModel(app) {
         if (Matrix.redact(s, r, id)) comments.value = comments.value + (kap to Matrix.comments(s, r))
     }
 
+    /** 1 random comrade name per app run = th prefill evywhere a name is asked (⚙️ · comments · Kreise) */
+    val suggestedName = comradeName()
+
     fun rename(name: String) = viewModelScope.launch {
         val n = name.trim().takeIf { it.isNotEmpty() } ?: return@launch
         marx.prefs.setMxName(n); session()?.let { Matrix.setName(it, n) }
