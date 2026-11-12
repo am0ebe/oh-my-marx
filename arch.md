@@ -18,16 +18,18 @@ _SDD: code says **wh** · th file says **y** · drift = a bug · fmt ➡ `pr/vib
 - 🔥 hot files (1 owner at a ti — fan-out lanes nvr split these): `assets/content/i18n_*.json` + `data/i18n/*.jsonl` (translate pass = fan-in only) · `android/app/build.gradle.kts` (version) · `ui/Changelog.kt` · `res/values*/strings.xml` · `TodayScreen.kt` · `MineScreen.kt` · `Share.kt`
 
 ## 🧾 decisions (newest on top)
-### D-015 @1112 · streak day = reading snippet read + Amen pressed there · ✔️ (not built)
+### D-015 @1112 · streak = Amen (ez 1 tap), placed under th reading snippet · ✔️ (not built) · amended @1112
 - **ctx**: streak counted quote Amen; plan "done" looked meagre next 2 it (Mi) · options a any day · b plan days · c hybrid
-- **dc**: a day counts when th reading snippet is read + Amen tapped at its bottom · Amen moves 2 reading (1 place)
-- **y**: am0 @1112 fon QA: "its not the quote is it. its the actual book" · **alt**: a/b/c chip (❌)
-- **ck**: (aft build) Amen only i read snippet · `PlanTest`/streak tst · open edge ➡ qa_1112.md Q4
+- **dc**: Amen = th streak action, stays ez (1 tap, no read-gate / timer) · 1 place: bottom o th reading snippet (rm card + hover dup) ➡ th investment (Hooked/IKEA) = actually reading a bit
+- **y**: am0 @1112: "its not the quote … its the actual book" + "Amen counts 4 th streak, keep it an ez action · investment = reading a bit"
+- **alt**: a/b/c chip (❌) · gate Amen on scroll/ti read (❌ friction)
+- **ck**: (aft build) Amen only i read snippet · Amen btn i `Cards.kt` = 0 · streak tst
 ### D-014 @1112 · Orden ➡ Abzeichen (badges), reading-room blue/gold · ✔️
 - **ctx**: Mi feedback: Orden = too real-socialism/authoritarian, ☭ evywhere
 - **dc**: rename + re-theme (reading-room look), positive reframes ("missed a day" tone out), stamp gift = ☭, Marx = lens not utopia
 - **y**: user feedback (Mi) via am0 · **alt**: keep Orden (❌ alienates non-hardcore users)
 - **ck**: `grep -rn "Orden" ui/` = only enum/code names, UI text says Abzeichen/badges · `OrdenTest.kt`
+- **amend @1112 (am0)**: tone = positive + friendly, **nudging allowed** (miss ➡ kind nudge, e.g. sad Marx) · ❌ guilt / shame / loss threats · ck: nudge strings carry no blame ("verpasst" / "verloren")
 ### D-013 @1112 · Krisenfest = 15 shakes · ✔️
 - **ctx**: crisis medal too easy · **dc**: `KRISE_SHAKES = 15` · **y**: Mi: "needs more shakes" · **ck**: `logic/Orden.kt` KRISE_SHAKES
 ### D-012 @1112 · 1 sober voice only · ✔️
