@@ -33,6 +33,7 @@ tools i bin/ (run fr th repo root, -h on any for help):
   andacht.py   7️⃣ LLM devotionals per plan day ➡ build.py again
   translate.py 8️⃣ quotes/UI/… ➡ it es pt zh ar (--only ui = just UI strings)
   translate_full.py 9️⃣ whole book ➡ it es pt zh ar (hours) · --export ➡ android assets
+  check_langs.py 🌐 ship guard: evy Lang.menu lang needs i18n_xx + full_xx.json (ship.sh runs it) · tsts: python3 -m unittest bin/test_bin.py
   server/      👥 community counter API (server/README.md: run, test, VPS install)
 EOF
 }

@@ -145,6 +145,25 @@ def items(only):
             if n.get("de", "").strip():
                 yield "fn", f"{n['kap']}:{n['n']}", n["de"], n.get("en", "")
 
+class CallFailed(Exception):
+    """1 LLM call that gave no usable answer · .toks = what th model generated anyway (0 = no reply, e.g. timeout)"""
+    def __init__(self, msg, toks=0, secs=0.0):
+        super().__init__(msg); self.toks, self.secs = toks, secs
+
+class Meter:
+    """all calls o th process: secs + toks, split ok ⬄ failed (failed toks = pure waste)"""
+    def __init__(self): self.reset()
+    def reset(self): self.calls = self.fails = self.toks = self.wasted = 0; self.secs = self.wasted_secs = 0.0
+    def call(self, secs, toks, ok):
+        self.calls += 1; self.secs += secs
+        if ok: self.toks += toks
+        else: self.fails += 1; self.wasted += toks; self.wasted_secs += secs
+    def line(self):
+        if not self.fails: return ""
+        return f" · ❌ {self.fails}/{self.calls} calls failed = {self.wasted} tok + {self.wasted_secs / 60:.1f} min wasted"
+
+METER = Meter()
+
 def ask(model, url, lang, batch):
     """batch: {key: (de, en)} ➡ {key: translation}"""
     ids = {f"k{i}": k for i, k in enumerate(batch)}
@@ -162,9 +181,22 @@ def ask(model, url, lang, batch):
     body = {"model": model, "prompt": prompt, "format": schema, "stream": False, "keep_alive": "30m",
             "options": {"temperature": 0.2, "num_ctx": 16384, "num_predict": cap}}
     req = urllib.request.Request(url, data=json.dumps(body).encode(), headers={"Content-Type": "application/json"})
-    r = json.load(urllib.request.urlopen(req, timeout=1800))
-    out = json.loads(r["response"])
-    return {ids[i]: out[i].strip() for i in ids if isinstance(out.get(i), str) and out[i].strip()}, r.get("eval_count", 0)
+    # 🐛 @1112: runaways were invisible 4 days ➡ evy call logs its secs + toks · a FAILED call (bad JSON = th model ran
+    #   on, toks alr spent) is counted i METER.wasted · an exception w/o a reply (timeout) = secs only, toks unknown
+    t0, toks, name = time.time(), 0, f"{lang} {len(batch)}×{next(iter(batch))}"
+    try:
+        r = json.load(urllib.request.urlopen(req, timeout=1800))
+        toks = r.get("eval_count", 0)
+        out = json.loads(r["response"])
+    except Exception as e:
+        secs = time.time() - t0
+        METER.call(secs, toks, ok=False)
+        print(f"    ❌ {name} · {secs:.1f}s · {toks} tok WASTED ({type(e).__name__})", flush=True)
+        raise CallFailed(str(e), toks, secs) from e
+    secs = time.time() - t0
+    METER.call(secs, toks, ok=True)
+    print(f"    ⏱ {name} · {secs:.1f}s · {toks} tok · {toks / max(secs, 0.001):.0f} tok/s", flush=True)
+    return {ids[i]: out[i].strip() for i in ids if isinstance(out.get(i), str) and out[i].strip()}, toks
 
 def check(lang, de, t):
     """➡ warning string or None"""
@@ -231,9 +263,9 @@ def run(lang, only, model, url, limit):
             el = time.time() - t0
             eta = el / max(done_chars, 1) * (total - done_chars)
             print(f"  [{lang} {kind}] {done_chars * 100 // max(total, 1)}% · {done_chars // 1000}k/{total // 1000}k chars"
-                  f" · {toks / max(el, 1):.0f} tok/s · eta {eta / 60:.0f} min", flush=True)
+                  f" · {toks / max(el, 1):.0f} tok/s · eta {eta / 60:.0f} min{METER.line()}", flush=True)
     f.close()
-    print(f"✔️ {lang} done in {(time.time() - t0) / 60:.0f} min", flush=True)
+    print(f"✔️ {lang} done in {(time.time() - t0) / 60:.0f} min · {METER.calls} calls · {METER.toks} tok ok{METER.line()}", flush=True)
 
 def ratio_bad(x):
     return (x.get("warn") or "").startswith("length")
