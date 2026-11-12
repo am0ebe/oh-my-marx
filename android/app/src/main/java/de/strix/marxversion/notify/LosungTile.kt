@@ -1,5 +1,6 @@
 package de.strix.marxversion.notify
 
+import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.content.Intent
 import android.os.Build
@@ -16,6 +17,7 @@ class LosungTile : TileService() {
         qsTile?.apply { state = Tile.STATE_INACTIVE; updateTile() }
     }
 
+    @SuppressLint("StartActivityAndCollapseDeprecated")  // Intent overload only on SDK < 34 (guarded below)
     override fun onClick() {
         val i = Intent(this, MainActivity::class.java)
             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
