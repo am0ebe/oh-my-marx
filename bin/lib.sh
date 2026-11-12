@@ -9,7 +9,7 @@ ADB=$ANDROID_HOME/platform-tools/adb
 # 🌐 where th download pages live (@1103: /bible dropped, too new 2 need a redirect)
 # short link 4 ppl: scagent.de/omm = 302 by ops' Caddy · Obtainium keeps th full URL
 WEB=https://scagent.de/oh-my-marx
-SHORT=https://scagent.de/omm                         # th link ppl share (QR · share btns)
+SHORT=https://scagent.de/oh-my-marx/                    # th link ppl share (QR · share btns) · @1112 full URL
 DIRS=/srv/www/oh-my-marx
 MAIL=omm@scagent.de                                 # feedback addr (Migadu alias ➡ am0ebe's inbox)
 SRC=https://github.com/am0ebe/oh-my-marx
@@ -216,10 +216,10 @@ $news
 <footer>
 <h2>Know someone who'd read Marx on the bus? ☭</h2>
 <button class="sb" id="sh"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="fill:none"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg> Share $APP</button>
-<p class="fb" id="feedback">💬 Bug, idea, praise? <a href="mailto:$MAIL?subject=Oh%20My%20Marx%20$ver&amp;body=What%20happened%20or%20what%20would%20you%20like%3F%0A%0A%0A(a%20screenshot%20helps%20%E2%80%94%20version%20$ver)">$MAIL</a>
+<p class="fb" id="feedback">💬 Bug, idea, praise? <a href="mailto:$MAIL?subject=Oh%20My%20Marx%20$ver&amp;body=What%20did%20you%20do%3F%0A%0A%0AWhat%20did%20you%20expect%3F%0A%0A%0AVersion%3A%20$ver%0A(screenshot%20optional%2C%20helps)">$MAIL</a>
 · <a href="$SRC/issues/new/choose">GitHub issue</a></p>
 </footer>
-<!-- 📣 share panel: same on fon + PC · "More apps…" = th fon's own share sheet (Signal, Element/Matrix, …) where it exists -->
+<!-- 📣 share panel: same on fon + PC -->
 <dialog id="sd" aria-label="Share">
 <button class="x" id="sx" aria-label="Close">✕</button>
 <h2>Share $APP</h2>
@@ -231,13 +231,13 @@ $news
 <a href="mailto:?subject=$(enc "Oh My Marx ☭")&amp;body=$t" title="Mail"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="fill:none"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg><span>Mail</span></a>
 <a href="https://wa.me/?text=$t" title="WhatsApp" rel="noopener" target="_blank">$(ico whatsapp)<span>WhatsApp</span></a>
 </nav>
-<div class="r2"><button class="p" id="cp"><span>📋 Copy link</span></button><button class="p" id="mo" hidden>More apps…</button></div>
-$(qrencode -t SVG --inline --svg-path -m 2 --foreground=1d1230 --background=f4ead8 "$SHORT" | sed 's/<svg /<svg class="qr" role="img" aria-label="QR code: scagent.de\/omm" /')
-<small>Scan with a phone camera · scagent.de/omm</small>
+<div class="r2"><button class="p" id="cp"><span>📋 Copy link</span></button></div>
+$(qrencode -t SVG --inline --svg-path -m 2 --foreground=1d1230 --background=f4ead8 "$SHORT" | sed 's/<svg /<svg class="qr" role="img" aria-label="QR code: scagent.de\/oh-my-marx" /')
+<small>Scan with a phone camera · scagent.de/oh-my-marx</small>
 </dialog>
 <script>
 var U = '$SHORT', TXT = 'Read Das Kapital like the Bible ☭ a daily verse, the whole book, free & open source';
-var d = document.getElementById('sd'), mo = document.getElementById('mo');
+var d = document.getElementById('sd');
 document.getElementById('sh').onclick = function () { d.showModal(); };
 document.getElementById('sx').onclick = function () { d.close(); };
 d.onclick = function (e) { if (e.target === d) d.close(); };   // tap outside th panel = close
@@ -245,8 +245,6 @@ document.getElementById('cp').onclick = function () {
   var s = this.querySelector('span');
   navigator.clipboard.writeText(U).then(function () { s.textContent = '✔ Copied'; }, function () { prompt('Copy this link:', U); });
 };
-// desktop Firefox/Chrome on Linux expose navigator.share but open nothing ➡ touch devices only
-if (navigator.share && matchMedia('(pointer: coarse)').matches) { mo.hidden = false; mo.onclick = function () { navigator.share({ title: '$APP', text: TXT, url: U }).catch(function () {}); }; }
 // 🧪 Dev tab: newest dev build straight fr dev/version.json (dev deploys don't re-render this page)
 fetch('dev/version.json', { cache: 'no-cache' }).then(function (r) { return r.json(); }).then(function (j) {
   var a = document.getElementById('dv'); a.href = 'dev/' + j.apk; a.textContent = '⬇️ Download DEV ' + j.version + (j.mb ? ' · ' + j.mb + ' MB' : '');

@@ -9,13 +9,13 @@ a.b{display:block;background:#b3261e;color:#fff;padding:.9em;border-radius:12px;
 <p>Jemand will mit dir <i>Das Kapital</i> lesen ☭</p>
 <div class="c" id="code">······</div>
 <a class="b" id="open" href="#">☭ In Oh My Marx öffnen</a>
-<p><small>App noch nicht da? ➡ <a href="https://scagent.de/omm">scagent.de/omm</a> installieren, dann hier nochmal tippen
+<p><small>App noch nicht da? ➡ <a href="https://scagent.de/oh-my-marx/">scagent.de/oh-my-marx</a> installieren, dann hier nochmal tippen
 — oder in der App: 👥 Kreis ➡ Code eintippen.</small></p>
 <p><small><a id="dev" href="#">(DEV-App)</a></small></p>
 <script>
   const c = (new URLSearchParams(location.search).get("c") || location.hash.slice(1) || "").toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 8);
   document.getElementById("code").textContent = c || "??????";
-  const fb = encodeURIComponent("https://scagent.de/omm");
+  const fb = encodeURIComponent("https://scagent.de/oh-my-marx/");
   const link = pkg => `intent://kreis/${c}#Intent;scheme=ohmymarx;package=${pkg};S.browser_fallback_url=${fb};end`;
   document.getElementById("open").href = link("de.strix.marxversion");
   document.getElementById("dev").href = link("de.strix.marxversion.dev");
