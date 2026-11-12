@@ -73,8 +73,8 @@ enum class Hook(val txt: Pair<String, String>) {
         "🪝 Autonomy instead of chain anxiety (Hooked ch. 4) — 1 rest day per week doesn't break the chain. Whoever trembles for their streak reads out of duty, not desire — and eventually quits.",
     )),
     DAYTIME(T(
-        "🪝 Routine-Anker (Hooked Kap. 2) — Farben + Gruß wechseln mit der Tageszeit, wie bei Insight Timer. Die App klebt sich an Kaffee, Mittagspause und Feierabend.",
-        "🪝 Routine anchor (Hooked ch. 2) — colours + greeting change with the time of day, like Insight Timer. The app sticks itself to coffee, lunch break and clocking out.",
+        "🪝 Routine-Anker (Hooked Kap. 2) — Farben + Gruß wechseln mit der Tageszeit, passend zum Tagesrhythmus. Die App klebt sich an Kaffee, Mittagspause und Feierabend.",
+        "🪝 Routine anchor (Hooked ch. 2) — colours + greeting change with the time of day, to match your day. The app sticks itself to coffee, lunch break and clocking out.",
     )),
     FEAST(T(
         "🪝 Kalender-Belohnung (Hooked Kap. 7) — an Feiertagen ein Sondermotiv. YouVersion hatte Angst vor der „Frohe Weihnachten“-Push. Stattdessen haben die Leute sie gescreenshottet und geteilt.",

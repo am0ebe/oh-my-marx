@@ -194,8 +194,8 @@ fun KreisDetail(vm: AppVm, i: Int, back: () -> Unit) {
         if (chat.isNotEmpty()) { list.scrollToItem(chat.lastIndex + 1); vm.kreisSeen(k.room, chat.last().ts) }  // 🔔 seen ➡ no notif 4 these
     }
     // link = th landing page (bin/kreis.html) ➡ "In Oh My Marx öffnen" ➡ app opens w th code · + th code 4 typing
-    val invite = tr("Komm in meinen Lesekreis „%s“ bei Oh My Marx ☭\nAntippen: %s\n(oder in der App: 👥 Kreis ➡ Code %s · App: https://scagent.de/omm)",
-        "Join my reading circle “%s” on Oh My Marx ☭\nTap: %s\n(or in the app: 👥 Circle ➡ code %s · app: https://scagent.de/omm)")
+    val invite = tr("Komm in meinen Lesekreis „%s“ bei Oh My Marx ☭\nAntippen: %s\n(oder in der App: 👥 Kreis ➡ Code %s · App: https://scagent.de/oh-my-marx/)",
+        "Join my reading circle “%s” on Oh My Marx ☭\nTap: %s\n(or in the app: 👥 Circle ➡ code %s · app: https://scagent.de/oh-my-marx/)")
         .f(k.name, "https://scagent.de/oh-my-marx/k/?c=" + k.code, k.code)
     val inviteTitle = tr("Einladen", "Invite")
 

@@ -66,11 +66,11 @@ fun MarxDialog(
     }
 }
 
-/** ☭ = close, evywhere · a real btn: round, tinted, hairline ring, ripple on tap */
+/** ★ = close, evywhere · a real btn: round, tinted, hairline ring, ripple on tap */
 @Composable
 fun CloseButton(onClick: () -> Unit, modifier: Modifier = Modifier, tint: Color = Red, size: Dp = 36.dp) {
     Surface(onClick = onClick, shape = CircleShape, color = tint.copy(alpha = 0.10f),
         border = BorderStroke(1.dp, tint.copy(alpha = 0.30f)), modifier = modifier.size(size)) {
-        Box(contentAlignment = Alignment.Center) { Text("☭", fontSize = (size.value * 0.48f).sp, color = tint, fontWeight = FontWeight.Bold) }
+        Box(contentAlignment = Alignment.Center) { Text("★", fontSize = (size.value * 0.48f).sp, color = tint, fontWeight = FontWeight.Bold) }
     }
 }
