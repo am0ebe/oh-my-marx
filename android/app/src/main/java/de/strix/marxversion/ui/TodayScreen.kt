@@ -23,6 +23,10 @@ import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.foundation.layout.height
+import de.strix.marxversion.logic.planIndex
 import de.strix.marxversion.logic.dailyPool
 import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.runtime.mutableIntStateOf
@@ -127,6 +131,9 @@ private fun teaser(s: String, lang: Lang, words: Int = 8) =
 @Composable
 private fun feastNow(vm: AppVm): Feast? = vm.feastPreview.collectAsStateWithLifecycle().value ?: Feast.on(LocalDate.now())
 
+private const val DEFAULT_PLAN = "30tage"
+private val PlanAccent = Color(0xFF6A3093)  // plan card accent (aubergine = Plans-tab 2nd colour)
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -> Unit, openPlans: () -> Unit) {
@@ -172,6 +179,13 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
         if (fills) confetti = true else swoosh = true
         vm.amen(v.id)
     }
+    // 🏠 Home tab tap ➡ scroll 2 top (th carousel jumps 2 card 1 itself)
+    LaunchedEffect(jump) { if (jump > 0) scroll.animateScrollTo(0) }
+    // 📖 evy1 i a plan: nothing chosen yet (once th prefs r really loaded) ➡ dflt = th flagship
+    val prefsReady by vm.prefsReady.collectAsStateWithLifecycle()
+    LaunchedEffect(prefsReady, s.activePlan, s.planStart) {
+        if (prefsReady && s.activePlan == null && s.planStart == null && vm.content.plan(DEFAULT_PLAN) != null) vm.startPlan(DEFAULT_PLAN)
+    }
     // 🚀 launcher shortcut "Orakel" / "Krise!"
     val req by vm.popRequest.collectAsStateWithLifecycle()
     LaunchedEffect(req) {
@@ -191,7 +205,9 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
                     fontSize = 14.sp, modifier = Modifier.padding(12.dp))
             }
         }
-        // ── 🃏 th cards: 1st thing u see (Hooked: reward right at th door) ──
+        // ── 🔥 streak widget on top (@1112): chain + week + Stempelkarte = th 1st thing u see ──
+        Box(Modifier.padding(horizontal = 16.dp).padding(bottom = 12.dp)) { Hero(days, feast, dt, s.testMode) }
+        // ── 🃏 th cards (Hooked: reward right at th door) ──
         CardCarousel(vm, extras, vod?.let { CardItem(it, CardItem.Kind.TODAY, 0, feast) }, doneToday, speaker, persona, jump, openChapter, amen)
         Column(Modifier.padding(horizontal = 16.dp)) {
             // 👥 Mitlesen: today's crowd (only if switched on + server reachable)
@@ -232,8 +248,7 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
             }
         }
 
-        Hero(days, feast, dt, s.testMode)
-        Gap(20)
+        Gap(8)
 
         // ── Lesepläne ──
         val plan = s.activePlan?.let { vm.content.plan(it) }
@@ -245,10 +260,38 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
         } else {
             val done = days.filter { it.planId == plan.id }
             val planToday = done.firstOrNull { it.date == today() }
-            val idx = (planToday?.planDay ?: (done.maxOfOrNull { it.planDay }?.plus(1) ?: 0)).coerceAtMost(plan.days.lastIndex)
+            val idxOrNull = planIndex(done, plan.days.size)
+            val accent = PlanAccent
+            if (idxOrNull == null) {
+                // 🏁 finished: nvr show th last page again
+                Card(Modifier.fillMaxWidth(), colors = CardDefaults.cardColors(containerColor = Color.White),
+                    border = BorderStroke(2.dp, Gold)) {
+                    Column(Modifier.padding(16.dp)) {
+                        Text("🏁 " + tr("Plan übererfüllt!", "Plan overfulfilled!"), fontWeight = FontWeight.Bold, fontSize = 20.sp, fontFamily = FontFamily.Serif)
+                        Text(planTitle(plan), fontSize = 14.sp, modifier = Modifier.padding(vertical = 4.dp))
+                        Button(onClick = openPlans, modifier = Modifier.fillMaxWidth()) { Text(tr("📚 Nächsten Plan wählen", "📚 Pick the next plan")) }
+                    }
+                }
+            } else {
+            val idx = idxOrNull
             val day = plan.days[idx]
-            Text("${plan.emoji} " + planTitle(plan), fontWeight = FontWeight.Bold, fontSize = 18.sp)
-            Text(tr("Tag %d von %d", "Day %d of %d").f(idx + 1, plan.days.size), fontSize = 13.sp)
+            Card(Modifier.fillMaxWidth(), colors = CardDefaults.cardColors(containerColor = Color.White),
+                elevation = CardDefaults.cardElevation(2.dp)) {
+              Column(Modifier.padding(16.dp)) {
+                // header: emoji disc · title · "Tag x von N" chip · progress bar
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Box(Modifier.size(42.dp).clip(CircleShape).background(accent.copy(alpha = 0.14f)), contentAlignment = Alignment.Center) {
+                        Text(plan.emoji, fontSize = 20.sp)
+                    }
+                    Column(Modifier.padding(start = 12.dp).weight(1f)) {
+                        Text(planTitle(plan), fontWeight = FontWeight.Bold, fontSize = 18.sp, fontFamily = FontFamily.Serif, color = accent)
+                        Text(tr("Tag %d von %d", "Day %d of %d").f(idx + 1, plan.days.size), fontSize = 12.sp, color = Color(0xFF6B6275))
+                    }
+                }
+                LinearProgressIndicator(progress = { (idx + if (planToday != null) 1 else 0).toFloat() / plan.days.size },
+                    color = accent, trackColor = accent.copy(alpha = 0.15f),
+                    modifier = Modifier.fillMaxWidth().padding(top = 10.dp).height(4.dp).clip(RoundedCornerShape(50)))
+                Gap(8)
 
             // Hooked ch7: day-1 missed ➡ suggest a less challenging plan
             val started = s.planStart?.let { LocalDate.parse(it) }
@@ -264,8 +307,10 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
             val ad = andacht(plan.id, idx, day)
             if (ad.isNotBlank()) {
                 Gap(8)
-                Text(tr("🕯️ Andacht", "🕯️ Devotional"), fontSize = 13.sp, color = MaterialTheme.colorScheme.secondary)
-                Text(ad, fontSize = 15.sp, lineHeight = 21.sp)
+                Column(Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).background(accent.copy(alpha = 0.07f)).padding(12.dp)) {
+                    Text(tr("🕯️ Andacht", "🕯️ Devotional"), fontSize = 12.sp, fontWeight = FontWeight.Bold, color = accent)
+                    Text(ad, fontSize = 15.sp, lineHeight = 22.sp, modifier = Modifier.padding(top = 4.dp))
+                }
             }
             Gap(8)
             day.verseIds.mapNotNull { vm.content.verse(it) }.forEach { VerseView(vm, it, speaker); Gap(4) }
@@ -282,9 +327,12 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                     modifier = Modifier.fillMaxWidth()) { Text(tr("Tag geschafft! ☭", "Day complete! ☭"), fontSize = 18.sp) }
             } else {
-                Text(tr("✔️ Heute erledigt. Feierabend.", "✔️ Done for today. Clock out."), color = MaterialTheme.colorScheme.primary)
-                nextTeaser?.let { Text(tr("Morgen: %s", "Tomorrow: %s").f(quoted(it)), fontSize = 13.sp, color = MaterialTheme.colorScheme.secondary) }
+                Text(tr("✔️ Heute erledigt. Feierabend.", "✔️ Done for today. Clock out."), color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.Bold)
             }
+              }  // card Column
+            }  // Card
+            }  // plan not finished
         }
         Gap(24)
 
