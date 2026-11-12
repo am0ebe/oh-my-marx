@@ -77,6 +77,8 @@ class Prefs(private val context: Context) {
         it[M.user] = s.userId; it[M.token] = s.token; it[M.pw] = pw; it[M.name] = name
     }
     suspend fun setMxName(name: String) = context.store.edit { it[M.name] = name }
+    /** server forgot me (new homeserver · wiped) ➡ drop th dead session, keep th display name 4 a silent re-register */
+    suspend fun dropMxSession() = context.store.edit { it.remove(M.user); it.remove(M.token); it.remove(M.pw) }
 
     // 👥 my Kreise: "roomId|code|name" (room ids never contain '|')
     private val kreiseKey = stringSetPreferencesKey("kreise")

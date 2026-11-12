@@ -50,6 +50,11 @@ object Matrix {
         }.getOrNull()
     }
 
+    /** is my access token still known 2 th server? ➡ true/false · null = unreachable (nvr drop th session on a network blip) */
+    suspend fun tokenValid(s: Session): Boolean? = withContext(Dispatchers.IO) {
+        runCatching { call("GET", "/account/whoami", null, s.token).first.let { if (it == 200) true else if (it == 401) false else null } }.getOrNull()
+    }
+
     suspend fun setName(s: Session, name: String): Boolean = withContext(Dispatchers.IO) {
         runCatching { call("PUT", "/profile/${enc(s.userId)}/displayname", JSONObject().put("displayname", name), s.token).first == 200 }.getOrDefault(false)
     }
