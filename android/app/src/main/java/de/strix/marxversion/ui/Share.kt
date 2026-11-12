@@ -158,7 +158,7 @@ fun cardBitmap(ctx: Context, quote: String, ref: String, lang: Lang, feast: Feas
 }
 
 /** link on evy shared thing (viral loop: card ➡ "what app is that?" ➡ link) */
-const val APP_LINK = "https://scagent.de/omm"
+const val APP_LINK = "https://scagent.de/oh-my-marx/"
 
 /** th receiver 4 th last share sheet · only 1 alive: a cancelled sheet never calls back ➡ drop it on th nxt share */
 private var chosenReceiver: BroadcastReceiver? = null
