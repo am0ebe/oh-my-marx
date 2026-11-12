@@ -26,6 +26,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.material3.IconButton
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -109,8 +112,8 @@ fun SettingsScreen(vm: AppVm, askNotifPermission: () -> Unit) {
         // ── 📱 widget hint ──
         Gap(8)
         Text(tr("📱 Widget", "📱 Widget"))
-        Text(tr("Homescreen lang drücken ➡ Widgets ➡ Oh My Marx: Losung + 🔥 Streak, Farbe wechselt mit der Tageszeit.",
-            "Long-press the home screen ➡ Widgets ➡ Oh My Marx: daily verse + 🔥 streak, colour changes with the time of day."),
+        Text(tr("Homescreen lang drücken ➡ Widgets ➡ Oh My Marx",
+            "Long-press the home screen ➡ Widgets ➡ Oh My Marx"),
             fontSize = 12.sp, color = MaterialTheme.colorScheme.secondary)
         HookNote(Hook.WIDGET, s.testMode)
         Gap(8)
@@ -120,16 +123,12 @@ fun SettingsScreen(vm: AppVm, askNotifPermission: () -> Unit) {
         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(vertical = 8.dp)) {
             Column(Modifier.weight(1f)) {
                 Text(tr("👥 Mitlesen", "👥 Read along"))
-                Text(tr("Zeigt, wie oft eine Seite gelesen wurde und wie viele heute Amen sagen. Gesendet wird nur: welche Seite + eine Zufallszahl, die sich jeden Tag ändert. Kein Konto, keine IP gespeichert, der Server vergisst die Zufallszahl am nächsten Tag.",
-                    "Shows how often a page was read and how many say Amen today. Sent: only which page + a random number that changes every day. No account, no IP stored, the server forgets the number the next day."), fontSize = 12.sp)
             }
             Switch(s.community, { vm.setCommunity(it) })
         }
         // 💬 comments: name = what others see (account is made w ur 1st comment, lives only on this fon)
         if (s.community) {
             val mx by vm.mxName.collectAsStateWithLifecycle()
-            Text(tr("💬 Dazu: unter jeder Buchseite kommentieren. Kommentare sind öffentlich für alle Mitlesenden.",
-                "💬 Plus: comment under every book page. Comments are public to everyone reading along."), fontSize = 12.sp)
             mx?.let { cur ->
                 var edit by remember { mutableStateOf(false) }
                 var draft by remember(cur) { mutableStateOf(cur) }
@@ -167,42 +166,24 @@ fun SettingsScreen(vm: AppVm, askNotifPermission: () -> Unit) {
         Text(tr("Über", "About"), fontWeight = FontWeight.Bold)
         Text("$APP_NAME · " + tr("Version %s", "Version %s").f(BuildConfig.VERSION_NAME), fontSize = 13.sp, color = MaterialTheme.colorScheme.secondary)
         Gap(6)
-        Text(tr("Marx lesen wie die Bibel: jeden Tag ein Häppchen Kapital. Und nebenbei ein Lehrbuch, wie Apps Gewohnheiten bauen — schalte den Hooked-Modus ein.",
-            "Read Marx like the Bible: a bite of Capital every day. And on the side a textbook on how apps build habits — switch on Hooked mode."), fontSize = 13.sp)
-        Gap(6)
-        Text(tr("🤖 Stolz gevibecodet von einem Zentauren: am0ebe (Mensch, will) + Claude Opus 5.5 in Claude Code (Anthropic, tippt). Übersetzungen: Qwen3, lokal auf einer RTX 3090 Ti. Entfremdete Arbeit, vollautomatisiert. Die Produktionsmittel gehören trotzdem uns.",
-            "🤖 Proudly vibe-coded by a centaur: am0ebe (human, wants) + Claude Opus 5.5 in Claude Code (Anthropic, types). Translations: Qwen3, local on an RTX 3090 Ti. Alienated labour, fully automated. The means of production are still ours."), fontSize = 13.sp)
+        Text(tr("🤖 Stolz gevibecodet von einem Zentauren — halb Mensch, halb Agent. Entfremdete Arbeit, vollautomatisiert. Die Produktionsmittel gehören trotzdem uns.",
+            "🤖 Proudly vibe-coded by a centaur — half human, half agent. Alienated labour, fully automated. The means of production are still ours."), fontSize = 13.sp)
         val ctx = androidx.compose.ui.platform.LocalContext.current
-        // 📨 page § feedback = mail (version prefilled) + GitHub issue forms · bin/lib.sh page()
-        TextButton(onClick = { runCatching { ctx.startActivity(android.content.Intent(android.content.Intent.ACTION_VIEW,
-            android.net.Uri.parse(de.strix.marxversion.data.Update.page + "#feedback"))) } }) {
-            Text(tr("💬 Feedback: Bug, Idee, Lob ➡", "💬 Feedback: bug, idea, praise ➡"), fontSize = 13.sp)
+        // 🔘 🤏 icon row: 🌐 page · 📤 share th app · 💬 feedback = mail straight 2 us (version prefilled, 0 web hops)
+        val pageUrl = de.strix.marxversion.data.Update.page
+        val shareTxt = tr("Marx lesen wie die Bibel — Oh My Marx ☭ ", "Read Marx like the Bible — Oh My Marx ☭ ") + pageUrl
+        val ver = BuildConfig.VERSION_NAME
+        val mailBody = tr("Was ist passiert / was wünschst du dir?\n\n\n(Version %s — ein Screenshot hilft)", "What happened / what would you like?\n\n\n(version %s — a screenshot helps)").f(ver)
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            IconBtn("🌐", tr("Webseite", "Web page")) { runCatching { ctx.startActivity(android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse(pageUrl))) } }
+            IconBtn("📤", tr("App teilen", "Share the app")) { runCatching { ctx.startActivity(android.content.Intent.createChooser(
+                android.content.Intent(android.content.Intent.ACTION_SEND).setType("text/plain").putExtra(android.content.Intent.EXTRA_TEXT, shareTxt), null)) } }
+            IconBtn("💬", tr("Feedback: Bug, Idee, Lob", "Feedback: bug, idea, praise")) { runCatching { ctx.startActivity(android.content.Intent(android.content.Intent.ACTION_SENDTO, android.net.Uri.parse("mailto:")).apply {
+                putExtra(android.content.Intent.EXTRA_EMAIL, arrayOf("omm@scagent.de"))
+                putExtra(android.content.Intent.EXTRA_SUBJECT, "Oh My Marx $ver")
+                putExtra(android.content.Intent.EXTRA_TEXT, mailBody)
+            }) } }
         }
-        Gap(6)
-        // 📜 sources ⬄ what we (app / LLM) put on top · keep i sync w README.md § Sources
-        Gap(6)
-        Text(tr("📜 Quellen", "📜 Sources"), fontWeight = FontWeight.Bold, fontSize = 13.sp)
-        Text(tr("• Deutsch: Karl Marx, Das Kapital Bd. 1, 4. Aufl. 1890 (hg. Engels), Text nach MEW 23 (Dietz), über das archivierte mlwerke.de. Seitenzahlen = MEW 23. Fußnoten = Marx' eigene.",
-            "• German: Karl Marx, Das Kapital vol. 1, 4th ed. 1890 (ed. Engels), text as in MEW 23 (Dietz), via the archived mlwerke.de. Page numbers = MEW 23. Footnotes = Marx's own."), fontSize = 13.sp)
-        Text(tr("• Englisch: Übersetzung Samuel Moore & Edward Aveling 1887 (hg. Engels), über marxists.org.",
-            "• English: translation by Samuel Moore & Edward Aveling 1887 (ed. Engels), via marxists.org."), fontSize = 13.sp)
-        Text(tr("• Porträt: J. J. E. Mayall, London 1875. Alles gemeinfrei.",
-            "• Portrait: J. J. E. Mayall, London 1875. All public domain."), fontSize = 13.sp)
-        Text(tr("• Mechanik: abgeschaut bei Bibel-Apps, erklärt in Nir Eyal, „Hooked“ (2014), Kap. 7 — nur kurz zitiert.",
-            "• Mechanics: borrowed from bible apps, explained in Nir Eyal, “Hooked” (2014), ch. 7 — only briefly quoted."), fontSize = 13.sp)
-        Gap(6)
-        Text(tr("🤖 Was die App obendrauf macht", "🤖 What the app adds on top"), fontWeight = FontWeight.Bold, fontSize = 13.sp)
-        Text(tr("• Absätze Deutsch ⬄ Englisch automatisch zugeordnet — kann mal danebenliegen.",
-            "• Paragraphs German ⬄ English paired automatically — may be off now and then."), fontSize = 13.sp)
-        Text(tr("• Alle anderen Sprachen: das ganze Buch + Fußnoten von einem lokalen LLM (Qwen3) aus dem Deutschen übersetzt, mit einem Glossar der üblichen Fachbegriffe (Mehrwert, Ware …) — keine veröffentlichte Ausgabe, kann holpern.",
-            "• All other languages: the whole book + footnotes translated from German by a local LLM (Qwen3), with a glossary of the standard terms (surplus value, commodity …) — not a published edition, may stumble."), fontSize = 13.sp)
-        Text(tr("• Zitate: ein lokales LLM (Qwen3) wählt und bewertet sie, der Wortlaut ist aber immer Marx' Originalsatz (automatisch geprüft).",
-            "• Quotes: a local LLM (Qwen3) picks and rates them, but the wording is always Marx's original sentence (checked automatically)."), fontSize = 13.sp)
-        Text(tr("• Andachten: vom LLM geschrieben (Deutsch + Englisch).",
-            "• Devotionals: written by the LLM (German + English)."), fontSize = 13.sp)
-        Text(tr("• App, Zitate, Andachten + Pläne in den anderen Sprachen: ebenfalls maschinell übersetzt (Qwen3).",
-            "• App, quotes, devotionals + plans in the other languages: machine-translated too (Qwen3)."), fontSize = 13.sp)
-        Text(tr("Irrtümer vorbehalten, Marx hat immer recht.", "Errors reserved, Marx is always right."), fontSize = 13.sp, color = MaterialTheme.colorScheme.secondary)
         Gap(6)
         Text(tr("🔓 Quellcode: github.com/am0ebe/oh-my-marx (GPL-3.0) — selbst bauen statt APK vertrauen.",
             "🔓 Source code: github.com/am0ebe/oh-my-marx (GPL-3.0) — build it yourself instead of trusting the APK."), fontSize = 13.sp)
@@ -211,4 +192,10 @@ fun SettingsScreen(vm: AppVm, askNotifPermission: () -> Unit) {
     if (pickTime) TimeWheelDialog(s.notifHour, s.notifMinute, onDismiss = { pickTime = false }) { h, m ->
         vm.setNotif(s.notifOn, h, m); pickTime = false
     }
+}
+
+/** 🤏 emoji icon button (contentDescription = a11y label) */
+@Composable
+private fun IconBtn(icon: String, desc: String, onClick: () -> Unit) {
+    IconButton(onClick, Modifier.semantics { contentDescription = desc }) { Text(icon, fontSize = 22.sp) }
 }

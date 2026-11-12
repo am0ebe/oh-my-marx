@@ -5,7 +5,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -102,7 +105,6 @@ private fun plain(s: String) = s.replaceFirst(LEAD, "")
 
 @Composable
 fun ReleaseNotes() {
-    var all by remember { mutableStateOf(false) }
     val mine = BuildConfig.VERSION_NAME
     val dev = "-dev." in mine
     // mirrors th download page (@1106): no emoji · newest version only · tap ➡ older ones
@@ -119,18 +121,21 @@ fun ReleaseNotes() {
             else -> Text(tr("✔️ neuester Dev-Build", "✔️ newest dev build"), fontSize = 12.sp, color = MaterialTheme.colorScheme.secondary)
         }
     }
-    (if (all) RELEASES else RELEASES.take(1)).forEach { r ->
-        val here = mine == r.version || (dev && mine.startsWith(r.version))
-        Column(Modifier.fillMaxWidth().padding(vertical = 4.dp)
-            .then(if (here) Modifier.background(Gold.copy(alpha = 0.16f), RoundedCornerShape(8.dp)) else Modifier).padding(6.dp)) {
-            Row {
-                Text("v${r.version}", fontWeight = FontWeight.Bold, fontSize = 13.sp)
-                Text("  ·  ${r.date}" + if (here) "  ·  " + tr("⬅ du hast diese", "⬅ you have this") else "",
-                    fontSize = 12.sp, color = MaterialTheme.colorScheme.secondary)
+    // 1 scrollable box (max 320dp) w ALL releases · newest open · older = tap header
+    Column(Modifier.fillMaxWidth().heightIn(max = 320.dp).verticalScroll(rememberScrollState())) {
+        RELEASES.forEachIndexed { idx, r ->
+            val here = mine == r.version || (dev && mine.startsWith(r.version))
+            var open by remember { mutableStateOf(idx == 0) }
+            Column(Modifier.fillMaxWidth().padding(vertical = 4.dp)
+                .then(if (here) Modifier.background(Gold.copy(alpha = 0.16f), RoundedCornerShape(8.dp)) else Modifier).padding(6.dp)) {
+                Row(Modifier.fillMaxWidth().clickable { open = !open }.padding(vertical = 2.dp)) {
+                    Text("v${r.version}", fontWeight = FontWeight.Bold, fontSize = 13.sp)
+                    Text("  ·  ${r.date}" + if (here) "  ·  " + tr("⬅ du hast diese", "⬅ you have this") else "",
+                        fontSize = 12.sp, color = MaterialTheme.colorScheme.secondary, modifier = Modifier.weight(1f))
+                    Text(if (open) "⬆" else "⬇", fontSize = 12.sp, color = Blue)
+                }
+                if (open) r.items.forEach { Text("• " + plain(tr(it)), fontSize = 13.sp) }
             }
-            r.items.forEach { Text("• " + plain(tr(it)), fontSize = 13.sp) }
         }
     }
-    if (RELEASES.size > 1) Text(if (all) tr("weniger ⬆", "less ⬆") else tr("Ältere Versionen ⬇", "Older versions ⬇"), fontSize = 12.sp, color = Blue,
-        modifier = Modifier.clickable { all = !all }.padding(vertical = 4.dp))
 }
