@@ -157,6 +157,7 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
     val jump by vm.homeJump.collectAsStateWithLifecycle()
     var kriseFx by remember { mutableStateOf(false) }
     var swoosh by remember { mutableStateOf(false) }
+    var checkFx by remember { mutableStateOf(false) }   // "Tag geschafft" = ✔️ pop (≠ ☭, QA @1112)
     var confetti by remember { mutableStateOf(false) }
     val scroll = rememberScrollState()
     val scope = rememberCoroutineScope()
@@ -288,6 +289,8 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
                     Column(Modifier.padding(start = 12.dp).weight(1f)) {
                         Text(planTitle(plan), fontWeight = FontWeight.Bold, fontSize = 18.sp, fontFamily = FontFamily.Serif, color = accent)
                         Text(tr("Tag %d von %d", "Day %d of %d").f(idx + 1, plan.days.size), fontSize = 12.sp, color = Color(0xFF6B6275))
+                        Text(tr("noch %d Lesetage bis „%s“", "%d more reading days to “%s”").f(stampCard(readingDays(days)).left, tr(rank(cardsDone(readingDays(days))))),
+                            fontSize = 12.sp, color = Color(0xFF6B6275))
                     }
                 }
                 LinearProgressIndicator(progress = { (idx + if (planToday != null) 1 else 0).toFloat() / plan.days.size },
@@ -324,13 +327,10 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
                 Button(onClick = {
                     val total = readingDays(days)
                     if (!doneToday && cardJustFilled(total + 1)) rankUp = cardsDone(total + 1) - 1
-                    vm.dayDone(plan.id, idx, day.verseIds); celebrate = true; swoosh = true
+                    vm.dayDone(plan.id, idx, day.verseIds); celebrate = true; checkFx = true
                 },
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
-                    modifier = Modifier.fillMaxWidth()) { Text(tr("Tag geschafft! ☭", "Day complete! ☭"), fontSize = 18.sp) }
-            } else {
-                Text(tr("✔️ Heute erledigt. Feierabend.", "✔️ Done for today. Clock out."), color = MaterialTheme.colorScheme.primary,
-                    fontWeight = FontWeight.Bold)
+                    modifier = Modifier.fillMaxWidth()) { Text(tr("Tag geschafft! ✔️", "Day complete! ✔️"), fontSize = 18.sp) }
             }
               }  // card Column
             }  // Card
@@ -379,6 +379,7 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
 
     if (kriseFx) KriseFlash { kriseFx = false }
     if (swoosh) SickleSwoosh { swoosh = false }
+    if (checkFx) CheckPop { checkFx = false }
     if (confetti) Confetti { confetti = false }
 }
 
@@ -428,11 +429,12 @@ private fun Hero(days: List<DayLog>, feast: Feast?, dt: DayTime, hooked: Boolean
                 val (bg, fg, txt) = when {
                     isRead -> Triple(white, Color(0xFF1D1230), "✓")
                     d in rest -> Triple(white.copy(alpha = 0.85f), Color(0xFF1D1230), "🕊")
-                    d == today -> Triple(Red, white, "!")
+                    d == today -> Triple(white.copy(alpha = 0.3f), white, d.dayOfWeek.getDisplayName(TextStyle.NARROW, lang.locale))   // open today = letter, no "!"
                     else -> Triple(white.copy(alpha = if (d.isAfter(today)) 0.16f else 0.08f), white.copy(alpha = 0.7f),
                         d.dayOfWeek.getDisplayName(TextStyle.NARROW, lang.locale))
                 }
-                Box(Modifier.size(34.dp).clip(CircleShape).background(bg), contentAlignment = Alignment.Center) {
+                Box(Modifier.size(34.dp).clip(CircleShape).background(bg)
+                    .then(if (d == today) Modifier.border(2.5.dp, white, CircleShape) else Modifier), contentAlignment = Alignment.Center) {   // today = ring
                     Text(txt, color = fg, fontSize = 15.sp, fontWeight = FontWeight.Bold)
                 }
             }
@@ -461,9 +463,7 @@ private fun Hero(days: List<DayLog>, feast: Feast?, dt: DayTime, hooked: Boolean
                 }
             }
         }
-        // strix @1106: "N more days to <rank>" motivates (next-level pull) · th "Stempelkarte N" part = noise ➡ gone
-        Text(tr("noch %d Lesetage bis „%s“", "%d more reading days to “%s”").f(card.left, tr(rank(ranks))),
-            color = white, fontSize = 12.sp, modifier = Modifier.padding(top = 4.dp))
+        // "N more days to <rank>" moved 2 th plan card (QA @1112)
         if (ranks > 0) Text(tr("Rang: %s", "Rank: %s").f(tr(rank(ranks - 1))), color = white.copy(alpha = 0.8f), fontSize = 11.sp)
     }
     HookNote(Hook.STREAK, hooked)

@@ -109,7 +109,7 @@ fun CardCarousel(
         val r = ref(it.v)
         // card bitmap off th main thread (StaticLayout + 1080×1350 px) ➡ swiping stays smooth
         val bmp by produceState<ImageBitmap?>(null, it.key, lang, q) {
-            value = withContext(Dispatchers.Default) { cardBitmap(ctx, q, r, lang, it.feast, it.kind == CardItem.Kind.KRISE).asImageBitmap() }
+            value = withContext(Dispatchers.Default) { cardBitmap(ctx, q, r, lang, it.feast, it.kind == CardItem.Kind.KRISE, sun = false).asImageBitmap() }
         }
         // neighbours shrink + fade a bit = "deck o cards" feel
         val off = abs((pager.currentPage - i) + pager.currentPageOffsetFraction).coerceIn(0f, 1f)

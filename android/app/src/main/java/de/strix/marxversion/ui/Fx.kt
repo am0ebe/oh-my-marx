@@ -245,3 +245,27 @@ fun ShakeDetector(onShake: () -> Unit) {
         onDispose { sm.unregisterListener(l) }
     }
 }
+
+/** ✔️ "Tag geschafft" fx (QA @1112: ≠ ☭): check pops in w overshoot + green ring pulse + 📳 ➡ fade. ~1.2 s */
+@Composable
+fun CheckPop(onDone: () -> Unit) {
+    val done by rememberUpdatedState(onDone)
+    val ctx = LocalContext.current
+    val t = remember { Animatable(0f) }
+    LaunchedEffect(Unit) {
+        buzz(ctx, longArrayOf(0, 35, 30, 80))
+        t.animateTo(1f, tween(1200, easing = LinearEasing)); done()
+    }
+    Overlay {
+        val v = t.value
+        val pop = if (v < 0.25f) v / 0.25f * 1.25f else 1.25f - (v - 0.25f).coerceAtMost(0.15f) / 0.15f * 0.25f
+        val fade = if (v > 0.75f) (1f - v) / 0.25f else 1f
+        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Canvas(Modifier.fillMaxSize()) {
+                val ring = (v / 0.6f).coerceIn(0f, 1f)
+                drawCircle(Color(0xFF43A047).copy(alpha = (1f - ring) * 0.5f * fade), radius = 110f * (0.5f + ring * 0.5f) * 2f, style = Stroke(6f))
+            }
+            Text("✔️", fontSize = 96.sp, modifier = Modifier.graphicsLayer { scaleX = pop; scaleY = pop; alpha = fade })
+        }
+    }
+}
