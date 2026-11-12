@@ -86,7 +86,7 @@ private val KRISE_COLORS = intArrayOf(0xFF000000.toInt(), 0xFF3A0000.toInt(), 0x
  * feast ≠ null ➡ 🎉 Sondermotiv: its colours + its emoji next 2 th saint · krise ➡ 📉 black/red, crashing chart, no halo
  * evy normal card: 😇 Saint Marx (halo + beard = res/drawable/ic_launcher_fg) on top
  */
-fun cardBitmap(ctx: Context, quote: String, ref: String, lang: Lang, feast: Feast? = null, krise: Boolean = false): Bitmap {
+fun cardBitmap(ctx: Context, quote: String, ref: String, lang: Lang, feast: Feast? = null, krise: Boolean = false, sun: Boolean = true): Bitmap {
     val w = 1080; val h = 1350
     val bmp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
     val c = Canvas(bmp)
@@ -114,7 +114,7 @@ fun cardBitmap(ctx: Context, quote: String, ref: String, lang: Lang, feast: Feas
         c.drawText(t, w / 2f - head.measureText(t) / 2f, 190f, head)
     } else {
         // sun + 😇 Saint Marx (vector: halo + hair + beard)
-        c.drawCircle(w / 2f, h * 0.86f, 170f, Paint().apply { color = 0xCCFFE9A8.toInt() })
+        if (sun) c.drawCircle(w / 2f, h * 0.86f, 170f, Paint().apply { color = 0xCCFFE9A8.toInt() })
         ContextCompat.getDrawable(ctx, R.drawable.ic_launcher_fg)?.apply {
             setBounds(w / 2 - 140, 0, w / 2 + 140, 280)
             draw(c)
