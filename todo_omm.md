@@ -1,5 +1,5 @@
 ## 🎯 sprint goal
-- 🧪 **QA + iterate 0.7.0 b4 anything new** (🦠 @1106: "test existing feats + iterate a couple o times, else slop") ➡ friends' feedback in ➡ fix ➡ only then 0.8.0
+- 🧪 **QA + iterate 0.9.x b4 anything new** (was 0.7.0, bumped @1112) (🦠 @1106: "test existing feats + iterate a couple o times, else slop") ➡ friends' feedback in ➡ fix ➡ only then 0.8.0
   - 🚦 rule: no version bump / ship / big new feat til th current one had ≥1 QA round on th fon · big side-quests (voice, chat infra) ➡ own pr
 
 ## ⏳
@@ -9,47 +9,62 @@
   - ⚠️ traps: origin = Forgejo (only push target) · `gh` = GitHub fetch-only, mirror carries it (ship.sh waits ≤120 s) · gradle needs `JAVA_HOME=~/.local/opt/jdk21` (lib.sh sets it) · zsh `tr` alias, bare `===` · VPS = ops-owned (pr/ops/omm.md), nvr edit Caddy//srv · `android/omm.properties` (reg token) needed 4 comments/Kreise · fon screenshots only aft asking
 
 ## ‼️
-- 🦠 **QA notes @1108** (scrap):
-  - 📜 "Was ist neu" ➡ alle Release-Notes: scrollable box, not 1 huge list · T: only show th last version's notes? (simpler)
-  - 💬 feedback box: ❌ link 2 web page ➡ straight 2 GitHub issue o mail (open it directly, 0 friction) · later: in-app msg (= 🔵 phase 2)
-  - ✂️ prefs bottom: rm th app ads + slop + references
-  - 🔘 1 row o 🤏 icon buttons: 🌐 web page · 📤 share · 💬 feedback — clean, side by side
-  - ✍️ credit line ➡ "proudly vibe-coded by a centaur — half hu, half agent" + keep th polemic bit · rm specifics (who · hw · translations)
-- 📨⭐ **user feedback log** — 1st real users = gold ➡ `feedback.md` (who · wh · date) · 🔑 most imp signal
-  - M: "share" unclear (share wh? th app?) ➡ didn't try · auto Signal/oth share ✔️ · loved shake (didn't K possible) · playful · Tagesflow + Ahnen anim "fetzig" · "Mahlzeit…" note hit right while eating (time-of-day ✔️) · übersichtlich · 12 MB = good code · Marxoskop nice
-  - M2 (dev): uneasy w a precompiled APK ➡ wants source ➡ link GitHub/Forgejo src visibly
-  - Jan (dev): liked th AI-slop-w-creative-funny-msg plans
-- 🦠 **QA notes @1107** (rest, 1+2 ✔️ i 0.9.0):
-  - 🔊 voice: 1 sober dflt, rm th oth voices (cringe) · real voices = own pr (pr/audio, see 🔵) · must pronounce th lang
-  - 🐛 share btn lags ➡ y?
-  - 🐛 1st share: badge + animation fire while th share sheet is still open + even on cancel ➡ fire aft a real share (o drop th claim)
-  - 🎲 crisis-proof medal: needs more shakes (ppl shake a lot, too ez)
-  - 📖 Read = look like a book: physical pages, page-turn · chapter jump = flip many pages at once
-  - ⏰ can't turn off th daily verse ➡ 🔍 how bible apps etc time it: fixed ti · user-set · smart? · T: ready all day + nudge
-  - 🧩 widgets: rm evythg aft "omm" i th widget names/descr (streak color…) ➡ it shows, no need 2 write it
-  - 🏠 Home tab tap ➡ scroll 2 top (not remembered pos) · streak widget at th top
-  - ✂️ rm th "Mitlesen / read along" note
-  - ❓ name entry: 1st comment ask? dflt = random Marxist name (gender-equal)? ➡ then accounts? (name + Kreis later)
-  - 🔮 Marxoskop: mk it look + appealing · tiles w icons per topic, tappable
+- ⭐🧪 **QA sprint 0.9.x** (bin @1112: QA @1108 + @1107 rest + Mi feedback) — 4 lanes = 🔀 fan-out (disjoint screens) · 1 `deploy.sh` + 👤 fon QA at fan-in · plan ➡ `pr/m8/plan_fanout.md`
+  - **A 📖 reading plan rework** ⭐ (Mi: "Leseplan haut nicht hin" = real-user 🐛)
+    - 🐛 not continuous: same page shown 2× ➡ fix + tst
+    - reward missing ➡ plan shd train regular L (Mi) · streak = reading-plan days, not quote-click? (2nd "done" looks meagre next 2 th big streak widget) ➡ 💬 am0 discuss b4 build
+    - evy1 i a plan by dflt · rm th "tomorrow … sentence" aft today's done (clock-out)
+    - design: not bland ➡ bounding boxes · font · formatting · fits next 2 streak widget + quote o th day
+    - streak widget "shd show 2 at start" ❓ am0: meaning?
+    - Stempelkarte: 2 filled = traction (keep) · icon = same ☭ symbol, not 🎁
+  - **B ⚙️ About + prefs cleanup** (QA @1108, ⚡)
+    - 📜 "Was ist neu": scrollable box, not 1 huge list · T: only last version's notes?
+    - 💬 feedback: straight 2 GitHub issue o mail, 0 friction
+    - 🔘 1 row 🤏 icon btns: 🌐 page · 📤 share · 💬 feedback · ✂️ rm app ads + slop + refs · ✂️ rm "Mitlesen" note
+    - ✍️ credit ➡ "proudly vibe-coded by a centaur — half hu, half agent" + keep polemic bit · rm who/hw/translations
+    - 🧩 widget names/descr: rm evythg aft "omm"
+  - **C 🏠 Home + share**
+    - Home tab tap ➡ scroll top · streak widget on top · 👍 most-used ctrls i right-thumb zone (Mi)
+    - 📤 share: 2 users confused (M + Mi: share wh?) ➡ "share th app" as hot trigger at motivated moments · o omit
+    - 🐛 share btn lags · 🐛 1st-share badge fires while sheet open / on cancel ➡ only aft real share
+  - **D 🎨 tone + rewards** (Mi)
+    - less ☭: Marx = lens 2 understand capitalism, not THE 1 utopia (non-hardcore users) · Orden = too real-socialism/authoritarian ➡ oth awards
+    - ⚠️ negative conditioning ("u missed a day") felt bad ➡ reframe positive
+    - 🎲 crisis medal needs more shakes · 🔊 voice: 1 sober dflt, rm oth (cringe, Mi agrees)
+  - **later** (needs design, not this sprint): 📖 Read = real book look + page flip · ⏰ daily verse can't be turned off (🔍 bible apps' timing) · ❓ name entry · 🔮 Marxoskop tiles · 🔓 Lesekreis progressive disclosure (unlock aft ~1 month, Mi) · 🏷️ quotes off-topic sometimes ➡ manual sort per cat · ⬆️ update nag ("stops working fr date X") + in-app APK DL ⬄ Obtainium
+- 📨⭐ **user feedback** — 1st real users = gold · 🔑 most imp signal
+  - **log** ➡ `feedback.md` (who · wh · date)
+    - M: "share" unclear (share wh? th app?) ➡ didn't try · auto Signal/oth share ✔️ · loved shake (didn't K possible) · playful · Tagesflow + Ahnen anim "fetzig" · "Mahlzeit…" note hit right while eating (time-of-day ✔️) · übersichtlich · 12 MB = good code · Marxoskop nice
+    - M2 (dev): uneasy w a precompiled APK ➡ wants source ➡ link GitHub/Forgejo src visibly
+    - Jan (dev): liked th AI-slop-w-creative-funny-msg plans
+    - Mi (@1112 scrap): 👍 read plan good + not 2 long · anim geil · langs awesome · Krise shake awesome · 👎 voice · neg conditioning · Orden 2 real-socialist · ☭ 2 much · leseplan not continuous (same page 2×) + no reward · share unclear · quotes sometimes off · 💡 Lesekreis = good platform, onboard users 1st, unlock later · constrain urself: wh's core? (Rick Rubin) · thumb-zone map · update nag · in-app DL · metrics by version (cohorts) · GA alternatives?
+  - **system** — phase 1 = links only, no new server (plan: notes.md § 📨)
+    - ✔️ page: mail (fast) + GitHub issue link · Forgejo = code only (sign-up off ➡ no issues there)
+    - ✔️ GitHub: issue forms 🐛 + 💡 + "no account? mail" (`.github/ISSUE_TEMPLATE/`, live aft push) · labels `needs-triage` `from-app`
+    - ✔️ app ⚙️ ➡ Über: tappable "💬 Feedback" (0.9.0) · am0 @1108: go direct 2 issue/mail (QA lane B)
+    - 🤖🛠️ `/triage` skill: `gh issue list -l needs-triage` + Migadu inbox ➡ label · dedupe · draft reply · mail-feedback ➡ `gh issue create -l from-app` (reworded, no names)
+    - 🔵 phase 2 (aft QA rounds): in-app form ➡ `POST /feedback` (omm_api) ➡ priv inbox ➡ triage · CONTRIBUTING · CI
 - 🦠📣 send **scagent.de/omm** 2 2-3 friends (0.6.0 ppl need 1 manual update, banner only fr ≥0.7.0)
-- 📨⭐ **feedback** — phase 1 = links only, no new server (plan: notes.md § 📨)
-  - ✔️ page: mail (fast) + GitHub issue link · Forgejo = code only (sign-up off ➡ no issues there)
-  - ✔️ GitHub: issue forms 🐛 + 💡 + "no account? mail" (`.github/ISSUE_TEMPLATE/`, live aft push) · labels `needs-triage` `from-app`
-  - ✔️ app ⚙️ ➡ Über: tappable "💬 Feedback" (0.9.0) · am0 @1108: go direct 2 issue/mail ⬆
-  - 🤖🛠️ `/triage` skill: `gh issue list -l needs-triage` + Migadu inbox ➡ label · dedupe · draft reply · mail-feedback ➡ `gh issue create -l from-app` (reworded, no names)
-  - 🔵 phase 2 (aft QA rounds): in-app form ➡ `POST /feedback` (omm_api) ➡ priv inbox ➡ triage · CONTRIBUTING · CI
 - 🌍 **LLM book qy** (all 11 i th app since 0.8/0.9 · notes.md § 🌍): 👤 native QA zh/ar/hi/bn/ur · samples `bin/translate_full.py --show 5 --langs it es`
   - 🔍 alt = existing translations: © per translator (life + 70 y, ZH 50 y) · ES Juan B. Justo 1898 (†1928 ➡ prob PD) · ZH 郭大力/王亚南 1938 (CN PD ~2027) · IT Cantimori (© til 2036) · marxists.org hosting ≠ PD · 🦠 decide aft comparing
 - 🦠📚 **Matrix + chat: K + tst**
   - 🦠 re: notes.md § 🏗️ technical: Matrix (10 min) + `server/matrix/README.md`
   - 🤖🧪 `bin/matrix_e2e.py`: 2 throwaway users ➡ Kreis gründen · beitreten · chat · Amen ➡ repeatable smoke tst vs live (th @1104 run wasn't saved) · + a bot user 🦠 can chat w fr th fon = tst chat alone
   - 🤖🧪 `data/Matrix.kt` JVM tst vs a tiny fake HTTP server (register UIA 3 steps · join · timeline parse · redacted dropped) · needs `testImplementation("org.json:json:…")`
-- 🦠🔑 keystore: ✔️ symlink @1105 · left: KeePass note (`base64 -w0`, notes.md § 🔑) · 1 offline/restic copy · lap same `ln -s` (➡ sys ansible?)
-- 💬 ops (optional): `/omm/*` ➡ `/oh-my-marx/{path}` (Obtainium URL `scagent.de/omm/`) · `/omm/src` ➡ GitHub 302 · `/omm/dev` redirect = valid again (/dev back @1106)
 
 ## 📆
 
 ## 🔵
+- _⬇ demoted fr ‼️ @1112 (WIP ≤5)_
+- 🦠🔑 keystore: ✔️ symlink @1105 · left: KeePass note (`base64 -w0`, notes.md § 🔑) · 1 offline/restic copy · lap same `ln -s` (➡ sys ansible?)
+- 💬 ops (optional): `/omm/*` ➡ `/oh-my-marx/{path}` (Obtainium URL `scagent.de/omm/`) · `/omm/src` ➡ GitHub 302 · `/omm/dev` redirect = valid again (/dev back @1106)
+- _⬇ new @1112 (scrap), prio order_
+- 🪝⭐ **Hooked/Fogg pass** (aft QA sprint) — raw ➡ `re/boox/hooked/hooked.md` § 📥 @1112
+  - audit: variable rewards (wh r our rewards? where?) · friction removed? · novelty (pop sth new, curiosity) · observable impact (Fogg: "N ppl joined 24h") · measured impact ➡ A/B (call2act · img · invite txt)
+  - gen txts w persuasion ♟️ (pregiving · reciprocity · cooperation · social proof) · simple! · inspire (Sinek: y Marx matters 2day, hard ➡ digestible) · AI-Luddites hook (🔵 line below)
+- 📊 **in-app analytics** (priv-friendly) — DLs by version · screen dwell · filter out am0 ➡ dash = ops 📊 bin (`todo_ops`)
+- 📄 **GH README polish** (scrap @1112, merge w README ⬄ page line below) — badges row like anything-llm (discussion · matrix instead o reddit · license) · lang btn · 😉 fake "star history" 0➡1 graph w a wink line · stats row (stars · contributors · DLs) — fun even at 0, "pls star/DL" 4 friends
+- ❓ **AGPL-3 ⬄ GPL-3** (scrap @1112) — M8 A: same copyleft + 1 clause: AGPL also triggers on **network use** (users talk 2 a modified version over th net ➡ must offer src) · GPL only on distribution · ➡ app = GPL fine · 🤔 `server/` (omm_api) ➡ AGPL if u want forks o th server 2 share back
 - 🤖 🩹 **lint baseline** (CI @1108, `android/app/lint-baseline.xml`): 4 err known ➡ fix + `./gradlew updateLintBaseline` · `LosungTile.kt:25` deprecated `startActivityAndCollapse(Intent)` (false alarm: SDK<34 branch only ➡ `@SuppressLint("StartActivityAndCollapseDeprecated")`) · `ReadScreen.kt:197` unused BoxWithConstraints scope · `app_name` not translated "en" ×2 (➡ `translatable="false"`) · + 29 warn
 - 📄 **README ⬄ scagent.de/omm out o sync** ➡ README mirrors page (Obtainium 1st ➡ direct DL ➡ src Forgejo + GH) · rm iPhone line (o say: not planned, hard + 💰) · 🔑 T: 1 SSOT ➡ gen both (md + html) = pattern 4 ALL docs (wiki · kb · pr scaffold) ⬄ kb
 - 🎮 gamify: Tamagotchi-style Marx avatar + xp · starts weak/fragile ➡ fit on streak · pick ur avatar · xfer 2 oth apps (cali!)
