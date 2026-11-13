@@ -130,6 +130,27 @@ fun opening(t: String): String {
     return if (end <= 220) s.take(end) else s.take(220).substringBeforeLast(' ') + " …"
 }
 
+/**
+ * big round #3: Today/feed show a passage as a short snippet + "weiterlesen" (was: 2-3 k char walls) · cut at th last
+ * sentence end ≤ max (≥ max/2), else at a word · null = short enough, show it all (≤ max × 1.3: no "more" 4 3 words)
+ */
+fun snippet(t: String, max: Int = SNIPPET): String? {
+    if (t.length <= max * 13 / 10) return null
+    val head = t.take(max)
+    val end = Regex("[.!?;:][\"“”»«)]?(\\s|$)").findAll(head).map { it.range.first + it.value.trimEnd().length }.lastOrNull { it >= max / 2 }
+    return if (end != null) head.take(end).trimEnd() else head.substringBeforeLast(' ').trimEnd(',', ';', ' ') + " …"
+}
+const val SNIPPET = 320
+
+/** ~reading minutes 4 th "weiterlesen" label (200 words/min, zh: 400 chars/min) */
+fun readMinutes(t: String) = maxOf(1, if (t.count { it == ' ' } < t.length / 20) t.length / 400 else (t.count { it == ' ' } + 1) / 200)
+
+@Composable
+fun bridge(d: PlanDay): String = when (LocalLang.current) {
+    Lang.DE -> d.bridgeDe
+    else -> d.bridgeEn   // oth langs: EN til translate.py learns xd/xe (fan-in pass)
+}
+
 @Composable
 fun andacht(planId: String, idx: Int, d: PlanDay): String = when (LocalLang.current) {
     Lang.DE -> d.andachtDe
@@ -150,6 +171,10 @@ fun planDesc(p: Plan) = when (LocalLang.current) {
     Lang.EN -> p.descEn
     else -> LocalTr.current?.plan?.get(p.id)?.getOrNull(1)?.ifBlank { null } ?: p.descEn
 }
+
+/** section heading: DE ➡ MEW · evy oth lang ➡ th EN (Moore/Aveling) heading · DE only if build.py found none */
+@Composable
+fun secTitle(v: Verse) = if (LocalLang.current == Lang.DE) v.secTitle else v.secTitleEn.ifBlank { v.secTitle }
 
 @Composable
 fun chapterTitle(c: Chapter) = when (LocalLang.current) {
@@ -205,7 +230,7 @@ private fun NoteBubble(modifier: Modifier = Modifier, content: @Composable () ->
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun VerseView(vm: AppVm, v: Verse, speaker: Speaker? = null, showActions: Boolean = true, flash: Boolean = false) {
+fun VerseView(vm: AppVm, v: Verse, speaker: Speaker? = null, showActions: Boolean = true, flash: Boolean = false, preview: Boolean = false) {
     val mark by vm.mark(v.id).collectAsStateWithLifecycle(null)
     val settings by vm.settings.collectAsStateWithLifecycle()
     val ctx = LocalContext.current
@@ -222,7 +247,11 @@ fun VerseView(vm: AppVm, v: Verse, speaker: Speaker? = null, showActions: Boolea
         repeat(2) { glow.animateTo(1f, tween(320)); glow.animateTo(0.3f, tween(320)) }
         glow.animateTo(0f, tween(1200))
     }
-    val txt = verseText(v)
+    val fullTxt = verseText(v)
+    // preview (Today plan + feed, big round #3): snippet + "weiterlesen" · 🔊 still reads th whole passage
+    var expanded by remember(v.id) { mutableStateOf(false) }
+    val cut = if (preview && !expanded) snippet(fullTxt) else null
+    val txt = cut ?: fullTxt
     val r = ref(v)
     val textLang = verseLang(v)   // 🔊 voice reads th lang th text is in
     val fallbackNote = when {
@@ -275,6 +304,10 @@ fun VerseView(vm: AppVm, v: Verse, speaker: Speaker? = null, showActions: Boolea
             append(txt.substring(last))
         }
         Text(annotated, fontFamily = FontFamily.Serif, fontSize = 16.sp * scale, lineHeight = 23.sp * scale)
+        if (cut != null) Text(tr("weiterlesen ▾ · noch ~%d Min.", "read more ▾ · ~%d min left").f(readMinutes(fullTxt.drop(cut.length))),
+            fontSize = 13.sp, fontWeight = FontWeight.Bold, color = Red,
+            modifier = Modifier.padding(top = 4.dp).clip(RoundedCornerShape(50)).clickable { expanded = true }
+                .background(Red.copy(alpha = 0.08f)).padding(horizontal = 10.dp, vertical = 4.dp))
         // ✍️ margin note: shown inline as a NoteBubble · tap it (or Notiz) = edit right here, same bubble, no popup
         // QA r4: no Save/Cancel words · QA r5: no ★ either · any tap (away o on th field) = close · changed ➡ saved · blank ➡ note gone
         if (editNote) {

@@ -250,6 +250,67 @@
   ]
  },
  {
+  "id": "ludditen",
+  "emoji": "🤖",
+  "tde": "Maschinenstürmer & KI",
+  "ten": "Luddites & AI",
+  "dde": "7 Tage Kapitel 13: Webstühle, Maschinenstürmer und warum das Kapitel über Maschinerie sich heute wie ein KI-Kommentar liest. Marx' Text ist original von 1867 — nur die Brücke ins Heute ist neu.",
+  "den": "7 days of chapter 13: power looms, Luddites, and why the chapter on machinery reads like a comment on AI today. Marx's text is the 1867 original — only the bridge to today is new.",
+  "days": [
+   {
+    "v": [
+     "13,73"
+    ],
+    "xd": "Aristoteles träumte von Werkzeugen, die von selbst arbeiten — dann bräuchte niemand mehr Sklaven. Wir haben die Werkzeuge jetzt fast: Code, der Code schreibt. Marx' Pointe kommt gleich danach: Die Maschine hat den Arbeitstag nicht verkürzt, sondern verlängert. Der Traum war nie das Problem. Die Frage ist, wem die Dreifüße des Hephaistos gehören.",
+    "xe": "Aristotle dreamt of tools that work by themselves — then nobody would need slaves. We almost have those tools now: code that writes code. Marx's punchline comes right after: the machine did not shorten the working day, it lengthened it. The dream was never the problem. The question is who owns the tripods of Hephaestus."
+   },
+   {
+    "v": [
+     "13,62"
+    ],
+    "xd": "Ein Perpetuum mobile, das nur an einer Schranke scheitert: an den Menschen, die müde werden und Widerworte geben. Klingt nach dem Pitch eines KI-Start-ups? Marx beschreibt 1867, wie Maschinen den Druck erhöhen, den Menschen an ihr Tempo anzupassen. Heute heißt das Produktivitäts-Dashboard.",
+    "xe": "A perpetual-motion machine that hits only one limit: the humans who get tired and talk back. Sounds like an AI start-up pitch? In 1867 Marx describes how machines raise the pressure to match humans to their pace. Today we call it a productivity dashboard."
+   },
+   {
+    "v": [
+     "13,110"
+    ],
+    "xd": "Zwei Sätze, die gleich klingen und es nicht sind: Menschen benutzen die Maschine — oder die Maschine benutzt Menschen als ihre 'bewussten Organe'. Wenn ein Algorithmus Lieferfahrern die Route, das Tempo und die Pausen vorgibt: Wer ist da Subjekt, wer Objekt? Marx' Unterscheidung ist die Frage, die man jeder KI stellen sollte.",
+    "xe": "Two sentences that sound alike and aren't: people use the machine — or the machine uses people as its 'conscious organs'. When an algorithm sets a delivery rider's route, speed and breaks: who is the subject, who the object? Marx's distinction is the question to ask of every AI."
+   },
+   {
+    "v": [
+     "13,124",
+     "13,125"
+    ],
+    "xd": "Die Ludditen zerschlugen Webstühle — und gelten seitdem als Fortschrittsfeinde. Marx ist fairer und strenger zugleich: Die Arbeiter brauchten Zeit, um die Maschine von ihrer kapitalistischen Anwendung zu unterscheiden. Der Gegner war nie der Webstuhl. Wer heute KI-Modelle 'zerschlagen' will, statt über Eigentum und Arbeitszeit zu reden, kämpft dieselbe alte Schlacht am falschen Ort.",
+    "xe": "The Luddites smashed looms — and have been called enemies of progress ever since. Marx is both fairer and stricter: workers needed time to tell the machine apart from its capitalist use. The enemy was never the loom. Whoever wants to 'smash' AI models today instead of talking about ownership and working hours is fighting the same old battle in the wrong place."
+   },
+   {
+    "v": [
+     "13,127",
+     "13,130"
+    ],
+    "xd": "'Das Arbeitsmittel erschlägt den Arbeiter.' Als Maschine wird das Werkzeug zum Konkurrenten des Menschen, der es bedient. Übersetzerinnen, Illustratoren, Callcenter: Für viele ist das 2026 keine Theorie. Marx hätte gefragt: Wird die gesparte Zeit zu Freizeit für alle — oder zu Arbeitslosigkeit für die einen und Überstunden für die anderen?",
+    "xe": "'The instrument of labour strikes down the labourer.' As a machine, the tool becomes the competitor of the person who operates it. Translators, illustrators, call centres: for many in 2026 this is not theory. Marx would have asked: does the saved time become free time for everyone — or unemployment for some and overtime for others?"
+   },
+   {
+    "v": [
+     "13,165"
+    ],
+    "xd": "Der Kernsatz des Kapitels: An sich verkürzt die Maschine die Arbeitszeit — kapitalistisch angewandt verlängert sie den Arbeitstag. An sich erleichtert sie die Arbeit — kapitalistisch angewandt steigert sie die Intensität. Ersetze 'Maschine' durch 'KI' und lies den Absatz noch einmal. Kein Wort muss geändert werden. Das ist entweder genial oder sehr traurig.",
+    "xe": "The key sentence of the chapter: in itself the machine shortens working time — applied capitalistically it lengthens the working day. In itself it lightens labour — applied capitalistically it raises its intensity. Replace 'machine' with 'AI' and read the paragraph again. Not a word needs changing. That is either brilliant or very sad."
+   },
+   {
+    "v": [
+     "13,144"
+    ],
+    "xd": "338 Baumwollfabriken verschwinden, die Produktion wächst trotzdem — in den Händen von weniger Kapitalisten. Marx' Zahlen von 1868 sind das Muster, das wir heute bei Rechenzentren und Basismodellen sehen: riesige Maschinen, wenige Besitzer. Die Frage nach den Produktionsmitteln war nie altmodisch. Sie läuft jetzt nur auf GPUs.",
+    "xe": "338 cotton mills disappear, output grows anyway — in the hands of fewer capitalists. Marx's 1868 figures are the pattern we see today with data centres and foundation models: giant machines, few owners. The question of the means of production was never old-fashioned. It just runs on GPUs now."
+   }
+  ]
+ },
+ {
   "id": "erschoepft",
   "emoji": "😴",
   "tde": "Marx für Erschöpfte",

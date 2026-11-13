@@ -122,5 +122,49 @@ class Meter(unittest.TestCase):
         self.assertEqual(tf.METER.wasted, 1000)   # batch of 1: try 1 + try 2 (no split, no single retry)
 
 
+align, build = load("align"), load("build")
+
+
+class AlignEn(unittest.TestCase):
+    """big round #1/#4: EN reader gaps · DE section titles · ch.1 TOC as body txt"""
+    def test_split_en_spreads_sentences_by_de_length(self):
+        en = "One short. Two is a bit longer here. Three closes it all off nicely."
+        parts = align.split_en(en, [10, 60])
+        self.assertEqual(len(parts), 2); self.assertTrue(all(parts))
+        self.assertEqual(" ".join(parts), en)
+        self.assertEqual(parts[0], "One short.")
+
+    def test_split_en_prefers_paragraph_breaks_and_keeps_1_sentence_each(self):
+        parts = align.split_en("A first para. ¶ B second para.", [5, 5])
+        self.assertEqual(parts, ["A first para.", "B second para."])
+        self.assertEqual(align.split_en("Only one.", [5, 5]), ["Only one.", ""])
+
+    def test_toc_dropped(self):
+        body = '<h3>Chapter One</h3><p class="toc">Contents</p><p class="index">A. Elementary</p><h3>SECTION 1</h3><p>The wealth'
+        out = align.drop_toc(body)
+        self.assertNotIn("Elementary", out); self.assertIn("SECTION 1", out)
+
+    def test_heads_build_de_style_titles(self):
+        h = align.Heads()
+        h.push(3, "Chapter One: Commodities"); h.push(3, "SECTION 3"); h.push(4, "THE FORM OF VALUE OR EXCHANGE VALUE")
+        self.assertEqual(h.cur(), ["Commodities", "3. The Form of Value or Exchange Value"])   # chapter = lvl 2 (DE Kap 4/24)
+        h.push(5, "A. Elementary Form"); h.push(7, "(a.) The nature [12] of this form")
+        self.assertEqual(h.cur()[-1], "a. The nature of this form")
+        self.assertEqual(align.title_case("DAY AND NIGHT WORK. THE RELAY SYSTEM"), "Day and Night Work. The Relay System")
+
+    def test_en_sec_titles_innermost_label_match(self):
+        V = [{"kap": "1", "sec": "1.3.A.3", "sec_title": "3. Die Äquivalentform",
+              "en_head": ["3. The Form of Value", "A. Elementary", "3. The Equivalent form"]},
+             {"kap": "15", "sec": "15.IV", "sec_title": "IV. Gleichzeitige Variationen",
+              "en_head": ["4. Simultaneous Variations", "B. Increasing intensity"]},
+             {"kap": "24", "sec": "24.1", "sec_title": "1. Das Geheimnis", "en_head": ["The Secret of Primitive Accumulation"]},
+             {"kap": "2", "sec": "", "sec_title": "", "en_head": []}]
+        t = build.en_sec_titles(V)
+        self.assertEqual(t[("1", "1.3.A.3")], "3. The Equivalent form")
+        self.assertEqual(t[("15", "15.IV")], "IV. Simultaneous Variations")
+        self.assertEqual(t[("24", "24.1")], "1. The Secret of Primitive Accumulation")
+        self.assertNotIn(("2", ""), t)
+
+
 if __name__ == "__main__":
     unittest.main()

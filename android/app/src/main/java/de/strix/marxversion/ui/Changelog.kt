@@ -41,6 +41,11 @@ val RELEASES = listOf(
         T("📖 Umblättern: wischen, doppelt tippen oder das Eselsohr unten rechts", "📖 Turning pages: swipe, double-tap or the dog-ear bottom right"),
         T("✍️ Notizen sehen aus wie Kommentare: eigene Farbe, Randlinie, antippen = fertig", "✍️ Notes look like comments: own colour, side line, tap = done"),
         T("📊 Lesefortschritt in Prozent", "📊 Reading progress in percent"),
+        T("📜 Weiterlesen: nach dem Tagespensum geht das Buch einfach weiter — scrollen genügt", "📜 Keep reading: after your daily portion the book simply goes on — just scroll"),
+        T("✂️ Lange Absätze auf „Heute“ gekürzt, „weiterlesen“ zeigt den Rest", "✂️ Long paragraphs on “Today” trimmed, “read more” shows the rest"),
+        T("🤖 Neuer Leseplan „Maschinenstürmer & KI“: Kapitel 13 und was es heute heißt", "🤖 New reading plan “Luddites & AI”: chapter 13 and what it means today"),
+        T("🔓 Hooked-Modus schaltet sich nach 7 Lesetagen frei — mit eigenem Abzeichen", "🔓 Hooked mode unlocks after 7 reading days — with its own badge"),
+        T("🇬🇧 Englisch: Abschnittstitel auf Englisch, keine Lücken mehr, Kapitel 1 ohne Inhaltsverzeichnis-Salat", "🇬🇧 English: section titles in English, no more gaps, chapter 1 without table-of-contents clutter"),
     )),
     Release("0.9.0", "2026-11-08", listOf(
         T("🌍 6 neue Sprachen: Französisch, Russisch, Hindi, Bengalisch, Urdu, Indonesisch — das ganze Buch inklusive", "🌍 6 new languages: French, Russian, Hindi, Bengali, Urdu, Indonesian — the whole book included"),

@@ -45,6 +45,16 @@ class ContentTest {
         }
     }
 
+    /** big round #1 + #4: EN reader = real EN (not th chapter TOC, not "no English paragraph here" walls), EN section titles */
+    @Test fun englishReaderData() {
+        assertTrue("1,1 EN = th opening, not th TOC", verses.first { it.id == "1,1" }.en.startsWith("The wealth of those societies"))
+        assertTrue("no TOC lines as body", verses.none { Regex("""^(A\. Elementary|Section 1 [—-])""").containsMatchIn(it.en) })
+        assertTrue("≤ 20 verses wo EN (was 199)", verses.count { it.en.isBlank() } <= 20)
+        val titled = verses.filter { it.secTitle.isNotBlank() }
+        assertTrue("evy DE section title hs an EN one", titled.all { it.secTitleEn.isNotBlank() })
+        assertEquals("4. The Fetishism of Commodities and the Secret Thereof", verses.first { it.sec == "1.4" }.secTitleEn)
+    }
+
     @Test fun verseOfDayIsStablePerDay() {
         val pool = dailyPool(verses)
         assertTrue(pool.isNotEmpty())

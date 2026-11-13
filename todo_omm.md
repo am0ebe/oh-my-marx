@@ -37,11 +37,11 @@
 ## 📆
 
 ## 🔵
-- 🤖 **big round** (QA r5 @1113, am0 "rest yes" ➡ parked 4 a data/btn round) · src ➡ qa_1112.md § r4 sweep
-  - #3 EN reader: section titles still DE ("1. Die zwei Faktoren der Ware…") + ¶ "no English paragraph here" ➡ EN secTitle pass (data)
-  - #4 ch.1 page 1 = th TOC as body txt ("A. Elementary … 1. The Two Poles …") ➡ split.py drop/format it (data)
-  - #6 plan verses on Today = long txt walls above "Day complete!" ➡ ties 2 D3/D-015 Amen under snippet
-  - #7 btn styles mixed: Today tinted circles (CardAction, now also ⚙️ About) · Kreis filled pills · Marxoskop outlined chips · Hooked AssistChips ➡ 1 system (D7)
+- 🤖 **big round** (QA r5 @1113, am0 "rest yes" ➡ parked 4 a data/btn round) · src ➡ qa_1112.md § r4 sweep + § big round pt 1
+  - ✔️ @1113 pt 1 (M8 order, non-design): #3 EN titles/gaps · #4 ch.1 TOC · #6 Today snippets · 📜 feed · 🔓 Hooked unlock · 🤖 Ludditen plan ➡ arch D-024..027 · not deployed
+  - #7 btn styles mixed: Today tinted circles (CardAction, now also ⚙️ About) · Kreis filled pills · Marxoskop outlined chips · Hooked AssistChips ➡ 1 system (D7) ➡ design system spec (pt 2)
+  - 🤖 fan-in: `bin/translate.py --only ui` (new strings: feed · unlock · bridge box · changelog) + teach translate.py PlanDay xd/xe
+  - 🔵 data leftovers: 13,122-125 EN shifted ~1 para (align DP slip) · DE "FÜFNZEHNTES" typo ➡ Kap 15 opening i Kap 14 (fix = id shift ➡ bookmark migration)
 - 🧪 self-update (D-021) on a real fon: 1st DEV deploy aft r5 ➡ old DEV (adb-installed) gets th notification wi ~1 d · Obtainium-installed = skipped by design
 - _⬇ demoted fr ‼️ @1112 (WIP ≤5)_
 - 🦠🔑 keystore: ✔️ symlink @1105 · left: KeePass note (`base64 -w0`, notes.md § 🔑) · 1 offline/restic copy · lap same `ln -s` (➡ sys ansible?)

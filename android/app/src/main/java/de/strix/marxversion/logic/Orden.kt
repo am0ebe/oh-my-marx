@@ -54,6 +54,10 @@ enum class Orden(
         OrdenGroup.BOOK, earned = { "24" in it.chaptersDone }),
     PLAN("📋", T("Leseplan gemeistert", "Reading plan mastered"), T("Einen Leseplan bis zum letzten Tag geschafft.", "Finished a reading plan to its last day."),
         OrdenGroup.BOOK, earned = { it.plansDone >= 1 }),
+    // 🔓 progressive disclosure (big round #5 · D-025): th app's own Hooked tricks stay hidden til u r a regular
+    HOOKED("🪝", T("Hinter den Kulissen", "Behind the scenes"), T("Hooked-Modus freigeschaltet: 7 Lesetage oder dein erster fertiger Leseplan.",
+        "Hooked mode unlocked: 7 reading days or your first finished reading plan."),
+        OrdenGroup.READ, earned = { hookedUnlocked(it) }),
     MARKS("🖍️", T("Mein Kapital wächst", "My capital grows"), T("10 Markierungen, Notizen oder Lesezeichen.", "10 highlights, notes or bookmarks."),
         OrdenGroup.BOOK, earned = { it.marks >= 10 }),
     BOOK("📕", T("Hat's wirklich gelesen", "Actually read it"), T("Das ganze Kapital, Band 1. Jeder Absatz.", "All of Capital, vol. 1. Every paragraph."),
@@ -91,6 +95,11 @@ enum class Orden(
         fun earned(s: Stats): Set<Orden> = entries.filter { it.earned(s) }.toSet()
     }
 }
+
+/** 🔓 Hooked mode unlock (QA @1112 am0: "only after finishing 7 days or first read plan") · total days, not a streak (D-004: no anxiety) */
+const val HOOKED_DAYS = 7
+fun hookedUnlocked(s: Stats) = s.dates.size >= HOOKED_DAYS || s.plansDone >= 1
+fun hookedDaysLeft(readingDays: Int) = maxOf(0, HOOKED_DAYS - readingDays)
 
 /** 4th Thursday o November + 1 */
 fun blackFriday(year: Int): LocalDate =

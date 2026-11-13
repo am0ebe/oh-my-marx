@@ -320,7 +320,7 @@ private fun Page(vm: AppVm, p: BookPage, speaker: Speaker, i: Int, n: Int, modif
                 fontFamily = FontFamily.Serif, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth().padding(vertical = 14.dp))
             p.verses.forEachIndexed { k, v ->
                 val prev = p.verses.getOrNull(k - 1)
-                if (v.secTitle.isNotBlank() && v.sec != prev?.sec) SectionTitle(v.secTitle)
+                if (v.secTitle.isNotBlank() && v.sec != prev?.sec) SectionTitle(secTitle(v))
                 VerseView(vm, v, speaker, flash = v.id == flashId)
                 Gap(4)
             }

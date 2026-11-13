@@ -14,6 +14,7 @@ data class Verse(
     val kap: String,
     val sec: String = "",
     @SerialName("st") val secTitle: String = "",
+    @SerialName("ste") val secTitleEn: String = "",   // EN heading (marxists.org via build.py en_sec_titles) · "" ➡ DE shown
     @SerialName("p") val page: Int? = null,      // MEW 23 page (= strix's paper copy)
     val de: String,
     val en: String = "",
@@ -45,6 +46,8 @@ data class PlanDay(
     @SerialName("v") val verseIds: List<String>,
     @SerialName("ad") val andachtDe: String = "",
     @SerialName("ae") val andachtEn: String = "",
+    @SerialName("xd") val bridgeDe: String = "",   // 💡 "Und heute?" = NEW txt linking th passage 2 today (data/plans_extra.json, eg Marx ⬄ KI)
+    @SerialName("xe") val bridgeEn: String = "",
 )
 
 @Serializable

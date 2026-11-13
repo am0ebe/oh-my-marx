@@ -47,6 +47,39 @@ CHAPTERS = {
     "25": ("25. Die moderne Kolonisationstheorie", "25. The Modern Theory of Colonisation", 7),
 }
 
+LABEL = re.compile(r"^([IVX]+|\d+|[A-Za-z])[.)]\s+")
+ROMAN = {"I": 1, "II": 2, "III": 3, "IV": 4, "V": 5, "VI": 6, "VII": 7, "VIII": 8, "IX": 9, "X": 10}
+
+def label(t):
+    """'a) Gehalt' ➡ ('abc', 1) · 'IV. X' / '4. X' ➡ ('num', 4) · no label ➡ None"""
+    m = LABEL.match(t)
+    if not m: return None
+    x = m.group(1)
+    if x in ROMAN: return ("num", ROMAN[x])   # Kapital's letter sections stop at F ➡ I/V/X = roman
+    return ("num", int(x)) if x.isdigit() else ("abc", ord(x.lower()) - 96)
+
+def en_sec_titles(V):
+    """DE sec ➡ EN title fr th marxists.org headings align.py hung on each verse (en_head = heading stack, outer ➡ inner)
+    1st: a stack entry whose label matches th DE one ('a)' ⬄ 'a.' · 'IV.' ⬄ '4.') · else th most common innermost
+    (DE Kap 4 + 24 = several EN chapters ➡ EN chapter title) · label written th DE way, EN words · none ➡ "" (app shows DE)"""
+    from collections import Counter
+    secs = {}
+    for v in V:
+        if v["sec_title"]:
+            secs.setdefault((v["kap"], v["sec"]), (v["sec_title"], []))[1].append(v.get("en_head") or [])
+    out = {}
+    for key, (de_t, stacks) in secs.items():
+        want = label(de_t)
+        # innermost match per verse ('3. The Equivalent form' beats th outer '3. The Form of Value')
+        hits = Counter(next((h for h in reversed(s) if label(h) == want), None) for s in stacks) if want else Counter()
+        hits.pop(None, None)
+        inner = Counter(s[-1] for s in stacks if s)
+        en = (hits or inner).most_common(1)[0][0] if (hits or inner) else ""
+        if en:
+            words = LABEL.sub("", en) if label(en) else en
+            out[key] = (LABEL.match(de_t).group(1) + ". " if want else "") + words[:1].upper() + words[1:]
+    return out
+
 def jl(name):
     p = DATA / name
     return [json.loads(l) for l in open(p, encoding="utf-8")] if p.exists() else []
@@ -163,6 +196,19 @@ def plans(V):
                   days=days))
     return P
 
+def extra_plans(ids):
+    """data/plans_extra.json = hand-curated plans (🤖 Ludditen & KI): verses by id (Kapital txt untouched) + per day a NEW
+    bridge txt xd/xe ('💡 Und heute?') · missing id ➡ fail loud (a split.py change must not silently empty a day)"""
+    p = DATA / "plans_extra.json"
+    out = []
+    for e in (json.loads(p.read_text(encoding="utf-8")) if p.exists() else []):
+        bad = [i for d in e["days"] for i in d["v"] if i not in ids]
+        if bad:
+            raise SystemExit(f"plans_extra {e['id']}: unknown verse ids {bad}")
+        out.append({k: e[k] for k in ("id", "emoji", "tde", "ten", "dde", "den")}
+                   | {"days": [d["v"] for d in e["days"]], "x": [{k: d[k] for k in ("xd", "xe") if d.get(k)} for d in e["days"]]})
+    return out
+
 def main():
     V = jl("verses.jsonl")
     old = {json.loads(l)["id"]: json.loads(l)["de"] for l in open(DATA / "verses_scored_v0.jsonl", encoding="utf-8")} \
@@ -175,12 +221,13 @@ def main():
     stars = {i for r in jl("rank.jsonl") for i in r["star"]}
     roasts = {i for r in jl("rank.jsonl") for i in r["roast"]}
     out, n_scored = [], 0
+    ste = en_sec_titles(V)
     for i, v in enumerate(V):
         s = by_de.get(v["de"], {})
         n_scored += bool(s)
         q = verbatim(s.get("quote_de", ""), v["de"])
         qe = verbatim(s.get("quote_en", ""), v["en"].replace(" ¶ ", " ")) if q else ""
-        o = {"id": v["id"], "kap": v["kap"], "sec": v["sec"], "st": v["sec_title"], "p": v["page"],
+        o = {"id": v["id"], "kap": v["kap"], "sec": v["sec"], "st": v["sec_title"], "ste": ste.get((v["kap"], v["sec"]), ""), "p": v["page"],
              "de": v["de"], "en": v["en"], "kind": v["kind"], "_i": i}
         if s:
             o |= {"qd": q, "qe": qe, "j": s["juice"], "d": s["difficulty"],
@@ -189,11 +236,14 @@ def main():
         out.append(o)
 
     P = plans(out)
+    P[1:1] = extra_plans({o["id"] for o in out if o["kind"] == "text"})   # curated (🤖 Ludditen) right aft th flagship
     andachten = {(a["plan"], a["day"]): a for a in jl("andachten.jsonl")}
     for p in P:
         p["days"] = [{"v": ids} | ({"ad": andachten[(p["id"], i)]["de"], "ae": andachten[(p["id"], i)]["en"]}
                                    if (p["id"], i) in andachten and andachten[(p["id"], i)]["v"] == ids else {})
+                     | (p["x"][i] if p.get("x") else {})
                      for i, ids in enumerate(p["days"]) if ids]
+        p.pop("x", None)
     (DATA / "plans.json").write_text(json.dumps(P, ensure_ascii=False, indent=1), encoding="utf-8")
 
     first_page = {}

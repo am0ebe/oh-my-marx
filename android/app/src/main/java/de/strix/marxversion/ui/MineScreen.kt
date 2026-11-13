@@ -20,6 +20,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.graphics.Color
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -152,7 +153,18 @@ fun SettingsScreen(vm: AppVm, askNotifPermission: () -> Unit) {
 
         // ── 🪝 Hooked mode (= explainer + 🪝 notes everywhere + test buttons) ──
         val openHooked = LocalOpenHooked.current
-        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(vertical = 8.dp)) {
+        // 🔓 progressive disclosure (big round #5 · D-025): locked til 7 reading days / 1st finished plan · alr on = stays
+        val earned by vm.orden.collectAsStateWithLifecycle()
+        val logDays by vm.days.collectAsStateWithLifecycle()
+        if (de.strix.marxversion.logic.Orden.HOOKED !in earned && !s.testMode) Column(Modifier.padding(vertical = 8.dp)) {
+            val left = de.strix.marxversion.logic.hookedDaysLeft(de.strix.marxversion.logic.readingDays(logDays))
+            Text(tr("🔒 Hooked-Modus", "🔒 Hooked mode"), color = Color.Gray)
+            Text(tr("Ein Blick hinter die Kulissen der App — schaltet sich frei nach 7 Lesetagen oder deinem ersten fertigen Leseplan. Noch %d Tage.",
+                "A look behind the app's scenes — unlocks after 7 reading days or your first finished reading plan. %d days to go.").f(left),
+                fontSize = 12.sp, color = Color.Gray)
+            androidx.compose.material3.LinearProgressIndicator(progress = { (de.strix.marxversion.logic.HOOKED_DAYS - left) / de.strix.marxversion.logic.HOOKED_DAYS.toFloat() },
+                color = Gold, modifier = Modifier.fillMaxWidth().padding(top = 6.dp))
+        } else Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(vertical = 8.dp)) {
             Column(Modifier.weight(1f)) {
                 Text(tr("🪝 Hooked-Modus", "🪝 Hooked mode"))
                 Text(tr("Die App erklärt, wie sie dich anfixt: gelbe 🪝-Zettel an jedem Trick, eine Lernseite zu Nir Eyals „Hooked“ + Test-Knöpfe auf „Heute“.",

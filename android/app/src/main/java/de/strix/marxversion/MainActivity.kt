@@ -234,7 +234,10 @@ private fun App(vm: AppVm) {
     val newOrden by vm.newOrden.collectAsStateWithLifecycle()
     var showOrden by remember { mutableStateOf<List<de.strix.marxversion.logic.Orden>>(emptyList()) }
     LaunchedEffect(newOrden) { if (newOrden.isNotEmpty()) { kotlinx.coroutines.delay(2600); showOrden = newOrden } }
-    if (showOrden.isNotEmpty()) de.strix.marxversion.ui.NewOrdenDialog(showOrden) { vm.ordenSeen(showOrden); showOrden = emptyList() }
+    val hookedNew = de.strix.marxversion.logic.Orden.HOOKED
+    if (hookedNew in showOrden) de.strix.marxversion.ui.HookedUnlockDialog({ vm.setTestMode(true) }) {   // 🔓 own moment 1st (D-025), rest aft
+        vm.ordenSeen(listOf(hookedNew)); showOrden = showOrden - hookedNew
+    } else if (showOrden.isNotEmpty()) de.strix.marxversion.ui.NewOrdenDialog(showOrden) { vm.ordenSeen(showOrden); showOrden = emptyList() }
 
     // 🆕 download + install (data/Update.kt)
     val showUpdate by vm.showUpdate.collectAsStateWithLifecycle()

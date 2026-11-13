@@ -132,6 +132,7 @@ private fun teaser(s: String, lang: Lang, words: Int = 8) =
 private fun feastNow(vm: AppVm): Feast? = vm.feastPreview.collectAsStateWithLifecycle().value ?: Feast.on(LocalDate.now())
 
 private const val DEFAULT_PLAN = "30tage"
+private const val LUDDITES = "ludditen"   // data/plans_extra.json
 private val PlanAccent = Color(0xFF6A3093)  // plan card accent (aubergine = Plans-tab 2nd colour)
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -256,6 +257,7 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
         // ── Lesepläne ──
         val plan = s.activePlan?.let { vm.content.plan(it) }
         var nextTeaser: String? = null
+        var feedAfter: List<String>? = null   // today's snippet done ➡ 📜 feed continues aft it (#4)
         if (plan == null) {
             OutlinedButton(onClick = openPlans, modifier = Modifier.fillMaxWidth()) {
                 Text(tr("📚 Leseplan wählen — Kapital in kleinen Hostien", "📚 Pick a reading plan — Capital in communion-wafer portions"))
@@ -318,7 +320,20 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
                 }
             }
             Gap(8)
-            day.verseIds.mapNotNull { vm.content.verse(it) }.forEach { VerseView(vm, it, speaker); Gap(4) }
+            // big round #3: snippet + "weiterlesen" (was a 2-3 k char wall above "Tag geschafft")
+            day.verseIds.mapNotNull { vm.content.verse(it) }.forEach { VerseView(vm, it, speaker, preview = true); Gap(4) }
+            // 💡 curated plans (🤖 Ludditen): NEW bridge txt Marx ➡ today, under th original passage (#6)
+            val br = bridge(day)
+            if (br.isNotBlank()) {
+                Gap(4)
+                Column(Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).background(Blue.copy(alpha = 0.07f)).padding(12.dp)) {
+                    Text(tr("💡 Und heute?", "💡 And today?"), fontSize = 12.sp, fontWeight = FontWeight.Bold, color = Blue)
+                    Text(br, fontSize = 15.sp, lineHeight = 22.sp, modifier = Modifier.padding(top = 4.dp))
+                    Text(tr("neuer Text — Marx' Absatz oben ist original", "new text — Marx's paragraph above is the original"),
+                        fontSize = 11.sp, color = Color.Gray, modifier = Modifier.padding(top = 4.dp))
+                }
+            }
+            if (planToday != null) feedAfter = day.verseIds
             Gap()
             // Hooked ch5: investment loads th nxt trigger ➡ tease tomorrow's reading
             nextTeaser = plan.days.getOrNull(idx + 1)?.verseIds?.firstNotNullOfOrNull { vm.content.verse(it) }
@@ -340,15 +355,36 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
 
         // ── Marxoskop: "Was nervt?" ──
         Text(tr("🔮 Marxoskop — was nervt dich gerade?", "🔮 Marxoscope — what's bugging you?"), fontWeight = FontWeight.Bold)
+        var kiAsk by remember { mutableStateOf(false) }
+        var kiTapped by remember { mutableStateOf(false) }
         FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
             NERVT.keys.forEach { k ->
                 // answer = a card, flies 2 th front o th deck up top
-                FilterChip(selected = false, onClick = { oracleCard(marxoskop(vm.content.verses, k)) }, label = { Text(tr(NERVT_LABEL.getValue(k))) })
+                FilterChip(selected = false, onClick = { oracleCard(marxoskop(vm.content.verses, k)); if (k == "ki") kiTapped = true },
+                    label = { Text(tr(NERVT_LABEL.getValue(k))) })
             }
+        }
+        // 🤖 KI chip ➡ link straight 2 th Ludditen plan (#6, QA @1112 "link directly to AI")
+        if (kiTapped && s.activePlan != LUDDITES && vm.content.plan(LUDDITES) != null) {
+            Card(onClick = { kiAsk = true }, colors = CardDefaults.cardColors(containerColor = Blue.copy(alpha = 0.08f)),
+                modifier = Modifier.fillMaxWidth().padding(top = 8.dp)) {
+                Text(tr("🤖 Mehr davon? 7 Tage „Maschinenstürmer & KI“ — Kapitel 13 + was es heute heißt ➡",
+                    "🤖 Want more? 7 days of “Luddites & AI” — chapter 13 + what it means today ➡"),
+                    fontSize = 14.sp, modifier = Modifier.padding(12.dp))
+            }
+        }
+        if (kiAsk) MarxDialog({ kiAsk = false }, title = tr("Plan wechseln?", "Switch plan?"), actions = {
+            TextButton(onClick = { kiAsk = false }) { Text(tr("Später", "Later")) }
+            Button(onClick = { kiAsk = false; kiTapped = false; vm.startPlan(LUDDITES) }) { Text(tr("🤖 Los", "🤖 Start")) }
+        }) {
+            Text(tr("Dein jetziger Plan bleibt gespeichert — du kannst jederzeit unter „Pläne“ zurück.",
+                "Your current plan stays saved — switch back any time under “Plans”."))
         }
         HookNote(Hook.FORER, s.testMode)
         // (pull/shake hint lives only under th cards: down here "pull down" doesn't work ➡ misleading, rm'd @1104)
         Gap(40)
+        // ── 📜 endless feed aft today's snippet (#4 · D-024) = th tail o Home ──
+        feedAfter?.let { ReadOnFeed(vm, it, scroll, speaker) }
 
         if (celebrate) {
             if (rankUp != null) Confetti {}  // 🎉 full card = paper rain, 1st = behind th dialog

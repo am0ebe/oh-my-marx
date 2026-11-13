@@ -5,6 +5,9 @@ per DE Kap: DP alignment (Gale-Church style) over paragraph sequences
   cost = length-ratio mismatch + bead penalty − anchor bonus (shared numbers + footnote refs)
   beads: 1-1 · 1-2 · 2-1 · 2-2 · 1-3 · 3-1 · 1-0 · 0-1  ➡ 1 DE Absatz gets 0..n EN paragraphs
 footnotes: DE fn ⬄ EN fn derived fr aligned verses (zip o their fn refs i order)
+k-1 beads (marxists.org merged paragraphs) ➡ EN sentences split over th DE Absätze by length (no "no English paragraph" gaps)
+EN headings (h3-h6 + subhead spans) tracked per paragraph ➡ verse["en_head"] ➡ build.py derives EN section titles
+chapter TOC (<p class="toc"> + index lines) dropped b4 aligning (was ch.1 page 1 body txt)
 
 usage: align.py [--show KAP]   # --show prints th alignment o 1 Kap 4 eyeballing
 """
@@ -34,23 +37,89 @@ def parse_en(stem):
     if m := re.search(r"<h3>[^<]*(Chapter|SECTION)[^<]*</h3>|<h[13][^>]*>.*?(Preface|Afterword)", body, re.I | re.S):
         body = body[m.start():]
     body = re.split(r'<p class="footer"|<hr class="end"\s*/?>\s*(?:<p class="footer"|$)', body, flags=re.I)[0]
-    body = re.sub(r"<h[1-6][^>]*>.*?</h[1-6]>", "", body, flags=re.S | re.I)
-    paras = []
-    for m in re.finditer(r"<table\b.*?</table>|<p\b[^>]*>.*?(?=<p\b|<table\b|<hr\b|</body>|$)", body, re.S | re.I):
+    body = drop_toc(body)
+    paras, heads = [], Heads()
+    for m in re.finditer(r"<h([1-6])[^>]*>(.*?)</h\1>|<table\b.*?</table>|<p\b[^>]*>.*?(?=<p\b|<table\b|<hr\b|<h[1-6]\b|</body>|$)",
+                         body, re.S | re.I):
+        if m.group(1):
+            heads.push(int(m.group(1)), clean(m.group(2)))
+            continue
         frag = m.group(0)
         if re.match(r'<p class="(footer|information|title|toc)', frag, re.I):
             continue
+        if sub := re.search(r'<span class="subhead">(.*?)</span>', frag, re.S | re.I):
+            heads.push(7, clean(sub.group(1)))
         t = clean(re.sub(r"</t[dh]>", " | ", frag, flags=re.I)) if frag.lower().startswith("<table") else clean(frag)
         t = re.sub(r"(\s*\|\s*)+", " | ", t).strip(" |")
         if len(t) < 3 or re.search(r"Section 1 - .*Section 2 - ", t):  # skip in-page section index
             continue
-        paras.append({"en": t, "kind": "table" if frag.lower().startswith("<table") else "text"})
+        paras.append({"en": t, "kind": "table" if frag.lower().startswith("<table") else "text", "head": heads.cur()})
     notes = {}
     for m in re.finditer(r'<p class="information">(.*?)(?=<p class="information">|<hr|</body>|$)', notes_src, re.S | re.I):
         t = clean(m.group(1))
         if fm := re.match(r"\[?(\d+[a-z]?)\]?[.)]?\s+", t):
             notes[fm.group(1)] = t[fm.end():]
     return paras, notes
+
+def drop_toc(body):
+    """chapter TOC = <p class="toc"> + index/indentb lines up 2 th 1st heading aft it ➡ gone (was ch.1 page 1 body txt)"""
+    return re.sub(r'<p class="toc".*?(?=<h[1-6]\b)', "", body, count=1, flags=re.S | re.I)
+
+SMALL = {"a", "an", "and", "as", "at", "by", "for", "from", "in", "into", "of", "on", "or", "the", "to", "with", "upon"}
+
+def title_case(t):
+    """'THE TWO FACTORS OF A COMMODITY' ➡ 'The Two Factors of a Commodity' · mixed case left alone"""
+    if t == t.upper():
+        t = " ".join(w if i and w in SMALL else "-".join(p[:1].upper() + p[1:] for p in w.split("-"))
+                     for i, w in enumerate(t.lower().split(" ")))
+    return re.sub(r"([.?!] )([a-z])", lambda m: m.group(1) + m.group(2).upper(), t)   # '… Work. the Relay' ➡ 'The'
+
+class Heads:
+    """EN heading stack per page, outer ➡ inner: 2 'Chapter Four: X' ➡ 'X' (DE Kap 4 + 24 = several EN chapters)
+    · 3 'SECTION 3' + h4 title ➡ '3. The Form of Value' · 5 'A. …' · 6 '1. …' · 7 subhead span '(a.) …' ➡ 'a. …'
+    cur() = th stack above a paragraph · build.py picks th entry whose label matches th DE sec ('a)' ⬄ 'a.' · 'IV.' ⬄ '4.')"""
+    def __init__(self): self.stack, self.sec_no = {}, None
+    def push(self, lvl, txt):
+        txt = re.sub(r"\s*\[\d+[a-z]?\]\s*", " ", re.sub(r"\s+", " ", txt)).strip(" :.")
+        if not txt or re.match(r"(Part [IVX]+|Footnotes)\b", txt, re.I):
+            return
+        if ch := re.match(r"Chapter [\w-]+\s*[:.]\s*(.+)", txt, re.I):
+            self.stack, self.sec_no = {2: title_case(ch.group(1))}, None
+            return
+        if lvl <= 3 and (sec := re.match(r"SECTION\s+([IVX\d]+)$", txt, re.I)):
+            self.sec_no = sec.group(1)
+            self.stack = {k: v for k, v in self.stack.items() if k < 3} | {3: f"{self.sec_no}."}   # title follows i h4
+            return
+        if lvl == 4 and self.sec_no and self.stack.get(3, "").endswith("."):
+            self.stack[3] = f"{self.sec_no}. {title_case(txt)}"
+            return
+        txt = title_case(re.sub(r"^\((\w+)\.?\)\s*", r"\1. ", txt))   # '(a.) The nature' ➡ 'a. The nature'
+        lvl = max(lvl, 4)
+        self.stack = {k: v for k, v in self.stack.items() if k < lvl} | {lvl: txt}
+    def cur(self):
+        return [self.stack[k] for k in sorted(self.stack)]
+
+SENT = r"(?<=[.!?:;])\s+(?=[A-Z“\"‘(\[0-9])"
+
+def split_en(en_txt, de_lens):
+    """1 EN chunk ⬄ k DE Absätze ➡ k EN pieces, cut at th sentence boundary closest 2 each DE cumulative length share
+    (monotonic · evy piece ≥1 sentence while there r enough) · was: all EN on th 1st Absatz, rest "no English paragraph here\""""
+    k = len(de_lens)
+    sents = [x.strip() for x in re.split(r"\s*¶\s*|" + SENT, en_txt) if x and x.strip()]
+    if k == 1 or len(sents) < 2:
+        return [en_txt] + [""] * (k - 1)
+    total_de, total_en = sum(de_lens) or 1, sum(len(x) for x in sents) or 1
+    cum, acc = [], 0
+    for x in sents:
+        acc += len(x); cum.append(acc / total_en)
+    cuts, prev, share = [], 0, 0.0
+    for i in range(k - 1):
+        share += de_lens[i] / total_de
+        lo, hi = prev + 1, len(sents) - (k - 1 - i)   # leave ≥1 sentence 4 evy later piece
+        prev = prev if lo > hi else min(range(lo, hi + 1), key=lambda c: abs(cum[c - 1] - share))
+        cuts.append(prev)
+    bounds = [0] + cuts + [len(sents)]
+    return [" ".join(sents[a:b]) for a, b in zip(bounds, bounds[1:])]
 
 def anchors(t):
     return set(re.findall(r"\b\d[\d,.]*\d\b|\b\d{2,}\b", re.sub(r"\[\d+[a-z]?\]", "", t))) \
@@ -110,9 +179,12 @@ def main():
         for di, ej in beads:
             en_txt = " ¶ ".join(en_paras[j]["en"] for j in ej)
             en_ch = en_paras[ej[0]]["ch"] if ej else None
-            for x, i in enumerate(di):
-                vs[i]["en"] = en_txt if x == 0 else ""  # DE 2-1 bead ➡ EN on th 1st DE Absatz
+            text_di = [i for i in di if vs[i]["kind"] != "meta"] or di   # headings don't eat EN sentences
+            pieces = dict(zip(text_di, split_en(en_txt, [len(vs[i]["de"]) for i in text_di]))) if en_txt else {}
+            for i in di:
+                vs[i]["en"] = pieces.get(i, "")  # k-1 bead ➡ EN split by sentences (was: all on th 1st DE Absatz)
                 vs[i]["en_ch"] = en_ch
+                vs[i]["en_head"] = en_paras[ej[0]]["head"] if ej else []
                 vs[i]["bead"] = f"{len(di)}-{len(ej)}"
             de_fn = [f for i in di for f in vs[i]["fn"]]
             en_fn = re.findall(r"\[(\d+[a-z]?)\]", en_txt)
@@ -126,7 +198,7 @@ def main():
                 for i in di: print("  DE", vs[i]["de"][:110])
                 for j in ej: print("  EN", en_paras[j]["en"][:110])
     for v in verses:
-        v.setdefault("en", ""); v.setdefault("en_ch", None); v.setdefault("bead", "1-0")
+        v.setdefault("en", ""); v.setdefault("en_ch", None); v.setdefault("bead", "1-0"); v.setdefault("en_head", [])
         v["en_fn"] = re.findall(r"\[(\d+[a-z]?)\]", v["en"])
     for x in notes_de:
         ch_n = fnmap.get((x["kap"], x["n"]))

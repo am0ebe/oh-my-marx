@@ -44,6 +44,7 @@ class ShotsApp : MarxApp() {
 @RunWith(RobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @Config(sdk = [35], qualifiers = "w411dp-h891dp-xxhdpi", application = ShotsApp::class)
+@org.junit.FixMethodOrder(org.junit.runners.MethodSorters.NAME_ASCENDING)
 class ShotsTest {
     @get:Rule val rule = createAndroidComposeRule<MainActivity>()
     private val dir = File(System.getProperty("shotsDir") ?: "build/shots")
@@ -94,6 +95,22 @@ class ShotsTest {
         scroll(); shot("settings_2")
         scroll(); shot("settings_3")
         tap("Today", true); tap("In book", true); shot("in_book_flash")   // ✨ passage pulses (QA r4)
+    }
+
+    /** big round #4: day done ➡ 📜 Weiterlesen feed at th tail o Home (scroll ➡ more loads) */
+    //   named z… = runs LAST: Room's marx.db survives between tests i 1 JVM ➡ a done day would leak into `screens`
+    @Test fun zFeed() {
+        rule.waitUntil(30_000) { rule.onAllNodesWithText("Today").fetchSemanticsNodes().isNotEmpty() }
+        scroll(); scroll()
+        tap("Day complete!")
+        rule.mainClock.advanceTimeBy(3000)
+        tap("★", true)                         // celebrate dialog (own window: back press doesn't reach it)
+        rule.mainClock.advanceTimeBy(3000)     // 1st reading day ➡ "new badge" dialog aft 2.6 s
+        if (rule.onAllNodesWithText("Keep going!").fetchSemanticsNodes().isNotEmpty()) tap("Keep going!")
+        repeat(4) { scroll() }
+        shot("feed")
+        repeat(4) { scroll() }
+        shot("feed_2")
     }
 
     @Test fun cards() {

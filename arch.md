@@ -18,6 +18,30 @@ _SDD: code says **wh** · th file says **y** · drift = a bug · fmt ➡ `pr/vib
 - 🔥 hot files (1 owner at a ti — fan-out lanes nvr split these): `assets/content/i18n_*.json` + `data/i18n/*.jsonl` (translate pass = fan-in only) · `android/app/build.gradle.kts` (version) · `ui/Changelog.kt` · `res/values*/strings.xml` · `TodayScreen.kt` · `MineScreen.kt` · `Share.kt`
 
 ## 🧾 decisions (newest on top)
+### D-027 @1113 · curated plans = `data/plans_extra.json` · 🤖 Ludditen & KI: Kap. 13 verbatim + NEW "💡 Und heute?" bridge txt (xd/xe) · ✔️
+- **ctx**: QA @1112 "add a luddites read plan and link directly to AI · xplaining txt new, bible-txt original" (R4) · big round #6
+- **dc**: build.py `extra_plans()` appends hand-curated plans (verse ids only, unknown id = build fails) right aft th flagship · PlanDay `xd`/`xe` ➡ Today box "💡 Und heute?" + "new text — Marx's paragraph above is the original" · 7 days: 13,73 Aristoteles · 13,62 · 13,110 · 13,124-125 Ludditen · 13,127+130 · 13,165 "an sich ⬄ kapitalistisch angewandt" · 13,144 · Marxoskop "KI & Maschinen" ➡ card ➡ confirm ➡ `startPlan("ludditen")`
+- **y**: bridge = separate field ≠ Andacht (Andacht = LLM devotional, bridge = authored argument) · Kapital txt stays untouched by construction
+- **alt**: LLM bridges via andacht.py (❌ local M Marx errors) · new Marxoskop card only (❌ 1-shot, no habit)
+- **ck**: `BigRoundTest.ludditesPlanIsKap13WithBridges` · oth langs = EN bridge til translate.py learns xd/xe (fan-in)
+### D-026 @1113 · 🔓 Hooked mode = progressive disclosure: unlock aft 7 reading days (total) o 1st finished plan · own badge + unlock anim · ✔️
+- **ctx**: QA @1112 "hooked mode only after 7 days or first read plan ➡ animation/award 'unlocked!'" · big round #5
+- **dc**: `Orden.HOOKED` 🪝 "Hinter den Kulissen" (`hookedUnlocked`: dates ≥ 7 ‖ plansDone ≥ 1) · MainActivity: HOOKED new ➡ `HookedUnlockDialog` 1st (padlock wiggle ➡ shackle opens ➡ 🪝 drops + 📳 + confetti, btn "Einschalten" = testMode on) · ⚙️: locked row + days left + bar until earned · alr on = stays
+- **y**: total days not streak (D-004 no anxiety) · dialog names its own trick (honest Hooked) · goal gradient i ⚙️
+- **alt**: hide th row entirely til unlock (❌ no curiosity) · streak-7 (❌ anxiety)
+- **ck**: `BigRoundTest.hookedUnlocksAfter7DaysOrFirstPlan` · shot `settings_2` = 🔒 row
+### D-025 @1113 · 📜 endless feed aft today's snippet = book order, insta-style auto-load · snippets + "weiterlesen" on Today · ✔️ v1
+- **ctx**: QA @1112 "after finishing the snippet ➡ continue for the motivated, endless feed, hooked" · am0 Q3 ✔️ auto-scroll like insta · r4 #6 plan verses = txt walls · big round #3 + #4
+- **dc**: `VerseView(preview = true)` ➡ `snippet()` cuts at sentence end ≤ 320 chars + pill "weiterlesen ▾ · noch ~N Min." (🔊 reads all) · Today: plan verses + feed use it · aft "Tag geschafft" ➡ `ReadOnFeed` at th tail o Home: passages right aft today's last one i BOOK order, 3 per load when ≤ ~1800 px left (no tap) · chapter % bar · "⬇ gleich: »…«" teaser · ☕ break card evy 10 · scrolled-past = `vm.read` (Read % + badges), NOT plan days (D-011)
+- **y**: book order = context (plans jump) · break cards keep D-014 honest tone · Marxoskop stays above (reachable)
+- **alt**: LazyColumn rewrite o Today (❌ big hot-file churn) · "weiter" btn (❌ am0 Q3) · plan's nxt day (❌ breaks D-011 continuity)
+- **ck**: `BigRoundTest` snippet/feedStart · shots `feed` `feed_2` · ⚠️ loads a bit ahead ➡ "read" marks passages b4 fully seen (v1)
+### D-024 @1113 · EN reader data = pipeline: align.py drops chapter TOC · splits merged EN paras over DE Absätze · EN section titles fr marxists.org headings · ✔️
+- **ctx**: r4 sweep #3 (DE sec titles i EN + "no English paragraph here") + #4 (ch.1 page 1 = TOC as body txt) · big round #1 #2
+- **dc**: `drop_toc` (`<p class="toc">` ➡ nxt heading; also fixed ch.3 · 13 · 15 · 23 1st verses) · `split_en`: k-1 bead ➡ EN sentences cut by DE length share (199 ➡ 11 verses wo EN) · `Heads` stack per EN paragraph ➡ verse `en_head` ➡ build.py `en_sec_titles` (innermost label match 'a)'⬄'a.' · 'IV'⬄'4', else EN chapter title 4 DE Kap 4/24) ➡ verses.json `ste` ➡ `secTitle()` (DE ➡ st, else ste)
+- **y**: no hand edits · plans + scores unchanged (DE txt identical, plans.json byte-equal) · full_xx untouched
+- **alt**: LLM translate DE titles (❌ Moore/Aveling wording exists) · override table (❌ drifts)
+- **ck**: `bin/test_bin.py AlignEn` · `ContentTest.englishReaderData` (all 90 DE titles hv EN) · ⚠️ known: 13,122-125 EN shifted ~1 para (pre-existing DP slip) · DE split typo "FÜFNZEHNTES" ➡ Kap 15 opening sits i Kap 14 (ids would shift ➡ not touched)
 ### D-023 @1113 · updater by installer: Obtainium ➡ poke it · self ➡ silent aft 1st · amends D-021 · ✔️ (fon tst pending)
 - **ctx**: am0: Obtainium bg updates were on but he always beat its 6 h interval (deploy ➡ reload ➡ update by hand = same friction as th website) · "use Obtainium if it's there, else th website apk" · 6 h delay ok 4 users
 - **dc**: `Update.Via` fr installer o record: OBTAINIUM ➡ notify only aft `GRACE_H` 8 h o th same version, tap = `obtainium://refresh?id=<pkg>` (Obtainium wiki deep link; no link can INSTALL) · SELF ➡ PackageInstaller session (not ACTION_VIEW) so WE become installer o record ➡ Android 12+ + `UPDATE_PACKAGES_WITHOUT_USER_ACTION` ➡ worker installs silently, `UpdatedReceiver` posts "✔️ X installed" · 1st self-update / < 12 ➡ 1 confirm · STORE ➡ nothing
