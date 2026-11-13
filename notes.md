@@ -72,10 +72,10 @@ _🧾 arch + decision log (y, alt, ck) ➡ [arch.md](arch.md) · "decided @1028"
 ```
 bin/fetch.py      # raw html ➡ data/raw/{de,en}  (idempotent, ~10 min fr wayback)
 bin/split.py      # DE ➡ data/de.jsonl + notes_de.jsonl  (Kap,Absatz · MEW page · fn)
-bin/align.py      # DE⬄EN DP alignment ➡ data/verses.jsonl + notes.jsonl  (--show 8 = eyeball)
+bin/align.py      # DE⬄EN DP alignment ➡ data/verses.jsonl + notes.jsonl  (--show 8 = eyeball) · drops EN chapter TOC · k-1 beads ➡ EN split by sentences · en_head (D-024)
 bin/score.py      # LLM: quote_de/en · juice · difficulty · tags ➡ data/scores.jsonl  (resumable, ~1s/Vers, ~35 min)
 bin/rank.py       # LLM relative pass per section: ⭐ best ~1/6 · 🔥 real roasts ➡ data/rank.jsonl (~2 min)
-bin/build.py      # verbatim quotes + plans + export ➡ android/app/src/main/assets/content/*.json
+bin/build.py      # verbatim quotes + plans + EN sec titles (ste) + export ➡ android/app/src/main/assets/content/*.json · curated plans = data/plans_extra.json (ids + xd/xe bridge txt, D-027)
 bin/andacht.py    # LLM Andachten per plan day ➡ data/andachten.jsonl  ➡ then build.py again
 bin/translate.py  # AFT build.py: quotes · Andachten · plans · chapters · UI strings ➡ it/es/pt/zh/ar ➡ assets/content/i18n_xx.json (~8 min/lang)
 ```
@@ -85,7 +85,7 @@ bin/translate.py  # AFT build.py: quotes · Andachten · plans · chapters · UI
 - cache `data/i18n/<lang>.jsonl` · re-run = only changed strings · `--export-only` rebuilds th json fr cache
 - src DE = MEW 23 via archived mlwerke.de (wayback) — has `<245>` page markers ✔️ · EN = marxists.org
 - ⚠️ mlwerke html is sloppy: missing `</A>` i headings · page anchors `M341` ⬄ footnote anchors `M8` · 1 typo'd fn link (`#Z203`) — split.py handles all 3
-- align: 10/10 random pairs ✔️ · 1719/1949 Absätze w EN (rest = tables/headings/merged paras)
+- align: 10/10 random pairs ✔️ · 1903/1949 Absätze w EN @1113 (was 1719: merged EN paras now split, D-024) · ⚠️ 13,122-125 EN shifted ~1 para
 - scores joined by DE txt (not id) cuz ids shifted once aft th heading fix ➡ `data/verses_scored_v0.jsonl` = th id map
 - 👾 absolute LLM ratings inflated (73 % juice=5 · 92 % "polemic") ➡ rank.py = relative picks ⇒ ⭐288 · 🔥82
 - 👾 26 % LLM quotes not verbatim (elided "…", paraphrase) ➡ build.py fuzzy-matches ➡ uses th **source** sentence(s) ⇒ 1514 DE / 1232 EN quotes, all verbatim

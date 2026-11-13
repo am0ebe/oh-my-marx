@@ -3,8 +3,9 @@
   - 🚦 rule: no version bump / ship / big new feat til th current one had ≥1 QA round on th fon · big side-quests (voice, chat infra) ➡ own pr
 
 ## ⏳
-- ▶ **RESUME @1113 eos #2** — r5 + r5b on main `a51c93b` (pushed, 61 tsts + lint + build green) · **DEV A `0.10.0-dev.1113.1304` deployed** (r4+r5+r5b) · stable still 0.9.0 · board = [qa_1112.md](qa_1112.md) § r5 / r5b · y ➡ [arch.md](arch.md) D-020..023
-  - ▶ **NEXT** = 🦠 fon tst updater (D-023), 5 steps i last sesh's reply: 1 Obtainium ➡ install A (⚙️ What's new shows `installer: dev.imranr.obtainium`) · 2 "B" ➡ 🤖 `bin/deploy.sh -q` ➡ banner ➡ "Update in Obtainium" · 3 browser APK over it · 4 "C" ➡ DL + 1 confirm ➡ installer = `….dev` · 5 "D" ➡ "🧪 bg update check now" ➡ silent + "✔️ installed" notif (🔑 least sure) · 🤖 deploy only on am0's letter
+- ▶ **RESUME @1113 eos #3** — big round pt 1 on main `7ff0aa3` (74 tsts + build green, ❌ not deployed) ➡ qa_1112 § big round pt 1 · D-024..027 · DEV on fon = still A (r4+r5+r5b)
+  - ⏳ **in flight (M8 order @1113)**: 1 DE typo "FÜFNZEHNTES" (split.py) ➡ Kap 15 ids shift ➡ 1-time id migration (marks · ReadLog · DayLog?) + tst · 2 13,122-125 EN align slip · 3 `bin/translate.py --only ui` fan-in · ❌ deploy
+  - then 🦠 fon tst updater (D-023), 5 steps i last sesh's reply: 1 Obtainium ➡ install A (⚙️ What's new shows `installer: dev.imranr.obtainium`) · 2 "B" ➡ 🤖 `bin/deploy.sh -q` ➡ banner ➡ "Update in Obtainium" · 3 browser APK over it · 4 "C" ➡ DL + 1 confirm ➡ installer = `….dev` · 5 "D" ➡ "🧪 bg update check now" ➡ silent + "✔️ installed" notif (🔑 least sure) · 🤖 deploy only on am0's letter
   - then fon QA r5 (note bubble · double-tap/dog-ear · % · ⚙️) ➡ 🤖 D3 Amen ➡ snippet bottom (D-015) · big round 3/4/6/7 (🔵)
   - 📸 b4 handing any UI change 2 am0: `./gradlew testDebugUnitTest --tests '*ShotsTest*' -Pshots --rerun` ➡ `android/app/build/shots/` ➡ montage + look (D-019)
   - 👤 strix: Changelog 0.9.1 wording · name label (D-016 alts) · ★ vs ✕ on note (D-017) · verse share gone on Today too (D-018) · 💬 qa_1112 Q2 Mitlesen · Q5-7 · stray `pr/omm/▐qq` ➡ rm? · native check hi/bn/ur/id · KeePass keystore note
