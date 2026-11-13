@@ -8,6 +8,11 @@ lead-ins ending w ':' ("Mill sagt:") merged into th following Absatz
 footnote refs i txt ➡ [52] · page markers <245> dropped (page = MEW page at Absatz start)
 
 usage: split.py   (re-runs fully, overwrites outputs)
+
+🔁 ids moved vs th previous data/de.jsonl (same DE txt, new id) ➡ data/id_moves.json (cumulative old ➡ new, chains
+composed) + th id-keyed data files remapped once, here (rank · andachten · i18n q · i18n_full v) · th app migrates
+th usr's marks/progress fr th exported copy (assets id_moves.json, data/IdMoves.kt) · @1113: "FÜFNZEHNTES" typo
+put Kap 15's opening i Kap 14 + Kap 15 ids continued at 15,40
 """
 import html, json, pathlib, re
 
@@ -19,7 +24,8 @@ ORDINALS = ["ERSTES", "ZWEITES", "DRITTES", "VIERTES", "FÜNFTES", "SECHSTES", "
             "NEUNTES", "ZEHNTES", "ELFTES", "ZWÖLFTES", "DREIZEHNTES", "VIERZEHNTES", "FÜNFZEHNTES",
             "SECHZEHNTES", "SIEBZEHNTES", "ACHTZEHNTES", "NEUNZEHNTES", "ZWANZIGSTES", "EINUNDZWANZIGSTES",
             "ZWEIUNDZWANZIGSTES", "DREIUNDZWANZIGSTES", "VIERUNDZWANZIGSTES", "FÜNFUNDZWANZIGSTES"]
-KAP_HEAD = re.compile(r"\b(" + "|".join(ORDINALS) + r")\s+KAPITEL\b")
+TYPOS = {"FÜFNZEHNTES": "FÜNFZEHNTES"}   # mlwerke source typos i chapter heads (me23 Kap 15)
+KAP_HEAD = re.compile(r"\b(" + "|".join(ORDINALS + list(TYPOS)) + r")\s+KAPITEL\b")
 SEC_ANCHOR = re.compile(r'<A NAME="Kap_(\d+)((?:_[A-Za-z0-9]+)*)">(.*?)(?:</A>|$)', re.S | re.I)  # </A> sometimes missing
 PAGE = re.compile(r"<(\d{1,3})>")
 
@@ -71,11 +77,13 @@ def main():
                         notes[-1]["de"] += "\n" + t
                     continue
             if m := KAP_HEAD.search(raw_txt):
-                new = str(ORDINALS.index(m.group(1)) + 1)
+                new = str(ORDINALS.index(TYPOS.get(m.group(1), m.group(1))) + 1)
                 if new != kap:  # "DREIZEHNTES KAPITEL. TEIL II" = continuation file, keep counting
                     kap, n, sec, sec_title = new, 0, "", ""
                 continue
             if m := SEC_ANCHOR.search(chunk):
+                if kap is not None and m.group(1) != kap and not str(kap).startswith("V"):
+                    n = 0   # guard: a missed chapter head must not carry th Absatz count into th nxt Kap (was 15,40…)
                 kap = m.group(1)
                 sec = kap + m.group(2).replace("_", ".")
                 sec_title = clean(m.group(3))
@@ -108,11 +116,54 @@ def main():
                                "fn": re.findall(r"\[(\d+[a-z]?)\]", txt)})
             if pages: page = int(pages[-1])  # nxt Absatz continues on th last page seen
     out = ROOT / "data"
+    old = [json.loads(l) for l in open(out / "de.jsonl", encoding="utf-8")] if (out / "de.jsonl").exists() else []
+    moves = id_moves(old, verses)
+    if moves:
+        save_moves(moves)
+        remap_data(moves)
+        print(f"🔁 {len(moves)} verse ids moved ➡ data/id_moves.json + id-keyed data remapped (eg {next(iter(moves.items()))})")
     (out / "de.jsonl").write_text("".join(json.dumps(v, ensure_ascii=False) + "\n" for v in verses), encoding="utf-8")
     (out / "notes_de.jsonl").write_text("".join(json.dumps(x, ensure_ascii=False) + "\n" for x in notes), encoding="utf-8")
     per = {}
     for v in verses: per[v["kap"]] = per.get(v["kap"], 0) + 1
     print(f"{len(verses)} Absätze · {len(notes)} Fußnoten · per Kap: {per}")
+
+MOVES = ROOT / "data" / "id_moves.json"
+
+def id_moves(old, new):
+    """same DE txt, dif id ➡ {old: new} · txt that's not unique i th new split ➡ skipped (can't tell which)"""
+    by_txt = {}
+    for v in new:
+        by_txt.setdefault(v["de"], []).append(v["id"])
+    moves = {}
+    for v in old:
+        c = by_txt.get(v["de"], [])
+        if v["id"] not in c and len(c) == 1:
+            moves[v["id"]] = c[0]
+    return moves
+
+def compose(prev, moves):
+    """cumulative map: earlier a ➡ b, now b ➡ c ➡ a ➡ c · + th new moves · identity rows dropped"""
+    out = {a: moves.get(b, b) for a, b in prev.items()} | moves
+    return {a: b for a, b in out.items() if a != b}
+
+def save_moves(moves):
+    prev = json.loads(MOVES.read_text(encoding="utf-8")) if MOVES.exists() else {}
+    MOVES.write_text(json.dumps(compose(prev, moves), ensure_ascii=False, indent=0), encoding="utf-8")
+
+def remap_data(moves, data=ROOT / "data"):
+    """rename verse ids i evy id-keyed pipeline file (1×, right when th split moved them) ➡ no LLM re-run needed"""
+    m = lambda i: moves.get(i, i)
+    def rewrite(p, f):
+        if p.exists():
+            rows = [f(json.loads(l)) for l in open(p, encoding="utf-8")]
+            p.write_text("".join(json.dumps(r, ensure_ascii=False) + "\n" for r in rows), encoding="utf-8")
+    rewrite(data / "rank.jsonl", lambda r: r | {"star": [m(i) for i in r["star"]], "roast": [m(i) for i in r["roast"]]})
+    rewrite(data / "andachten.jsonl", lambda r: r | {"v": [m(i) for i in r["v"]]})
+    for p in sorted((data / "i18n").glob("*.jsonl")):
+        rewrite(p, lambda r: r | {"k": m(r["k"])} if r.get("kind") == "q" else r)
+    for p in sorted((data / "i18n_full").glob("*.jsonl")):
+        rewrite(p, lambda r: r | {"k": m(r["k"])} if r.get("kind") == "v" else r)
 
 if __name__ == "__main__":
     main()

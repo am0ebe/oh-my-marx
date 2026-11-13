@@ -92,6 +92,11 @@ class Prefs(private val context: Context) {
     suspend fun nudgeDay(): String? = context.store.data.first()[nudgeKey]
     suspend fun setNudgeDay(day: String) = context.store.edit { it[nudgeKey] = day }
 
+    // 🔁 IdMoves: how many verse-id moves (assets id_moves.json, cumulative) this install alr applied
+    private val movesKey = intPreferencesKey("id_moves_done")
+    suspend fun idMovesDone(): Int = context.store.data.first()[movesKey] ?: 0
+    suspend fun setIdMovesDone(n: Int) = context.store.edit { it[movesKey] = n }
+
     suspend fun dropKreis(room: String) = context.store.edit { it[kreiseKey] = it[kreiseKey].orEmpty().filterNot { e -> e.startsWith("$room|") }.toSet() }
 
     val settings: Flow<Settings> = context.store.data.map { p: Preferences ->

@@ -4,7 +4,7 @@
 
 ## ⏳
 - ▶ **RESUME @1113 eos #3** — big round pt 1 on main `7ff0aa3` (74 tsts + build green, ❌ not deployed) ➡ qa_1112 § big round pt 1 · D-024..027 · DEV on fon = still A (r4+r5+r5b)
-  - ⏳ **in flight (M8 order @1113)**: 1 DE typo "FÜFNZEHNTES" (split.py) ➡ Kap 15 ids shift ➡ 1-time id migration (marks · ReadLog · DayLog?) + tst · 2 13,122-125 EN align slip · 3 `bin/translate.py --only ui` fan-in · ❌ deploy
+  - ✔️ M8 follow-ups @1113: FÜFNZEHNTES + id migration (D-028) · 13,120-125 + ch17 intro align · UI + plan fan-in 11 langs · ❌ not deployed
   - then 🦠 fon tst updater (D-023), 5 steps i last sesh's reply: 1 Obtainium ➡ install A (⚙️ What's new shows `installer: dev.imranr.obtainium`) · 2 "B" ➡ 🤖 `bin/deploy.sh -q` ➡ banner ➡ "Update in Obtainium" · 3 browser APK over it · 4 "C" ➡ DL + 1 confirm ➡ installer = `….dev` · 5 "D" ➡ "🧪 bg update check now" ➡ silent + "✔️ installed" notif (🔑 least sure) · 🤖 deploy only on am0's letter
   - then fon QA r5 (note bubble · double-tap/dog-ear · % · ⚙️) ➡ 🤖 D3 Amen ➡ snippet bottom (D-015) · big round 3/4/6/7 (🔵)
   - 📸 b4 handing any UI change 2 am0: `./gradlew testDebugUnitTest --tests '*ShotsTest*' -Pshots --rerun` ➡ `android/app/build/shots/` ➡ montage + look (D-019)
@@ -41,8 +41,7 @@
 - 🤖 **big round** (QA r5 @1113, am0 "rest yes" ➡ parked 4 a data/btn round) · src ➡ qa_1112.md § r4 sweep + § big round pt 1
   - ✔️ @1113 pt 1 (M8 order, non-design): #3 EN titles/gaps · #4 ch.1 TOC · #6 Today snippets · 📜 feed · 🔓 Hooked unlock · 🤖 Ludditen plan ➡ arch D-024..027 · not deployed
   - #7 btn styles mixed: Today tinted circles (CardAction, now also ⚙️ About) · Kreis filled pills · Marxoskop outlined chips · Hooked AssistChips ➡ 1 system (D7) ➡ design system spec (pt 2)
-  - 🤖 fan-in: `bin/translate.py --only ui` (new strings: feed · unlock · bridge box · changelog) + teach translate.py PlanDay xd/xe
-  - 🔵 data leftovers: 13,122-125 EN shifted ~1 para (align DP slip) · DE "FÜFNZEHNTES" typo ➡ Kap 15 opening i Kap 14 (fix = id shift ➡ bookmark migration)
+  - 🤖 teach translate.py PlanDay xd/xe (Ludditen bridges = EN i oth langs) · UI fan-in ✔️ @1113
 - 🧪 self-update (D-021) on a real fon: 1st DEV deploy aft r5 ➡ old DEV (adb-installed) gets th notification wi ~1 d · Obtainium-installed = skipped by design
 - _⬇ demoted fr ‼️ @1112 (WIP ≤5)_
 - 🦠🔑 keystore: ✔️ symlink @1105 · left: KeePass note (`base64 -w0`, notes.md § 🔑) · 1 offline/restic copy · lap same `ln -s` (➡ sys ansible?)

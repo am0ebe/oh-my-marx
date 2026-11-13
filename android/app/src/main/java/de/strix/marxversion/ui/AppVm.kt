@@ -229,6 +229,8 @@ class AppVm(app: Application) : AndroidViewModel(app) {
     init {
         // parsing ~6 MB JSON on th main thread would freeze th UI ➡ IO dispatcher
         viewModelScope.launch(Dispatchers.IO) { content.load(); _loaded.value = true; refreshWidgets(app) }
+        // 🔁 pipeline renamed verse ids (FÜFNZEHNTES fix @1113) ➡ marks + read log follow, once (data/IdMoves.kt)
+        viewModelScope.launch(Dispatchers.IO) { de.strix.marxversion.data.IdMoves.migrate(app, marx.db, marx.prefs) }
         // app start (+ any lang change not via setLang) ➡ load th book 4 th saved lang · no-op if setLang alr did
         viewModelScope.launch {
             settings.map { it.lang }.distinctUntilChanged().collectLatest { l -> loadFull(l) }

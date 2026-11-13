@@ -45,6 +45,13 @@ interface MarkDao {
 
     @Upsert
     suspend fun put(m: Mark)
+
+    // 🔁 IdMoves: rename verse ids (old ➡ new) i 1 go
+    @Query("SELECT * FROM Mark WHERE verseId IN (:ids)")
+    suspend fun byIds(ids: List<String>): List<Mark>
+
+    @Query("DELETE FROM Mark WHERE verseId IN (:ids)")
+    suspend fun drop(ids: List<String>)
 }
 
 @Dao
@@ -54,6 +61,12 @@ interface LogDao {
 
     @Query("SELECT verseId FROM ReadLog")
     fun readIds(): Flow<List<String>>
+
+    @Query("SELECT * FROM ReadLog WHERE verseId IN (:ids)")
+    suspend fun readByIds(ids: List<String>): List<ReadLog>
+
+    @Query("DELETE FROM ReadLog WHERE verseId IN (:ids)")
+    suspend fun dropRead(ids: List<String>)
 
     @Upsert
     suspend fun day(d: DayLog)

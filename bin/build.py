@@ -259,6 +259,9 @@ def main():
     dump("notes.json", [{k: x for k, x in n.items() if x} for n in jl("notes.jsonl")])
     dump("chapters.json", chapters)
     dump("plans.json", P)
+    # 🔁 verse ids split.py renamed (old ➡ new) ➡ app migrates th usr's marks + read log once (data/IdMoves.kt)
+    moves = DATA / "id_moves.json"
+    dump("id_moves.json", json.loads(moves.read_text(encoding="utf-8")) if moves.exists() else {})
     sizes = " · ".join(f"{f.name} {f.stat().st_size // 1024}k" for f in sorted(OUT.glob("*.json")))
     print(f"{len(verses)} verses ({n_scored} scored, ⭐{sum(1 for v in verses if v.get('star'))} 🔥{sum(1 for v in verses if v.get('pol'))}) · {len(P)} plans ({sum(len(p['days']) for p in P)} days, "
           f"{sum(1 for p in P for d in p['days'] if 'ad' in d)} w Andacht) · {sizes}")

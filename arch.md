@@ -18,6 +18,13 @@ _SDD: code says **wh** · th file says **y** · drift = a bug · fmt ➡ `pr/vib
 - 🔥 hot files (1 owner at a ti — fan-out lanes nvr split these): `assets/content/i18n_*.json` + `data/i18n/*.jsonl` (translate pass = fan-in only) · `android/app/build.gradle.kts` (version) · `ui/Changelog.kt` · `res/values*/strings.xml` · `TodayScreen.kt` · `MineScreen.kt` · `Share.kt`
 
 ## 🧾 decisions (newest on top)
+### D-028 @1113 · verse ids may move: split.py writes `data/id_moves.json` (old ➡ new by DE txt) + remaps pipeline data · app migrates marks + read log once · ✔️
+- **ctx**: M8 follow-up (am0 "Go"): DE source typo "FÜFNZEHNTES KAPITEL" ➡ Kap 15 opening sat i Kap 14 (14,37-39) + Kap 15 ids ran on fr 15,40 · fixing = 30 ids move · users' 🔖 ✍️ + progress must not break
+- **dc**: split.py `TYPOS` alias + guard (sec anchor w new Kap resets Absatz count) · moves = same DE txt, unique ➡ `id_moves.json` cumulative (chains composed) · same run renames ids i rank · andachten · i18n q · i18n_full v (no LLM re-run) · build.py ➡ assets `id_moves.json` · app `data/IdMoves.kt`: AppVm start ➡ if moves.size > Prefs `id_moves_done` ➡ 1 Room transaction renames Mark + ReadLog (collision ➡ merge) · DayLog = plan indices ➡ untouched
+- **y**: fix th data at its src, not a display hack · DE txt = stable identity across splits
+- **alt**: keep wrong ids forever (❌ Kap 15 = "15,40…", wrong footnotes) · alias table i th app only (❌ 2 id systems)
+- **ck**: `IdMovesTest` (Robolectric + in-memory Room + real asset map: 4 tsts: map dead ➡ live ids · marks/reads follow · merge · runs once) · `bin/test_bin.py` · 1868 verses, 92 Andachten + ⭐288 kept
+- **note D-024**: v1 `drop_toc` cut "toc ➡ nxt heading" = ate ch17's 3-Absatz intro ➡ now only contiguous toc/index lines · align: name anchors (EN mid-sentence capitals ⬄ DE txt + cited fns) + length may match txt+fns (Moore/Aveling inline long fns) ➡ 13,120-125 exact · churn 34 verses, sampled = fixes (V3 · 8 · 14 · 22 · 23)
 ### D-027 @1113 · curated plans = `data/plans_extra.json` · 🤖 Ludditen & KI: Kap. 13 verbatim + NEW "💡 Und heute?" bridge txt (xd/xe) · ✔️
 - **ctx**: QA @1112 "add a luddites read plan and link directly to AI · xplaining txt new, bible-txt original" (R4) · big round #6
 - **dc**: build.py `extra_plans()` appends hand-curated plans (verse ids only, unknown id = build fails) right aft th flagship · PlanDay `xd`/`xe` ➡ Today box "💡 Und heute?" + "new text — Marx's paragraph above is the original" · 7 days: 13,73 Aristoteles · 13,62 · 13,110 · 13,124-125 Ludditen · 13,127+130 · 13,165 "an sich ⬄ kapitalistisch angewandt" · 13,144 · Marxoskop "KI & Maschinen" ➡ card ➡ confirm ➡ `startPlan("ludditen")`

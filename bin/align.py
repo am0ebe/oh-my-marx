@@ -63,7 +63,15 @@ def parse_en(stem):
 
 def drop_toc(body):
     """chapter TOC = <p class="toc"> + index/indentb lines up 2 th 1st heading aft it ➡ gone (was ch.1 page 1 body txt)"""
-    return re.sub(r'<p class="toc".*?(?=<h[1-6]\b)', "", body, count=1, flags=re.S | re.I)
+    # 🐛 @1113 v1 cut "toc ➡ nxt heading" = also ate ch17's intro (3 Absätze before SECTION 1) ➡ only th contiguous TOC lines
+    m = re.search(r'<p class="toc"', body, re.I)
+    if not m:
+        return body
+    line = re.compile(r'\s*<p class="(?:toc|index\w*|indentb)"[^>]*>.*?(?=<p\b|<h[1-6]\b|<hr\b|$)', re.S | re.I)
+    j = m.start()
+    while mm := line.match(body, j):
+        j = mm.end()
+    return body[:m.start()] + body[j:]
 
 SMALL = {"a", "an", "and", "as", "at", "by", "for", "from", "in", "into", "of", "on", "or", "the", "to", "with", "upon"}
 
@@ -125,12 +133,33 @@ def anchors(t):
     return set(re.findall(r"\b\d[\d,.]*\d\b|\b\d{2,}\b", re.sub(r"\[\d+[a-z]?\]", "", t))) \
         | {"fn" + x for x in re.findall(r"\[(\d+[a-z]?)\]", t)}
 
-def align(de, en):
-    """DP ➡ list o (de_idx[], en_idx[]) beads"""
+NAME_W = 1.0
+FN_PEN = 0.4
+NOT_NAMES = {"English", "French", "German", "The", "This", "That", "But", "And", "For", "Mr", "Messrs", "Sir", "Lord", "Act", "Acts",
+             "Factory", "Inspector", "Inspectors", "Report", "Reports", "Commission", "Parliament", "House", "Commons", "Political", "Economy"}
+
+def names_en(t):
+    """mid-sentence capitalised EN words (≥ 4 letters) = proper names, mostly spelled th same i th DE (Fourier · Leyden · Ure)
+    · @1113: k-1 ⬄ 1-k slips (13,120-125: Moore/Aveling inline Marx' fn quotes) needed a content anchor beyond numbers"""
+    t = re.sub(r"\[\d+[a-z]?\]", "", t)
+    return {w for w in re.findall(r"(?<=[a-z,;] )([A-Z][a-zäöüé]{3,})\b", t) if w not in NOT_NAMES}
+
+def words_de(t):
+    """DE tokens + genitive-s stripped ('Londons' ➡ 'London')"""
+    ws = set(re.findall(r"\w+", t))
+    return ws | {w[:-1] for w in ws if w.endswith("s")}
+
+def align(de, en, de_fn=None):
+    """DP ➡ list o (de_idx[], en_idx[]) beads
+    de_fn[i] = txt o th footnotes DE Absatz i cites · Moore/Aveling sometimes inline a long fn as paragraphs (13,125 ⬄
+    fn 194: Danzig · Leyden · Boxhorn) ➡ length may match txt OR txt + fns (+ FN_PEN) · fn names count as DE words"""
+    F = [len(x) for x in de_fn] if de_fn else [0] * len(de)
     LD = sum(len(x) for x in de) or 1
     LE = sum(len(x) for x in en) or 1
     r = LE / LD
     A_de, A_en = [anchors(x) for x in de], [anchors(x) for x in en]
+    N_en = [names_en(x) for x in en]
+    W_de = [words_de(x + " " + (de_fn[i] if de_fn else "")) for i, x in enumerate(de)]
     n, m = len(de), len(en)
     INF = float("inf")
     D = [[INF] * (m + 1) for _ in range(n + 1)]
@@ -147,10 +176,16 @@ def align(de, en):
                 ld = sum(len(x) for x in de[i:a])
                 le = sum(len(x) for x in en[j:b])
                 c = pen + 2.0 * abs(math.log((le + 50) / (r * ld + 50)))
+                lf = sum(F[i:a])
+                if lf and dj > 1:   # EN inlined th cited fn(s) as extra paragraphs
+                    c = min(c, pen + FN_PEN + 2.0 * abs(math.log((le + 50) / (r * (ld + lf) + 50))))
                 if di and dj:
                     ad = set().union(*A_de[i:a]); ae = set().union(*A_en[j:b])
                     if ad or ae:
                         c -= 1.5 * len(ad & ae) / max(len(ad | ae), 1)
+                    ne = set().union(*N_en[j:b])
+                    if ne:   # names (Fourier · Leyden · Sidmouth) the EN chunk shares w th DE chunk
+                        c -= NAME_W * len(ne & set().union(*W_de[i:a])) / len(ne)
                 if D[i][j] + c < D[a][b]:
                     D[a][b], B[a][b] = D[i][j] + c, (i, j)
     beads, (i, j) = [], (n, m)
@@ -175,7 +210,8 @@ def main():
             en_notes |= {(s, n): t for n, t in nt.items()}
         en_notes_all |= en_notes
         vs = [v for v in verses if v["kap"] == k]
-        beads = align([v["de"] for v in vs], [p["en"] for p in en_paras])
+        fn_txt = {x["n"]: x["de"] for x in notes_de if x["kap"] == k}
+        beads = align([v["de"] for v in vs], [p["en"] for p in en_paras], [" ".join(fn_txt.get(f, "") for f in v["fn"]) for v in vs])
         for di, ej in beads:
             en_txt = " ¶ ".join(en_paras[j]["en"] for j in ej)
             en_ch = en_paras[ej[0]]["ch"] if ej else None
