@@ -2106,3 +2106,29 @@
 {"kind": "ui", "k": "already lived (you do work, right?)", "src": "schon gelebt (du arbeitest ja)\u0000already lived (you do work, right?)", "t": "sudah hidup (kamu kan bekerja, kan?)"}
 {"kind": "ui", "k": "👥 also post to the reading room — as %s", "src": "👥 auch im Lesesaal posten — als %s\u0000👥 also post to the reading room — as %s", "t": "👥 juga posting di ruang baca — sebagai %s"}
 {"kind": "ui", "k": "Nothing accumulated yet. Tap a passage ➡ Bookmark or Note — primitive accumulation starts small.", "src": "Noch nichts akkumuliert. Tipp auf einen Absatz ➡ Lesezeichen oder Notiz — ursprüngliche Akkumulation beginnt klein.\u0000Nothing accumulated yet. Tap a passage ➡ Bookmark or Note — primitive accumulation starts small.", "t": "Belum ada yang dikumpulkan. Ketuk ayat ➡ Tandai atau Catatan — akumulasi awal dimulai kecil."}
+{"kind": "ui", "k": "Name", "src": "Name\u0000Name", "t": "Nama"}
+{"kind": "ui", "k": "👤 you write as %s · change: ⚙️ Settings", "src": "👤 du schreibst als %s · ändern: ⚙️ Einstellungen\u0000👤 you write as %s · change: ⚙️ Settings", "t": "👤 kamu menulis sebagai %s · ubah: ⚙️ Pengaturan"}
+{"kind": "ui", "k": "free software (GPL-3.0)", "src": "freie Software (GPL-3.0)\u0000free software (GPL-3.0)", "t": "perangkat lunak bebas (GPL-3.0)"}
+{"kind": "ui", "k": "Website", "src": "Webseite\u0000Website", "t": "Situs Web"}
+{"kind": "ui", "k": "Feedback", "src": "Feedback\u0000Feedback", "t": "Umpan Balik"}
+{"kind": "ui", "k": "Feedback = mail to us: bug, idea, praise — all welcome", "src": "Feedback = Mail an uns: Bug, Idee, Lob — alles willkommen\u0000Feedback = mail to us: bug, idea, praise — all welcome", "t": "Umpan Balik = kirim email ke kami: bug, ide, pujian — semuanya diterima"}
+{"kind": "ui", "k": "%d of %d chapters done", "src": "%d von %d Kapiteln erledigt\u0000%d of %d chapters done", "t": "%d dari %d bab selesai"}
+{"kind": "ui", "k": "⬅ swipe or double-tap = turn the page", "src": "⬅ wischen oder doppelt tippen = umblättern\u0000⬅ swipe or double-tap = turn the page", "t": "⬅ geser atau ketuk dua kali = ganti halaman"}
+{"kind": "ui", "k": "⬅ swipe or double-tap = turn the page · 🤏 two fingers = font", "src": "⬅ wischen oder doppelt tippen = umblättern · 🤏 zwei Finger = Schrift\u0000⬅ swipe or double-tap = turn the page · 🤏 two fingers = font", "t": "⬅ geser atau ketuk dua kali = ganti halaman · 🤏 dua jari = font"}
+{"kind": "ui", "k": "🆕 Version %s is out — tap = install (your data stays)", "src": "🆕 Version %s ist da — antippen = installieren (deine Daten bleiben)\u0000🆕 Version %s is out — tap = install (your data stays)", "t": "🆕 Versi %s sudah hadir — ketuk = pasang (data kamu tetap)"}
+{"kind": "ui", "k": "New version", "src": "Neue Version\u0000New version", "t": "Versi Baru"}
+{"kind": "ui", "k": "You have the newest version (%s). ✔️", "src": "Du hast die neueste Version (%s). ✔️\u0000You have the newest version (%s). ✔️", "t": "Kamu sudah pakai versi terbaru (%s). ✔️"}
+{"kind": "ui", "k": "Didn't work — internet? Get it on the web page.", "src": "Ging nicht — Internet? Lade sie auf der Webseite.\u0000Didn't work — internet? Get it on the web page.", "t": "Gagal — cek koneksi internet? Unduh di situs web."}
+{"kind": "ui", "k": "🌐 Open web page", "src": "🌐 Webseite öffnen\u0000🌐 Open web page", "t": "🌐 Buka situs web"}
+{"kind": "ui", "k": "Oh My Marx %s is out · you have %s", "src": "Oh My Marx %s ist da · du hast %s\u0000Oh My Marx %s is out · you have %s", "t": "Oh My Marx %s sudah keluar · kamu punya %s"}
+{"kind": "ui", "k": "Installs over the old app — your data stays.", "src": "Installiert sich über die alte App — deine Daten bleiben.\u0000Installs over the old app — your data stays.", "t": "Terinstal melalui aplikasi lama — data kamu tetap."}
+{"kind": "ui", "k": "One time: allow “install apps from this source” for Oh My Marx, then come back.", "src": "Einmalig: erlaube „Apps aus dieser Quelle installieren“ für Oh My Marx, dann zurück.\u0000One time: allow “install apps from this source” for Oh My Marx, then come back.", "t": "Sekali saja: izinkan ‘pasang aplikasi dari sumber ini’ untuk Oh My Marx, lalu kembali."}
+{"kind": "ui", "k": "Allow ➡", "src": "Erlauben ➡\u0000Allow ➡", "t": "Izinkan ➡"}
+{"kind": "ui", "k": "📦 Install", "src": "📦 Installieren\u0000📦 Install", "t": "📦 Pasang"}
+{"kind": "ui", "k": "downloading …", "src": "lädt …\u0000downloading …", "t": "mengunduh …"}
+{"kind": "ui", "k": "🌐 To the download page", "src": "🌐 Zur Download-Seite\u0000🌐 To the download page", "t": "🌐 Ke halaman unduhan"}
+{"kind": "ui", "k": "⬇️ Download + install", "src": "⬇️ Laden + installieren\u0000⬇️ Download + install", "t": "⬇️ Unduh + pasang"}
+{"kind": "ui", "k": "🆕 Updates announce themselves: a notification when a new version is out, tap = download + install", "src": "🆕 Updates melden sich selbst: Benachrichtigung bei neuer Version, antippen = laden + installieren\u0000🆕 Updates announce themselves: a notification when a new version is out, tap = download + install", "t": "🆕 Pembaruan mengumumkan diri sendiri: notifikasi saat versi baru tersedia, ketuk = unduh + pasang"}
+{"kind": "ui", "k": "📖 Turning pages: swipe, double-tap or the dog-ear bottom right", "src": "📖 Umblättern: wischen, doppelt tippen oder das Eselsohr unten rechts\u0000📖 Turning pages: swipe, double-tap or the dog-ear bottom right", "t": "📖 Mengganti halaman: geser, ketuk dua kali, atau tandai di kanan bawah"}
+{"kind": "ui", "k": "✍️ Notes look like comments: own colour, side line, tap = done", "src": "✍️ Notizen sehen aus wie Kommentare: eigene Farbe, Randlinie, antippen = fertig\u0000✍️ Notes look like comments: own colour, side line, tap = done", "t": "✍️ Catatan terlihat seperti komentar: warna sendiri, garis samping, ketuk = selesai"}
+{"kind": "ui", "k": "📊 Reading progress in percent", "src": "📊 Lesefortschritt in Prozent\u0000📊 Reading progress in percent", "t": "📊 Kemajuan membaca dalam persen"}

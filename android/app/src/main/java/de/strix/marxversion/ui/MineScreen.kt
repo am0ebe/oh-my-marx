@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import de.strix.marxversion.BuildConfig
+import de.strix.marxversion.R
 import de.strix.marxversion.data.f
 
 /** "Mein Kapital" — evy highlight/note/bookmark = th usr's accumulated (reading) capital */
@@ -103,6 +104,8 @@ fun SettingsScreen(vm: AppVm, askNotifPermission: () -> Unit) {
 
         // ── voice persona ──
         Gap(8)
+        // QA r5 (#5): picker only when there's sth 2 pick (D-012: 1 sober voice ➡ hidden)
+        if (Persona.picker.size > 1) {
         Text(tr("🔊 Vorlese-Stimme — antippen = Hörprobe", "🔊 Reading voice — tap = sample"))
         val speaker = rememberSpeaker()
         val lang = LocalLang.current
@@ -115,6 +118,7 @@ fun SettingsScreen(vm: AppVm, askNotifPermission: () -> Unit) {
         }
         Gap(8)
         HorizontalDivider()
+        }
 
         // ── 📱 widget hint ──
         Gap(8)
@@ -126,17 +130,10 @@ fun SettingsScreen(vm: AppVm, askNotifPermission: () -> Unit) {
         Gap(8)
         HorizontalDivider()
 
-        // ── 👥 Mitlesen (opt-in · data/Community.kt + server/omm_api.py) ──
-        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(vertical = 8.dp)) {
-            Column(Modifier.weight(1f)) {
-                Text(tr("👥 Mitlesen", "👥 Read along"))
-                Text(tr("anonym: zeigt, wie viele diese Seite heute lesen + schaltet Kommentare frei",
-                    "anonymous: shows how many read this page today + unlocks comments"), fontSize = 12.sp, color = MaterialTheme.colorScheme.secondary)
-            }
-            Switch(s.community, { vm.setCommunity(it) })
-        }
-        // 💬 comments: name = what others see (account is made w ur 1st comment, lives only on this fon)
-        if (s.community) {
+        // ── 👤 name ── QA r5: Mitlesen toggle + its txt gone = always on (D-020) · 1 field, label just "Name", only here (#8)
+        // 💬 name = what others see i comments + Kreise (account is made w ur 1st post, lives only on this fon)
+        Gap(8)
+        run {
             val mx by vm.mxName.collectAsStateWithLifecycle()
             // QA r3: always editable · prefilled w a random comrade name · saves on blur / Done only if changed (no Save btn)
             val start = mx ?: vm.suggestedName
@@ -175,38 +172,36 @@ fun SettingsScreen(vm: AppVm, askNotifPermission: () -> Unit) {
         // ── about ──
         Gap()
         Text(tr("Über", "About"), fontWeight = FontWeight.Bold)
-        Text("$APP_NAME · " + tr("Version %s", "Version %s").f(BuildConfig.VERSION_NAME), fontSize = 13.sp, color = MaterialTheme.colorScheme.secondary)
+        // QA r5: GPL sat alone under th btns ➡ now part o th identity line (wh it is · which version · which licence)
+        Text("$APP_NAME · " + tr("Version %s", "Version %s").f(BuildConfig.VERSION_NAME) + " · " + tr("freie Software (GPL-3.0)", "free software (GPL-3.0)"),
+            fontSize = 13.sp, color = MaterialTheme.colorScheme.secondary)
         Gap(6)
         Text(tr("🤖 Stolz vibe-gecodet mit Claude Opus + Sonnet. Entfremdete Arbeit, vollautomatisiert. Die Produktionsmittel gehören trotzdem uns.",
             "🤖 Proudly vibe-coded with Claude Opus + Sonnet. Alienated labour, fully automated. The means of production are still ours."), fontSize = 13.sp)
         val ctx = androidx.compose.ui.platform.LocalContext.current
-        // 🔘 🤏 icon row: 🌐 page · 📤 share th app · 💬 feedback = mail straight 2 us (version prefilled, 0 web hops)
+        // 🔘 QA r5: 3 bare emoji = unclear ➡ labelled pills, same CardAction system as Today (🌐 page · 📤 share · 💬 feedback mail)
         val pageUrl = de.strix.marxversion.data.Update.page
         val shareTxt = tr("Marx lesen wie die Bibel — Oh My Marx ☭", "Read Marx like the Bible — Oh My Marx ☭")   // ShareAppPanel adds APP_LINK
         var sharePanel by remember { mutableStateOf(false) }
         if (sharePanel) ShareAppPanel(shareTxt) { sharePanel = false }
         val ver = BuildConfig.VERSION_NAME
         val mailBody = tr("Was ist passiert / was wünschst du dir?\n\n\n(Version %s — ein Screenshot hilft)", "What happened / what would you like?\n\n\n(version %s — a screenshot helps)").f(ver)
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)) {
-            IconBtn("🌐", tr("Webseite", "Web page")) { runCatching { ctx.startActivity(android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse(pageUrl))) } }
-            IconBtn("📤", tr("App teilen", "Share the app")) { sharePanel = true }
-            IconBtn("💬", tr("Feedback: Bug, Idee, Lob", "Feedback: bug, idea, praise")) { runCatching { ctx.startActivity(android.content.Intent(android.content.Intent.ACTION_SENDTO, android.net.Uri.parse("mailto:")).apply {
+        Gap(10)
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(20.dp, Alignment.CenterHorizontally)) {
+            CardAction(R.drawable.ic_public, tr("Webseite", "Website"), Blue) { runCatching { ctx.startActivity(android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse(pageUrl))) } }
+            CardAction(R.drawable.ic_send, tr("App teilen", "Share app"), Blue) { sharePanel = true }
+            CardAction(R.drawable.ic_feedback, tr("Feedback", "Feedback"), Red) { runCatching { ctx.startActivity(android.content.Intent(android.content.Intent.ACTION_SENDTO, android.net.Uri.parse("mailto:")).apply {
                 putExtra(android.content.Intent.EXTRA_EMAIL, arrayOf("omm@scagent.de"))
                 putExtra(android.content.Intent.EXTRA_SUBJECT, "Oh My Marx $ver")
                 putExtra(android.content.Intent.EXTRA_TEXT, mailBody)
             }) } }
         }
-        Gap(6)
-        Text("🔓 GPL-3.0", fontSize = 13.sp)
+        Text(tr("Feedback = Mail an uns: Bug, Idee, Lob — alles willkommen", "Feedback = mail to us: bug, idea, praise — all welcome"),
+            fontSize = 11.sp, color = MaterialTheme.colorScheme.secondary, textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+            modifier = Modifier.fillMaxWidth().padding(top = 6.dp))
     }
 
     if (pickTime) TimeWheelDialog(s.notifHour, s.notifMinute, onDismiss = { pickTime = false }) { h, m ->
         vm.setNotif(s.notifOn, h, m); pickTime = false
     }
-}
-
-/** 🤏 emoji icon button (contentDescription = a11y label) */
-@Composable
-private fun IconBtn(icon: String, desc: String, onClick: () -> Unit) {
-    IconButton(onClick, Modifier.semantics { contentDescription = desc }) { Text(icon, fontSize = 22.sp) }
 }

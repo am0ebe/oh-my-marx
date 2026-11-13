@@ -2142,3 +2142,29 @@
 {"kind": "ui", "k": "already lived (you do work, right?)", "src": "schon gelebt (du arbeitest ja)\u0000already lived (you do work, right?)", "t": "已活过（你不是在工作吗）"}
 {"kind": "ui", "k": "👥 also post to the reading room — as %s", "src": "👥 auch im Lesesaal posten — als %s\u0000👥 also post to the reading room — as %s", "t": "👥 也在阅览室发帖——以 %s 身份"}
 {"kind": "ui", "k": "Nothing accumulated yet. Tap a passage ➡ Bookmark or Note — primitive accumulation starts small.", "src": "Noch nichts akkumuliert. Tipp auf einen Absatz ➡ Lesezeichen oder Notiz — ursprüngliche Akkumulation beginnt klein.\u0000Nothing accumulated yet. Tap a passage ➡ Bookmark or Note — primitive accumulation starts small.", "t": "尚未积累任何东西。点击一段 ➡ 收藏或笔记 — 原始积累始于微小。"}
+{"kind": "ui", "k": "Name", "src": "Name\u0000Name", "t": "名称"}
+{"kind": "ui", "k": "👤 you write as %s · change: ⚙️ Settings", "src": "👤 du schreibst als %s · ändern: ⚙️ Einstellungen\u0000👤 you write as %s · change: ⚙️ Settings", "t": "👤 你以 %s 的身份书写 · 更改： ⚙️ 设置"}
+{"kind": "ui", "k": "free software (GPL-3.0)", "src": "freie Software (GPL-3.0)\u0000free software (GPL-3.0)", "t": "自由软件 (GPL-3.0)"}
+{"kind": "ui", "k": "Website", "src": "Webseite\u0000Website", "t": "网站"}
+{"kind": "ui", "k": "Feedback", "src": "Feedback\u0000Feedback", "t": "反馈"}
+{"kind": "ui", "k": "Feedback = mail to us: bug, idea, praise — all welcome", "src": "Feedback = Mail an uns: Bug, Idee, Lob — alles willkommen\u0000Feedback = mail to us: bug, idea, praise — all welcome", "t": "反馈 = 发邮件给我们：Bug、想法、赞美——全欢迎"}
+{"kind": "ui", "k": "%d of %d chapters done", "src": "%d von %d Kapiteln erledigt\u0000%d of %d chapters done", "t": "%d 本中的 %d 本已完成"}
+{"kind": "ui", "k": "⬅ swipe or double-tap = turn the page", "src": "⬅ wischen oder doppelt tippen = umblättern\u0000⬅ swipe or double-tap = turn the page", "t": "⬅ 滑动或双击 = 翻页"}
+{"kind": "ui", "k": "⬅ swipe or double-tap = turn the page · 🤏 two fingers = font", "src": "⬅ wischen oder doppelt tippen = umblättern · 🤏 zwei Finger = Schrift\u0000⬅ swipe or double-tap = turn the page · 🤏 two fingers = font", "t": "⬅ 滑动或双击 = 翻页 · 🤏 双指 = 字体"}
+{"kind": "ui", "k": "🆕 Version %s is out — tap = install (your data stays)", "src": "🆕 Version %s ist da — antippen = installieren (deine Daten bleiben)\u0000🆕 Version %s is out — tap = install (your data stays)", "t": "🆕 版本 %s 已上线 —— 点击 = 安装（你的数据不会丢失）"}
+{"kind": "ui", "k": "New version", "src": "Neue Version\u0000New version", "t": "新版本"}
+{"kind": "ui", "k": "You have the newest version (%s). ✔️", "src": "Du hast die neueste Version (%s). ✔️\u0000You have the newest version (%s). ✔️", "t": "你已拥有最新版本 (%s)。✔️"}
+{"kind": "ui", "k": "Didn't work — internet? Get it on the web page.", "src": "Ging nicht — Internet? Lade sie auf der Webseite.\u0000Didn't work — internet? Get it on the web page.", "t": "失败了——网络问题？请在网页上下载。"}
+{"kind": "ui", "k": "🌐 Open web page", "src": "🌐 Webseite öffnen\u0000🌐 Open web page", "t": "🌐 打开网页"}
+{"kind": "ui", "k": "Oh My Marx %s is out · you have %s", "src": "Oh My Marx %s ist da · du hast %s\u0000Oh My Marx %s is out · you have %s", "t": "Oh My Marx %s 上线啦 · 你已有 %s"}
+{"kind": "ui", "k": "Installs over the old app — your data stays.", "src": "Installiert sich über die alte App — deine Daten bleiben.\u0000Installs over the old app — your data stays.", "t": "通过旧应用安装——你的数据不会丢失。"}
+{"kind": "ui", "k": "One time: allow “install apps from this source” for Oh My Marx, then come back.", "src": "Einmalig: erlaube „Apps aus dieser Quelle installieren“ für Oh My Marx, dann zurück.\u0000One time: allow “install apps from this source” for Oh My Marx, then come back.", "t": "仅需一次：允许“来自此来源安装应用”给 Oh My Marx，然后返回。"}
+{"kind": "ui", "k": "Allow ➡", "src": "Erlauben ➡\u0000Allow ➡", "t": "允许 ➡"}
+{"kind": "ui", "k": "📦 Install", "src": "📦 Installieren\u0000📦 Install", "t": "📦 安装"}
+{"kind": "ui", "k": "downloading …", "src": "lädt …\u0000downloading …", "t": "下载中 …"}
+{"kind": "ui", "k": "🌐 To the download page", "src": "🌐 Zur Download-Seite\u0000🌐 To the download page", "t": "🌐 前往下载页面"}
+{"kind": "ui", "k": "⬇️ Download + install", "src": "⬇️ Laden + installieren\u0000⬇️ Download + install", "t": "⬇️ 下载并安装"}
+{"kind": "ui", "k": "🆕 Updates announce themselves: a notification when a new version is out, tap = download + install", "src": "🆕 Updates melden sich selbst: Benachrichtigung bei neuer Version, antippen = laden + installieren\u0000🆕 Updates announce themselves: a notification when a new version is out, tap = download + install", "t": "🆕 更新自动通知：新版本上线时提醒，点击即可下载并安装"}
+{"kind": "ui", "k": "📖 Turning pages: swipe, double-tap or the dog-ear bottom right", "src": "📖 Umblättern: wischen, doppelt tippen oder das Eselsohr unten rechts\u0000📖 Turning pages: swipe, double-tap or the dog-ear bottom right", "t": "📖 翻页方式：滑动、双击或右下角的小书签"}
+{"kind": "ui", "k": "✍️ Notes look like comments: own colour, side line, tap = done", "src": "✍️ Notizen sehen aus wie Kommentare: eigene Farbe, Randlinie, antippen = fertig\u0000✍️ Notes look like comments: own colour, side line, tap = done", "t": "✍️ 笔记像评论：自定义颜色、边框线，点击即完成"}
+{"kind": "ui", "k": "📊 Reading progress in percent", "src": "📊 Lesefortschritt in Prozent\u0000📊 Reading progress in percent", "t": "📊 阅读进度百分比"}

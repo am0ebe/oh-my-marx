@@ -18,6 +18,25 @@ _SDD: code says **wh** · th file says **y** · drift = a bug · fmt ➡ `pr/vib
 - 🔥 hot files (1 owner at a ti — fan-out lanes nvr split these): `assets/content/i18n_*.json` + `data/i18n/*.jsonl` (translate pass = fan-in only) · `android/app/build.gradle.kts` (version) · `ui/Changelog.kt` · `res/values*/strings.xml` · `TodayScreen.kt` · `MineScreen.kt` · `Share.kt`
 
 ## 🧾 decisions (newest on top)
+### D-022 @1113 · reader gestures: double-tap = turn page · 📐 dog-ear = turn · 1st chapters peek + hint · ✔️
+- **ctx**: QA r5: am0 found page turn by accident ("NICE") ➡ needs discovery · "double tap = turn page, drop bookmark-via-double-tap"
+- **dc**: `LocalPageTurn` (ChapterScreen) ⬅ VerseView `onDoubleClick` + paper `detectTapGestures` · `DogEar` bottom-right (tap = turn) · until 3 own turns (`omm_ui` SharedPrefs "turns"): page lifts 2× + pill "swipe or double-tap" ~6 s · 🔖 = verse menu only
+- **y**: 3 cues (motion · object · words) w/o a tutorial screen · outside th book (Today) no double-tap ➡ tap reacts at once
+- **alt**: HorizontalPager w dots (❌ loses th spine-hinged turn) · persistent ‹ › btns (❌ clutter on "pure Marx" page)
+- **ck**: `ui/ReadScreen.kt` TURN_HINT · DogEar · grep `onDoubleClick` VerseView = turnPage
+### D-021 @1113 · self-update 4 hand-installed APKs: daily bg check ➡ notification ➡ download + install dialog · ✔️
+- **ctx**: QA r5 🔑: friends install th APK directly ➡ must nvr sit on a stale version · audit: only `Update.check` on app start ➡ Today banner ➡ opened th web page (manual download) · DEV: Changelog line "➡ Obtainium" only · no bg, no notification
+- **dc**: `notify/UpdateWorker.kt` WorkManager 1 d (network) ➡ `Update.check` on th app's own channel (`.dev` ➡ `<web>/dev/version.json`, else `<web>/version.json`) ➡ notification "🆕 X is out" (new version at once, same one again evy 2 d) ➡ tap / Today banner ➡ `UpdateDialog`: download `apk` fr version.json (plain name only, sha256 checked) ➡ `ACTION_VIEW` apk via FileProvider (`REQUEST_INSTALL_PACKAGES`; 1st time ➡ "allow this source" page, resumes by itself) · fail ➡ web page
+- **y**: same debug key ➡ installs over, data stays · installer = Obtainium/F-Droid/Play ➡ skip (they update themselves) · lib.sh alr writes apk + sha256
+- **alt**: PackageInstaller session API (❌ more code, same system dialog) · in-app silent install (❌ impossible wo device owner) · Obtainium 4 all (❌ friends won't)
+- **ck**: `UpdateTest` (parse · channel · nag · sha · installer) + `UpdateWorkerTest` (Robolectric, fake version.json ➡ notification, no repeat, older = silent) · manifest REQUEST_INSTALL_PACKAGES
+### D-020 @1113 · Mitlesen always on (toggle gone) · name field only i ⚙️, label "Name" · supersedes D-005 switch + D-016 label · ✔️
+- **ctx**: QA r5: "rm the Mitlesen/read-along option + its txt (always on)" · "label just 'Name'" · sweep #8 name field on ⚙️ + Kreis (+ comments sheet)
+- **dc**: `Settings.community = true` (old stored off ignored) · ⚙️ Name field (D-016 prefill + blur-save stay) · Kreis + comments: `WritesAs` line "you write as X · change: ⚙️"
+- **y**: am0 · 1 place 2 change identity · still anonymous daily token (D-005), UI says nothing about it now
+- **alt**: keep switch (❌ am0) · name field evywhere (❌ 3 fields drift)
+- **ck**: grep `setCommunity` i ui/ = 0 · `nameLabel()` = "Name"
+- **note D-017**: QA r5 amends th note editor: no ★ (only app-wide close elsewhere) · ANY short tap while open = close (save if changed, blank = gone) + th tap is eaten (can't toggle th action row) · 👥 chip exempt · look = `NoteBubble` (side ruler · ✍️ icon · blue tint · sans)
 ### D-019 @1113 · headless screenshots = Robolectric native graphics (`ShotsTest`, -Pshots) · ✔️
 - **ctx**: am0 r4: "design keeps slipping thru ➡ compare screens side by side" · no /dev/kvm on tow ➡ emulator ❌ · fon screencap = private (memory)
 - **dc**: `test/…/ShotsTest.kt` drives th real MainActivity (tabs · chapter · verse menu · note · settings · In book) + cardBitmap variants ➡ `app/build/shots/*.png` · skipped i normal `testDebugUnitTest`

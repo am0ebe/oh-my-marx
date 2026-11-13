@@ -46,9 +46,14 @@ import de.strix.marxversion.data.f
  * No account yet ➡ 1st thing = "how do u want 2 be called?" ➡ th account is made w th 1st comment.
  * Hold ur own comment = delete.
  */
-/** 👤 th public name label (QA r3 @1112: not "Dein Name") · alts 4 am0: Genoss:in · Kampfname · Name · Username */
+/** 👤 th public name label · QA r5: just "Name" (r3 was "Lesesaal-Name", D-016) */
 @Composable
-fun nameLabel() = tr("Lesesaal-Name", "Reading-room name")
+fun nameLabel() = tr("Name", "Name")
+
+/** 👤 "du schreibst als Rosa 1871 · ändern: ⚙️" — th 1 name field lives i Settings (QA r5 #8) */
+@Composable
+fun WritesAs(name: String) = Text(tr("👤 du schreibst als %s · ändern: ⚙️ Einstellungen", "👤 you write as %s · change: ⚙️ Settings").f(name),
+    fontSize = 12.sp, color = MaterialTheme.colorScheme.secondary)
 
 /** 🎲 default name: a socialist thinker's 1st name + a year o th movement (no Lenin/Stalin/Mao — D-014: lens, not regime) */
 fun comradeName(rnd: kotlin.random.Random = kotlin.random.Random): String =
@@ -63,7 +68,7 @@ fun CommentsSheet(vm: AppVm, kap: String, page: Int?, onDismiss: () -> Unit) {
     val me by produceState<String?>(null, name) { value = vm.myUserId() }
     val list = all[kap].orEmpty().filter { it.page == page }
     var draft by remember { mutableStateOf("") }
-    var newName by remember { mutableStateOf(vm.suggestedName) }
+    val newName = vm.suggestedName
     var busy by remember { mutableStateOf(false) }
     var failed by remember { mutableStateOf(false) }
     LaunchedEffect(kap) { vm.loadComments(kap) }
@@ -97,12 +102,7 @@ fun CommentsSheet(vm: AppVm, kap: String, page: Int?, onDismiss: () -> Unit) {
                     }
                 }
             }
-            if (name == null) {
-                // 1st time: pick a name (= th Matrix account, made on send)
-                OutlinedTextField(newName, { newName = it }, singleLine = true, modifier = Modifier.fillMaxWidth(),
-                    label = { Text(nameLabel()) },
-                    keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Words))
-            } else Text(tr("👤 du schreibst als %s", "👤 you write as %s").f(name!!), fontSize = 11.sp, color = MaterialTheme.colorScheme.secondary)
+            WritesAs(name ?: newName)   // QA r5 (#8): name field only i ⚙️ · no account yet = th prefilled comrade name
             Row(verticalAlignment = Alignment.CenterVertically) {
                 OutlinedTextField(draft, { draft = it }, modifier = Modifier.weight(1f).padding(vertical = 6.dp), minLines = 1, maxLines = 4,
                     placeholder = { Text(tr("Kommentar …", "Comment …")) },

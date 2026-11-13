@@ -7,6 +7,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- 📳 Krise! buzz pattern (ui/Fx.kt) · normal permission, no prompt -->
     <uses-permission android:name="android.permission.VIBRATE" />
+    <!-- 🆕 self-update 4 hand-installed APKs: hands th downloaded apk 2 Android's install dialog (data/Update.kt) · usr allows once -->
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
     <!-- 🐛 Android 11+ package visibility: wo this th app can't see th TTS engine ➡ 🔊 silently did nothing -->
     <queries>

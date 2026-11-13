@@ -107,6 +107,7 @@ class MainActivity : ComponentActivity() {
             "losung" -> vm.forcePopup.value = true
             "oracle", "krise" -> vm.popRequest.value = p
             "kreis" -> vm.openKreise.value++          // 👥 Kreis notification tap
+            "update" -> vm.openUpdate()               // 🆕 update notification tap (notify/UpdateWorker.kt)
         }
         i?.removeExtra(EXTRA_POP)
         // 👥 invite link: ohmymarx://kreis/K7M2Q9 ➡ Kreis tab w th code ready
@@ -120,12 +121,13 @@ class MainActivity : ComponentActivity() {
     companion object { const val EXTRA_LOSUNG = "losung"; const val EXTRA_POP = "pop" }
 }
 
+// QA r5 (sweep #2): monochrome icons (were colour emoji next 2 a grey ☭ = mixed look) · ☭ stays ours, tinted like th rest · null = ☭
 private val TABS = listOf(
-    Triple("today", "☀️", T("Heute", "Today")),
-    Triple("plans", "📚", T("Pläne", "Plans")),
-    Triple("read", "📖", T("Lesen", "Read")),
-    Triple("kreis", "👥", T("Kreis", "Circle")),
-    Triple("mine", "☭", T("Mein Kapital", "My Capital")),
+    Triple("today", R.drawable.ic_nav_today, T("Heute", "Today")),
+    Triple("plans", R.drawable.ic_nav_plans, T("Pläne", "Plans")),
+    Triple("read", R.drawable.ic_book, T("Lesen", "Read")),
+    Triple("kreis", R.drawable.ic_nav_group, T("Kreis", "Circle")),
+    Triple("mine", null, T("Mein Kapital", "My Capital")),
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -187,7 +189,10 @@ private fun App(vm: AppVm) {
                     NavigationBarItem(
                         selected = route == r,
                         onClick = { if (r == "today") home() else nav.go(r) },
-                        icon = { Text(icon) },
+                        icon = {
+                            if (icon != null) Icon(painterResource(icon), null, Modifier.size(24.dp))
+                            else Text("☭", fontSize = 21.sp, fontWeight = FontWeight.Bold)   // LocalContentColor = same tint as th icons
+                        },
                         label = { Text(tr(label)) },
                     )
                 }
@@ -230,6 +235,10 @@ private fun App(vm: AppVm) {
     var showOrden by remember { mutableStateOf<List<de.strix.marxversion.logic.Orden>>(emptyList()) }
     LaunchedEffect(newOrden) { if (newOrden.isNotEmpty()) { kotlinx.coroutines.delay(2600); showOrden = newOrden } }
     if (showOrden.isNotEmpty()) de.strix.marxversion.ui.NewOrdenDialog(showOrden) { vm.ordenSeen(showOrden); showOrden = emptyList() }
+
+    // 🆕 download + install (data/Update.kt)
+    val showUpdate by vm.showUpdate.collectAsStateWithLifecycle()
+    if (showUpdate) de.strix.marxversion.ui.UpdateDialog(vm) { vm.showUpdate.value = false }
     }
 }
 

@@ -21,5 +21,6 @@ open class MarxApp : Application() {  // open: test/ShotsTest's ShotsApp inits W
         super.onCreate()
         ensureChannel(this)
         de.strix.marxversion.notify.scheduleKreis(this)  // 🔔 Lesekreis msgs + evening nudge (no-op wo circles)
+        de.strix.marxversion.notify.scheduleUpdate(this) // 🆕 ~daily "new version" check (no-op 4 store/Obtainium installs)
     }
 }

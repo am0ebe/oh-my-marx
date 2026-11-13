@@ -39,6 +39,9 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -156,24 +159,41 @@ fun chapterTitle(c: Chapter) = when (LocalLang.current) {
 }
 
 /**
- * ✍️ tap outside th open note = save (QA r4) · Compose doesn't blur a text field on a tap elsewhere ➡ th editor registers
- * its bounds here, th root (MainActivity) watches taps (Initial pass, nothing consumed) + clears focus on 1 outside ➡ editor commits
+ * ✍️ open note editor ⬄ th root (MainActivity) tap watcher · Compose doesn't blur a text field on a tap elsewhere.
+ * QA r5: a tap ANYWHERE while th note is open (outside = "tap away", on th field = "tap it again") does exactly 1 thing:
+ * close th editor (save if changed) · th tap is eaten ➡ it can't also toggle th action btns below o open sth else.
+ * `keep` = th 👥 chip: taps there pass thru (it's part o th editor) · long-press on th field = cursor/paste, passes thru.
  */
-object NoteFocus { var bounds: Rect? = null }
+object NoteFocus { var bounds: Rect? = null; var keep: Rect? = null }
 
-/** root modifier: a tap (not a drag) outside th open note editor ➡ clear focus */
+/** root modifier: short tap (not a drag, not a hold) while a note is open ➡ clear focus (= commit) + consume th tap */
 fun Modifier.tapOutsideNote(focus: FocusManager, slop: Float): Modifier = pointerInput(Unit) {
     awaitEachGesture {
         val down = awaitFirstDown(requireUnconsumed = false, pass = PointerEventPass.Initial)
-        val b = NoteFocus.bounds ?: return@awaitEachGesture
+        if (NoteFocus.bounds == null) return@awaitEachGesture
+        if (NoteFocus.keep?.contains(down.position) == true) return@awaitEachGesture
         var moved = 0f
-        var last: Offset
+        var ev: androidx.compose.ui.input.pointer.PointerEvent
         do {
-            val ev = awaitPointerEvent(PointerEventPass.Initial)
-            last = ev.changes.first().position
-            moved = maxOf(moved, (last - down.position).getDistance())
+            ev = awaitPointerEvent(PointerEventPass.Initial)
+            moved = maxOf(moved, (ev.changes.first().position - down.position).getDistance())
         } while (ev.changes.any { it.pressed })
-        if (moved < slop && !b.contains(down.position)) focus.clearFocus()
+        val held = ev.changes.first().uptimeMillis - down.uptimeMillis
+        if (moved < slop && held < viewConfiguration.longPressTimeoutMillis) {
+            ev.changes.forEach { it.consume() }   // th up is gone ➡ no click underneath
+            focus.clearFocus()
+        }
+    }
+}
+
+/** 🗒️ "this is MY note, not Marx" at a glance (QA r5): comment-style — side ruler · note icon · tinted bg · sans font */
+@Composable
+private fun NoteBubble(modifier: Modifier = Modifier, content: @Composable () -> Unit) {
+    Row(modifier.fillMaxWidth().padding(top = 6.dp).height(androidx.compose.foundation.layout.IntrinsicSize.Min)
+        .clip(RoundedCornerShape(topEnd = 8.dp, bottomEnd = 8.dp)).background(Blue.copy(alpha = 0.09f))) {
+        Box(Modifier.width(3.dp).fillMaxHeight().background(Blue.copy(alpha = 0.75f)))
+        Icon(painterResource(R.drawable.ic_note), null, Modifier.padding(start = 8.dp, top = 9.dp).size(15.dp), tint = Blue)
+        Box(Modifier.weight(1f).padding(start = 8.dp, end = 10.dp, top = 7.dp, bottom = 8.dp)) { content() }
     }
 }
 
@@ -224,23 +244,15 @@ fun VerseView(vm: AppVm, v: Verse, speaker: Speaker? = null, showActions: Boolea
     }
     val scale = LocalReadScale.current
     val haptic = LocalHapticFeedback.current
-    // ☭ burst on double-tap (Instagram-heart style): 0 ➡ 1 = grow + fade out
-    val burst = remember { Animatable(1f) }
-    val scope = rememberCoroutineScope()
+    // QA r5: double-tap = turn th page (i th book) · was 🔖 + ☭ burst · outside th book (Today) no double-tap ➡ tap reacts at once
+    val turnPage = LocalPageTurn.current
     Box {
     Column(
         Modifier.fillMaxWidth().bringIntoViewRequester(into).clip(RoundedCornerShape(6.dp)).background(bg)
             .background(Gold.copy(alpha = 0.45f * glow.value)).then(frame)
             .then(if (showActions) Modifier.combinedClickable(
                 onClick = { open = !open },
-                // double-tap = 🔖 bookmark on/off · on ➡ ☭ burst
-                onDoubleClick = {
-                    vm.bookmark(v.id)
-                    if (mark?.bookmark != true) {
-                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                        scope.launch { burst.snapTo(0f); burst.animateTo(1f, tween(650)) }
-                    }
-                },
+                onDoubleClick = turnPage,
                 onLongClick = { haptic.performHapticFeedback(HapticFeedbackType.LongPress); open = true },
             ) else Modifier)
             .padding(6.dp),
@@ -263,8 +275,8 @@ fun VerseView(vm: AppVm, v: Verse, speaker: Speaker? = null, showActions: Boolea
             append(txt.substring(last))
         }
         Text(annotated, fontFamily = FontFamily.Serif, fontSize = 16.sp * scale, lineHeight = 23.sp * scale)
-        // ✍️ margin note: shown inline · tap it (or Notiz) = edit right here, no popup
-        // QA r4: no Save/Cancel words · tap outside = save (empty = nothing / note gone) · 🤏 ★ = discard
+        // ✍️ margin note: shown inline as a NoteBubble · tap it (or Notiz) = edit right here, same bubble, no popup
+        // QA r4: no Save/Cancel words · QA r5: no ★ either · any tap (away o on th field) = close · changed ➡ saved · blank ➡ note gone
         if (editNote) {
             var draft by remember { mutableStateOf(mark?.note ?: "") }
             var public by remember { mutableStateOf(false) }
@@ -272,7 +284,7 @@ fun VerseView(vm: AppVm, v: Verse, speaker: Speaker? = null, showActions: Boolea
             var closed by remember { mutableStateOf(false) }
             val focus = remember { FocusRequester() }
             LaunchedEffect(Unit) { focus.requestFocus() }
-            DisposableEffect(Unit) { onDispose { NoteFocus.bounds = null } }
+            DisposableEffect(Unit) { onDispose { NoteFocus.bounds = null; NoteFocus.keep = null } }
             val pubName = vm.mxName.collectAsStateWithLifecycle().value ?: vm.suggestedName
             val commit = {
                 if (!closed) {
@@ -283,21 +295,29 @@ fun VerseView(vm: AppVm, v: Verse, speaker: Speaker? = null, showActions: Boolea
                     editNote = false
                 }
             }
-            Column(Modifier.fillMaxWidth().padding(top = 6.dp).onGloballyPositioned { NoteFocus.bounds = it.boundsInRoot() }) {
-                OutlinedTextField(draft, { draft = it }, minLines = 2,
-                    modifier = Modifier.fillMaxWidth().focusRequester(focus).onFocusChanged {
-                        if (it.isFocused) hadFocus = true else if (hadFocus) commit()
-                    },
-                    placeholder = { Text(tr("Deine Randnotiz …", "Your margin note …")) },
-                    trailingIcon = { CloseButton({ closed = true; editNote = false }, size = 26.dp) },
-                    keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences))
-                // 👥 same note, also public on this page (Mitlesen on) = th old "Mitreden" btn, now at th passage (QA r4: 1 pattern)
+            Column(Modifier.fillMaxWidth().onGloballyPositioned { NoteFocus.bounds = it.boundsInRoot() }) {
+                NoteBubble {
+                    val style = androidx.compose.ui.text.TextStyle(fontSize = 14.sp, lineHeight = 19.sp, color = MaterialTheme.colorScheme.onSurface)
+                    androidx.compose.foundation.text.BasicTextField(draft, { draft = it }, textStyle = style, minLines = 2,
+                        cursorBrush = androidx.compose.ui.graphics.SolidColor(Blue),
+                        modifier = Modifier.fillMaxWidth().focusRequester(focus).onFocusChanged {
+                            if (it.isFocused) hadFocus = true else if (hadFocus) commit()
+                        },
+                        keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
+                        decorationBox = { inner ->
+                            if (draft.isEmpty()) Text(tr("Deine Randnotiz …", "Your margin note …"), style = style.copy(color = Color.Gray))
+                            inner()
+                        })
+                }
+                // 👥 same note, also public on this page (Mitlesen) = th old "Mitreden" btn, now at th passage (QA r4: 1 pattern)
                 if (settings.community && vm.commentsAvailable) FilterChip(selected = public, onClick = { public = !public },
+                    modifier = Modifier.onGloballyPositioned { NoteFocus.keep = it.boundsInRoot() },
                     label = { Text(tr("👥 auch im Lesesaal posten — als %s", "👥 also post to the reading room — as %s").f(pubName), fontSize = 12.sp) })
             }
         } else mark?.note?.let {
-            Text("✍️ $it", fontSize = 13.sp, color = MaterialTheme.colorScheme.secondary,
-                modifier = Modifier.padding(top = 4.dp).then(if (showActions) Modifier.clickable { editNote = true } else Modifier))
+            NoteBubble(if (showActions) Modifier.clickable { editNote = true } else Modifier) {
+                Text(it, fontSize = 14.sp, lineHeight = 19.sp, color = MaterialTheme.colorScheme.onSurface)
+            }
         }
 
         if (showActions && open) {
@@ -317,10 +337,6 @@ fun VerseView(vm: AppVm, v: Verse, speaker: Speaker? = null, showActions: Boolea
         }
         if (showActions && marked) HookNote(Hook.INVESTMENT, settings.testMode)
     }
-    if (burst.value < 1f) Text("☭", fontSize = 64.sp, color = Red, modifier = Modifier.align(Alignment.Center).graphicsLayer {
-        val t = burst.value
-        scaleX = 0.4f + 1.4f * t; scaleY = scaleX; alpha = 1f - t
-    })
     }
 
     footnote?.let { n ->

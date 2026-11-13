@@ -73,7 +73,7 @@ fun KreiseScreen(vm: AppVm, open: (Int) -> Unit) {
     val name by vm.mxName.collectAsStateWithLifecycle()
     val members by vm.kreisMembers.collectAsStateWithLifecycle()
     val tl by vm.kreisTimeline.collectAsStateWithLifecycle()
-    var myName by remember { mutableStateOf(vm.suggestedName) }
+    val myName = vm.suggestedName
     var newName by remember { mutableStateOf("") }
     var code by remember { mutableStateOf("") }
     var busy by remember { mutableStateOf(false) }
@@ -100,9 +100,7 @@ fun KreiseScreen(vm: AppVm, open: (Int) -> Unit) {
                 Column(Modifier.padding(12.dp)) {
                     Text(tr("📨 Einladung in einen Lesekreis", "📨 Invitation to a reading circle"), fontWeight = FontWeight.Bold)
                     Text(pc, fontFamily = FontFamily.Monospace, fontSize = 22.sp, fontWeight = FontWeight.Bold, color = Red)
-                    if (name == null) OutlinedTextField(myName, { myName = it }, singleLine = true, modifier = Modifier.fillMaxWidth(),
-                        label = { Text(nameLabel()) },
-                        keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Words))
+                    WritesAs(name ?: myName)
                     Row {
                         Button(onClick = {
                             busy = true; msg = null
@@ -133,13 +131,9 @@ fun KreiseScreen(vm: AppVm, open: (Int) -> Unit) {
             "🌱 No circle yet. Found one and send the code to friends — or join with a code."), modifier = Modifier.padding(vertical = 8.dp))
         Gap(16)
 
-        // name (= Matrix account, shared w comments) only th 1st time
-        if (name == null) {
-            OutlinedTextField(myName, { myName = it }, singleLine = true, modifier = Modifier.fillMaxWidth(),
-                label = { Text(nameLabel()) },
-                keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Words))
-            Gap(8)
-        }
+        // QA r5 (#8): th name field lives only i ⚙️ · here: who u r + where 2 change it (no account yet = th prefilled comrade name)
+        WritesAs(name ?: myName)
+        Gap(8)
         val me = name ?: myName.takeIf { it.isNotBlank() }
         Text(tr("＋ Kreis gründen", "＋ Found a circle"), fontWeight = FontWeight.Bold)
         Row(verticalAlignment = Alignment.CenterVertically) {

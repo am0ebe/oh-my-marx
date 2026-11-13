@@ -2105,3 +2105,29 @@
 {"kind": "ui", "k": "already lived (you do work, right?)", "src": "schon gelebt (du arbeitest ja)\u0000already lived (you do work, right?)", "t": "پہلے ہی زندہ ہوا (تم تو کام کر رہے ہو)"}
 {"kind": "ui", "k": "👥 also post to the reading room — as %s", "src": "👥 auch im Lesesaal posten — als %s\u0000👥 also post to the reading room — as %s", "t": "👥 پڑھنے والے ہال میں بھی پوسٹ کریں — %s کے طور پر"}
 {"kind": "ui", "k": "Nothing accumulated yet. Tap a passage ➡ Bookmark or Note — primitive accumulation starts small.", "src": "Noch nichts akkumuliert. Tipp auf einen Absatz ➡ Lesezeichen oder Notiz — ursprüngliche Akkumulation beginnt klein.\u0000Nothing accumulated yet. Tap a passage ➡ Bookmark or Note — primitive accumulation starts small.", "t": "ابھی کچھ بھی جمع نہیں ہوا۔ ایک آیت پر ٹیپ کریں ➡ بکمارک یا نوٹ — ابتدائی تراکیب چھوٹی شروع ہوتی ہیں۔"}
+{"kind": "ui", "k": "Name", "src": "Name\u0000Name", "t": "نام"}
+{"kind": "ui", "k": "👤 you write as %s · change: ⚙️ Settings", "src": "👤 du schreibst als %s · ändern: ⚙️ Einstellungen\u0000👤 you write as %s · change: ⚙️ Settings", "t": "👤 تمہارا نام %s ہے · تبدیل کریں: ⚙️ سیٹنگس"}
+{"kind": "ui", "k": "free software (GPL-3.0)", "src": "freie Software (GPL-3.0)\u0000free software (GPL-3.0)", "t": "مفت سافٹ ویئر (GPL-3.0)"}
+{"kind": "ui", "k": "Website", "src": "Webseite\u0000Website", "t": "ویب سائٹ"}
+{"kind": "ui", "k": "Feedback", "src": "Feedback\u0000Feedback", "t": "تاثرات"}
+{"kind": "ui", "k": "Feedback = mail to us: bug, idea, praise — all welcome", "src": "Feedback = Mail an uns: Bug, Idee, Lob — alles willkommen\u0000Feedback = mail to us: bug, idea, praise — all welcome", "t": "تاثرات = ہمارے پاس ای میل بگ، خیال، تعریف — سب کچھ خوش آمدید"}
+{"kind": "ui", "k": "%d of %d chapters done", "src": "%d von %d Kapiteln erledigt\u0000%d of %d chapters done", "t": "%d of %d فصلیں مکمل"}
+{"kind": "ui", "k": "⬅ swipe or double-tap = turn the page", "src": "⬅ wischen oder doppelt tippen = umblättern\u0000⬅ swipe or double-tap = turn the page", "t": "⬅ سوائپ یا ڈبل ٹیپ = صفحہ بدلیں"}
+{"kind": "ui", "k": "⬅ swipe or double-tap = turn the page · 🤏 two fingers = font", "src": "⬅ wischen oder doppelt tippen = umblättern · 🤏 zwei Finger = Schrift\u0000⬅ swipe or double-tap = turn the page · 🤏 two fingers = font", "t": "⬅ سوائپ یا ڈبل ٹیپ = صفحہ بدلیں · 🤏 دو انگلیاں = فونٹ"}
+{"kind": "ui", "k": "🆕 Version %s is out — tap = install (your data stays)", "src": "🆕 Version %s ist da — antippen = installieren (deine Daten bleiben)\u0000🆕 Version %s is out — tap = install (your data stays)", "t": "🆕 ورژن %s آ گئی ہے — ٹیپ کریں = انسٹال (تمہارے ڈیٹا رہیں گے)"}
+{"kind": "ui", "k": "New version", "src": "Neue Version\u0000New version", "t": "نئی ورژن"}
+{"kind": "ui", "k": "You have the newest version (%s). ✔️", "src": "Du hast die neueste Version (%s). ✔️\u0000You have the newest version (%s). ✔️", "t": "تمہارے پاس نئی ترین ورژن (%s) ہے۔ ✔️"}
+{"kind": "ui", "k": "Didn't work — internet? Get it on the web page.", "src": "Ging nicht — Internet? Lade sie auf der Webseite.\u0000Didn't work — internet? Get it on the web page.", "t": "کام نہیں ہوا — انٹرنیٹ؟ ویب سائٹ پر ڈاؤن لوڈ کریں۔"}
+{"kind": "ui", "k": "🌐 Open web page", "src": "🌐 Webseite öffnen\u0000🌐 Open web page", "t": "🌐 ویب سائٹ کھولیں"}
+{"kind": "ui", "k": "Oh My Marx %s is out · you have %s", "src": "Oh My Marx %s ist da · du hast %s\u0000Oh My Marx %s is out · you have %s", "t": "اہ مارکس %s آ گیا ہے · تمہارے پاس %s ہیں"}
+{"kind": "ui", "k": "Installs over the old app — your data stays.", "src": "Installiert sich über die alte App — deine Daten bleiben.\u0000Installs over the old app — your data stays.", "t": "پرانی ایپ کے ذریعے انسٹال ہوتا ہے — تمہارے ڈیٹا رہیں گے۔"}
+{"kind": "ui", "k": "One time: allow “install apps from this source” for Oh My Marx, then come back.", "src": "Einmalig: erlaube „Apps aus dieser Quelle installieren“ für Oh My Marx, dann zurück.\u0000One time: allow “install apps from this source” for Oh My Marx, then come back.", "t": "ایک بارہ: ایپس کو اس ماخذ سے انسٹال کرنے کی اجازت دیں، پھر واپس آئیں۔"}
+{"kind": "ui", "k": "Allow ➡", "src": "Erlauben ➡\u0000Allow ➡", "t": "اجازت دیں ➡"}
+{"kind": "ui", "k": "📦 Install", "src": "📦 Installieren\u0000📦 Install", "t": "📦 انسٹال کریں"}
+{"kind": "ui", "k": "downloading …", "src": "lädt …\u0000downloading …", "t": "ڈاؤن لوڈ ہو رہا ہے …"}
+{"kind": "ui", "k": "🌐 To the download page", "src": "🌐 Zur Download-Seite\u0000🌐 To the download page", "t": "🌐 ڈاؤن لوڈ کی صفحہ پر"}
+{"kind": "ui", "k": "⬇️ Download + install", "src": "⬇️ Laden + installieren\u0000⬇️ Download + install", "t": "⬇️ ڈاؤن لوڈ کریں + انسٹال کریں"}
+{"kind": "ui", "k": "🆕 Updates announce themselves: a notification when a new version is out, tap = download + install", "src": "🆕 Updates melden sich selbst: Benachrichtigung bei neuer Version, antippen = laden + installieren\u0000🆕 Updates announce themselves: a notification when a new version is out, tap = download + install", "t": "🆕 اپڈیٹس خود کو متعارف کراتے ہیں: نئی ورژن کے آنے پر اطلاع، ٹیپ کریں = ڈاؤن لوڈ + انسٹال"}
+{"kind": "ui", "k": "📖 Turning pages: swipe, double-tap or the dog-ear bottom right", "src": "📖 Umblättern: wischen, doppelt tippen oder das Eselsohr unten rechts\u0000📖 Turning pages: swipe, double-tap or the dog-ear bottom right", "t": "📖 صفحات پلٹنے کے لیے: سوائپ، ڈبل ٹیپ یا نیچے دائیں کونے میں ایسیل کا کھنچا ہوا کنارہ"}
+{"kind": "ui", "k": "✍️ Notes look like comments: own colour, side line, tap = done", "src": "✍️ Notizen sehen aus wie Kommentare: eigene Farbe, Randlinie, antippen = fertig\u0000✍️ Notes look like comments: own colour, side line, tap = done", "t": "✍️ نوٹس کامنٹس کی طرح دکھائی دیتے ہیں: اپنی رنگ، سائیڈ لائن، ٹیپ کریں = مکمل"}
+{"kind": "ui", "k": "📊 Reading progress in percent", "src": "📊 Lesefortschritt in Prozent\u0000📊 Reading progress in percent", "t": "📊 پڑھائی کا تقدم فیصد میں"}

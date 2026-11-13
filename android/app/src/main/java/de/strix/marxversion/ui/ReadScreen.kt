@@ -52,6 +52,10 @@ import androidx.compose.ui.text.font.FontFamily
 import de.strix.marxversion.data.Verse
 import kotlinx.coroutines.launch
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.clip
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.size
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -78,8 +82,14 @@ fun ReadScreen(vm: AppVm, openChapter: (String) -> Unit) {
     LazyColumn(Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
         item {
             Text(tr("Das Kapital, Band 1", "Capital, Volume 1"), fontSize = 22.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(top = 12.dp))
-            Text(tr("%d von %d erledigt", "%d of %d done").f(n, done.size), fontSize = 13.sp)
-            LinearProgressIndicator(progress = { n / done.size.toFloat() }, modifier = Modifier.fillMaxWidth().padding(vertical = 6.dp))
+            // QA r5: bar + % · % = paragraphs read (moves evy page, not only per finished chapter)
+            val pct = bookPercent(readIds.size, vm.content.verses.size)
+            Text(tr("%d von %d Kapiteln erledigt", "%d of %d chapters done").f(n, done.size), fontSize = 13.sp)
+            Row(verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
+                LinearProgressIndicator(progress = { pct / 100f }, modifier = Modifier.weight(1f).padding(vertical = 6.dp))
+                Text("%d %%".f(pct), fontSize = 13.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.padding(start = 10.dp))
+            }
             HookNote(Hook.ENDOWED, s.testMode)
         }
         var lastAb = -1
@@ -110,6 +120,13 @@ fun ReadScreen(vm: AppVm, openChapter: (String) -> Unit) {
     }
 }
 
+/** 📊 whole-book % (floor · started = ≥ 1 % · all read = 100) */
+fun bookPercent(read: Int, total: Int): Int = when {
+    total <= 0 || read <= 0 -> 0
+    read >= total -> 100
+    else -> (read * 100 / total).coerceIn(1, 99)
+}
+
 /** 🤏 reader font scale (pinch) · only th chapter reader provides it, evywhere else = 1 */
 val LocalReadScale = compositionLocalOf { 1f }
 
@@ -133,7 +150,7 @@ private val INK = Color(0xFF3B2A1A)
  * 📖 th book (strix @1103: "like th actual old book, swipe ➡ th page turns"):
  *  whole Kapital as 1 stack o pages · drag ⬅ = th page lifts off th spine + turns · drag ➡ = turn back
  *  🤏 pinch = font size (saved) · long page ➡ scroll down inside it
- *  verse: tap = menu · double-tap = 🔖 + ☭ burst · hold = menu
+ *  verse: tap = menu · hold = menu · double-tap anywhere = turn (QA r5, was 🔖) · 📐 dog-ear = turn
  * Own pager (not HorizontalPager): th turning page must be drawn ABOVE th next one, pinned at th spine.
  */
 @Composable
@@ -158,7 +175,30 @@ fun ChapterScreen(vm: AppVm, kap: String, focus: String?, @Suppress("UNUSED_PARA
     var talk by remember { mutableStateOf<BookPage?>(null) }
     talk?.let { p -> CommentsSheet(vm, p.kap, p.page) { talk = null } }
 
-    CompositionLocalProvider(LocalReadScale provides scale) {
+    // 👉 turn by code (double-tap · dog-ear · hint) = same animation as a finished drag · ignored mid-turn
+    val fwd: () -> Unit = {
+        if (index < pages.lastIndex && !turn.isRunning && turn.value == 0f) scope.launch {
+            turn.animateTo(-1f, tween(320)); index++; turn.snapTo(0f)
+        }
+    }
+    // 💡 QA r5 "page turn = NICE, but hidden": th 1st few chapters th page peeks (lifts 2× at th corner) + a hint pill,
+    //   until u turned 3 pages urself · counter i plain SharedPreferences (UI hint, not user data)
+    val ctx = androidx.compose.ui.platform.LocalContext.current
+    val hintPrefs = remember { ctx.getSharedPreferences("omm_ui", android.content.Context.MODE_PRIVATE) }
+    var turnsDone by remember { mutableIntStateOf(hintPrefs.getInt("turns", 0)) }
+    LaunchedEffect(index) {
+        if (index != start && turnsDone < TURN_HINT) { turnsDone++; hintPrefs.edit().putInt("turns", turnsDone).apply() }
+    }
+    var hintOn by remember { mutableStateOf(turnsDone < TURN_HINT) }   // pill: ~6 s per chapter open, gone on th 1st turn
+    LaunchedEffect(index) { if (index != start) hintOn = false }
+    LaunchedEffect(Unit) { kotlinx.coroutines.delay(6000); hintOn = false }
+    LaunchedEffect(Unit) {
+        if (turnsDone >= TURN_HINT || index >= pages.lastIndex) return@LaunchedEffect
+        kotlinx.coroutines.delay(900)
+        repeat(2) { if (turn.value == 0f) { turn.animateTo(-0.16f, tween(380)); turn.animateTo(0f, tween(420)) } }
+    }
+
+    CompositionLocalProvider(LocalReadScale provides scale, LocalPageTurn provides fwd) {
         Box(
             Modifier.fillMaxSize().background(Color(0xFF2A1E14))  // th desk under th book
                 .pointerInput(Unit) {  // 🤏 pinch (Initial pass: before th page scrolls)
@@ -197,7 +237,9 @@ fun ChapterScreen(vm: AppVm, kap: String, focus: String?, @Suppress("UNUSED_PARA
                         },
                         onDragCancel = { scope.launch { turn.animateTo(0f) } },
                     )
-                },
+                }
+                // 👆👆 double-tap on th paper (margins, head, folio) = turn · on a passage VerseView routes its double-tap here too
+                .pointerInput(Unit) { detectTapGestures(onDoubleTap = { fwd() }) },
         ) {
             val t = turn.value
             val cam = 18 * density.density
@@ -216,7 +258,35 @@ fun ChapterScreen(vm: AppVm, kap: String, focus: String?, @Suppress("UNUSED_PARA
                     cameraDistance = cam
                 }, null) { talk = pages[over] }
             }
+            // 📐 dog-ear bottom-right = "this is a page, it turns" · tap = turn (indicator + 2nd way 2 do it)
+            if (index < pages.lastIndex && t == 0f) DogEar(Modifier.align(Alignment.BottomEnd), fwd)
+            // 💬 hint pill (only while th peek is still on, see TURN_HINT · 6 s, then out o th way)
+            if (hintOn && index < pages.lastIndex) Text(
+                tr("⬅ wischen oder doppelt tippen = umblättern", "⬅ swipe or double-tap = turn the page"),
+                fontSize = 12.sp, color = PAPER, modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 14.dp)
+                    .background(INK.copy(alpha = 0.82f), androidx.compose.foundation.shape.RoundedCornerShape(50))
+                    .padding(horizontal = 14.dp, vertical = 6.dp))
         }
+    }
+}
+
+/** turns u do urself b4 th peek + hint pill stop */
+private const val TURN_HINT = 3
+
+/** 👉 "turn forward" fr inside a page (VerseView double-tap) · null = not i th book (Today plan verses) */
+val LocalPageTurn = compositionLocalOf<(() -> Unit)?> { null }
+
+/** 📐 folded page corner: desk shows thru th cut, th flap lies on th page w a soft shadow */
+@Composable
+private fun DogEar(modifier: Modifier, onClick: () -> Unit) {
+    androidx.compose.foundation.Canvas(modifier.size(36.dp).clickable(onClick = onClick)) {
+        val w = size.width; val h = size.height
+        val cut = androidx.compose.ui.graphics.Path().apply { moveTo(w, 0f); lineTo(w, h); lineTo(0f, h); close() }
+        drawPath(cut, Color(0xFF2A1E14))
+        val flap = androidx.compose.ui.graphics.Path().apply { moveTo(0f, h); lineTo(w, 0f); lineTo(0f, 0f); close() }
+        drawPath(flap, Brush.linearGradient(listOf(Color(0xFFD9C7A3), Color(0xFFEFE0C2)), start = androidx.compose.ui.geometry.Offset(w / 2, h / 2),
+            end = androidx.compose.ui.geometry.Offset(0f, 0f)))
+        drawLine(Color(0x55000000), androidx.compose.ui.geometry.Offset(0f, h), androidx.compose.ui.geometry.Offset(w, 0f), strokeWidth = 1.5f)
     }
 }
 
@@ -234,13 +304,15 @@ private fun Page(vm: AppVm, p: BookPage, speaker: Speaker, i: Int, n: Int, modif
         // spine shadow left + page-edge darkening right = it looks bound
         Brush.horizontalGradient(0f to Color(0x33000000), 0.06f to Color.Transparent, 0.94f to Color.Transparent, 1f to Color(0x22000000)))) {
         Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(start = 22.dp, end = 16.dp, top = 10.dp, bottom = 14.dp)) {
-            Row(Modifier.fillMaxWidth()) {
+            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                 Text((chapter?.let { chapterTitle(it) } ?: p.kap).uppercase(), fontSize = 10.sp, color = INK.copy(alpha = 0.6f),
                     letterSpacing = 1.2.sp, maxLines = 1, modifier = Modifier.weight(1f))
                 // 👥 Mitlesen: how often this page was read (social proof, opt-in)
                 p.page?.let { pg -> reads[pg]?.let { Text("👥 %d×  ·  ".f(it), fontSize = 10.sp, color = Red.copy(alpha = 0.8f)) } }
-                if (talkOn && talkCount > 0) Text("💬 %d  ·  ".f(talkCount), fontSize = 10.sp, color = Red.copy(alpha = 0.8f),
-                    modifier = Modifier.clickable(onClick = onTalk))
+                // QA r5 (sweep #9): was 10 sp red txt, easy 2 miss ➡ a real chip (48 dp-ish tap target via padding)
+                if (talkOn && talkCount > 0) Text("💬 %d".f(talkCount), fontSize = 13.sp, fontWeight = FontWeight.Bold, color = Color.White,
+                    modifier = Modifier.padding(end = 8.dp).clip(androidx.compose.foundation.shape.RoundedCornerShape(50)).background(Red)
+                        .clickable(onClick = onTalk).padding(horizontal = 10.dp, vertical = 3.dp))
                 p.page?.let { Text(tr("MEW S. %d", "MEW p. %d").f(it), fontSize = 10.sp, color = INK.copy(alpha = 0.6f)) }
             }
             HorizontalDivider(color = INK.copy(alpha = 0.25f), modifier = Modifier.padding(vertical = 6.dp))
@@ -258,7 +330,7 @@ private fun Page(vm: AppVm, p: BookPage, speaker: Speaker, i: Int, n: Int, modif
             Text("— ${p.page ?: (i + 1)} —", fontSize = 12.sp, color = INK.copy(alpha = 0.55f), fontFamily = FontFamily.Serif,
                 textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
             if (i == 0 || i == n - 1) Text(
-                tr("⬅ ziehen = umblättern · 🤏 zwei Finger = Schrift · doppelt tippen = 🔖", "⬅ drag = turn the page · 🤏 two fingers = font · double-tap = 🔖"),
+                tr("⬅ wischen oder doppelt tippen = umblättern · 🤏 zwei Finger = Schrift", "⬅ swipe or double-tap = turn the page · 🤏 two fingers = font"),
                 fontSize = 11.sp, color = INK.copy(alpha = 0.5f), textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth().padding(top = 8.dp))
         }
     }

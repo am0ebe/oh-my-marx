@@ -37,6 +37,10 @@ val RELEASES = listOf(
     Release("0.9.1", "2026-11-12", listOf(
         T("⚙️ Über: nur noch die neueste Version, schlichter Abspann, Symbolreihe mittig", "⚙️ About: newest version only, simpler credits, centred icon row"),
         T("🔖 Lesezeichen mit eigener Überschrift", "🔖 Bookmarks with their own heading"),
+        T("🆕 Updates melden sich selbst: Benachrichtigung bei neuer Version, antippen = laden + installieren", "🆕 Updates announce themselves: a notification when a new version is out, tap = download + install"),
+        T("📖 Umblättern: wischen, doppelt tippen oder das Eselsohr unten rechts", "📖 Turning pages: swipe, double-tap or the dog-ear bottom right"),
+        T("✍️ Notizen sehen aus wie Kommentare: eigene Farbe, Randlinie, antippen = fertig", "✍️ Notes look like comments: own colour, side line, tap = done"),
+        T("📊 Lesefortschritt in Prozent", "📊 Reading progress in percent"),
     )),
     Release("0.9.0", "2026-11-08", listOf(
         T("🌍 6 neue Sprachen: Französisch, Russisch, Hindi, Bengalisch, Urdu, Indonesisch — das ganze Buch inklusive", "🌍 6 new languages: French, Russian, Hindi, Bengali, Urdu, Indonesian — the whole book included"),

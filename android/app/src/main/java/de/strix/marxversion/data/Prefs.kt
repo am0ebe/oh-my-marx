@@ -29,7 +29,7 @@ data class Settings(
     val activePlan: String? = null,
     val planStart: String? = null,      // "2026-10-28"
     val readScale: Float = 1f,          // 🤏 pinch i th reader ➡ font size × this
-    val community: Boolean = true,      // 👥 Mitlesen (dflt ON @1103 strix · switch off i ⚙️): anonymous daily-token counts + comments
+    val community: Boolean = true,      // 👥 Mitlesen: anonymous daily-token counts + comments · always on since QA r5 (D-020, no ⚙️ toggle)
 )
 
 /** 👥 a Lesekreis = 1 Matrix room, found by its code */
@@ -106,7 +106,7 @@ class Prefs(private val context: Context) {
             activePlan = p[K.activePlan],
             planStart = p[K.planStart],
             readScale = p[K.readScale] ?: 1f,
-            community = p[K.community] ?: true,
+            community = true,   // QA r5 (D-020): Mitlesen always on, toggle gone ➡ an old stored "off" no longer counts
         )
     }
 

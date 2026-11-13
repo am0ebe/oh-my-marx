@@ -36,6 +36,12 @@
 ## 📆
 
 ## 🔵
+- 🤖 **big round** (QA r5 @1113, am0 "rest yes" ➡ parked 4 a data/btn round) · src ➡ qa_1112.md § r4 sweep
+  - #3 EN reader: section titles still DE ("1. Die zwei Faktoren der Ware…") + ¶ "no English paragraph here" ➡ EN secTitle pass (data)
+  - #4 ch.1 page 1 = th TOC as body txt ("A. Elementary … 1. The Two Poles …") ➡ split.py drop/format it (data)
+  - #6 plan verses on Today = long txt walls above "Day complete!" ➡ ties 2 D3/D-015 Amen under snippet
+  - #7 btn styles mixed: Today tinted circles (CardAction, now also ⚙️ About) · Kreis filled pills · Marxoskop outlined chips · Hooked AssistChips ➡ 1 system (D7)
+- 🧪 self-update (D-021) on a real fon: 1st DEV deploy aft r5 ➡ old DEV (adb-installed) gets th notification wi ~1 d · Obtainium-installed = skipped by design
 - _⬇ demoted fr ‼️ @1112 (WIP ≤5)_
 - 🦠🔑 keystore: ✔️ symlink @1105 · left: KeePass note (`base64 -w0`, notes.md § 🔑) · 1 offline/restic copy · lap same `ln -s` (➡ sys ansible?)
 - 💬 ops (optional): `/omm/*` ➡ `/oh-my-marx/{path}` (Obtainium URL `scagent.de/omm/`) · `/omm/src` ➡ GitHub 302 · `/omm/dev` redirect = valid again (/dev back @1106)

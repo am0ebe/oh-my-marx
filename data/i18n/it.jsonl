@@ -2143,3 +2143,29 @@
 {"kind": "ui", "k": "already lived (you do work, right?)", "src": "schon gelebt (du arbeitest ja)\u0000already lived (you do work, right?)", "t": "già vissuto (lavori, no?)"}
 {"kind": "ui", "k": "👥 also post to the reading room — as %s", "src": "👥 auch im Lesesaal posten — als %s\u0000👥 also post to the reading room — as %s", "t": "👥 anche nel salone di lettura — come %s"}
 {"kind": "ui", "k": "Nothing accumulated yet. Tap a passage ➡ Bookmark or Note — primitive accumulation starts small.", "src": "Noch nichts akkumuliert. Tipp auf einen Absatz ➡ Lesezeichen oder Notiz — ursprüngliche Akkumulation beginnt klein.\u0000Nothing accumulated yet. Tap a passage ➡ Bookmark or Note — primitive accumulation starts small.", "t": "Niente ancora accumulato. Tocca un passaggio ➡ Segnalibro o Appunto — l'accumulazione primitiva inizia piccola."}
+{"kind": "ui", "k": "Name", "src": "Name\u0000Name", "t": "Nome"}
+{"kind": "ui", "k": "👤 you write as %s · change: ⚙️ Settings", "src": "👤 du schreibst als %s · ändern: ⚙️ Einstellungen\u0000👤 you write as %s · change: ⚙️ Settings", "t": "👤 scrivi come %s · cambia: ⚙️ Impostazioni"}
+{"kind": "ui", "k": "free software (GPL-3.0)", "src": "freie Software (GPL-3.0)\u0000free software (GPL-3.0)", "t": "software libero (GPL-3.0)"}
+{"kind": "ui", "k": "Website", "src": "Webseite\u0000Website", "t": "Sito web"}
+{"kind": "ui", "k": "Feedback", "src": "Feedback\u0000Feedback", "t": "Feedback"}
+{"kind": "ui", "k": "Feedback = mail to us: bug, idea, praise — all welcome", "src": "Feedback = Mail an uns: Bug, Idee, Lob — alles willkommen\u0000Feedback = mail to us: bug, idea, praise — all welcome", "t": "Feedback = scrivici: bug, idea, elogio — tutto benvenuto"}
+{"kind": "ui", "k": "%d of %d chapters done", "src": "%d von %d Kapiteln erledigt\u0000%d of %d chapters done", "t": "%d di %d capitoli completati"}
+{"kind": "ui", "k": "⬅ swipe or double-tap = turn the page", "src": "⬅ wischen oder doppelt tippen = umblättern\u0000⬅ swipe or double-tap = turn the page", "t": "⬅ scorri o tocchi due volte = sfoglia"}
+{"kind": "ui", "k": "⬅ swipe or double-tap = turn the page · 🤏 two fingers = font", "src": "⬅ wischen oder doppelt tippen = umblättern · 🤏 zwei Finger = Schrift\u0000⬅ swipe or double-tap = turn the page · 🤏 two fingers = font", "t": "⬅ scorri o tocchi due volte = sfoglia · 🤏 due dita = carattere"}
+{"kind": "ui", "k": "🆕 Version %s is out — tap = install (your data stays)", "src": "🆕 Version %s ist da — antippen = installieren (deine Daten bleiben)\u0000🆕 Version %s is out — tap = install (your data stays)", "t": "🆕 La versione %s è uscita — tocca per installare (i tuoi dati restano)"}
+{"kind": "ui", "k": "New version", "src": "Neue Version\u0000New version", "t": "Nuova versione"}
+{"kind": "ui", "k": "You have the newest version (%s). ✔️", "src": "Du hast die neueste Version (%s). ✔️\u0000You have the newest version (%s). ✔️", "t": "Hai la versione più recente (%s). ✔️"}
+{"kind": "ui", "k": "Didn't work — internet? Get it on the web page.", "src": "Ging nicht — Internet? Lade sie auf der Webseite.\u0000Didn't work — internet? Get it on the web page.", "t": "Non è andato — internet? Scaricala dal sito web."}
+{"kind": "ui", "k": "🌐 Open web page", "src": "🌐 Webseite öffnen\u0000🌐 Open web page", "t": "🌐 Apri sito web"}
+{"kind": "ui", "k": "Oh My Marx %s is out · you have %s", "src": "Oh My Marx %s ist da · du hast %s\u0000Oh My Marx %s is out · you have %s", "t": "Oh My Marx %s è uscito · hai %s"}
+{"kind": "ui", "k": "Installs over the old app — your data stays.", "src": "Installiert sich über die alte App — deine Daten bleiben.\u0000Installs over the old app — your data stays.", "t": "Si installa tramite l'app vecchia — i tuoi dati restano."}
+{"kind": "ui", "k": "One time: allow “install apps from this source” for Oh My Marx, then come back.", "src": "Einmalig: erlaube „Apps aus dieser Quelle installieren“ für Oh My Marx, dann zurück.\u0000One time: allow “install apps from this source” for Oh My Marx, then come back.", "t": "Una volta sola: abilita “installa app da questa fonte” per Oh My Marx, poi torna indietro."}
+{"kind": "ui", "k": "Allow ➡", "src": "Erlauben ➡\u0000Allow ➡", "t": "Abilita ➡"}
+{"kind": "ui", "k": "📦 Install", "src": "📦 Installieren\u0000📦 Install", "t": "📦 Installa"}
+{"kind": "ui", "k": "downloading …", "src": "lädt …\u0000downloading …", "t": "scaricamento …"}
+{"kind": "ui", "k": "🌐 To the download page", "src": "🌐 Zur Download-Seite\u0000🌐 To the download page", "t": "🌐 Alla pagina di download"}
+{"kind": "ui", "k": "⬇️ Download + install", "src": "⬇️ Laden + installieren\u0000⬇️ Download + install", "t": "⬇️ Scarica + installa"}
+{"kind": "ui", "k": "🆕 Updates announce themselves: a notification when a new version is out, tap = download + install", "src": "🆕 Updates melden sich selbst: Benachrichtigung bei neuer Version, antippen = laden + installieren\u0000🆕 Updates announce themselves: a notification when a new version is out, tap = download + install", "t": "🆕 Gli aggiornamenti si annunciano da soli: notifica quando c'è una nuova versione, tocca = scarica + installa"}
+{"kind": "ui", "k": "📖 Turning pages: swipe, double-tap or the dog-ear bottom right", "src": "📖 Umblättern: wischen, doppelt tippen oder das Eselsohr unten rechts\u0000📖 Turning pages: swipe, double-tap or the dog-ear bottom right", "t": "📖 Voltare le pagine: scorri, tocchi due volte o l'angolo in basso a destra"}
+{"kind": "ui", "k": "✍️ Notes look like comments: own colour, side line, tap = done", "src": "✍️ Notizen sehen aus wie Kommentare: eigene Farbe, Randlinie, antippen = fertig\u0000✍️ Notes look like comments: own colour, side line, tap = done", "t": "✍️ Le note sembrano commenti: colore personale, bordo, tocca = fine"}
+{"kind": "ui", "k": "📊 Reading progress in percent", "src": "📊 Lesefortschritt in Prozent\u0000📊 Reading progress in percent", "t": "📊 Avanzamento lettura in percentuale"}

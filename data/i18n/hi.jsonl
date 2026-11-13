@@ -2106,3 +2106,29 @@
 {"kind": "ui", "k": "already lived (you do work, right?)", "src": "schon gelebt (du arbeitest ja)\u0000already lived (you do work, right?)", "t": "पहले से ही जीवित (तुम तो काम करते हो, है ना?)"}
 {"kind": "ui", "k": "👥 also post to the reading room — as %s", "src": "👥 auch im Lesesaal posten — als %s\u0000👥 also post to the reading room — as %s", "t": "👥 भी पढ़ाई कक्ष में पोस्ट करें — %s के रूप में"}
 {"kind": "ui", "k": "Nothing accumulated yet. Tap a passage ➡ Bookmark or Note — primitive accumulation starts small.", "src": "Noch nichts akkumuliert. Tipp auf einen Absatz ➡ Lesezeichen oder Notiz — ursprüngliche Akkumulation beginnt klein.\u0000Nothing accumulated yet. Tap a passage ➡ Bookmark or Note — primitive accumulation starts small.", "t": "अभी तक कुछ भी संचय नहीं हुआ। एक अनुच्छेद पर टैप करें ➡ पुस्तकचिह्न या नोट — मूल आर्थिक संचय छोटे से शुरू होता है।"}
+{"kind": "ui", "k": "Name", "src": "Name\u0000Name", "t": "नाम"}
+{"kind": "ui", "k": "👤 you write as %s · change: ⚙️ Settings", "src": "👤 du schreibst als %s · ändern: ⚙️ Einstellungen\u0000👤 you write as %s · change: ⚙️ Settings", "t": "👤 तुम %s के रूप में लिख रहे हो · बदलें: ⚙️ सेटिंग्स"}
+{"kind": "ui", "k": "free software (GPL-3.0)", "src": "freie Software (GPL-3.0)\u0000free software (GPL-3.0)", "t": "मुक्त सॉफ्टवेयर (GPL-3.0)"}
+{"kind": "ui", "k": "Website", "src": "Webseite\u0000Website", "t": "वेबसाइट"}
+{"kind": "ui", "k": "Feedback", "src": "Feedback\u0000Feedback", "t": "फीडबैक"}
+{"kind": "ui", "k": "Feedback = mail to us: bug, idea, praise — all welcome", "src": "Feedback = Mail an uns: Bug, Idee, Lob — alles willkommen\u0000Feedback = mail to us: bug, idea, praise — all welcome", "t": "फीडबैक = हमें ईमेल करें: बग, आइडिया, तारीफ — सब कुछ स्वागत है"}
+{"kind": "ui", "k": "%d of %d chapters done", "src": "%d von %d Kapiteln erledigt\u0000%d of %d chapters done", "t": "%d ऑफ %d अध्याय पूरे"}
+{"kind": "ui", "k": "⬅ swipe or double-tap = turn the page", "src": "⬅ wischen oder doppelt tippen = umblättern\u0000⬅ swipe or double-tap = turn the page", "t": "⬅ स्वाइप या डबल-टैप = पृष्ठ घुमाएँ"}
+{"kind": "ui", "k": "⬅ swipe or double-tap = turn the page · 🤏 two fingers = font", "src": "⬅ wischen oder doppelt tippen = umblättern · 🤏 zwei Finger = Schrift\u0000⬅ swipe or double-tap = turn the page · 🤏 two fingers = font", "t": "⬅ स्वाइप या डबल-टैप = पृष्ठ घुमाएँ · 🤏 दो उंगलियाँ = फॉन्ट"}
+{"kind": "ui", "k": "🆕 Version %s is out — tap = install (your data stays)", "src": "🆕 Version %s ist da — antippen = installieren (deine Daten bleiben)\u0000🆕 Version %s is out — tap = install (your data stays)", "t": "🆕 वर्जन %s आ गया — टैप करें = इंस्टॉल (तुम्हारे डेटा बने रहेंगे)"}
+{"kind": "ui", "k": "New version", "src": "Neue Version\u0000New version", "t": "नई वर्जन"}
+{"kind": "ui", "k": "You have the newest version (%s). ✔️", "src": "Du hast die neueste Version (%s). ✔️\u0000You have the newest version (%s). ✔️", "t": "तुम्हारे पास नवीनतम वर्जन (%s) है। ✔️"}
+{"kind": "ui", "k": "Didn't work — internet? Get it on the web page.", "src": "Ging nicht — Internet? Lade sie auf der Webseite.\u0000Didn't work — internet? Get it on the web page.", "t": "नहीं हुआ — इंटरनेट? वेबसाइट पर लोड करो।"}
+{"kind": "ui", "k": "🌐 Open web page", "src": "🌐 Webseite öffnen\u0000🌐 Open web page", "t": "🌐 वेबसाइट खोलें"}
+{"kind": "ui", "k": "Oh My Marx %s is out · you have %s", "src": "Oh My Marx %s ist da · du hast %s\u0000Oh My Marx %s is out · you have %s", "t": "ओह माई मार्क्स %s आ गया · तुम्हारे पास %s है"}
+{"kind": "ui", "k": "Installs over the old app — your data stays.", "src": "Installiert sich über die alte App — deine Daten bleiben.\u0000Installs over the old app — your data stays.", "t": "पुरानी ऐप के ऊपर इंस्टॉल होता है — तुम्हारे डेटा बने रहेंगे।"}
+{"kind": "ui", "k": "One time: allow “install apps from this source” for Oh My Marx, then come back.", "src": "Einmalig: erlaube „Apps aus dieser Quelle installieren“ für Oh My Marx, dann zurück.\u0000One time: allow “install apps from this source” for Oh My Marx, then come back.", "t": "एक बार: ओह माई मार्क्स के लिए 'इस स्रोत से ऐप इंस्टॉल करें' की अनुमति दें, फिर वापस आएँ।"}
+{"kind": "ui", "k": "Allow ➡", "src": "Erlauben ➡\u0000Allow ➡", "t": "अनुमति दें ➡"}
+{"kind": "ui", "k": "📦 Install", "src": "📦 Installieren\u0000📦 Install", "t": "📦 इंस्टॉल करें"}
+{"kind": "ui", "k": "downloading …", "src": "lädt …\u0000downloading …", "t": "लोड हो रहा है …"}
+{"kind": "ui", "k": "🌐 To the download page", "src": "🌐 Zur Download-Seite\u0000🌐 To the download page", "t": "🌐 डाउनलोड पेज पर जाएँ"}
+{"kind": "ui", "k": "⬇️ Download + install", "src": "⬇️ Laden + installieren\u0000⬇️ Download + install", "t": "⬇️ डाउनलोड करें + इंस्टॉल करें"}
+{"kind": "ui", "k": "🆕 Updates announce themselves: a notification when a new version is out, tap = download + install", "src": "🆕 Updates melden sich selbst: Benachrichtigung bei neuer Version, antippen = laden + installieren\u0000🆕 Updates announce themselves: a notification when a new version is out, tap = download + install", "t": "🆕 अपडेट स्वयं घोषित करते हैं: नई वर्जन आने पर नोटिफिकेशन, टैप करें = डाउनलोड + इंस्टॉल"}
+{"kind": "ui", "k": "📖 Turning pages: swipe, double-tap or the dog-ear bottom right", "src": "📖 Umblättern: wischen, doppelt tippen oder das Eselsohr unten rechts\u0000📖 Turning pages: swipe, double-tap or the dog-ear bottom right", "t": "📖 पृष्ठ बदलें: स्वाइप करें, डबल-टैप करें या नीचे दाहिने कोने में एसेलसोर (कुत्ते का कान)"}
+{"kind": "ui", "k": "✍️ Notes look like comments: own colour, side line, tap = done", "src": "✍️ Notizen sehen aus wie Kommentare: eigene Farbe, Randlinie, antippen = fertig\u0000✍️ Notes look like comments: own colour, side line, tap = done", "t": "✍️ नोट्स कॉमेंट की तरह दिखते हैं: अपना रंग, किनारा, टैप करें = तैयार"}
+{"kind": "ui", "k": "📊 Reading progress in percent", "src": "📊 Lesefortschritt in Prozent\u0000📊 Reading progress in percent", "t": "📊 पढ़ाई का प्रगति प्रतिशत में"}

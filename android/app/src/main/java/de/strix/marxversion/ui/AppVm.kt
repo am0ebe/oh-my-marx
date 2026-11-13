@@ -208,8 +208,14 @@ class AppVm(app: Application) : AndroidViewModel(app) {
     val feastPreview = MutableStateFlow<Feast?>(null)
     val timePreview = MutableStateFlow<DayTime?>(null)
 
-    /** 🆕 newer version on th download page (data/Update.kt) · checked once per app start */
+    /** 🆕 newer version on th download page (data/Update.kt) · checked once per app start (+ bg ~daily: notify/UpdateWorker.kt) */
     val update = MutableStateFlow<Update.Latest?>(null)
+    /** 🆕 UpdateDialog open (Today banner o update notification tap) */
+    val showUpdate = MutableStateFlow(false)
+    fun openUpdate() {
+        showUpdate.value = true
+        if (update.value == null) viewModelScope.launch { update.value = Update.check(getApplication()) }
+    }
 
     /** 📖 whole book i th LLM langs, paired w its lang (MainActivity only passes it on if th lang matches) · Full null = DE/EN
      *  🐛 @1107 was: lang switch ➡ old book dropped ➡ EN shown while th new 2-5 MB parsed ➡ "switches 2 EN 1st"
