@@ -18,6 +18,12 @@ _SDD: code says **wh** · th file says **y** · drift = a bug · fmt ➡ `pr/vib
 - 🔥 hot files (1 owner at a ti — fan-out lanes nvr split these): `assets/content/i18n_*.json` + `data/i18n/*.jsonl` (translate pass = fan-in only) · `android/app/build.gradle.kts` (version) · `ui/Changelog.kt` · `res/values*/strings.xml` · `TodayScreen.kt` · `MineScreen.kt` · `Share.kt`
 
 ## 🧾 decisions (newest on top)
+### D-023 @1113 · updater by installer: Obtainium ➡ poke it · self ➡ silent aft 1st · amends D-021 · ✔️ (fon tst pending)
+- **ctx**: am0: Obtainium bg updates were on but he always beat its 6 h interval (deploy ➡ reload ➡ update by hand = same friction as th website) · "use Obtainium if it's there, else th website apk" · 6 h delay ok 4 users
+- **dc**: `Update.Via` fr installer o record: OBTAINIUM ➡ notify only aft `GRACE_H` 8 h o th same version, tap = `obtainium://refresh?id=<pkg>` (Obtainium wiki deep link; no link can INSTALL) · SELF ➡ PackageInstaller session (not ACTION_VIEW) so WE become installer o record ➡ Android 12+ + `UPDATE_PACKAGES_WITHOUT_USER_ACTION` ➡ worker installs silently, `UpdatedReceiver` posts "✔️ X installed" · 1st self-update / < 12 ➡ 1 confirm · STORE ➡ nothing
+- **y**: 0 taps 4 friends fr th 2nd update on · Obtainium keeps its job (we don't install over it: it declares ENFORCE_UPDATE_OWNERSHIP ➡ extra prompts)
+- **alt**: install over Obtainium installs ourselves (❌ ownership prompt + 2 updaters fighting) · Shizuku (❌ setup 4 friends) · daily nag 4 Obtainium too (❌ noise, its bg wins mostly)
+- **ck**: `UpdateWorkerTest` 8 (per installer · grace · silent · fallback) · `UpdateTest` via/silentRule · DEV ⚙️ "🧪 bg update check now · installer: X"
 ### D-022 @1113 · reader gestures: double-tap = turn page · 📐 dog-ear = turn · 1st chapters peek + hint · ✔️
 - **ctx**: QA r5: am0 found page turn by accident ("NICE") ➡ needs discovery · "double tap = turn page, drop bookmark-via-double-tap"
 - **dc**: `LocalPageTurn` (ChapterScreen) ⬅ VerseView `onDoubleClick` + paper `detectTapGestures` · `DogEar` bottom-right (tap = turn) · until 3 own turns (`omm_ui` SharedPrefs "turns"): page lifts 2× + pill "swipe or double-tap" ~6 s · 🔖 = verse menu only

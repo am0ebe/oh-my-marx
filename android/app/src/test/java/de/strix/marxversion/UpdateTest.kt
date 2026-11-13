@@ -62,13 +62,24 @@ class UpdateTest {
         assertEquals("https://scagent.de/oh-my-marx/dev/", Update.base(true))
     }
 
-    @Test fun storesAndObtainiumUpdateThemselves() {
-        assertFalse(Update.wantedFor("dev.imranr.obtainium.fdroid"))
-        assertFalse(Update.wantedFor("com.android.vending"))
-        assertFalse(Update.wantedFor("org.fdroid.fdroid"))
-        assertTrue(Update.wantedFor(null))                                   // adb / unknown
-        assertTrue(Update.wantedFor("com.google.android.packageinstaller")) // browser download ➡ tap apk
-        assertTrue(Update.wantedFor("de.strix.marxversion"))               // our own self-update
+    @Test fun whoBringsTheUpdate() {
+        assertEquals(Update.Via.OBTAINIUM, Update.via("dev.imranr.obtainium"))
+        assertEquals(Update.Via.OBTAINIUM, Update.via("dev.imranr.obtainium.fdroid"))
+        assertEquals(Update.Via.STORE, Update.via("com.android.vending"))
+        assertEquals(Update.Via.STORE, Update.via("org.fdroid.fdroid"))
+        assertEquals(Update.Via.SELF, Update.via(null))                                   // adb / unknown
+        assertEquals(Update.Via.SELF, Update.via("com.google.android.packageinstaller")) // browser download ➡ tap apk
+        assertEquals(Update.Via.SELF, Update.via("de.strix.marxversion.dev"))           // our own self-update
+    }
+
+    /** silent only once WE installed ourselves, on Android 12+ */
+    @Test fun silentRule() {
+        val me = "de.strix.marxversion.dev"
+        assertTrue(Update.silentOk(me, me, 31))
+        assertFalse(Update.silentOk(me, me, 30))
+        assertFalse(Update.silentOk("com.google.android.packageinstaller", me, 35))
+        assertFalse(Update.silentOk(null, me, 35))
+        assertFalse(Update.silentOk("dev.imranr.obtainium", me, 35))
     }
 
     @Test fun nagRule() {

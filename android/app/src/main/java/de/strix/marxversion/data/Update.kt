@@ -1,7 +1,9 @@
 package de.strix.marxversion.data
 
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageInstaller
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
@@ -23,10 +25,11 @@ import java.security.MessageDigest
  * 🆕 self-update 4 friends who installed th APK by hand (QA r5 @1113: "must nvr sit on a stale version").
  *  1) version.json next 2 th download page (bin/lib.sh writes it on evy deploy/ship: version · code · apk · sha256)
  *     stable app ➡ <web>/version.json · DEV app (.dev) ➡ <web>/dev/version.json = th channel it came from
- *  2) checked on app start (Today banner) + ~daily i th background (notify/UpdateWorker.kt ➡ system notification)
- *  3) tap ➡ UpdateDialog: download th APK (sha256 checked) ➡ Android's own install dialog (REQUEST_INSTALL_PACKAGES)
+ *  2) checked on app start (Today banner) + ~daily i th background (notify/UpdateWorker.kt)
+ *  3) by installer (Via): Obtainium ➡ poke it (obtainium://refresh) · self ➡ download (sha256 checked) + PackageInstaller
+ *     session: 1st ti 1 confirm, then WE r installer o record ➡ Android 12+ installs silently (D-023)
  *     same signing key ➡ installs over th old app, data stays
- * Skipped when an app store / Obtainium installed us: they update th app themselves ➡ no 2nd notice.
+ * Skipped when an app store installed us (it updates th app itself).
  * Fails soft evywhere: offline / garbage / 404 = no update, nvr a crash.
  */
 object Update {
@@ -41,18 +44,47 @@ object Update {
 
     data class Latest(val version: String, val code: Int, val apk: String? = null, val sha256: String? = null)
 
-    /** installers th update th app by themselves (Obtainium · its F-Droid flavour · F-Droid · Neo Store · Droid-ify · Aurora · Play) */
-    private val UPDATERS = listOf("dev.imranr.obtainium", "org.fdroid.", "com.machiav3lli.fdroid", "com.looker.droidify",
-        "com.aurora.store", "com.android.vending")
+    /** app stores th update th app by themselves, nothing 2 do (F-Droid · Neo Store · Droid-ify · Aurora · Play) */
+    private val STORES = listOf("org.fdroid.", "com.machiav3lli.fdroid", "com.looker.droidify", "com.aurora.store", "com.android.vending")
+    private const val OBTAINIUM = "dev.imranr.obtainium"   // + its ".fdroid" flavour
 
-    /** 🧪 seam: true = nobody else will tell th usr (browser download · file manager · adb · our own self-update) */
-    internal fun wantedFor(installer: String?) = installer == null || UPDATERS.none { installer.startsWith(it) }
+    /**
+     * who brings th next version (am0 @1113: "use Obtainium if it's there, else th website apk"):
+     *  OBTAINIUM = it installed us ➡ we only poke it (`obtainium://refresh?id=…`) · its own bg updates (6 h) usually win
+     *  SELF = browser / file manager / adb / our own earlier self-update ➡ we download + install (silent once we're installer)
+     *  STORE = a store ➡ nothing
+     */
+    enum class Via { OBTAINIUM, SELF, STORE }
 
-    /** banner / notification makes sense only if nothing else will tell th usr */
-    fun wanted(ctx: Context): Boolean = wantedFor(runCatching {
+    /** 🧪 seam */
+    internal fun via(installer: String?): Via = when {
+        installer == null -> Via.SELF
+        installer.startsWith(OBTAINIUM) -> Via.OBTAINIUM
+        STORES.any { installer.startsWith(it) } -> Via.STORE
+        else -> Via.SELF
+    }
+
+    /** installer o record (null = adb / unknown) */
+    fun installer(ctx: Context): String? = runCatching {
         if (Build.VERSION.SDK_INT >= 30) ctx.packageManager.getInstallSourceInfo(ctx.packageName).installingPackageName
         else @Suppress("DEPRECATION") ctx.packageManager.getInstallerPackageName(ctx.packageName)
-    }.getOrNull())
+    }.getOrNull()
+
+    fun via(ctx: Context) = via(installer(ctx))
+
+    /** banner / notification makes sense unless a store handles it */
+    fun wanted(ctx: Context): Boolean = via(ctx) != Via.STORE
+
+    /** 🤫 Android 12+ installs w/o asking only if WE r th installer o record (= aft our 1st, confirmed self-update) */
+    internal fun silentOk(installer: String?, me: String, sdk: Int) = sdk >= 31 && installer == me
+    fun silentOk(ctx: Context) = silentOk(installer(ctx), ctx.packageName, Build.VERSION.SDK_INT)
+
+    /** 🔄 Obtainium: check this 1 app now (wiki "Deep Links": obtainium://refresh?id=<app id>, id = package) */
+    fun obtainiumRefresh(ctx: Context): Intent =
+        Intent(Intent.ACTION_VIEW, Uri.parse("obtainium://refresh?id=" + ctx.packageName)).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+
+    /** Obtainium users: its bg check (6 h) gets a head start ➡ we only nag aft GRACE_H hours o th same version */
+    const val GRACE_H = 8
 
     /** 🧪 DEV app only: newest build on <web>/dev/ (null = offline / not DEV) · th app says honestly if it's stale (@1107) */
     suspend fun devLatest(): Latest? = withContext(Dispatchers.IO) {
@@ -65,7 +97,10 @@ object Update {
         setRequestProperty("Cache-Control", "no-cache")
     }
 
-    private fun fetchText(url: String): String = open(url).inputStream.bufferedReader().use { it.readText() }
+    internal fun fetchText(url: String): String = open(url).inputStream.bufferedReader().use { it.readText() }
+
+    /** ❌ last install failure (notify/InstallReceiver) ➡ UpdateDialog shows it + th web fallback */
+    val installError = kotlinx.coroutines.flow.MutableStateFlow<String?>(null)
 
     /** 🧪 seam (JVM-testable, kotlinx json: org.json is stubbed in unit tests) · throws on garbage / missing version */
     internal fun parse(text: String): Latest {
@@ -128,8 +163,29 @@ object Update {
     /** ⚙️ th system page where th usr allows it (comes back 2 th app aft) */
     fun allowIntent(ctx: Context) = Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, Uri.parse("package:" + ctx.packageName))
 
-    /** 📦 Android's install dialog 4 th downloaded apk (FileProvider ➡ res/xml/file_paths.xml "update") */
+    /** 📦 Android's install dialog 4 th downloaded apk (FileProvider ➡ res/xml/file_paths.xml "update") · fallback only */
     fun installIntent(ctx: Context, apk: File): Intent = Intent(Intent.ACTION_VIEW)
         .setDataAndType(FileProvider.getUriForFile(ctx, ctx.packageName + ".files", apk), "application/vnd.android.package-archive")
         .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_ACTIVITY_NEW_TASK)
+
+    /**
+     * 📦 install via a PackageInstaller session = WE become th installer o record ➡ nxt update can be silent (Android 12+).
+     * always asks 4 USER_ACTION_NOT_REQUIRED: not eligible (1st ti, < 12) ➡ Android asks th usr anyway (InstallReceiver
+     * shows its dialog) · result ➡ notify/InstallReceiver.kt · `bg` = no screen 2 show a dialog on ➡ notification instead
+     */
+    fun installSession(ctx: Context, apk: File, bg: Boolean) {
+        val pi = ctx.packageManager.packageInstaller
+        val p = PackageInstaller.SessionParams(PackageInstaller.SessionParams.MODE_FULL_INSTALL).apply {
+            setAppPackageName(ctx.packageName)
+            if (Build.VERSION.SDK_INT >= 31) setRequireUserAction(PackageInstaller.SessionParams.USER_ACTION_NOT_REQUIRED)
+        }
+        val id = pi.createSession(p)
+        pi.openSession(id).use { s ->
+            s.openWrite("omm.apk", 0, apk.length()).use { o -> apk.inputStream().use { it.copyTo(o) }; s.fsync(o) }
+            val i = Intent(ctx, de.strix.marxversion.notify.InstallReceiver::class.java).putExtra(EXTRA_BG, bg)
+            // MUTABLE: th system adds status + th confirm intent 2 it (explicit intent ➡ safe)
+            s.commit(PendingIntent.getBroadcast(ctx, id, i, PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_UPDATE_CURRENT).intentSender)
+        }
+    }
+    const val EXTRA_BG = "bg"
 }

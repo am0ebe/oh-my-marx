@@ -138,6 +138,13 @@ fun ReleaseNotes() {
                 fontSize = 12.sp, color = Red, fontWeight = FontWeight.Bold)
             else -> Text(tr("✔️ neuester Dev-Build", "✔️ newest dev build"), fontSize = 12.sp, color = MaterialTheme.colorScheme.secondary)
         }
+        // 🧪 DEV: run th daily bg update check NOW (D-023 fon test: silent path wo waiting a day) · installer shown 4 th test
+        val ctx = androidx.compose.ui.platform.LocalContext.current
+        val who = remember { Update.installer(ctx) ?: "adb/?" }
+        androidx.compose.material3.TextButton(onClick = {
+            androidx.work.WorkManager.getInstance(ctx).enqueue(androidx.work.OneTimeWorkRequestBuilder<de.strix.marxversion.notify.UpdateWorker>().build())
+            android.widget.Toast.makeText(ctx, "🧪 update check queued", android.widget.Toast.LENGTH_SHORT).show()
+        }) { Text("🧪 bg update check now · installer: $who", fontSize = 12.sp) }
     }
     // ⏳ DEV only: preview of th next release
     if (pending != null) {

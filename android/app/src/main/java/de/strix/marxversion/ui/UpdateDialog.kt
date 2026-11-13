@@ -43,10 +43,19 @@ fun UpdateDialog(vm: AppVm, onDismiss: () -> Unit) {
     var waitAllow by remember { mutableStateOf(false) }
     val openPage = { runCatching { ctx.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(Update.page))) }; onDismiss() }
 
+    // ❌ session failed (notify/InstallReceiver) ➡ web fallback
+    val err by Update.installError.collectAsStateWithLifecycle()
+    androidx.compose.runtime.LaunchedEffect(Unit) { Update.installError.value = null }   // fresh dialog = no stale error
+    // 🔄 Obtainium installed us ➡ let it do th update (D-023) · not there any more ➡ our own flow
+    val viaObtainium = remember { Update.via(ctx) == Update.Via.OBTAINIUM }
+    var obtainiumGone by remember { mutableStateOf(false) }
+
     fun install(f: File) {
         if (!Update.canInstall(ctx)) { waitAllow = true; runCatching { ctx.startActivity(Update.allowIntent(ctx)) }; return }
         waitAllow = false
-        if (runCatching { ctx.startActivity(Update.installIntent(ctx, f)) }.isFailure) failed = true
+        // session (not ACTION_VIEW) ➡ we become installer o record ➡ nxt updates silent (Android 12+)
+        Update.installError.value = null
+        if (runCatching { Update.installSession(ctx, f, bg = false) }.isFailure) failed = true
     }
     // back fr "allow installs" ➡ go on wo another tap
     LifecycleResumeEffect(waitAllow) {
@@ -59,8 +68,9 @@ fun UpdateDialog(vm: AppVm, onDismiss: () -> Unit) {
             val u = l
             when {
                 u == null -> Text(tr("Du hast die neueste Version (%s). ✔️", "You have the newest version (%s). ✔️").f(BuildConfig.VERSION_NAME))
-                failed -> {
+                failed || err != null -> {
                     Text(tr("Ging nicht — Internet? Lade sie auf der Webseite.", "Didn't work — internet? Get it on the web page."))
+                    err?.let { Text(it, fontSize = 11.sp, color = MaterialTheme.colorScheme.secondary) }
                     Button(onClick = openPage, modifier = Modifier.fillMaxWidth().padding(top = 10.dp)) { Text(tr("🌐 Webseite öffnen", "🌐 Open web page")) }
                 }
                 else -> {
@@ -69,6 +79,9 @@ fun UpdateDialog(vm: AppVm, onDismiss: () -> Unit) {
                         fontSize = 13.sp, color = MaterialTheme.colorScheme.secondary, modifier = Modifier.padding(top = 4.dp))
                     val p = progress
                     when {
+                        viaObtainium && !obtainiumGone -> Button(onClick = {
+                            if (runCatching { ctx.startActivity(Update.obtainiumRefresh(ctx)) }.isSuccess) onDismiss() else obtainiumGone = true
+                        }, modifier = Modifier.fillMaxWidth().padding(top = 12.dp)) { Text(tr("🔄 In Obtainium aktualisieren", "🔄 Update in Obtainium")) }
                         waitAllow -> {
                             Text(tr("Einmalig: erlaube „Apps aus dieser Quelle installieren“ für Oh My Marx, dann zurück.",
                                 "One time: allow “install apps from this source” for Oh My Marx, then come back."),
