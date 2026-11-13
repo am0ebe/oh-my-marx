@@ -21,7 +21,7 @@ _entry page = click-thru start · details live i th linked files · design + dec
 - dev build = **next** release + `-dev.MMDD.HHMM`, automatic (`deploy.sh` ➡ `-PdevBase`)
   - 0.8.0 shipped ➡ dev = `0.9.0-dev.1107.1430` = "test build o th coming 0.9.0"
 - `versionCode` = minutes since 2026-01-01 ➡ evy build counts as newer · dev ⬄ stable nvr a downgrade err
-- 🆕 in-app update banner = only 4 hand-installed APKs · Obtainium / F-Droid / store installs + DEV app ➡ nvr (`data/Update.kt`)
+- 🆕 updater (`data/Update.kt` + `notify/UpdateWorker.kt`, D-021/023) by installer o record: Obtainium ➡ notif aft 8 h, tap = `obtainium://refresh` · browser/adb ➡ notif ➡ DL + 1 confirm, then WE r installer ➡ Android 12+ silent · stores ➡ nothing · DEV app reads `dev/version.json` · DEV ⚙️ "🧪 bg update check now · installer: X" = tst hook
 
 ## 🌊 release wflo
 1. code ➡ `bin/deploy.sh` (`-a` = + wireless adb now) ➡ fon: Obtainium ➡ pull 2 refresh ➡ tap **Update** on th DEV entry

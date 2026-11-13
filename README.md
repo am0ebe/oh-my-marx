@@ -62,7 +62,7 @@ Bookmarks, notes, streak and settings stay on the phone. Three things talk to `s
 Germany): the update check (reads `version.json`), the anonymous *read along* counter
 ([`server/omm_api.py`](server/omm_api.py), ~200 lines of Python stdlib: page keys + a daily random token, no IPs) and,
 once you use them, comments and reading circles (a [Matrix](https://matrix.org) homeserver, config in
-[`server/matrix/`](server/matrix/)). *Read along* can be switched off in ⚙️.
+[`server/matrix/`](server/matrix/)). *Read along* is always on since 0.9.1 (no switch).
 
 ### Known gaps
 
@@ -70,7 +70,7 @@ once you use them, comments and reading circles (a [Matrix](https://matrix.org) 
 - Circle chats are not end-to-end encrypted.
 - Synapse keeps its default client-IP records (~28 days) for comment accounts.
 - Releases are signed with a debug key so far.
-- *Read along* is on by default.
+- *Read along* cannot be switched off (anonymous daily token, no IPs).
 
 ## Layout
 
@@ -81,7 +81,7 @@ android/          Android Studio project (module app)
     ui/               Compose screens: Today (cards), Read (book), Plans, Circle, My Capital, Settings, Hooked
     data/             Room DB · DataStore · assets JSON · i18n · counter · Matrix · update check
     logic/            pure Kotlin: verse of the day, streak, holidays, voice DSP ➡ unit-tested
-    notify/           daily notification · widget · quick-settings tile
+    notify/           daily notification · widget · quick-settings tile · update worker
 bin/              content pipeline (Python + local LLM via ollama) · deploy.sh (dev) · ship.sh (release)
 data/             pipeline intermediates: verses, alignment, scores, translations
 server/           counter API · Matrix config · SERVICE.md (what the server side needs)
@@ -104,8 +104,10 @@ Nobody edits it by hand: `bin/ship.sh minor|patch|major` bumps it. Two channels,
 
 Dev builds are labelled with the coming version automatically (shipped `0.8.0` ➡ dev shows `0.9.0-dev…`).
 `versionCode` = minutes since 2026-01-01, so every build counts as newer and switching channels never needs a
-downgrade. The in-app update notice only shows for people who installed the APK by hand: Obtainium, F-Droid and
-stores update the app themselves, and the DEV app never shows it.
+downgrade. Updates depend on who installed the app: stores update it themselves; Obtainium gets a head start and
+the app only nudges it (`obtainium://refresh`) if a version is still missing after 8 h; hand-installed APKs get a
+daily background check, a notification and a one-tap install. After that first install the app updates itself
+silently on Android 12+. The DEV app follows `scagent.de/oh-my-marx/dev/`.
 
 Release cycle:
 
