@@ -309,6 +309,18 @@ _per concept 2-3 lines_
 
 ## 🗃️ pruned fr todo_omm @1113 (detail + old ✔️)
 
+### ✂️ BL hygiene @1113 — prune_1113.md applied (🦠 ✔️ via M8) · old lines verbatim
+- **dropped** (5):
+  - 🌐 web/PWA 4 iPhone friends — later, rebuild (no shake, new voices) · _y: no iPhone demand logged_
+  - 🔑 real release key + `apksigner rotate` · in-app download + install dialog (costs REQUEST_INSTALL_PACKAGES) · _y: Play-Store-only need · in-app install = done (D-023)_
+  - 💡 lang packs (only if APK > ~30 MB): ship EN+DE, oth `full_xx.json.gz` on VPS ➡ download on lang pick (sha256 fr version.json) · _y: 29.7 MB, no pressure_
+  - 🏗️ AGP 9 + compileSdk 37 · _y: bump when forced_
+  - 🦠🧪 install Android Studio (tarball, reuses `~/Android/Sdk`) ➡ notes.md § reading guide · _y: gradle CLI builds evything_
+- **demoted**: 📦 Ask Marx ⭐ ➡ no ⭐ · 👥 community nxt ➡ split: QR + report/mod stay "nxt", 7 oth ➡ 💡 ideas line
+- **moved**: 🎮 gamify: Tamagotchi-style Marx avatar + xp · starts weak/fragile ➡ fit on streak · pick ur avatar · xfer 2 oth apps (cali!) ➡ `pr/cali/notes.md` § 🔵 · 🔊⭐ realistic persona voices (plan § voice 🗺️: A Chatterbox pre-render on tow ➡ C distill 2 Piper ~20-60 MB · ref voice = 🦠/consenting friend) ➡ pr/audio (`voice/` + todo_audio alr hv it), omm keeps a 1-line pointer
+- **promoted**: 🦠 P3 habit test 2w ➡ ‼️ ("do now o drop" ➡ softer)
+- **new**: 💡 small Marx animation (🔵) · ✂️ rule: flag drop candidates i todo, nvr rm wo 🦠 ok
+
 ### ⏳ resume @1113 eos #3 — detail
 - ▶ **RESUME @1113 eos #3** — big round pt 1 on main `7ff0aa3` (74 tsts + build green, ❌ not deployed) ➡ qa_1112 § big round pt 1 · D-024..027 · DEV on fon = still A (r4+r5+r5b)
   - ✔️ M8 follow-ups @1113: FÜFNZEHNTES + id migration (D-028) · 13,120-125 + ch17 intro align · UI + plan fan-in 11 langs · ❌ not deployed
