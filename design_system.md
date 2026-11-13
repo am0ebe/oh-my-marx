@@ -123,10 +123,10 @@ _now 7 looks: `Button` · `OutlinedButton` · `TextButton` · `AssistChip` · `F
 ### 5 kinds — nothing else
 | # | kind | look | wh | max |
 |---|------|------|----|-----|
-| 1 | **Primary** | red fill · white label-l bold · pill · **L** h 52 full-width / **S** h 40 hug | THE action: Amen · day done · start plan · install · send | 1 per screen / dialog / panel |
+| 1 | **Primary** | red fill · white label-l bold (L = 16sp) · pill · **L** h 52 full-width / **S** h 40 hug | THE action: Amen · day done · start plan · install · send | 1 per screen / dialog / panel |
 | 2 | **Tonal** | blueTint fill · blue label-l · pill h 40 | 2nd actions: found / join · copy link · share targets · refresh | 2 side by side |
 | 3 | **Text** | blue label-l, no fill · h 40 | defer / leave / more: "Later" · "Show me" | — |
-| 4 | **ActionItem** | mono icon + label-m under it · 48 target · style **Circle** (redTint disc 44) o **Bare** | icon rows: quote card row · About row = Circle · verse menu i th book = Bare | 5 per row |
+| 4 | **ActionItem** | mono icon + label-m under it · 48 target · style **Circle** (blueTint disc 44 + blue icon · red disc = 2 loud next 2 Primary) o **Bare** | icon rows: quote card row · About row = Circle · verse menu i th book = Bare | 5 per row |
 | 5 | **Chip** | pill h 32 · label-m · **Choice** (toggle: off = paperDeep, on = redTint + ✓ + red txt) o **Suggest** (tap = go: paperHi + `outline`) | persona · "also post 2 reading room" = Choice · Marxoscope topics · Hooked bench = Suggest | wraps |
 - **singletons** (1 look, fixed spot): ★ CloseStar (36 visual, top-end o dialogs + sheets) · Switch (red track) · MoreChip "read more ▾" (redTint) · CountChip "💬 N" · DogEar 📐
 - 🚫 gone: outlined btns · AssistChip · emoji i labels ("🤖 Los" ➡ "Start") · 2 Primaries i 1 view · full-width Tonal stacks (share panel ➡ list rows)
@@ -151,6 +151,7 @@ _now 7 looks: `Button` · `OutlinedButton` · `TextButton` · `AssistChip` · `F
 - **B** 👍 sinks 3dp on press + 📳 = satisfying (Duolingo feel, qa-R1) + fits a printing press · 👎 loud if evy btn does it · r8 breaks round = tappable
 - **C** 👍 most bookish · 👎 weak affordance, 48dp targets hard, bad 4 th daily Amen
 - 🤖 **pick: A evywhere + B's press edge only on Primary-L** (pill keeps its shape, 4dp redDeep under it, sinks on press) ➡ th 1 daily btn feels physical, rest stays quiet
+- 👀 **rendered** (pick by eye): `DsGalleryTest` (test-only, ❌ ships) ➡ `android/app/build/shots/ds_buttons.png` = 0 now · A · A+ (pick) · B · C · run: `./gradlew testDebugUnitTest --tests "*DsGalleryTest*" -Pshots --rerun`
 
 ### now ➡ ds
 | now | ➡ |
