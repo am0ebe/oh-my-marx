@@ -306,3 +306,69 @@ _per concept 2-3 lines_
 ## icon
 - Marx (J. J. E. Mayall, London 1875, PD) · crop face ➡ sepia ➡ circle ➡ gold halo · on Parteibuch-rot
 - `magick` cmds: crop 700x700+480+290 ➡ 220px ➡ circle mask ➡ ellipse halo @y106 ➡ `res/mipmap-xxxhdpi/ic_marx_fg.png`
+
+## 🗃️ pruned fr todo_omm @1113 (detail + old ✔️)
+
+### ⏳ resume @1113 eos #3 — detail
+- ▶ **RESUME @1113 eos #3** — big round pt 1 on main `7ff0aa3` (74 tsts + build green, ❌ not deployed) ➡ qa_1112 § big round pt 1 · D-024..027 · DEV on fon = still A (r4+r5+r5b)
+  - ✔️ M8 follow-ups @1113: FÜFNZEHNTES + id migration (D-028) · 13,120-125 + ch17 intro align · UI + plan fan-in 11 langs · ❌ not deployed
+  - then 🦠 fon tst updater (D-023), 5 steps i last sesh's reply: 1 Obtainium ➡ install A (⚙️ What's new shows `installer: dev.imranr.obtainium`) · 2 "B" ➡ 🤖 `bin/deploy.sh -q` ➡ banner ➡ "Update in Obtainium" · 3 browser APK over it · 4 "C" ➡ DL + 1 confirm ➡ installer = `….dev` · 5 "D" ➡ "🧪 bg update check now" ➡ silent + "✔️ installed" notif (🔑 least sure) · 🤖 deploy only on am0's letter
+  - then fon QA r5 (note bubble · double-tap/dog-ear · % · ⚙️) ➡ 🤖 D3 Amen ➡ snippet bottom (D-015) · big round 3/4/6/7 (🔵)
+  - 📸 b4 handing any UI change 2 am0: `./gradlew testDebugUnitTest --tests '*ShotsTest*' -Pshots --rerun` ➡ `android/app/build/shots/` ➡ montage + look (D-019)
+  - 👤 strix: Changelog 0.9.1 wording · name label (D-016 alts) · ★ vs ✕ on note (D-017) · verse share gone on Today too (D-018) · 💬 qa_1112 Q2 Mitlesen · Q5-7 · stray `pr/omm/▐qq` ➡ rm? · native check hi/bn/ur/id · KeePass keystore note
+  - ⚠️ traps: origin = Forgejo (only push target) · `gh` = GitHub fetch-only, mirror carries it (ship.sh waits ≤120 s) · gradle needs `JAVA_HOME=~/.local/opt/jdk21` (lib.sh sets it) · zsh `tr` alias, bare `===` · gradle test cached aft deleting shots ➡ `--rerun` · VPS = ops-owned (pr/ops/omm.md), nvr edit Caddy//srv · `android/omm.properties` (reg token) needed 4 comments/Kreise · fon screenshots only aft asking
+
+### ‼️ QA sprint 0.9.x + feedback — detail
+- ⭐🧪 **QA sprint 0.9.x** — r1-r3 ⚡ done (fan-out lanes, 0 conflicts) · left ➡ [qa_1112.md](qa_1112.md): 🎨 10 design proposals (D1 landing · D2 book look · D3 Amen ➡ snippet · D4 auto-scroll feed …) · 🔍 5 research (Duolingo · YouVersion share · Fogg txt · Luddites/AI plan · feedback) · 💬 open Qs
+  - ❓ streak widget "shd show 2 at start" = ? (still unanswered)
+  - **later** (needs design, not this sprint): 📖 Read = real book look + page flip · ⏰ daily verse can't be turned off (🔍 bible apps' timing) · ❓ name entry · 🔮 Marxoskop tiles · 🔓 Lesekreis progressive disclosure (unlock aft ~1 month, Mi) · 🏷️ quotes off-topic sometimes ➡ manual sort per cat
+- 📨⭐ **user feedback** — 1st real users = gold · 🔑 most imp signal
+  - **log** ➡ `feedback.md` (who · wh · date)
+    - M: "share" unclear (share wh? th app?) ➡ didn't try · auto Signal/oth share ✔️ · loved shake (didn't K possible) · playful · Tagesflow + Ahnen anim "fetzig" · "Mahlzeit…" note hit right while eating (time-of-day ✔️) · übersichtlich · 12 MB = good code · Marxoskop nice
+    - M2 (dev): uneasy w a precompiled APK ➡ wants source ➡ link GitHub/Forgejo src visibly
+    - Jan (dev): liked th AI-slop-w-creative-funny-msg plans
+    - Mi (@1112 scrap): 👍 read plan good + not 2 long · anim geil · langs awesome · Krise shake awesome · 👎 voice · neg conditioning · Orden 2 real-socialist · ☭ 2 much · leseplan not continuous (same page 2×) + no reward · share unclear · quotes sometimes off · 💡 Lesekreis = good platform, onboard users 1st, unlock later · constrain urself: wh's core? (Rick Rubin) · thumb-zone map · update nag · in-app DL · metrics by version (cohorts) · GA alternatives?
+  - **system** — phase 1 = links only, no new server (plan: notes.md § 📨)
+    - ✔️ page: mail (fast) + GitHub issue link · Forgejo = code only (sign-up off ➡ no issues there)
+    - ✔️ GitHub: issue forms 🐛 + 💡 + "no account? mail" (`.github/ISSUE_TEMPLATE/`, live aft push) · labels `needs-triage` `from-app`
+    - ✔️ app ⚙️ ➡ Über: tappable "💬 Feedback" (0.9.0) · am0 @1108: go direct 2 issue/mail (QA lane B)
+    - 🤖🛠️ `/triage` skill: `gh issue list -l needs-triage` + Migadu inbox ➡ label · dedupe · draft reply · mail-feedback ➡ `gh issue create -l from-app` (reworded, no names)
+    - 🔵 phase 2 (aft QA rounds): in-app form ➡ `POST /feedback` (omm_api) ➡ priv inbox ➡ triage · CONTRIBUTING · CI
+
+### ‼️ LLM book qy + Matrix tst — detail
+- 🌍 **LLM book qy** (all 11 i th app since 0.8/0.9 · notes.md § 🌍): 👤 native QA zh/ar/hi/bn/ur · samples `bin/translate_full.py --show 5 --langs it es`
+  - 🔍 alt = existing translations: © per translator (life + 70 y, ZH 50 y) · ES Juan B. Justo 1898 (†1928 ➡ prob PD) · ZH 郭大力/王亚南 1938 (CN PD ~2027) · IT Cantimori (© til 2036) · marxists.org hosting ≠ PD · 🦠 decide aft comparing
+- 🦠📚 **Matrix + chat: K + tst**
+  - 🦠 re: notes.md § 🏗️ technical: Matrix (10 min) + `server/matrix/README.md`
+  - 🤖🧪 `bin/matrix_e2e.py`: 2 throwaway users ➡ Kreis gründen · beitreten · chat · Amen ➡ repeatable smoke tst vs live (th @1104 run wasn't saved) · + a bot user 🦠 can chat w fr th fon = tst chat alone
+  - 🤖🧪 `data/Matrix.kt` JVM tst vs a tiny fake HTTP server (register UIA 3 steps · join · timeline parse · redacted dropped) · needs `testImplementation("org.json:json:…")`
+
+### 🔵 big round — detail
+- 🤖 **big round** (QA r5 @1113, am0 "rest yes" ➡ parked 4 a data/btn round) · src ➡ qa_1112.md § r4 sweep + § big round pt 1
+  - ✔️ @1113 pt 1 (M8 order, non-design): #3 EN titles/gaps · #4 ch.1 TOC · #6 Today snippets · 📜 feed · 🔓 Hooked unlock · 🤖 Ludditen plan ➡ arch D-024..027 · not deployed
+  - #7 btn styles mixed: Today tinted circles (CardAction, now also ⚙️ About) · Kreis filled pills · Marxoskop outlined chips · Hooked AssistChips ➡ 1 system (D7) ➡ design system spec (pt 2)
+  - 🤖 teach translate.py PlanDay xd/xe (Ludditen bridges = EN i oth langs) · UI fan-in ✔️ @1113
+
+### ✔️ archive (≤@1107)
+- ✔️ @1107: Obtainium DEV cause found (entry on defaults) · DEV app honest build status (dev/version.json) · remotes split (origin = Forgejo, gh fetch-only) + ship.sh waits 4 mirror · Orden · Hero · Amen · MarxDialog · freeze fix · fr/ru/id whole book
+- ✔️ @1106: 0.8.0 shipped (whole book IT/ES/PT/ZH/AR) · ship.sh self-bump · page Stable|Dev tabs + share + OG card + llms.txt · `--redo-bad` 243/272 · repo public + `priv/`
+- ✔️ @1105: 🔓 repo public (GPL-3.0 · Hooked OCR out o tree + history ➡ `re/boox/hooked/pages/` · README all EN · renamed `oh-my-marx` · Forgejo mirror) · bup `pr/.old/bibleApp_pre-filter_1104.bundle` · ⚠️ GH keeps old SHAs reachable = accepted risk
+- ✔️ @1105: 🆕 update check (`data/Update.kt`) · release flow (ship.sh ➡ tag + GH release, `notes.py`) · page EN + What's new + footer btns + favicon · /dev rm'd (deploy = adb) · Migadu `omm@` + `hey@` · keystore symlink · 🌍 full Kapital ➡ 5 langs overnight · `pr/bible/` rm'd
+- ✔️ dev 0.7.0 @1104: 👥 Lesekreise (5th tab): gründen w 6-char code (no look-alikes) · beitreten by code · 📤 invite text · today ✔️ per person (Amen ➡ `de.ohmymarx.amen` event i evy Kreis) · 🎟️ shared card (day counts only if all read) · chat · leave · e2e tstd on live server w 2 throwaway users · 3 tests · ⚠️ not E2E-encrypted (said i th UI) · 0.6.0 shipped + scagent.de/omm short link (ops)
+- ✔️ dev 0.6.0 @1103 (2): 📉 Krise translated (card + flash, 7 langs) · 🌅 Teilen aus dem Buch = exactly th shown paragraph (long ➡ "…") · 📜 ⚙️ "Was ist neu" (ui/Changelog.kt, add on top b4 ship) · 🔵 DEV icon blue · Matrix README (why · friends chat · Element X · federation) · ops handoff ➡ now ops-owned runbook `pr/ops/omm.md` (bup §3i, fleet auto-rebuild/bump, mon, rip-out list) · contract = `server/SERVICE.md`
+- ✔️ dev 0.6.0 @1103: 💬 comments per book page (Matrix: Synapse `omm-matrix` on VPS, client-only, token signup, 31 chapter rooms, e2e tstd w throwaway user) · Caddy /omm/api + /_matrix live (via vps-claude, bak .bak-1103/-1103b) · /bible ➡ /oh-my-marx (0.5.2 shipped)
+- ✔️ dev @1103: 👥 community ① — `server/omm_api.py` (stdlib + sqlite, daily tokens, 5 tests) runs on VPS (`~am0/omm-api`, docker, `web` net, no public route yet) · app: ⚙️ Mitlesen opt-in, 👥 N× per book page, Home crowd line, INTERNET perm · dev build = own app `.dev` · README.md 4 friends · lib.sh: /oh-my-marx when it exists
+- ✔️ v0.5.1 @1103: name = **Oh My Marx** · `bin/deploy.sh` (dev channel /bible/dev ➡ Obtainium · `-a` = wireless adb) replaces dev.sh · `bin/ship.sh` + `-h/--help/-?` on both + tools list (`bin/lib.sh`) · 1 version (`val appVersion`) + auto versionCode
+- ✔️ v0.5.0 @1103: 🃏 Home = card carousel (cards 1st-class, no popup on open) · 📉 Krise = full-screen red flash + buzz + crisis card · ☭ swoosh on Amen/Tag geschafft · 📖 book reader (708 MEW pages, paper, page turn) · 😇 Saint Marx on cards · 🔖 double-tap bookmark · gold frame on marked · ✍️ inline notes · ❌ highlight btn + ⋯ · share-only dialog · ☭ = close · Jahresplan quotes fallback
+- ✔️ v0.4.0 @1103: gestures (popup stories · chapter swipe · pinch font · double-tap ☭ burst · hold palette · pull-down oracle · shake Krise) · 📋 copy icon · 🎉 confetti · 📳 haptics · 🚀 3 launcher shortcuts + ⚙️ QS tile · "Karl" restored (strix: can stay) · `dev.sh -q` = install wo launch
+- ✔️ v0.3.2 @1103: 🌅 notif/widget tap ➡ full-screen Losung (blurred card bg) · 🔊 prerender (tap = instant) + voice sample on chip tap · ⏰ picker always 24 h · 😇 new icon (halo + beard, notif + themed) · lang menu says "full txt: EN" · 🚫 "Karl" out o code/UI · 🩹 doubled quote marks · adb = SDK one (apt rm'd) · dev.sh tstd ✔️
+- ✔️ v0.3.1 @1102: 🔊 holy voices on-device (TTS ➡ wav per pitch layer ➡ mix + Freeverb hall ➡ MediaPlayer, cached) · ☭☁️ Gottvater Marx = new default · 5 DSP tests · repo ➡ GitHub am0ebe/bibleApp (priv) + gitea remote (repo not created yet)
+- ✔️ v0.3.0 @1101: 🎉 12 Feiertage (card motif + verse + greeting) · 🌅 time-o-day hero · 🔥 streak + 🕊️ Sabbat-Joker · 🎟️ Stempelkarte (2 gift) ➡ 7 ranks · 1 verse = reading day · 📱 widget · 🪝 Hooked-Modus + lesson page (4 phases + 6 extras) · card popup on tap + on evy Teilen · About: proudly vibecoded · notes: friends-wo-adb table + store FAQ
+- ✔️ v0.2.0 @1031: name bibleApp · nav 🐛 (restoreState ➡ ⚙️) · Marx icon = home · lang dropdown + 7 langs (UI 101/101) · wheel time picker, greyed when Losung off · 🧪 Testmodus (= Fetisch + reroll/notif/popups/reset) · TTS 🐛 `<queries>` + personas · 🌅 daily Losung popup w share · verse tap ➡ labelled icon bar (palette replaces 4 ○) · copy · "Morgen: …" teaser (load nxt trigger) · About: version + vibecoding
+- ✔️ plan + research @1028
+- ✔️ P0 KB intake: OCR (gemma3 + glm-ocr 4 TOC) · hooked.md § 7 · kapital_toc.md · notes.md · tags.py ☭ · pr/CLAUDE.md row @1028
+- ✔️ P1 fetch · split (1949 Absätze, 1103 Fußnoten, MEW pages) · align DE⬄EN (10/10 spot-check) @1028
+- ✔️ P1 score (1873) · rank ⭐288 🔥82 · verbatim quotes · 9 plans / 404 days · 92 Andachten DE+EN @1028
+- ✔️ P2 Android MVP: APK 15 MB builds · 4/4 JVM tests · Marx icon w halo · not yet run on a device @1028
+- ✔️ toolchain user-space: JDK 21 · Gradle 8.14.3 · Android SDK 36 @1028
+- ✔️ `.stignore`: + `**/.gradle/` `**/.kotlin/` @1028
