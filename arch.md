@@ -18,6 +18,46 @@ _SDD: code says **wh** · th file says **y** · drift = a bug · fmt ➡ `pr/vib
 - 🔥 hot files (1 owner at a ti — fan-out lanes nvr split these): `assets/content/i18n_*.json` + `data/i18n/*.jsonl` (translate pass = fan-in only) · `android/app/build.gradle.kts` (version) · `ui/Changelog.kt` · `res/values*/strings.xml` · `TodayScreen.kt` · `MineScreen.kt` · `Share.kt`
 
 ## 🧾 decisions (newest on top)
+_🎨 D-029..036 @1113 = design system, all 💬 (🦠 decides · 🤖 pick = 1st option) · spec ➡ [design_system.md](design_system.md) § 0 = same list as a table · ❌ no code yet_
+### D-036 @1113 · Today above th fold (qa-D1): compact hero + stamp tag · 💬
+- **ctx**: 🦠 "landing shd fit verse + streak widget + read-plan btn" · now hero (star 92 + week row + stamp row + rank) + card ➡ plan entry below th fold
+- **options**: **a) compact hero 120dp (star 48 + 7 day dots + Tag "☭ 3/10"), full stamp card ➡ My Capital** (🤖 pick) · b) keep hero, shrink quote card · c) hero collapses on scroll
+- **y**: a = only one th fits both sizes by budget (412×915: 599 o 730 · 360×760: 542 o 592) + keeps th card big (it's th content) · b ❌ smaller quote = worse share img match · c ❌ nothing fits b4 th 1st scroll
+- **ck**: shots `today*` at 360×760: hero + card + actions + plan row visible · stamp card i `mine`
+### D-035 @1113 · sounds (qa-R1 "Duolingo-satisfying"): 3 tiny, dflt off · 💬
+- **options**: a) none, haptics only · **b) page rustle · stamp thud · badge chime (≤ 300 ms), 1 ⚙️ switch, dflt off, follows ringer** (🤖 pick, later lane L6) · c) on by dflt
+- **y**: haptics 1st = 90 % o th feel 4 0 assets · sound = opt-in (reading i bed / train) · c ❌ surprise noise = uninstall
+- **ck**: ⚙️ switch · no audio focus taken · APK + < 100 KB
+### D-034 @1113 · daily Amen fx = CheckPop · sickle swoosh = rare (rank-up / full stamp card) · 💬
+- **ctx**: swoosh 2.3 s evy day + Orden dialog aft a fixed 2600 ms wait ➡ daily tap feels long, rewards collide
+- **options**: a) as now · **b) daily = CheckPop 1.2 s + 📳 · swoosh + confetti only on rank-up / card full / plan done · 1 celebration at a ti (queue)** (🤖 pick)
+- **y**: variable reward (Hooked) needs rare ≠ daily · D-004 calm · 🦠 QA: wants satisfying, not slow
+- **ck**: `Fx.kt` queue · tst: 2 rewards same tap ➡ shown 1 aft th oth, no fixed delay
+### D-033 @1113 · book font = system serif now · bundled face = 🧪 later · 💬
+- **options**: **a) system serif (Noto Serif)** (🤖 pick) · b) bundle Literata o EB Garamond (OFL, +0.3-1 MB, Latin + Cyrillic only)
+- **y**: 13 langs incl. ar · hi · bn · ur · zh ➡ a bundled face covers 3-4 o them, rest falls back = 2 looks · APK alr 29.7 o ~30 MB · b = 🧪 aft th system lands (1 token swap)
+- **ck**: no `res/font` · `OmmType.book*` = `FontFamily.Serif`
+### D-032 @1113 · dark theme "Nachtschicht": tokens now, wire later, follow system · 💬
+- **options**: a) light only · **b) follow system** (🤖 pick, L6) · c) b + ⚙️ toggle (light · dark · system)
+- **y**: night readers = real (NIGHT hero alr exists) · tokens cost nothing now + keep hard-coded colours out (guard) · wiring = own QA round (shots ×2) ➡ not i th 1st pass · c = 1 more setting, only if asked
+- **ck**: `Tokens.kt` hs both schemes · `Theme.kt` uses light til L6
+### D-031 @1113 · reader chrome: slim paper head, no bottom nav i a chapter · 💬
+- **ctx**: qa-D2 "book look: old · worthy · holy" · now red top bar + lavender nav frame th page = app, not book
+- **options**: a) as now · **b) slim paper head (back · chapter · 💬 N), bottom nav hidden, status bar = page colour** (🤖 pick) · c) full immersive, tap = toggle chrome
+- **y**: b = +~100dp page + th page becomes th screen, exit stays visible · c ❌ tap is taken (verse menu · double-tap turn D-022) + hidden exit
+- **ck**: shot `chapter`: no NavigationBar · back works fr deep link
+### D-030 @1113 · buttons (qa-D7): 5 kinds · look = pill tonal + press edge on th 1 big btn · 💬
+- **ctx**: 🦠 "clunky-generic-microsoft98style", wants 2-3 mockups · r4 sweep #7: 7 btn looks mixed
+- **dc (proposed)**: Primary (red pill, L 52 / S 40, max 1 per view) · Tonal (blueTint pill) · Text · ActionItem (icon + label, Circle / Bare) · Chip (Choice / Suggest) + singletons (★ · Switch · MoreChip · CountChip · DogEar) · no outlined btns, no emoji i labels
+- **options** (mockups ➡ design_system.md § 5): **A pill tonal + B's 4dp press edge on Primary-L only** (🤖 pick) · A pure · B letterpress evywhere · C rubric (txt + red rule)
+- **y**: round = tappable holds · press edge + 📳 = th satisfying daily tap (qa-R1) wo making evy btn loud · C ❌ weak affordance 4 th daily Amen
+- **ck**: `DesignGuardTest`: 0 M3 `Button(` / `OutlinedButton(` / `AssistChip(` outside `ui/ds/` · `ds_gallery` shot
+### D-029 @1113 · design system = [design_system.md](design_system.md) SSOT · tokens i `ui/ds/` · ratchet guard · 💬
+- **ctx**: M8 order (🦠): 1 spec 4 btns · nav · type · colour · space · components · motion · now: 21 txt sizes · ~60 hard-coded colours · 9 radii · `Theme.kt` fills 8 M3 roles (rest = lavender dflts)
+- **dc (proposed)**: 3 materials (paper · ink · cloth-blue) + red = act · gold = earned · round = tappable, rect = container · serif = Marx, sans = app + ppl · chrome = vector icons, emoji = content · flat (only th quote card lifts) · 9 txt sizes, sentences ≥ 14sp · 4dp grid · 5 radii · 5 voices (**my bubbles = blue, not gold**) · plan accents = stripe / disc / tag only, titles ink
+- **y**: evy rule answers a QA line (qa-D2 book look · D6 voices · D7 btns · r4 #7) o a measured fail (gold txt 1.6 · 5 o 9 plan accents < 4.5 · `Color.Gray` 3.1)
+- **alt**: restyle screen by screen wo tokens (❌ drifts again, = how we got here) · adopt a ready M3 theme builder palette (❌ loses paper + rubric)
+- **ck**: `DesignGuardTest` baseline only goes down · lanes L0-L5 ➡ design_system.md § 12 · ⚠️ overlaps D-015 (Amen ➡ snippet bottom, unbuilt) = lane L1
 ### D-028 @1113 · verse ids may move: split.py writes `data/id_moves.json` (old ➡ new by DE txt) + remaps pipeline data · app migrates marks + read log once · ✔️
 - **ctx**: M8 follow-up (am0 "Go"): DE source typo "FÜFNZEHNTES KAPITEL" ➡ Kap 15 opening sat i Kap 14 (14,37-39) + Kap 15 ids ran on fr 15,40 · fixing = 30 ids move · users' 🔖 ✍️ + progress must not break
 - **dc**: split.py `TYPOS` alias + guard (sec anchor w new Kap resets Absatz count) · moves = same DE txt, unique ➡ `id_moves.json` cumulative (chains composed) · same run renames ids i rank · andachten · i18n q · i18n_full v (no LLM re-run) · build.py ➡ assets `id_moves.json` · app `data/IdMoves.kt`: AppVm start ➡ if moves.size > Prefs `id_moves_done` ➡ 1 Room transaction renames Mark + ReadLog (collision ➡ merge) · DayLog = plan indices ➡ untouched
@@ -145,6 +185,7 @@ _SDD: code says **wh** · th file says **y** · drift = a bug · fmt ➡ `pr/vib
 - **y**: ❓ am0 · **ck**: `data/I18n.kt`
 
 ## ❓ open Qs
+- 💬 **🎨 design system D-029..036** (8 picks waiting ➡ design_system.md § 0) · gate 4 lanes = D-029 · D-030 · D-036
 - 💬 **streak**: (a) any reading day · (b) plan days only · (c) hybrid chip — Mi: 2nd "done" looks meagre next 2 big streak widget
 - 💬 **Mitlesen toggle**: rm? (QA lane B removed th note only) · 💬 ☭ close btn i MarxDialog: keep/rm? · 💬 "share app" prompt aft streak/medal?
 - ❓ streak widget "shd show 2 at start" = ? (todo ‼️ A)

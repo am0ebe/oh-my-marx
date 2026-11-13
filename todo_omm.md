@@ -18,8 +18,9 @@
 ## 📆
 
 ## 🔵
-- 🤖 **big round** pts 3/4/6/7 left (QA r5 @1113) · src qa_1112.md § r4 sweep + § big round pt 1 · pt 1 ✔️
-  - #7 btn styles mixed (Today circles · Kreis pills · Marxoskop chips · Hooked AssistChips) ➡ 1 system (D7) ➡ design spec · 🤖 translate.py PlanDay xd/xe (Ludditen bridges = EN i oth langs)
+- 🎨⭐ **design system** — spec ✔️ @1113 ➡ [design_system.md](design_system.md) (tokens · 5 btn kinds · voices · per-screen deltas) · 💬 🦠: 8 picks D-029..036 (§ 0, "picks ok" = enough)
+  - then 🤖 lanes: L0 foundation (`ui/ds/` + guard) ➡ L1-L5 fan-out ➡ fan-in ➡ fon QA · covers big round #7 + qa-D1 · D3 (D-015) · D5-D9
+- 🤖 **big round** left (QA r5 @1113): translate.py PlanDay xd/xe (Ludditen bridges = EN i oth langs) · #7 btn styles ➡ design system ⬆ · src qa_1112.md § r4 sweep
 - 🧪 self-update (D-021) on a real fon: 1st DEV deploy aft r5 ➡ old DEV (adb-installed) gets th notification wi ~1 d · Obtainium-installed = skipped by design
 - 🦠🔑 keystore: ✔️ symlink @1105 · left: KeePass note (`base64 -w0`, notes.md § 🔑) · 1 offline/restic copy · lap same `ln -s` (➡ sys ansible?)
 - 💬 ops (optional): `/omm/*` ➡ `/oh-my-marx/{path}` (Obtainium URL `scagent.de/omm/`) · `/omm/src` ➡ GitHub 302 · `/omm/dev` redirect = valid again (/dev back @1106)
