@@ -384,3 +384,4 @@ _per concept 2-3 lines_
 - ✔️ P2 Android MVP: APK 15 MB builds · 4/4 JVM tests · Marx icon w halo · not yet run on a device @1028
 - ✔️ toolchain user-space: JDK 21 · Gradle 8.14.3 · Android SDK 36 @1028
 - ✔️ `.stignore`: + `**/.gradle/` `**/.kotlin/` @1028
+- 🪝 Hooked img `SN.png` (permission-dialog screenshot) ➡ `re/boox/hooked/img/SN.png` · embedded i `re/boox/hooked/hooked.md` (end) @1114
