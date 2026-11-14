@@ -1,6 +1,9 @@
 package de.strix.marxversion
 
 import android.Manifest
+import android.app.Activity
+import android.content.Context
+import android.content.ContextWrapper
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -12,30 +15,32 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.shape.CircleShape
-import de.strix.marxversion.ui.DevBlue
-import de.strix.marxversion.ui.IS_DEV
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -43,10 +48,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.core.view.WindowCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -56,24 +65,33 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import de.strix.marxversion.data.Lang
 import de.strix.marxversion.data.T
-import de.strix.marxversion.logic.today
+import de.strix.marxversion.logic.Orden
 import de.strix.marxversion.notify.schedule
 import de.strix.marxversion.ui.APP_NAME
 import de.strix.marxversion.ui.AppVm
+import de.strix.marxversion.ui.CelebrationHost
+import de.strix.marxversion.ui.CelebrationQueue
 import de.strix.marxversion.ui.ChapterScreen
+import de.strix.marxversion.ui.DevBlue
 import de.strix.marxversion.ui.HookedScreen
-import de.strix.marxversion.ui.KreiseScreen
+import de.strix.marxversion.ui.HookedUnlockDialog
+import de.strix.marxversion.ui.IS_DEV
 import de.strix.marxversion.ui.KreisDetail
+import de.strix.marxversion.ui.KreiseScreen
+import de.strix.marxversion.ui.LocalCelebrations
 import de.strix.marxversion.ui.LocalOpenHooked
-import androidx.compose.runtime.CompositionLocalProvider
 import de.strix.marxversion.ui.MarxTheme
-import de.strix.marxversion.ui.tapOutsideNote
 import de.strix.marxversion.ui.MineScreen
+import de.strix.marxversion.ui.NewOrdenDialog
 import de.strix.marxversion.ui.PlanDetail
 import de.strix.marxversion.ui.PlansScreen
 import de.strix.marxversion.ui.ReadScreen
+import de.strix.marxversion.ui.RewardSlot
 import de.strix.marxversion.ui.SettingsScreen
 import de.strix.marxversion.ui.TodayScreen
+import de.strix.marxversion.ui.UpdateDialog
+import de.strix.marxversion.ui.ds.Ds
+import de.strix.marxversion.ui.tapOutsideNote
 import de.strix.marxversion.ui.tr
 
 /** th only Activity · evythg else = composables swapped by th NavHost */
@@ -130,6 +148,23 @@ private val TABS = listOf(
     Triple("mine", null, T("Mein Kapital", "My Capital")),
 )
 
+/**
+ * 🧭 app chrome per route (design_system.md § 6 · D-031 b):
+ * Root = tab root: red bar + white title · Sub = pushed screen: paper bar, ink title, back arrow · Reader = chapter: no bars,
+ * status bar = page colour w dark icons (th slim paper head lives i ChapterScreen, lane L2)
+ */
+internal enum class Chrome { Root, Sub, Reader }
+
+internal fun chromeFor(route: String?): Chrome = when {
+    route == null || TABS.any { it.first == route } -> Chrome.Root
+    route.startsWith("chapter/") -> Chrome.Reader
+    else -> Chrome.Sub
+}
+
+/** reward keys i th celebration queue (ui/Fx.kt) */
+private const val R_UNLOCK = "unlock"
+private const val R_ORDEN = "orden"
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun App(vm: AppVm) {
@@ -137,6 +172,9 @@ private fun App(vm: AppVm) {
     val s by vm.settings.collectAsStateWithLifecycle()
     val forcePopup by vm.forcePopup.collectAsStateWithLifecycle()
     val route = nav.currentBackStackEntryAsState().value?.destination?.route
+    val chrome = chromeFor(route)
+    // 🎉 1 celebration at a ti (D-034): fx + reward dialogs queue here, screens play into it via LocalCelebrations
+    val fx = remember { CelebrationQueue() }
 
     // Android 13+ runtime permission 4 notifications
     val notifPermission = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) {}
@@ -156,45 +194,72 @@ private fun App(vm: AppVm) {
     val openKreise by vm.openKreise.collectAsStateWithLifecycle()
     LaunchedEffect(openKreise) { if (openKreise > 0) nav.go("kreis") }
 
+    StatusBar(chrome)
+
     val focusMgr = androidx.compose.ui.platform.LocalFocusManager.current
     val slop = androidx.compose.ui.platform.LocalViewConfiguration.current.touchSlop
-    CompositionLocalProvider(LocalOpenHooked provides openHooked) {
+    CompositionLocalProvider(LocalOpenHooked provides openHooked, LocalCelebrations provides fx) {
     Scaffold(
         // ✍️ tap outside an open margin note = save it (ui/VerseView.kt NoteFocus)
         modifier = Modifier.tapOutsideNote(focusMgr, slop),
+        // reader: no top bar ➡ th status bar strip shows th container = page colour
+        containerColor = if (chrome == Chrome.Reader) Ds.page else MaterialTheme.colorScheme.background,
         topBar = {
-            TopAppBar(
-                // tap Marx (or th name) = home
-                // 🧪 DEV app: Marx on a blue disc (= its launcher icon) ➡ nvr confuse it w th stable one
-                navigationIcon = {
-                    Image(painterResource(R.mipmap.ic_marx_fg), contentDescription = tr("Heute", "Today"),
-                        modifier = Modifier.padding(start = 4.dp).size(44.dp)
-                            .then(if (IS_DEV) Modifier.background(DevBlue, CircleShape) else Modifier)
-                            .clickable(onClick = home))
-                },
-                title = { Text(APP_NAME, modifier = Modifier.clickable(onClick = home)) },   // DEV = blue disc only (@1107)
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.primary, titleContentColor = Color.White),
-                actions = {
-                    if (s.testMode) TextButton(onClick = openHooked) { Text("🪝") }
-                    LangButton(s.lang) { vm.setLang(it) }
-                    androidx.compose.material3.IconButton(onClick = { nav.open("settings") }) {
-                        Icon(painterResource(R.drawable.ic_settings), tr("Einstellungen", "Settings"), tint = Color.White)
-                    }
-                },
-            )
+            when (chrome) {
+                Chrome.Root -> TopAppBar(
+                    // tap Marx (or th name) = home
+                    // 🧪 DEV app: Marx on a blue disc (= its launcher icon) ➡ nvr confuse it w th stable one
+                    navigationIcon = {
+                        Image(painterResource(R.mipmap.ic_marx_fg), contentDescription = tr("Heute", "Today"),
+                            modifier = Modifier.padding(start = 4.dp).size(44.dp)
+                                .then(if (IS_DEV) Modifier.background(DevBlue, CircleShape) else Modifier)
+                                .clickable(onClick = home))
+                    },
+                    title = { Text(APP_NAME, style = MaterialTheme.typography.titleMedium, modifier = Modifier.clickable(onClick = home)) },
+                    colors = TopAppBarDefaults.topAppBarColors(containerColor = Ds.red, titleContentColor = Ds.white,
+                        actionIconContentColor = Ds.white),
+                    actions = {
+                        if (s.testMode) IconButton(onClick = openHooked) {
+                            Icon(painterResource(R.drawable.ic_hook), tr("Hooked-Modus", "Hooked mode"), Modifier.size(24.dp))
+                        }
+                        LangButton(s.lang) { vm.setLang(it) }
+                        IconButton(onClick = { nav.open("settings") }) {
+                            Icon(painterResource(R.drawable.ic_settings), tr("Einstellungen", "Settings"))
+                        }
+                    },
+                )
+                Chrome.Sub -> TopAppBar(
+                    navigationIcon = {
+                        IconButton(onClick = { nav.popBackStack() }) { Icon(painterResource(R.drawable.ic_back), tr("Zurück", "Back")) }
+                    },
+                    title = { Text(subTitle(route), style = MaterialTheme.typography.titleMedium, maxLines = 1) },
+                    colors = TopAppBarDefaults.topAppBarColors(containerColor = Ds.paper, titleContentColor = Ds.ink,
+                        navigationIconContentColor = Ds.ink),
+                )
+                Chrome.Reader -> {}
+            }
         },
         bottomBar = {
-            NavigationBar {
-                TABS.forEach { (r, icon, label) ->
-                    NavigationBarItem(
-                        selected = route == r,
-                        onClick = { if (r == "today") home() else nav.go(r) },
-                        icon = {
-                            if (icon != null) Icon(painterResource(icon), null, Modifier.size(24.dp))
-                            else Text("☭", fontSize = 21.sp, fontWeight = FontWeight.Bold)   // LocalContentColor = same tint as th icons
-                        },
-                        label = { Text(tr(label)) },
-                    )
+            if (chrome != Chrome.Reader) Column {
+                HorizontalDivider(thickness = 1.dp, color = Ds.line)
+                NavigationBar(containerColor = Ds.paperDeep, tonalElevation = 0.dp) {
+                    TABS.forEach { (r, icon, label) ->
+                        NavigationBarItem(
+                            selected = route == r,
+                            onClick = { if (r == "today") home() else nav.go(r) },
+                            icon = {
+                                if (icon != null) Icon(painterResource(icon), null, Modifier.size(24.dp))
+                                else Box(Modifier.size(24.dp), contentAlignment = Alignment.Center) {   // ☭ glyph = same tint as th icons
+                                    Text("☭", style = MaterialTheme.typography.titleLarge, modifier = Modifier.wrapContentSize(unbounded = true))
+                                }
+                            },
+                            label = { Text(tr(label), style = MaterialTheme.typography.labelMedium, maxLines = 1) },
+                            colors = NavigationBarItemDefaults.colors(
+                                selectedIconColor = Ds.red, selectedTextColor = Ds.red, indicatorColor = Ds.redTint,
+                                unselectedIconColor = Ds.inkMuted, unselectedTextColor = Ds.inkMuted,
+                            ),
+                        )
+                    }
                 }
             }
         },
@@ -230,19 +295,61 @@ private fun App(vm: AppVm) {
         if (forcePopup) { nav.go("today"); vm.homeJump.value++; vm.popupDone() }
     }
 
-    // 🎖️ new medal(s) ➡ 1 dialog · waits out th Amen BAM (~2.3 s) so they don't pile up
+    // 🎖️ new medal(s) ➡ queued behind whatever celebrates now (Amen fx) ➡ no fixed wait · 🔓 Hooked unlock = own moment 1st (D-025)
     val newOrden by vm.newOrden.collectAsStateWithLifecycle()
-    var showOrden by remember { mutableStateOf<List<de.strix.marxversion.logic.Orden>>(emptyList()) }
-    LaunchedEffect(newOrden) { if (newOrden.isNotEmpty()) { kotlinx.coroutines.delay(2600); showOrden = newOrden } }
-    val hookedNew = de.strix.marxversion.logic.Orden.HOOKED
-    if (hookedNew in showOrden) de.strix.marxversion.ui.HookedUnlockDialog({ vm.setTestMode(true) }) {   // 🔓 own moment 1st (D-025), rest aft
-        vm.ordenSeen(listOf(hookedNew)); showOrden = showOrden - hookedNew
-    } else if (showOrden.isNotEmpty()) de.strix.marxversion.ui.NewOrdenDialog(showOrden) { vm.ordenSeen(showOrden); showOrden = emptyList() }
+    val shownOrden = remember { mutableSetOf<Orden>() }   // this session: nvr twice, even b4 th prefs write lands
+    LaunchedEffect(newOrden) {
+        val fresh = newOrden - shownOrden
+        if (Orden.HOOKED in fresh) fx.reward(R_UNLOCK)
+        if (fresh.any { it != Orden.HOOKED }) fx.reward(R_ORDEN)
+    }
+    RewardSlot(R_UNLOCK) { done ->
+        HookedUnlockDialog({ vm.setTestMode(true) }) { shownOrden += Orden.HOOKED; vm.ordenSeen(listOf(Orden.HOOKED)); done() }
+    }
+    RewardSlot(R_ORDEN) { done ->
+        val list = remember { newOrden.filter { it != Orden.HOOKED && it !in shownOrden } }
+        if (list.isEmpty()) LaunchedEffect(Unit) { done() }
+        else NewOrdenDialog(list) { shownOrden += list; vm.ordenSeen(list); done() }
+    }
+    CelebrationHost(fx)
 
     // 🆕 download + install (data/Update.kt)
     val showUpdate by vm.showUpdate.collectAsStateWithLifecycle()
-    if (showUpdate) de.strix.marxversion.ui.UpdateDialog(vm) { vm.showUpdate.value = false }
+    if (showUpdate) UpdateDialog(vm) { vm.showUpdate.value = false }
     }
+}
+
+/** pushed screens: short paper-bar title (th screen's own heading stays below) */
+@Composable
+private fun subTitle(route: String?): String = when {
+    route == null -> APP_NAME
+    route.startsWith("plan/") -> tr("Leseplan", "Reading plan")
+    route.startsWith("kreis/") -> tr("Lesekreis", "Reading circle")
+    route == "settings" -> tr("Einstellungen", "Settings")
+    route == "hooked" -> "Hooked"
+    else -> APP_NAME
+}
+
+/** status bar per chrome: red (tab roots, light icons) · paper (sub) · page (reader) w dark icons */
+@Composable
+private fun StatusBar(chrome: Chrome) {
+    val view = LocalView.current
+    LaunchedEffect(chrome) {
+        val w = view.context.activity()?.window ?: return@LaunchedEffect
+        val bar = when (chrome) { Chrome.Root -> Ds.red; Chrome.Sub -> Ds.paper; Chrome.Reader -> Ds.page }
+        // API 35+ = edge-to-edge: th bar is transparent, th top bar / Scaffold container paints under it
+        if (Build.VERSION.SDK_INT < 35) w.paintStatusBar(bar.toArgb())
+        WindowCompat.getInsetsController(w, view).isAppearanceLightStatusBars = chrome != Chrome.Root
+    }
+}
+
+@Suppress("DEPRECATION")
+private fun android.view.Window.paintStatusBar(argb: Int) { statusBarColor = argb }
+
+private tailrec fun Context.activity(): Activity? = when (this) {
+    is Activity -> this
+    is ContextWrapper -> baseContext.activity()
+    else -> null
 }
 
 /** shows only th current language · tap ➡ menu w th oth 6 */
@@ -250,11 +357,10 @@ private fun App(vm: AppVm) {
 private fun LangButton(cur: Lang, pick: (Lang) -> Unit) {
     var open by remember { mutableStateOf(false) }
     Box {
-        TextButton(onClick = { open = true }) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(cur.code, color = Color.White, fontWeight = FontWeight.Bold)
-                Icon(painterResource(R.drawable.ic_expand), null, tint = Color.White, modifier = Modifier.size(18.dp))
-            }
+        Row(Modifier.minimumInteractiveComponentSize().clip(CircleShape).clickable(role = Role.Button) { open = true }
+            .padding(horizontal = 8.dp), verticalAlignment = Alignment.CenterVertically) {
+            Text(cur.code, color = Ds.white, style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold)
+            Icon(painterResource(R.drawable.ic_expand), null, tint = Ds.white, modifier = Modifier.size(20.dp))
         }
         DropdownMenu(open, { open = false }) {
             Lang.menu.forEach { l ->
@@ -264,7 +370,7 @@ private fun LangButton(cur: Lang, pick: (Lang) -> Unit) {
                             Text((if (l == cur) "✓ " else "    ") + l.native)
                             // 0.8.0: whole book i all 7 · IT…AR = our own LLM translation ➡ say so (not a published edition)
                             if (l.ordinal > 1) Text("    " + tr("Ganzes Buch · KI-übersetzt aus dem Deutschen", "whole book · AI-translated from German"),
-                                fontSize = 11.sp, color = MaterialTheme.colorScheme.secondary)
+                                style = MaterialTheme.typography.labelMedium, color = Ds.inkMuted)
                         }
                     },
                     onClick = { open = false; pick(l) },

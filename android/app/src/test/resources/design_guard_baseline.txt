@@ -1,11 +1,12 @@
 # 🛡️ DesignGuardTest baseline — raw design values OUTSIDE ui/ds/ (design_system.md § 11)
 # ratchet: a nr may only go DOWN · evy lane lowers its share · goal = 0 evywhere (fan-in)
 # L0 @1114 = starting point (exempt: Share.kt · Fx.kt · notify/ · Feast.kt)
-Color(0x = 48
-.sp = 174
-RoundedCornerShape( = 33
-Button( = 19
-OutlinedButton( = 5
-TextButton( = 12
+# L5 shell @1114: MainActivity · UpdateDialog · Unlock · ShareAppPanel ➡ 0 (Color -4 · sp -14 · shape -2 · Button -7 · Outlined -3 · Text -4)
+Color(0x = 44
+.sp = 160
+RoundedCornerShape( = 31
+Button( = 12
+OutlinedButton( = 2
+TextButton( = 8
 AssistChip( = 9
 FilterChip( = 3
