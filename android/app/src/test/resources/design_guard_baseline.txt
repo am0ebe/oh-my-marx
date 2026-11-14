@@ -1,12 +1,12 @@
 # 🛡️ DesignGuardTest baseline — raw design values OUTSIDE ui/ds/ (design_system.md § 11)
 # ratchet: a nr may only go DOWN · evy lane lowers its share · goal = 0 evywhere (fan-in)
 # L0 @1114 start: 48 · 174 · 33 · 19 · 5 · 12 · 9 · 3 (exempt: Share.kt · Fx.kt · notify/ · Feast.kt)
-# @1114 aft L2 + L3 merge
-Color(0x = 29
-.sp = 106
-RoundedCornerShape( = 21
-Button( = 13
-OutlinedButton( = 4
-TextButton( = 9
+# @1114 aft L2 + L3 + L5 fan-in · left = L1 Today · L4 Mine/⚙️/Hooked
+Color(0x = 25
+.sp = 92
+RoundedCornerShape( = 19
+Button( = 6
+OutlinedButton( = 1
+TextButton( = 5
 AssistChip( = 9
 FilterChip( = 2

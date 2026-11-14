@@ -4,26 +4,42 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.OutlinedButton
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import de.strix.marxversion.MarxApp
+import de.strix.marxversion.R
+import de.strix.marxversion.ui.ds.Ds
+import de.strix.marxversion.ui.ds.Space
+import de.strix.marxversion.ui.ds.Tonal
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 /** QR of [APP_LINK] (qrencode -l M, 29×29) · "1" = dark module · ⚠️ regenerate if APP_LINK changes */
@@ -59,7 +75,8 @@ private val QR_ROWS = listOf(
     "11111110101001010001101101010",
 )
 
-private class Target(val label: String, val url: (msg: String, link: String) -> String)
+/** mark = 1-char monogram i th row's disc (no brand logos, no emoji i chrome) */
+private class Target(val label: String, val mark: String = label.take(1), val url: (msg: String, link: String) -> String)
 
 /** same set as th web page (bin/lib.sh share panel) */
 private val TARGETS = listOf(
@@ -68,7 +85,7 @@ private val TARGETS = listOf(
     Target("Telegram") { m, l -> "https://t.me/share/url?url=" + Uri.encode(l) + "&text=" + Uri.encode(m) },
     Target("Reddit") { m, l -> "https://www.reddit.com/submit?url=" + Uri.encode(l) + "&title=" + Uri.encode(m) },
     Target("WhatsApp") { m, l -> "https://wa.me/?text=" + Uri.encode("$m $l") },
-    Target("Mail") { m, l -> "mailto:?subject=" + Uri.encode(APP_NAME) + "&body=" + Uri.encode("$m $l") },
+    Target("Mail", "@") { m, l -> "mailto:?subject=" + Uri.encode(APP_NAME) + "&body=" + Uri.encode("$m $l") },
 )
 
 private fun openTarget(ctx: Context, url: String) {
@@ -80,35 +97,49 @@ private fun openTarget(ctx: Context, url: String) {
  * 📤 app share panel (QA @1112 #16) = web-style: social targets + copy link + system sheet + QR.
  * Use from any "share th app" btn: `if (show) ShareAppPanel(msg) { show = false }`
  * ⚠️ call sites (Cards.kt · MineScreen.kt) still use shareApp() ➡ switch i fan-in (other lanes' files)
+ * look (§ 10 · L5 @1114): sheet-style list = rows 56 (disc · name) w hairlines + Tonal "Copy link" (📳 + inline ✓ 1.2 s, no
+ * toast) + QR · no stack o outlined btns
  */
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ShareAppPanel(msg: String, onDismiss: () -> Unit) {
     val ctx = LocalContext.current
+    val haptics = rememberHaptics()
     val sheetTitle = tr("App teilen", "Share app")
-    MarxDialog(onDismiss = onDismiss, title = tr("App teilen", "Share app")) {
-        FlowRow(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)) {
-            TARGETS.forEach { t ->
-                OutlinedButton(onClick = { openTarget(ctx, t.url(msg, APP_LINK)) }, modifier = Modifier.padding(vertical = 2.dp)) {
-                    Text(t.label, fontSize = 13.sp)
-                }
+    var copied by remember { mutableStateOf(false) }
+    LaunchedEffect(copied) { if (copied) { delay(1200); copied = false } }
+    MarxDialog(onDismiss = onDismiss, title = sheetTitle) {
+        TARGETS.forEach { t ->
+            ShareRow(t.label, { openTarget(ctx, t.url(msg, APP_LINK)) }) {
+                Text(t.mark, style = MaterialTheme.typography.titleSmall, color = Ds.blue)
             }
+            HorizontalDivider(color = Ds.line)
         }
-        Row(Modifier.fillMaxWidth().padding(top = 8.dp), horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)) {
-            OutlinedButton(onClick = { copyText(ctx, APP_LINK) }) { Text(tr("📋 Link kopieren", "📋 Copy link"), fontSize = 13.sp) }
-            OutlinedButton(onClick = { shareApp(ctx, msg, sheetTitle) }) { Text(tr("Mehr Apps …", "More apps …"), fontSize = 13.sp) }
+        ShareRow(tr("Mehr Apps …", "More apps …"), { shareApp(ctx, msg, sheetTitle) }) {
+            Icon(painterResource(R.drawable.ic_share), null, Modifier.size(20.dp), tint = Ds.blue)
         }
-        Canvas(Modifier.padding(top = 14.dp).size(168.dp).align(Alignment.CenterHorizontally)) {
+        Tonal(if (copied) "✓ " + tr("Kopiert", "Copied") else tr("Link kopieren", "Copy link"),
+            { copyText(ctx, APP_LINK); haptics.confirm(); copied = true },
+            Modifier.align(Alignment.CenterHorizontally).padding(top = Space.m))
+        Canvas(Modifier.padding(top = Space.l).size(144.dp).align(Alignment.CenterHorizontally)) {
             val n = QR_ROWS.size
             val m = size.width / n
             drawRect(Color.White)
             QR_ROWS.forEachIndexed { y, r ->
                 r.forEachIndexed { x, c ->
-                    if (c == '1') drawRect(Color(0xFF1D1230), Offset(x * m, y * m), Size(m + 0.5f, m + 0.5f))
+                    if (c == '1') drawRect(Ds.ink, Offset(x * m, y * m), Size(m + 0.5f, m + 0.5f))
                 }
             }
         }
-        Text(tr("Mit der Handykamera scannen", "Scan with a phone camera"), fontSize = 12.sp, textAlign = TextAlign.Center,
-            modifier = Modifier.fillMaxWidth().padding(top = 4.dp))
+        Text(tr("Mit der Handykamera scannen", "Scan with a phone camera"), style = MaterialTheme.typography.labelMedium,
+            color = Ds.inkMuted, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth().padding(top = Space.xs))
     }
 }
+
+/** 1 share target: 40 disc (blueTint) + name body-l · row 56 */
+@Composable
+private fun ShareRow(label: String, onClick: () -> Unit, mark: @Composable () -> Unit) =
+    Row(Modifier.fillMaxWidth().height(56.dp).clip(MaterialTheme.shapes.small).clickable(role = Role.Button, onClick = onClick)
+        .padding(horizontal = Space.xs), verticalAlignment = Alignment.CenterVertically) {
+        Box(Modifier.size(40.dp).clip(CircleShape).background(Ds.blueTint), contentAlignment = Alignment.Center) { mark() }
+        Text(label, style = MaterialTheme.typography.bodyLarge, color = Ds.ink, modifier = Modifier.padding(start = Space.m).weight(1f))
+    }

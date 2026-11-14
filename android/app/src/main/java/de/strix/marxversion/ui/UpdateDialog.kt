@@ -5,11 +5,9 @@ import android.net.Uri
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -18,25 +16,29 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import de.strix.marxversion.BuildConfig
 import de.strix.marxversion.data.Update
 import de.strix.marxversion.data.f
+import de.strix.marxversion.ui.ds.Ds
+import de.strix.marxversion.ui.ds.Space
 import kotlinx.coroutines.launch
 import java.io.File
 
 /**
  * 🆕 update: 1 tap ➡ download (progress) ➡ Android's install dialog · 1st time Android asks "allow installs fr this app?"
  * ➡ we send th usr there + carry on by ourselves when they come back (resume) · any failure ➡ fallback = th download page
+ * look (design_system.md § 10, L5 @1114): reward-dialog pattern = 1 Primary-L (whatever th nxt step is) + Text "Later"
+ * stacked · body-m lines + changelog list · 📳 Confirm on th Primary
  */
 @Composable
 fun UpdateDialog(vm: AppVm, onDismiss: () -> Unit) {
     val ctx = LocalContext.current
     val l by vm.update.collectAsStateWithLifecycle()
     val scope = rememberCoroutineScope()
+    val haptics = rememberHaptics()
     var progress by remember { mutableStateOf<Float?>(null) }   // null = not started · -1 = size unknown
     var apk by remember { mutableStateOf<File?>(null) }
     var failed by remember { mutableStateOf(false) }
@@ -63,53 +65,62 @@ fun UpdateDialog(vm: AppVm, onDismiss: () -> Unit) {
         onPauseOrDispose {}
     }
 
-    MarxDialog(onDismiss, title = tr("Neue Version", "New version")) {
+    val u = l
+    val p = progress
+    val broken = failed || err != null
+    /** Primary = 📳 Confirm (§ 8) */
+    fun act(label: String, run: () -> Unit) = DialogAction(label) { haptics.confirm(); run() }
+    // th 1 nxt step · same order + calls as b4 (look-only lane)
+    val primary: DialogAction? = when {
+        u == null -> null
+        broken -> act(tr("Webseite öffnen", "Open web page"), openPage)
+        viaObtainium && !obtainiumGone -> act(tr("In Obtainium aktualisieren", "Update in Obtainium")) {
+            if (runCatching { ctx.startActivity(Update.obtainiumRefresh(ctx)) }.isSuccess) onDismiss() else obtainiumGone = true
+        }
+        waitAllow -> act(tr("Erlauben", "Allow")) { runCatching { ctx.startActivity(Update.allowIntent(ctx)) } }
+        apk != null -> act(tr("Installieren", "Install")) { apk?.let { install(it) } }
+        p != null -> null                                                  // downloading: th bar is th feedback
+        u.apk == null -> act(tr("Zur Download-Seite", "To the download page"), openPage)
+        else -> act(tr("Installieren", "Install")) {
+            progress = 0f
+            scope.launch {
+                runCatching { Update.download(ctx, u) { progress = it } }
+                    .onSuccess { apk = it; install(it) }
+                    .onFailure { failed = true }
+            }
+        }
+    }
+    val defer = if (u != null && !broken && p == null) DialogAction(tr("Später", "Later"), onDismiss) else null
+    val body = MaterialTheme.typography.bodyMedium
+
+    MarxDialog(onDismiss, title = tr("Neue Version", "New version"), primary = primary, defer = defer) {
         Column(Modifier.fillMaxWidth()) {
-            val u = l
             when {
-                u == null -> Text(tr("Du hast die neueste Version (%s). ✔️", "You have the newest version (%s). ✔️").f(BuildConfig.VERSION_NAME))
-                failed || err != null -> {
-                    Text(tr("Ging nicht — Internet? Lade sie auf der Webseite.", "Didn't work — internet? Get it on the web page."))
-                    err?.let { Text(it, fontSize = 11.sp, color = MaterialTheme.colorScheme.secondary) }
-                    Button(onClick = openPage, modifier = Modifier.fillMaxWidth().padding(top = 10.dp)) { Text(tr("🌐 Webseite öffnen", "🌐 Open web page")) }
+                u == null -> Text(tr("Du hast die neueste Version (%s). ✔️", "You have the newest version (%s). ✔️").f(BuildConfig.VERSION_NAME),
+                    style = MaterialTheme.typography.bodyLarge, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
+                broken -> {
+                    Text(tr("Ging nicht — Internet? Lade sie auf der Webseite.", "Didn't work — internet? Get it on the web page."),
+                        style = MaterialTheme.typography.bodyLarge)
+                    err?.let { Text(it, style = body, color = Ds.redDeep, modifier = Modifier.padding(top = Space.xs)) }
                 }
                 else -> {
-                    Text(tr("Oh My Marx %s ist da · du hast %s", "Oh My Marx %s is out · you have %s").f(u.version, BuildConfig.VERSION_NAME))
-                    Text(tr("Installiert sich über die alte App — deine Daten bleiben.", "Installs over the old app — your data stays."),
-                        fontSize = 13.sp, color = MaterialTheme.colorScheme.secondary, modifier = Modifier.padding(top = 4.dp))
-                    val p = progress
-                    when {
-                        viaObtainium && !obtainiumGone -> Button(onClick = {
-                            if (runCatching { ctx.startActivity(Update.obtainiumRefresh(ctx)) }.isSuccess) onDismiss() else obtainiumGone = true
-                        }, modifier = Modifier.fillMaxWidth().padding(top = 12.dp)) { Text(tr("🔄 In Obtainium aktualisieren", "🔄 Update in Obtainium")) }
-                        waitAllow -> {
-                            Text(tr("Einmalig: erlaube „Apps aus dieser Quelle installieren“ für Oh My Marx, dann zurück.",
-                                "One time: allow “install apps from this source” for Oh My Marx, then come back."),
-                                fontSize = 13.sp, modifier = Modifier.padding(top = 10.dp))
-                            Button(onClick = { runCatching { ctx.startActivity(Update.allowIntent(ctx)) } },
-                                modifier = Modifier.fillMaxWidth().padding(top = 8.dp)) { Text(tr("Erlauben ➡", "Allow ➡")) }
-                        }
-                        apk != null -> Button(onClick = { install(apk!!) }, modifier = Modifier.fillMaxWidth().padding(top = 12.dp)) {
-                            Text(tr("📦 Installieren", "📦 Install"))
-                        }
-                        p != null -> {
-                            if (p < 0f) LinearProgressIndicator(Modifier.fillMaxWidth().padding(top = 14.dp))
-                            else LinearProgressIndicator(progress = { p }, modifier = Modifier.fillMaxWidth().padding(top = 14.dp))
-                            Text(tr("lädt …", "downloading …"), fontSize = 12.sp, modifier = Modifier.padding(top = 4.dp))
-                        }
-                        u.apk == null -> Button(onClick = openPage, modifier = Modifier.fillMaxWidth().padding(top = 12.dp)) {
-                            Text(tr("🌐 Zur Download-Seite", "🌐 To the download page"))
-                        }
-                        else -> Button(onClick = {
-                            progress = 0f
-                            scope.launch {
-                                runCatching { Update.download(ctx, u) { progress = it } }
-                                    .onSuccess { apk = it; install(it) }
-                                    .onFailure { failed = true }
-                            }
-                        }, modifier = Modifier.fillMaxWidth().padding(top = 12.dp)) { Text(tr("⬇️ Laden + installieren", "⬇️ Download + install")) }
+                    Text(tr("Oh My Marx %s ist da · du hast %s", "Oh My Marx %s is out · you have %s").f(u.version, BuildConfig.VERSION_NAME),
+                        style = MaterialTheme.typography.bodyLarge)
+                    // 📜 what's new, if this build alr knows th release (DEV preview / same version notes)
+                    RELEASES.firstOrNull { it.version == u.version.substringBefore("-") }?.items?.take(6)?.let { items ->
+                        Column(Modifier.padding(top = Space.s)) { items.forEach { Text("• " + tr(it), style = body) } }
                     }
-                    if (!failed && p == null) TextButton(onClick = onDismiss, modifier = Modifier.padding(top = 2.dp)) { Text(tr("Später", "Later")) }
+                    Text(tr("Installiert sich über die alte App — deine Daten bleiben.", "Installs over the old app — your data stays."),
+                        style = body, color = Ds.inkMuted, modifier = Modifier.padding(top = Space.s))
+                    if (waitAllow) Text(tr("Einmalig: erlaube „Apps aus dieser Quelle installieren“ für Oh My Marx, dann zurück.",
+                        "One time: allow “install apps from this source” for Oh My Marx, then come back."),
+                        style = body, modifier = Modifier.padding(top = Space.m))
+                    if (p != null && apk == null && !(viaObtainium && !obtainiumGone) && !waitAllow) {
+                        if (p < 0f) LinearProgressIndicator(Modifier.fillMaxWidth().padding(top = Space.l))
+                        else LinearProgressIndicator(progress = { p }, modifier = Modifier.fillMaxWidth().padding(top = Space.l))
+                        Text(tr("lädt …", "downloading …"), style = MaterialTheme.typography.labelMedium, color = Ds.inkMuted,
+                            modifier = Modifier.padding(top = Space.xs))
+                    }
                 }
             }
         }

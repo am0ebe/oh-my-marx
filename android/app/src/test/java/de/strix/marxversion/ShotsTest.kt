@@ -68,6 +68,25 @@ class ShotsTest {
         save(name, b)
     }
 
+    /** dialogs = own window ➡ screen + 50 % scrim + th newest dialog's window centred on top (L5 @1114) */
+    private fun dialogShot(name: String) {
+        rule.waitForIdle()
+        rule.mainClock.advanceTimeBy(1500)
+        rule.waitForIdle()
+        val d = org.robolectric.shadows.ShadowDialog.getLatestDialog() ?: return
+        val v = rule.activity.window.decorView
+        val dv = d.window?.decorView ?: return
+        val b = Bitmap.createBitmap(v.width, v.height, Bitmap.Config.ARGB_8888)
+        rule.runOnUiThread {
+            val c = android.graphics.Canvas(b)
+            v.draw(c)
+            c.drawColor(0x80000000.toInt())
+            c.translate((v.width - dv.width) / 2f, (v.height - dv.height) / 2f)
+            dv.draw(c)
+        }
+        save(name, b)
+    }
+
     /** exact = whole label (tabs: "Read" ≠ "Reading plans") */
     private fun tap(text: String, exact: Boolean = false) {
         rule.waitUntil(10_000) { rule.onAllNodesWithText(text, substring = !exact).fetchSemanticsNodes().isNotEmpty() }
@@ -95,8 +114,16 @@ class ShotsTest {
         scroll(); shot("settings_2")
         scroll(); shot("settings_3")
         tap("Today", true); tap("In book", true); shot("in_book_flash")   // ✨ passage pulses (QA r4)
-        // L3 @1114: plan detail (back fr th reader 1st ➡ bottom nav, whatever th reader chrome looks like) · kreis_detail needs a server ➡ ❌ shot
+        // 📤 share panel (L5): list rows + Tonal copy · chapter has no nav bar (D-031) ➡ back 2 Today
         rule.activity.onBackPressedDispatcher.let { d -> rule.runOnUiThread { d.onBackPressed() } }
+        tap("Share app", true); dialogShot("share_app")
+        rule.onAllNodesWithContentDescription("Close").onFirst().performClick()
+        // 🆕 update dialog (L5): fake "newer version out" ➡ Primary-L Install + Text Later
+        val vm = androidx.lifecycle.ViewModelProvider(rule.activity)[de.strix.marxversion.ui.AppVm::class.java]
+        rule.runOnUiThread { vm.update.value = de.strix.marxversion.data.Update.Latest("9.9.9", 999_999, apk = "omm.apk"); vm.showUpdate.value = true }
+        dialogShot("update")
+        rule.runOnUiThread { vm.showUpdate.value = false; vm.update.value = null }
+        // L3 @1114: plan detail · kreis_detail needs a server ➡ ❌ shot
         tap("Plans", true); tap("Luddites & AI"); shot("plan_detail")
     }
 
@@ -108,8 +135,8 @@ class ShotsTest {
         tap("Day complete!")
         rule.mainClock.advanceTimeBy(3000)
         rule.onAllNodesWithContentDescription("Close").onFirst().performClick()   // ★ celebrate dialog (own window: back press doesn't reach it) · ★ = drawn since @1114, no glyph
-        rule.mainClock.advanceTimeBy(3000)     // 1st reading day ➡ "new badge" dialog aft 2.6 s
-        if (rule.onAllNodesWithText("Keep going!").fetchSemanticsNodes().isNotEmpty()) tap("Keep going!")
+        rule.mainClock.advanceTimeBy(3000)     // 1st reading day ➡ "new badge" dialog, queued behind th CheckPop (ui/Fx.kt)
+        if (rule.onAllNodesWithText("Keep going!").fetchSemanticsNodes().isNotEmpty()) { dialogShot("orden"); tap("Keep going!") }
         repeat(4) { scroll() }
         shot("feed")
         repeat(4) { scroll() }
