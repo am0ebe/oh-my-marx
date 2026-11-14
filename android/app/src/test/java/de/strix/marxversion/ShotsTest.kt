@@ -95,6 +95,9 @@ class ShotsTest {
         scroll(); shot("settings_2")
         scroll(); shot("settings_3")
         tap("Today", true); tap("In book", true); shot("in_book_flash")   // ✨ passage pulses (QA r4)
+        // L3 @1114: plan detail (back fr th reader 1st ➡ bottom nav, whatever th reader chrome looks like) · kreis_detail needs a server ➡ ❌ shot
+        rule.activity.onBackPressedDispatcher.let { d -> rule.runOnUiThread { d.onBackPressed() } }
+        tap("Plans", true); tap("Luddites & AI"); shot("plan_detail")
     }
 
     /** big round #4: day done ➡ 📜 Weiterlesen feed at th tail o Home (scroll ➡ more loads) */
