@@ -23,7 +23,7 @@ _SDD: code says **wh** · th file says **y** · drift = a bug · fmt ➡ `pr/vib
 - **dc**: `server/Dockerfile` uninstalls pip + rm `ensurepip` (same pip as a wheel) + build-time guard (`! import pip`) · nightly caller keeps `pip: true` (template skips w a warning wh no pip ➡ audit comes back by itself if deps ever land)
 - **y**: no pip = nothing 2 patch, 4 good · alt `pip install -U pip` ❌ needs PyPI at build + red again on th nxt pip advisory · alt `pip: false` i nightly.yml ❌ hides th finding, pip stays i th image
 - **ck**: local build: `pip` not found · `/v1/health` ok · trivy 0.72.0 (CI flags) exit 0 · CI canary green · live = aft ops rebuilds `/srv/omm-api` (ops-owned, SERVICE.md)
-_🎨 D-029..036 @1113 = design system, all 💬 (🦠 decides · 🤖 pick = 1st option) · spec ➡ [design_system.md](design_system.md) § 0 = same list as a table · ❌ no code yet_
+_🎨 D-029..036 @1113 = design system (🦠 decides · 🤖 pick = 1st option) · spec ➡ [design_system.md](design_system.md) § 0 = same list as a table · @1114: D-029 + D-030 ✔️ ➡ L0 built (`ui/ds/`) · D-031..036 still 💬_
 ### D-036 @1113 · Today above th fold (qa-D1): compact hero + stamp tag · 💬
 - **ctx**: 🦠 "landing shd fit verse + streak widget + read-plan btn" · now hero (star 92 + week row + stamp row + rank) + card ➡ plan entry below th fold
 - **options**: **a) compact hero 120dp (star 48 + 7 day dots + Tag "☭ 3/10"), full stamp card ➡ My Capital** (🤖 pick) · b) keep hero, shrink quote card · c) hero collapses on scroll
@@ -51,18 +51,19 @@ _🎨 D-029..036 @1113 = design system, all 💬 (🦠 decides · 🤖 pick = 1s
 - **options**: a) as now · **b) slim paper head (back · chapter · 💬 N), bottom nav hidden, status bar = page colour** (🤖 pick) · c) full immersive, tap = toggle chrome
 - **y**: b = +~100dp page + th page becomes th screen, exit stays visible · c ❌ tap is taken (verse menu · double-tap turn D-022) + hidden exit
 - **ck**: shot `chapter`: no NavigationBar · back works fr deep link
-### D-030 @1113 · buttons (qa-D7): 5 kinds · look = pill tonal + press edge on th 1 big btn · 💬
-- **ctx**: 🦠 "clunky-generic-microsoft98style", wants 2-3 mockups · r4 sweep #7: 7 btn looks mixed
-- **dc (proposed)**: Primary (red pill, L 52 / S 40, max 1 per view) · Tonal (blueTint pill) · Text · ActionItem (icon + label, Circle / Bare) · Chip (Choice / Suggest) + singletons (★ · Switch · MoreChip · CountChip · DogEar) · no outlined btns, no emoji i labels
+### D-030 @1113 · buttons (qa-D7): 5 kinds · look = pill tonal + press edge on th 1 big btn · ✔️ @1114 (🦠: A+)
+- **ctx**: 🦠 "clunky-generic-microsoft98style", wants 2-3 mockups · r4 sweep #7: 7 btn looks mixed · 🦠 picked by eye fr th rendered gallery (`62be257`: now · A · A+ · B · C)
+- **dc** ✔️ **A+**: Primary (red pill, L 52 / S 40, max 1 per view) · Tonal (blueTint pill) · Text · ActionItem (icon + label, Circle / Bare) · Chip (Choice / Suggest) + singletons (★ · Switch · MoreChip · CountChip · DogEar) · no outlined btns, no emoji i labels
 - **options** (mockups ➡ design_system.md § 5): **A pill tonal + B's 4dp press edge on Primary-L only** (🤖 pick) · A pure · B letterpress evywhere · C rubric (txt + red rule)
-- **y**: round = tappable holds · press edge + 📳 = th satisfying daily tap (qa-R1) wo making evy btn loud · C ❌ weak affordance 4 th daily Amen
-- **ck**: `DesignGuardTest`: 0 M3 `Button(` / `OutlinedButton(` / `AssistChip(` outside `ui/ds/` · `ds_gallery` shot
-### D-029 @1113 · design system = [design_system.md](design_system.md) SSOT · tokens i `ui/ds/` · ratchet guard · 💬
+- **y**: round = tappable holds · press edge + 📳 = th satisfying daily tap (qa-R1) wo making evy btn loud · C ❌ weak affordance 4 th daily Amen · A pure = calm but th 1 daily btn felt flat · B evywhere = loud + r8 breaks round = tappable
+- **ck**: L0 @1114: `ui/ds/Buttons.kt` (Primary L/S · Tonal · TextBtn · ActionItem · singletons) + `Chips.kt` · `ds_gallery` shot · `DesignGuardTest`: M3 `Button(` / `OutlinedButton(` / `TextButton(` / `AssistChip(` / `FilterChip(` outside `ui/ds/` = baseline ➡ 0 by fan-in
+### D-029 @1113 · design system = [design_system.md](design_system.md) SSOT · tokens i `ui/ds/` · ratchet guard · ✔️ @1114 (🦠: as written)
 - **ctx**: M8 order (🦠): 1 spec 4 btns · nav · type · colour · space · components · motion · now: 21 txt sizes · ~60 hard-coded colours · 9 radii · `Theme.kt` fills 8 M3 roles (rest = lavender dflts)
-- **dc (proposed)**: 3 materials (paper · ink · cloth-blue) + red = act · gold = earned · round = tappable, rect = container · serif = Marx, sans = app + ppl · chrome = vector icons, emoji = content · flat (only th quote card lifts) · 9 txt sizes, sentences ≥ 14sp · 4dp grid · 5 radii · 5 voices (**my bubbles = blue, not gold**) · plan accents = stripe / disc / tag only, titles ink
+- **dc** ✔️ (rules as written): 3 materials (paper · ink · cloth-blue) + red = act · gold = earned · round = tappable, rect = container · serif = Marx, sans = app + ppl · chrome = vector icons, emoji = content · flat (only th quote card lifts) · 9 txt sizes, sentences ≥ 14sp · 4dp grid · 5 radii · 5 voices (**my bubbles = blue, not gold**) · plan accents = stripe / disc / tag only, titles ink
 - **y**: evy rule answers a QA line (qa-D2 book look · D6 voices · D7 btns · r4 #7) o a measured fail (gold txt 1.6 · 5 o 9 plan accents < 4.5 · `Color.Gray` 3.1)
 - **alt**: restyle screen by screen wo tokens (❌ drifts again, = how we got here) · adopt a ready M3 theme builder palette (❌ loses paper + rubric)
-- **ck**: `DesignGuardTest` baseline only goes down · lanes L0-L5 ➡ design_system.md § 12 · ⚠️ overlaps D-015 (Amen ➡ snippet bottom, unbuilt) = lane L1
+- **ck**: `DesignGuardTest` baseline only goes down (L0 start @1114: `Color(0x` 48 · `.sp` 174 · `RoundedCornerShape(` 33 · btns/chips 48) · lanes L0-L5 ➡ design_system.md § 12 · ⚠️ overlaps D-015 (Amen ➡ snippet bottom, unbuilt) = lane L1
+  - guard + `TextButton(` (spec § 11 listed 4 M3 btns, `TextButton` = th same drift, ds `TextBtn` replaces it) · ratchet strict both ways: lower count ➡ lower th baseline i th same commit
 ### D-028 @1113 · verse ids may move: split.py writes `data/id_moves.json` (old ➡ new by DE txt) + remaps pipeline data · app migrates marks + read log once · ✔️
 - **ctx**: M8 follow-up (am0 "Go"): DE source typo "FÜFNZEHNTES KAPITEL" ➡ Kap 15 opening sat i Kap 14 (14,37-39) + Kap 15 ids ran on fr 15,40 · fixing = 30 ids move · users' 🔖 ✍️ + progress must not break
 - **dc**: split.py `TYPOS` alias + guard (sec anchor w new Kap resets Absatz count) · moves = same DE txt, unique ➡ `id_moves.json` cumulative (chains composed) · same run renames ids i rank · andachten · i18n q · i18n_full v (no LLM re-run) · build.py ➡ assets `id_moves.json` · app `data/IdMoves.kt`: AppVm start ➡ if moves.size > Prefs `id_moves_done` ➡ 1 Room transaction renames Mark + ReadLog (collision ➡ merge) · DayLog = plan indices ➡ untouched
@@ -190,7 +191,7 @@ _🎨 D-029..036 @1113 = design system, all 💬 (🦠 decides · 🤖 pick = 1s
 - **y**: ❓ am0 · **ck**: `data/I18n.kt`
 
 ## ❓ open Qs
-- 💬 **🎨 design system D-029..036** (8 picks waiting ➡ design_system.md § 0) · gate 4 lanes = D-029 · D-030 · D-036
+- 💬 **🎨 design system D-031..036** (6 picks waiting ➡ design_system.md § 0 · D-029 + D-030 ✔️ @1114, L0 built) · L1 Today needs D-036 · L2 chrome needs D-031
 - 💬 **streak**: (a) any reading day · (b) plan days only · (c) hybrid chip — Mi: 2nd "done" looks meagre next 2 big streak widget
 - 💬 **Mitlesen toggle**: rm? (QA lane B removed th note only) · 💬 ☭ close btn i MarxDialog: keep/rm? · 💬 "share app" prompt aft streak/medal?
 - ❓ streak widget "shd show 2 at start" = ? (todo ‼️ A)

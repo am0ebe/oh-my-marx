@@ -74,6 +74,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import de.strix.marxversion.R
+import de.strix.marxversion.ui.ds.ActStyle
+import de.strix.marxversion.ui.ds.ActionItem
 import de.strix.marxversion.data.Chapter
 import de.strix.marxversion.data.Lang
 import de.strix.marxversion.data.Plan
@@ -387,17 +389,10 @@ fun VerseView(vm: AppVm, v: Verse, speaker: Speaker? = null, showActions: Boolea
     }
 }
 
-/** icon + tiny label below — labels = no more guessing what th symbols mean */
+/** icon + label below ➡ thin wrapper over ds `ActionItem` Bare (L0 @1114: label 10 ➡ 12sp, label-m) */
 @Composable
-private fun RowScope.Action(icon: Int, label: String, tint: Color = MaterialTheme.colorScheme.secondary, onClick: () -> Unit) {
-    Column(
-        Modifier.weight(1f).clip(RoundedCornerShape(8.dp)).clickable(onClick = onClick).padding(vertical = 4.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Icon(painterResource(icon), contentDescription = label, tint = tint, modifier = Modifier.size(22.dp))
-        Text(label, fontSize = 10.sp, maxLines = 1, color = MaterialTheme.colorScheme.secondary)
-    }
-}
+private fun RowScope.Action(icon: Int, label: String, tint: Color = MaterialTheme.colorScheme.secondary, onClick: () -> Unit) =
+    ActionItem(icon, label, onClick, Modifier.weight(1f), style = ActStyle.Bare, tint = tint, labelColor = MaterialTheme.colorScheme.secondary)
 
 /** small helper: section heading inside a chapter */
 @Composable

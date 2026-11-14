@@ -60,6 +60,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.lerp
 import de.strix.marxversion.R
+import de.strix.marxversion.ui.ds.ActStyle
+import de.strix.marxversion.ui.ds.ActionItem
 import de.strix.marxversion.data.Verse
 import de.strix.marxversion.data.f
 import de.strix.marxversion.logic.Feast
@@ -179,22 +181,10 @@ fun CardCarousel(
 @Composable
 fun appShareMsg() = tr("Ich lese Das Kapital jeden Tag ein Stück — mit Oh My Marx ☭", "I read Das Kapital a bit every day — with Oh My Marx ☭")
 
-/** 🔘 1 card action: soft-tinted circle (tint @8 % + hairline ring) + label underneath · icon xor glyph · also used on th Read page */
+/** 🔘 1 card action ➡ thin wrapper over ds `ActionItem` Circle (L0 @1114, call sites untouched) · whole item tappable (sweep r4) */
 @Composable
-fun CardAction(icon: Int?, label: String, tint: Color, glyph: String? = null, onClick: () -> Unit) {
-    // sweep r4: label tappable too (was: only th 46 dp circle ➡ taps on "In book" did nothing)
-    Column(horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.width(64.dp).clip(RoundedCornerShape(12.dp)).clickable(onClick = onClick)) {
-        Surface(onClick = onClick, shape = CircleShape, color = tint.copy(alpha = 0.08f),
-            border = BorderStroke(1.dp, tint.copy(alpha = 0.22f)), modifier = Modifier.size(46.dp)) {
-            Box(contentAlignment = Alignment.Center) {
-                if (icon != null) Icon(painterResource(icon), label, Modifier.size(20.dp), tint = tint)
-                else Text(glyph.orEmpty(), color = tint, fontSize = 20.sp, fontWeight = FontWeight.Bold)
-            }
-        }
-        Text(label, fontSize = 11.sp, color = tint.copy(alpha = 0.85f), maxLines = 1, modifier = Modifier.padding(top = 3.dp))
-    }
-}
+fun CardAction(icon: Int?, label: String, tint: Color, glyph: String? = null, onClick: () -> Unit) =
+    ActionItem(icon, label, onClick, style = ActStyle.Circle, tint = tint, glyph = glyph)
 
 /** 🌈 title set i th card's arch (above th saint): today only (feast ➡ its greeting) · null = no arch · QA r4: no "Marx" (he's on it) */
 @Composable

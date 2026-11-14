@@ -87,7 +87,6 @@ import de.strix.marxversion.data.Lang
 import de.strix.marxversion.data.T
 import de.strix.marxversion.data.Verse
 import de.strix.marxversion.data.f
-import de.strix.marxversion.logic.CARD
 import de.strix.marxversion.logic.Cell
 import de.strix.marxversion.logic.DayTime
 import de.strix.marxversion.logic.Feast
@@ -479,26 +478,8 @@ private fun Hero(days: List<DayLog>, feast: Feast?, dt: DayTime, hooked: Boolean
             "🕊️ Sabbath joker used — 1 rest day per week doesn't break the chain."), color = white.copy(alpha = 0.85f), fontSize = 11.sp,
             modifier = Modifier.padding(top = 4.dp))
         Gap(14)
-        // 🎟️ Stempelkarte: 🎁 gift · ☭ earned · red ! = today's stamp, still open · ○ to go
-        Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
-            repeat(CARD) { i ->
-                val waiting = !doneToday && i == card.filled
-                Box(
-                    Modifier.size(24.dp).clip(CircleShape)
-                        .then(when {
-                            i < card.filled -> Modifier.background(Gold)
-                            waiting -> Modifier.background(Red)
-                            else -> Modifier.border(1.5.dp, white.copy(alpha = 0.7f), CircleShape)
-                        }),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    when {
-                        i < card.filled -> Text("☭", fontSize = 12.sp, color = Red, fontWeight = FontWeight.Bold)   // gift stamps = same ☭ (@1112, was 🎁)
-                        waiting -> Text("!", fontSize = 13.sp, color = white, fontWeight = FontWeight.Bold)
-                    }
-                }
-            }
-        }
+        // 🎟️ Stempelkarte: ☭ earned · red ! = today's stamp, still open · ○ to go ➡ ui/ds/StampCard.kt (L0 @1114: L1 + L4 share it)
+        de.strix.marxversion.ui.ds.StampRow(card, doneToday)
         // "N more days to <rank>" moved 2 th plan card (QA @1112)
         if (ranks > 0) Text(tr("Rang: %s", "Rank: %s").f(tr(rank(ranks - 1))), color = white.copy(alpha = 0.8f), fontSize = 11.sp)
     }

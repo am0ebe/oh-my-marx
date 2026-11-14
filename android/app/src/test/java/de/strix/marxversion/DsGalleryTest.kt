@@ -2,58 +2,63 @@ package de.strix.marxversion
 
 import android.graphics.Bitmap
 import androidx.activity.ComponentActivity
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.AssistChip
-import androidx.compose.material3.Button
-import androidx.compose.material3.FilterChip
-import androidx.compose.material3.Icon
-import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.graphics.lerp
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import de.strix.marxversion.data.Lang
-import de.strix.marxversion.ui.Blue
-import de.strix.marxversion.ui.CardAction
+import de.strix.marxversion.logic.StampCard
+import de.strix.marxversion.ui.DialogAction
+import de.strix.marxversion.ui.MarxDialogPanel
 import de.strix.marxversion.ui.MarxTheme
+import de.strix.marxversion.ui.ds.AccentPanel
+import de.strix.marxversion.ui.ds.ActStyle
+import de.strix.marxversion.ui.ds.ActionItem
+import de.strix.marxversion.ui.ds.Callout
+import de.strix.marxversion.ui.ds.ChoiceChip
+import de.strix.marxversion.ui.ds.CloseStar
+import de.strix.marxversion.ui.ds.CountChip
+import de.strix.marxversion.ui.ds.Ds
+import de.strix.marxversion.ui.ds.DsSwitch
+import de.strix.marxversion.ui.ds.HookPostIt
+import de.strix.marxversion.ui.ds.MarxVoice
+import de.strix.marxversion.ui.ds.MeBubble
+import de.strix.marxversion.ui.ds.MoreChip
+import de.strix.marxversion.ui.ds.OmmType
+import de.strix.marxversion.ui.ds.OtherBubble
+import de.strix.marxversion.ui.ds.Panel
+import de.strix.marxversion.ui.ds.Primary
+import de.strix.marxversion.ui.ds.Space
+import de.strix.marxversion.ui.ds.StampRow
+import de.strix.marxversion.ui.ds.SuggestChip
+import de.strix.marxversion.ui.ds.Tag
+import de.strix.marxversion.ui.ds.TextBtn
+import de.strix.marxversion.ui.ds.Tonal
+import de.strix.marxversion.ui.ds.Tone
 import org.junit.Assume.assumeTrue
 import org.junit.Before
 import org.junit.Rule
@@ -65,228 +70,160 @@ import org.robolectric.annotation.GraphicsMode
 import java.io.File
 
 /**
- * 🎨 button directions rendered 4 real (design_system.md § 5 · arch D-030 💬) ➡ 🦠 picks by eye
- * test-only mock: nothing here ships · same content i evy variant: now · A · A + press edge · B · C
- * run: ./gradlew testDebugUnitTest --tests '*DsGalleryTest*' -Pshots --rerun ➡ app/build/shots/ds_N_name.png
+ * 🎨 ds_gallery = th whole design system i 1 img (design_system.md § 11 · D-019 · D-030 ✔️ A+)
+ * renders th REAL ui/ds components (nothing mocked): type scale · 5 btn kinds × states · chips · singletons ·
+ * surfaces · 5 voices · stamp row · dialog panel ➡ 🦠 eyeballs th system, lanes check against it
+ * run: ./gradlew testDebugUnitTest --tests '*DsGalleryTest*' -Pshots --rerun ➡ app/build/shots/ds_gallery.png
  */
-private val paper = Color(0xFFF6EEDC)
-private val paperHi = Color(0xFFFFFBF2)
-private val paperDeep = Color(0xFFEDE3CC)
-private val ink = Color(0xFF3B2A1A)
-private val inkMuted = Color(0xFF6B5A48)
-private val outline = Color(0xFF8F8271)
-private val red = Color(0xFFB3261E)
-private val redDeep = Color(0xFF8C1D18)
-private val redTint = Color(0xFFEFDAC9)
-private val blue = Color(0xFF1F2F4F)
-private val blueTint = Color(0xFFE0DBCE)
-private val gold = Color(0xFFE8B931)
+private val PLAN_ORANGE = Ds.red.copy(red = .85f, green = .45f, blue = .1f)   // stand-in plan accent
 
-private enum class St { REST, PRESSED, OFF }
-
-private interface Kit {
-    val name: String
-    val sub: String
-    @Composable fun Primary(label: String, large: Boolean, st: St)
-    @Composable fun Second(label: String)
-    @Composable fun Link(label: String, danger: Boolean)
-    @Composable fun Act(icon: Int, label: String)
-    /** on = null ➡ Suggest chip (tap = go) · else Choice chip */
-    @Composable fun Chip(label: String, on: Boolean?)
+/** a source th reports "pressed" ➡ static pressed state, same code path as a finger */
+@Composable
+private fun pressed(): MutableInteractionSource {
+    val s = remember { MutableInteractionSource() }
+    // interactions = SharedFlow w no replay ➡ wait 1 frame til th component's collector subscribed
+    LaunchedEffect(Unit) { kotlinx.coroutines.delay(50); s.emit(PressInteraction.Press(Offset(10f, 10f))) }
+    return s
 }
 
 @Composable
-private fun Lbl(t: String, c: Color, size: Int = 14, w: FontWeight = FontWeight.Medium, serif: Boolean = false, under: Boolean = false) =
-    Text(t, color = c, fontSize = size.sp, fontWeight = w, maxLines = 1,
-        fontFamily = if (serif) FontFamily.Serif else FontFamily.Default,
-        textDecoration = if (under) TextDecoration.Underline else null)
+private fun H(t: String) = Column(Modifier.padding(top = Space.xl, bottom = Space.s)) {
+    Text(t.uppercase(), style = OmmType.bookMeta, color = Ds.red)
+    HorizontalDivider(Modifier.padding(top = Space.xs), color = Ds.line)
+}
 
 @Composable
-private fun Check(c: Color) = Canvas(Modifier.padding(end = 6.dp).size(12.dp)) {
-    val s = 2.dp.toPx()
-    drawLine(c, Offset(size.width * .08f, size.height * .55f), Offset(size.width * .4f, size.height * .85f), s, StrokeCap.Round)
-    drawLine(c, Offset(size.width * .4f, size.height * .85f), Offset(size.width * .95f, size.height * .18f), s, StrokeCap.Round)
-}
-
-/** filled btn · edge > 0 = press edge under it (sinks on press) */
-@Composable
-private fun Fill(label: String, large: Boolean, st: St, shape: Shape, edge: Dp) {
-    val h = if (large) 52.dp else 40.dp
-    val bg = when (st) { St.OFF -> ink.copy(alpha = .12f); St.PRESSED -> if (edge > 0.dp) red else lerp(red, ink, .22f); else -> red }
-    val fg = if (st == St.OFF) ink.copy(alpha = .38f) else Color.White
-    val sink = if (edge > 0.dp && st == St.PRESSED) edge - 1.dp else 0.dp
-    Box(Modifier.height(h + edge).then(if (large) Modifier.fillMaxWidth() else Modifier)) {
-        if (edge > 0.dp && st != St.OFF) Box(Modifier.matchParentSize().padding(top = edge).background(redDeep, shape))
-        Box(Modifier.offset(y = sink).height(h).then(if (large) Modifier.fillMaxWidth() else Modifier)
-            .background(bg, shape).padding(horizontal = 22.dp), contentAlignment = Alignment.Center) {
-            Lbl(label, fg, if (large) 16 else 14, FontWeight.Bold)
-        }
-    }
-}
-
-private object KitNow : Kit {
-    override val name = "0 · now"
-    override val sub = "M3 Button · OutlinedButton · TextButton · AssistChip · FilterChip · CardAction"
-    @Composable override fun Primary(label: String, large: Boolean, st: St) =
-        Button(onClick = {}, enabled = st != St.OFF, modifier = if (large) Modifier.fillMaxWidth() else Modifier) {
-            Text(label, fontSize = if (large) 17.sp else 14.sp, fontWeight = FontWeight.Bold)
-        }
-    @Composable override fun Second(label: String) = OutlinedButton(onClick = {}) { Text(label) }
-    @Composable override fun Link(label: String, danger: Boolean) {
-        if (danger) OutlinedButton(onClick = {}) { Text(label) } else TextButton(onClick = {}) { Text(label) }
-    }
-    @Composable override fun Act(icon: Int, label: String) = CardAction(icon, label, Blue) {}
-    @Composable override fun Chip(label: String, on: Boolean?) {
-        if (on == null) AssistChip(onClick = {}, label = { Text(label) })
-        else FilterChip(selected = on, onClick = {}, label = { Text(label) })
-    }
-}
-
-private class KitA(val edge: Boolean) : Kit {
-    override val name = if (edge) "A+ · pill tonal + press edge (pick)" else "A · pill tonal"
-    override val sub = if (edge) "like A · only the 1 big button gets a 4dp edge and sinks on press"
-        else "red pill = the action · blue tint pill = 2nd · flat, calm"
-    @Composable override fun Primary(label: String, large: Boolean, st: St) =
-        Fill(label, large, st, CircleShape, if (edge && large) 4.dp else 0.dp)
-    @Composable override fun Second(label: String) =
-        Box(Modifier.height(40.dp).background(blueTint, CircleShape).padding(horizontal = 18.dp), contentAlignment = Alignment.Center) { Lbl(label, blue) }
-    @Composable override fun Link(label: String, danger: Boolean) =
-        Box(Modifier.height(40.dp).padding(horizontal = 8.dp), contentAlignment = Alignment.Center) { Lbl(label, if (danger) redDeep else blue) }
-    @Composable override fun Act(icon: Int, label: String) =
-        Column(Modifier.width(66.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-            Box(Modifier.size(44.dp).background(blueTint, CircleShape), contentAlignment = Alignment.Center) {
-                Icon(painterResource(icon), label, Modifier.size(20.dp), tint = blue)
-            }
-            Spacer(Modifier.height(4.dp)); Lbl(label, ink, 12)
-        }
-    @Composable override fun Chip(label: String, on: Boolean?) {
-        val m = Modifier.height(32.dp).let {
-            when (on) {
-                true -> it.background(redTint, CircleShape)
-                false -> it.background(paperDeep, CircleShape)
-                null -> it.background(paperHi, CircleShape).border(1.dp, outline, CircleShape)
-            }
-        }
-        Row(m.padding(horizontal = 14.dp), verticalAlignment = Alignment.CenterVertically) {
-            if (on == true) Check(red)
-            Lbl(label, if (on == true) red else ink, 12)
-        }
-    }
-}
-
-private object KitB : Kit {
-    private val r = RoundedCornerShape(8.dp)
-    override val name = "B · letterpress"
-    override val sub = "every button is a block of type with an edge · sinks on press + haptic"
-    @Composable override fun Primary(label: String, large: Boolean, st: St) = Fill(label, large, st, r, 4.dp)
-    @Composable private fun Block(h: Dp, edge: Dp, sunk: Boolean, content: @Composable () -> Unit) =
-        Box(Modifier.height(h + edge)) {
-            if (!sunk) Box(Modifier.matchParentSize().padding(top = edge).background(lerp(paper, ink, .45f), r))
-            Box(Modifier.offset(y = if (sunk) edge - 1.dp else 0.dp).height(h).background(if (sunk) redTint else paperHi, r)
-                .border(1.dp, if (sunk) red else outline, r).padding(horizontal = 14.dp), contentAlignment = Alignment.Center) { content() }
-        }
-    @Composable override fun Second(label: String) = Block(40.dp, 3.dp, false) { Lbl(label, ink, 14, FontWeight.Bold) }
-    @Composable override fun Link(label: String, danger: Boolean) =
-        Box(Modifier.height(40.dp).padding(horizontal = 8.dp), contentAlignment = Alignment.Center) { Lbl(label, if (danger) redDeep else blue) }
-    @Composable override fun Act(icon: Int, label: String) =
-        Column(Modifier.width(66.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-            Block(44.dp, 3.dp, false) { Icon(painterResource(icon), label, Modifier.size(20.dp), tint = ink) }
-            Spacer(Modifier.height(4.dp)); Lbl(label, ink, 12)
-        }
-    @Composable override fun Chip(label: String, on: Boolean?) =
-        Block(30.dp, 2.dp, on == true) { Lbl(label, if (on == true) red else ink, 12, FontWeight.Bold) }
-}
-
-private object KitC : Kit {
-    override val name = "C · rubric"
-    override val sub = "no fills · serif ink + red rule = the action · red underlined words = 2nd"
-    @Composable override fun Primary(label: String, large: Boolean, st: St) {
-        val c = when (st) { St.OFF -> ink.copy(alpha = .38f); St.PRESSED -> red; else -> ink }
-        Box(Modifier.height(if (large) 52.dp else 40.dp).then(if (large) Modifier.fillMaxWidth() else Modifier), contentAlignment = Alignment.Center) {
-            Column(Modifier.width(IntrinsicSize.Max), horizontalAlignment = Alignment.CenterHorizontally) {
-                Lbl(label, c, if (large) 19 else 15, FontWeight.Bold, serif = true)
-                Spacer(Modifier.height(3.dp))
-                Box(Modifier.fillMaxWidth().height(2.dp).background(if (st == St.OFF) ink.copy(alpha = .12f) else red))
-            }
-        }
-    }
-    @Composable override fun Second(label: String) =
-        Box(Modifier.height(40.dp).padding(end = 12.dp), contentAlignment = Alignment.Center) { Lbl(label, red, under = true) }
-    @Composable override fun Link(label: String, danger: Boolean) =
-        Box(Modifier.height(40.dp).padding(horizontal = 8.dp), contentAlignment = Alignment.Center) { Lbl(label, if (danger) redDeep else inkMuted) }
-    @Composable override fun Act(icon: Int, label: String) =
-        Column(Modifier.width(66.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-            Box(Modifier.size(44.dp), contentAlignment = Alignment.Center) { Icon(painterResource(icon), label, Modifier.size(22.dp), tint = ink) }
-            Lbl(label, inkMuted, 12)
-        }
-    @Composable override fun Chip(label: String, on: Boolean?) =
-        Box(Modifier.height(32.dp).padding(end = 10.dp), contentAlignment = Alignment.Center) {
-            when (on) {
-                true -> Row(verticalAlignment = Alignment.CenterVertically) { Check(red); Lbl(label, red, 13, FontWeight.Bold) }
-                false -> Lbl(label, ink, 13)
-                null -> Lbl(label, red, 13, under = true)
-            }
-        }
-}
-
-private val KITS = listOf(KitNow, KitA(false), KitA(true), KitB, KitC)
+private fun Note(t: String) = Text(t, style = MaterialTheme.typography.labelSmall, color = Ds.inkMuted, modifier = Modifier.padding(bottom = Space.xs))
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun Sheet(k: Kit) = Column(Modifier.fillMaxSize().background(paper).padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-    Text(k.name, color = ink, fontSize = 22.sp, fontWeight = FontWeight.Bold)
-    Text(k.sub, color = inkMuted, fontSize = 14.sp, lineHeight = 20.sp)
-    Column {
-        Text("Capital 22,56 · MEW p. 621", color = inkMuted, fontSize = 11.sp, fontWeight = FontWeight.Medium)
-        Text("Accumulate, accumulate! That is Moses and the prophets!", color = ink, fontSize = 17.sp, lineHeight = 26.sp, fontFamily = FontFamily.Serif)
+private fun Left() = Column(Modifier.fillMaxWidth()) {
+    Text("Oh My Marx · design system", style = MaterialTheme.typography.titleLarge, color = Ds.ink)
+    Note("ds_gallery · L0 @1114 · D-030 A+")
+    H("type")
+    val ty = MaterialTheme.typography
+    listOf<Pair<String, TextStyle>>(
+        "display 28" to ty.displaySmall, "title-l 22" to ty.titleLarge, "title-m 18" to ty.titleMedium, "title-s 16" to ty.titleSmall,
+        "body-l 16 · main sentences" to ty.bodyLarge, "body-m 14 · bubbles, callouts" to ty.bodyMedium,
+        "label-l 14 · btn" to ty.labelLarge, "label-m 12 · chips, tags" to ty.labelMedium, "label-s 11 · refs (floor)" to ty.labelSmall,
+    ).forEach { (t, s) -> Text(t, style = s, color = Ds.ink) }
+    Text("Book title 24", style = OmmType.bookTitle, color = Ds.ink)
+    Text("Book head 17 · rubric", style = OmmType.bookHead, color = Ds.red)
+    Text("Book body 17 — the wealth of societies…", style = OmmType.bookBody, color = Ds.ink)
+    Text("Quote 22 italic", style = OmmType.quote, color = Ds.blue)
+    Text("BOOK META 11 · P. 49", style = OmmType.bookMeta, color = Ds.inkMuted)
+
+    H("1 · primary")
+    Note("L · rest · pressed (sinks into edge) · off · loading")
+    Column(verticalArrangement = Arrangement.spacedBy(Space.s)) {
+        Primary("Amen — read today", {})
+        Primary("Amen — read today", {}, src = pressed())
+        Primary("Amen — read today", {}, enabled = false)
+        Primary("Amen — read today", {}, loading = true)
     }
-    k.Primary("Amen — read today", true, St.REST)
-    k.Primary("Amen — pressed", true, St.PRESSED)
-    Row(horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.CenterVertically) {
-        k.Primary("Send", false, St.REST); k.Primary("Send", false, St.PRESSED); k.Primary("Send", false, St.OFF)
-        Text("rest · pressed · off", color = inkMuted, fontSize = 11.sp)
+    Note("S · rest · pressed · off")
+    Row(horizontalArrangement = Arrangement.spacedBy(Space.s)) {
+        Primary("Send", {}, large = false); Primary("Send", {}, large = false, src = pressed()); Primary("Send", {}, large = false, enabled = false)
     }
-    Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
-        k.Second("Copy link"); k.Second("In book"); Spacer(Modifier.weight(1f)); k.Link("Later", false)
+    H("2 · tonal  ·  3 · text")
+    Row(horizontalArrangement = Arrangement.spacedBy(Space.s), verticalAlignment = Alignment.CenterVertically) {
+        Tonal("Copy link", {}); Tonal("Join", {}, src = pressed()); TextBtn("Later", {})
     }
+    Row(horizontalArrangement = Arrangement.spacedBy(Space.s), verticalAlignment = Alignment.CenterVertically) {
+        Tonal("Refresh", {}, enabled = false); TextBtn("Show me", {}); TextBtn("Leave circle", {}, danger = true)
+    }
+    H("4 · action item")
+    Note("Circle · quote card row, About")
     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-        k.Act(R.drawable.ic_volume, "Listen"); k.Act(R.drawable.ic_copy, "Copy"); k.Act(R.drawable.ic_book, "In book")
-        k.Act(R.drawable.ic_share, "Share card"); k.Act(R.drawable.ic_send, "Share app")
+        ActionItem(R.drawable.ic_volume, "Listen", {}); ActionItem(R.drawable.ic_copy, "Copy", {})
+        ActionItem(R.drawable.ic_book, "In book", {}); ActionItem(R.drawable.ic_share, "Share card", {})
+        ActionItem(R.drawable.ic_send, "Share app", {}, tint = Ds.red)
     }
-    FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        k.Chip("Preacher", true); k.Chip("Comrade", false); k.Chip("Rent", null); k.Chip("Boss", null); k.Chip("Overtime", null)
+    Note("Bare · verse menu i th book")
+    Row(Modifier.fillMaxWidth().background(Ds.paperHi)) {
+        ActionItem(R.drawable.ic_volume, "Listen", {}, Modifier.weight(1f), style = ActStyle.Bare)
+        ActionItem(R.drawable.ic_bookmark, "Bookmark", {}, Modifier.weight(1f), style = ActStyle.Bare, tint = Ds.red)
+        ActionItem(R.drawable.ic_note, "Note", {}, Modifier.weight(1f), style = ActStyle.Bare)
+        ActionItem(R.drawable.ic_copy, "Copy", {}, Modifier.weight(1f), style = ActStyle.Bare, src = pressed())
     }
-    Column(Modifier.fillMaxWidth().background(paperHi, RoundedCornerShape(24.dp)).border(BorderStroke(1.dp, gold.copy(alpha = .55f)), RoundedCornerShape(24.dp)).padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        Text("New badge", color = ink, fontSize = 18.sp, fontWeight = FontWeight.Bold)
-        Text("7 days in a row. Marx kept your page.", color = ink, fontSize = 14.sp, textAlign = TextAlign.Center)
-        Spacer(Modifier.height(4.dp))
-        k.Primary("Keep going", true, St.REST)
-        k.Link("Later", false)
+    H("5 · chips")
+    FlowRow(horizontalArrangement = Arrangement.spacedBy(Space.s)) {
+        ChoiceChip("Preacher", true, {}); ChoiceChip("Comrade", false, {})
+        SuggestChip("Rent", {}); SuggestChip("Boss", {}); SuggestChip("Overtime", {})
     }
-    k.Link("Leave circle", true)
+    H("singletons")
+    Row(horizontalArrangement = Arrangement.spacedBy(Space.m), verticalAlignment = Alignment.CenterVertically) {
+        CloseStar({}); DsSwitch(true, {}); DsSwitch(false, {}); MoreChip("read more", {}); CountChip(3, {}, "3 notes")
+    }
+}
+
+@Composable
+private fun Right() = Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(Space.m)) {
+    H("surfaces")
+    Panel {
+        Text("Panel · settings group", style = MaterialTheme.typography.titleSmall, color = Ds.ink)
+        listOf("Reading size", "Reminder").forEachIndexed { i, t ->
+            if (i > 0) HorizontalDivider(color = Ds.line)
+            Row(Modifier.fillMaxWidth().height(56.dp), verticalAlignment = Alignment.CenterVertically) {
+                Text(t, style = MaterialTheme.typography.bodyLarge, color = Ds.ink, modifier = Modifier.weight(1f))
+                DsSwitch(i == 1, {})
+            }
+        }
+    }
+    AccentPanel(PLAN_ORANGE, "⚙️", active = true, head = {
+        Text("The Luddites", style = MaterialTheme.typography.titleMedium, color = Ds.ink)
+        Row(horizontalArrangement = Arrangement.spacedBy(Space.xs)) { Tag("Day 3 / 10", accent = PLAN_ORANGE); Tag("active", gold = true) }
+    }) {
+        Callout(Tone.accent(PLAN_ORANGE), lead = "🕯️", title = "Andacht") { Text("Machines don't hate you. Read why.") }
+    }
+    AccentPanel(Ds.blue, "📘", head = { Text("Commodity 101", style = MaterialTheme.typography.titleMedium, color = Ds.ink); Tag("7 days") })
+    Callout(Tone.Gold, lead = "🎁", title = "New version") { Text("0.9.2 is ready — 2 fixes.") }
+    Callout(Tone.Blue, lead = "💬", title = "And today?") { Text("Where did you see this at work?") }
+
+    H("voices")
+    MarxVoice("The wealth of those societies in which the capitalist mode of production prevails, presents itself as “an immense accumulation of commodities”.")
+    MeBubble(lead = "✍") { Text("My boss calls this “synergy”.") }
+    OtherBubble("Rosa", "2 h") { Text("Same at the print shop!") }
+    Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterEnd) { MeBubble { Text("Ha. Solidarity.") } }
+    HookPostIt { Text("🪝 Trick: the streak makes you fear losing it.") }
+
+    H("stamp card")
+    StampRow(StampCard(1, 4, 3), doneToday = false, ring = Ds.outline)
+    Box(Modifier.fillMaxWidth().background(Brush.verticalGradient(listOf(Color(0xFF1F2F4F), Color(0xFF8C1D18))), MaterialTheme.shapes.large)
+        .padding(Space.m)) { StampRow(StampCard(1, 7, 3), doneToday = true) }
+
+    H("dialog")
+    MarxDialogPanel({}, title = "New badge", primary = DialogAction("Keep going") {}, defer = DialogAction("Later") {}) {
+        Text("7 days in a row. Marx kept your page.", style = MaterialTheme.typography.bodyMedium, color = Ds.ink)
+    }
 }
 
 @RunWith(RobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
-@Config(sdk = [35], qualifiers = "w411dp-h960dp-xxhdpi", application = android.app.Application::class)
+@Config(sdk = [35], qualifiers = "w840dp-h1600dp-xxhdpi", application = android.app.Application::class)
 class DsGalleryTest {
     @get:Rule val rule = createAndroidComposeRule<ComponentActivity>()
     private val dir = File(System.getProperty("shotsDir") ?: "build/shots")
 
     @Before fun gate() = assumeTrue("needs -Pshots", System.getProperty("shots") == "1")
 
-    @Test fun buttons() {
-        var i by mutableIntStateOf(0)
-        rule.setContent { MarxTheme(Lang.EN, null) { Sheet(KITS[i]) } }
-        listOf("now", "A", "A_edge", "B", "C").forEachIndexed { n, name ->
-            i = n
-            rule.waitForIdle()
-            val v = rule.activity.window.decorView
-            val b = Bitmap.createBitmap(v.width, v.height, Bitmap.Config.ARGB_8888)
-            rule.runOnUiThread { v.draw(android.graphics.Canvas(b)) }
-            dir.mkdirs()
-            File(dir, "ds_${n}_$name.png").outputStream().use { b.compress(Bitmap.CompressFormat.PNG, 100, it) }
+    @Test fun gallery() {
+        rule.setContent {
+            MarxTheme(Lang.EN, null) {
+                Row(Modifier.fillMaxSize().background(Ds.paper).padding(Space.l), horizontalArrangement = Arrangement.spacedBy(Space.xl)) {
+                    Box(Modifier.weight(1f)) { Left() }
+                    Box(Modifier.width(1.dp).fillMaxSize().background(Ds.line))
+                    Box(Modifier.weight(1f)) { Right() }
+                }
+            }
         }
+        rule.waitForIdle()
+        rule.mainClock.advanceTimeBy(1500)   // press springs settle
+        rule.waitForIdle()
+        val v = rule.activity.window.decorView
+        val b = Bitmap.createBitmap(v.width, v.height, Bitmap.Config.ARGB_8888)
+        rule.runOnUiThread { v.draw(android.graphics.Canvas(b)) }
+        dir.mkdirs()
+        File(dir, "ds_gallery.png").outputStream().use { b.compress(Bitmap.CompressFormat.PNG, 100, it) }
     }
 }

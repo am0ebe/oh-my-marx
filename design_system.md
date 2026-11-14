@@ -6,8 +6,8 @@ _contrast = WCAG 2.x, computed (text ≥ 4.5 · large txt / icon / border ≥ 3)
 ## 0 · 💬 open choices (🦠 decides · "picks ok" = enough)
 | D | Q | options | 🤖 pick |
 |---|---|---------|---------|
-| D-029 | base rules o th spec (§ 1) | ✔️ as written · change X | as written |
-| D-030 | btn look (qa-D7, mockups § 5) | A pill tonal · B letterpress · C rubric | **A + B's press edge on th 1 big btn** |
+| D-029 | base rules o th spec (§ 1) | ✔️ as written · change X | ✔️ **as written** (🦠 @1114) |
+| D-030 | btn look (qa-D7, mockups § 5) | A pill tonal · B letterpress · C rubric | ✔️ **A + B's press edge on th 1 big btn** (🦠 @1114) |
 | D-031 | reader chrome | a) as now · b) slim paper head, no bottom nav · c) immersive, tap = toggle | **b** |
 | D-032 | dark theme | a) light only · b) follow system · c) + ⚙️ toggle | **tokens now, wire later = b** |
 | D-033 | book font | a) system serif · b) bundle 1 (Literata / EB Garamond, +0.3-1 MB) | **a** now · b = 🧪 later |
@@ -151,7 +151,7 @@ _now 7 looks: `Button` · `OutlinedButton` · `TextButton` · `AssistChip` · `F
 - **B** 👍 sinks 3dp on press + 📳 = satisfying (Duolingo feel, qa-R1) + fits a printing press · 👎 loud if evy btn does it · r8 breaks round = tappable
 - **C** 👍 most bookish · 👎 weak affordance, 48dp targets hard, bad 4 th daily Amen
 - 🤖 **pick: A evywhere + B's press edge only on Primary-L** (pill keeps its shape, 4dp redDeep under it, sinks on press) ➡ th 1 daily btn feels physical, rest stays quiet
-- 👀 **rendered** (pick by eye): `DsGalleryTest` (test-only, ❌ ships) ➡ `android/app/build/shots/ds_buttons.png` = 0 now · A · A+ (pick) · B · C · run: `./gradlew testDebugUnitTest --tests "*DsGalleryTest*" -Pshots --rerun`
+- ✔️ **A+ picked by eye** (🦠 @1114, directions render = `62be257`) ➡ built i `ui/ds/` (L0) · whole system i 1 img: `DsGalleryTest` ➡ `android/app/build/shots/ds_gallery.png` · run: `./gradlew testDebugUnitTest --tests "*DsGalleryTest*" -Pshots --rerun`
 
 ### now ➡ ds
 | now | ➡ |
@@ -341,6 +341,8 @@ _rules 4 evy lane: look only, ❌ behaviour change (except where a delta says so
   - `Theme.kt`: full light scheme + Typography + Shapes · dark scheme defined, not wired · `MarxDialog.kt`: tokens + stacked actions · `CardAction` / `Action` ➡ thin wrappers over ds (call sites untouched)
   - `DesignGuardTest` + baseline · `ds_gallery` shot
   - ✔ done wh: app looks ~same except nav bar + card colours fixed · gallery shot reviewed by 🦠
+  - ✔️ **built @1114**: `ui/ds/` Tokens · Type · Buttons · Chips · Surfaces (+ `MarxShapes`) · Bubbles · StampCard · Theme.kt all roles + Typography + Shapes (dark defined, not wired) · `MarxDialog(primary, defer)` stacked + `MarxDialogPanel` · `CardAction` / verse `Action` / `CloseButton` = wrappers · guard baseline set · 80 tsts + assembleDebug green · 👀 visible: nav bar paperDeep (was lavender) · top bar title bold (titleLarge 700) · action labels 12sp · ⏳ gallery review by 🦠
+  - call sites NOT moved (= lanes): `MarxDialog(actions = …)` row stays til each lane passes `primary` / `defer` · nav indicator red = L5 (MainActivity)
 - **fan-out** (parallel, aft L0):
   | lane | files | does | done wh |
   |------|-------|------|---------|

@@ -19,8 +19,8 @@
 ## 📆
 
 ## 🔵
-- 🎨⭐ **design system** — spec ✔️ @1113 ➡ [design_system.md](design_system.md) (tokens · 5 btn kinds · voices · per-screen deltas) · 💬 🦠: 8 picks D-029..036 (§ 0, "picks ok" = enough)
-  - then 🤖 lanes: L0 foundation (`ui/ds/` + guard) ➡ L1-L5 fan-out ➡ fan-in ➡ fon QA · covers big round #7 + qa-D1 · D3 (D-015) · D5-D9
+- 🎨⭐ **design system** — spec ✔️ @1113 ➡ [design_system.md](design_system.md) (tokens · 5 btn kinds · voices · per-screen deltas) · D-029 + D-030 (A+) ✔️ @1114 · 💬 🦠: 6 picks D-031..036 (L1 needs D-036)
+  - 🤖 lanes: ✔️ L0 foundation @1114 (`ui/ds/` + guard, 👀 🦠 ds_gallery.png) ➡ L1-L5 fan-out ➡ fan-in ➡ fon QA · covers big round #7 + qa-D1 · D3 (D-015) · D5-D9
 - 🤖 **big round** left (QA r5 @1113): translate.py PlanDay xd/xe (Ludditen bridges = EN i oth langs) · #7 btn styles ➡ design system ⬆ · src qa_1112.md § r4 sweep
 - 🧪 self-update (D-021) on a real fon: 1st DEV deploy aft r5 ➡ old DEV (adb-installed) gets th notification wi ~1 d · Obtainium-installed = skipped by design
 - 🦠🔑 keystore: ✔️ symlink @1105 · left: KeePass note (`base64 -w0`, notes.md § 🔑) · 1 offline/restic copy · lap same `ln -s` (➡ sys ansible?)
