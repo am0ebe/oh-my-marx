@@ -13,7 +13,7 @@
 ## 1 · `omm-api` — anonymous read counter (`server/omm_api.py`)
 | | |
 |--|--|
-| build | `server/Dockerfile` (python:3.12-alpine, stdlib only) · context `server/` w `.dockerignore` |
+| build | `server/Dockerfile` (python:3.12-alpine, stdlib only, pip removed from the image) · context `server/` w `.dockerignore` |
 | listens | :8000 HTTP inside the container · no TLS of its own |
 | route needed | `https://<host>/omm/api/*` ➡ strip prefix ➡ `:8000` · app hard-codes `https://scagent.de/omm/api/v1` |
 | state | `/data/omm.db` (SQLite) — totals + today's tokens · loss = counters restart at 0 (not critical) |

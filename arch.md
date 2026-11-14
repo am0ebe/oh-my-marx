@@ -18,6 +18,11 @@ _SDD: code says **wh** · th file says **y** · drift = a bug · fmt ➡ `pr/vib
 - 🔥 hot files (1 owner at a ti — fan-out lanes nvr split these): `assets/content/i18n_*.json` + `data/i18n/*.jsonl` (translate pass = fan-in only) · `android/app/build.gradle.kts` (version) · `ui/Changelog.kt` · `res/values*/strings.xml` · `TodayScreen.kt` · `MineScreen.kt` · `Share.kt`
 
 ## 🧾 decisions (newest on top)
+### D-037 @1114 · omm-api image ships wo pip · ✔️
+- **ctx**: 1st nightly live sweep (run 935, 03:15) ❌ — trivy = 0, red = **pip-audit**: base `python:3.12-alpine` bundles pip 25.0.1 ➡ 6 advisories (PYSEC-2026-1795 · 1796 · 2875 · 2876 · 196 · 3721, fix ≤ 26.2) · app = stdlib only, nvr calls pip
+- **dc**: `server/Dockerfile` uninstalls pip + rm `ensurepip` (same pip as a wheel) + build-time guard (`! import pip`) · nightly caller keeps `pip: true` (template skips w a warning wh no pip ➡ audit comes back by itself if deps ever land)
+- **y**: no pip = nothing 2 patch, 4 good · alt `pip install -U pip` ❌ needs PyPI at build + red again on th nxt pip advisory · alt `pip: false` i nightly.yml ❌ hides th finding, pip stays i th image
+- **ck**: local build: `pip` not found · `/v1/health` ok · trivy 0.72.0 (CI flags) exit 0 · CI canary green · live = aft ops rebuilds `/srv/omm-api` (ops-owned, SERVICE.md)
 _🎨 D-029..036 @1113 = design system, all 💬 (🦠 decides · 🤖 pick = 1st option) · spec ➡ [design_system.md](design_system.md) § 0 = same list as a table · ❌ no code yet_
 ### D-036 @1113 · Today above th fold (qa-D1): compact hero + stamp tag · 💬
 - **ctx**: 🦠 "landing shd fit verse + streak widget + read-plan btn" · now hero (star 92 + week row + stamp row + rank) + card ➡ plan entry below th fold
