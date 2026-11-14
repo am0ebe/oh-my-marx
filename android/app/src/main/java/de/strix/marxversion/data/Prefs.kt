@@ -30,6 +30,8 @@ data class Settings(
     val planStart: String? = null,      // "2026-10-28"
     val readScale: Float = 1f,          // 🤏 pinch i th reader ➡ font size × this
     val community: Boolean = true,      // 👥 Mitlesen: anonymous daily-token counts + comments · always on since QA r5 (D-020, no ⚙️ toggle)
+    val autoUpdate: Boolean = false,    // 🆕 browser installs: install updates wo asking (Android 12+) · dflt = ask (🦠 @1114)
+    val hero: Char = 'a',               // 🧪 D-036 a · b · c Today hero (Testmodus ⚙️ switch, abc test 🦠 @1114)
 )
 
 /** 👥 a Lesekreis = 1 Matrix room, found by its code */
@@ -48,6 +50,8 @@ class Prefs(private val context: Context) {
         val planStart = stringPreferencesKey("plan_start")
         val readScale = floatPreferencesKey("read_scale")
         val community = booleanPreferencesKey("community")
+        val autoUpdate = booleanPreferencesKey("auto_update")
+        val hero = stringPreferencesKey("hero")
         val commDay = stringPreferencesKey("comm_day")      // th day th token belongs 2
         val commToken = stringPreferencesKey("comm_token")  // random, new evy day
     }
@@ -112,8 +116,13 @@ class Prefs(private val context: Context) {
             planStart = p[K.planStart],
             readScale = p[K.readScale] ?: 1f,
             community = true,   // QA r5 (D-020): Mitlesen always on, toggle gone ➡ an old stored "off" no longer counts
+            autoUpdate = p[K.autoUpdate] ?: false,
+            hero = p[K.hero]?.firstOrNull()?.takeIf { it in "abc" } ?: 'a',
         )
     }
+
+    suspend fun setAutoUpdate(on: Boolean) = context.store.edit { it[K.autoUpdate] = on }
+    suspend fun setHero(c: Char) = context.store.edit { it[K.hero] = c.toString() }
 
     suspend fun setLang(l: Lang) = context.store.edit { it[K.lang] = l.name }
     suspend fun setTestMode(on: Boolean) = context.store.edit { it[K.testMode] = on }

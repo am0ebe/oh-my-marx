@@ -18,6 +18,12 @@ _SDD: code says **wh** · th file says **y** · drift = a bug · fmt ➡ `pr/vib
 - 🔥 hot files (1 owner at a ti — fan-out lanes nvr split these): `assets/content/i18n_*.json` + `data/i18n/*.jsonl` (translate pass = fan-in only) · `android/app/build.gradle.kts` (version) · `ui/Changelog.kt` · `res/values*/strings.xml` · `TodayScreen.kt` · `MineScreen.kt` · `Share.kt`
 
 ## 🧾 decisions (newest on top)
+### D-038 @1114 · updater: notify at once (all installers) · browser installs ASK by dflt, ⚙️ opt-in auto · amends D-023 · ✔️ (fon tst pending)
+- **ctx**: 🦠 deployed 1114, DEV (1113, Obtainium) showed nothing ("app doesnt show UPDATE popup") · Obtainium path waited 8 h (GRACE_H) + worker ran ~daily only ➡ nothing visible 4 hours
+- **dc**: 🦠 "do notification immediately" ➡ GRACE_H dropped · + 1 OneTime check on evy app start (WorkManager, network) next 2 th daily one · "browser apk selfupdate shd ask user … o they select autoupdate in settings" ➡ `Settings.autoUpdate` dflt OFF ➡ notification ➡ tap = UpdateDialog (1 confirm) · ON (⚙️ row, browser installs only) + Android 12+ + we r installer ➡ silent (D-023 path)
+- **y**: user sees + decides (consent) · Obtainium users: their own bg update may still win, then our ping is moot (same version ➡ no re-nag)
+- **alt**: keep grace (❌ 🦠 can't see it work) · silent by dflt (❌ 🦠: ask 1st)
+- **ck**: `UpdateWorkerTest` (obtainiumNotifiesAtOnce · autoOffAsksEvenIfWeCouldGoSilent · weInstalledOurselvesIsSilent w auto) · fon: deploy B ➡ notification within ~1 min o opening th app
 ### D-037 @1114 · omm-api image ships wo pip · ✔️
 - **ctx**: 1st nightly live sweep (run 935, 03:15) ❌ — trivy = 0, red = **pip-audit**: base `python:3.12-alpine` bundles pip 25.0.1 ➡ 6 advisories (PYSEC-2026-1795 · 1796 · 2875 · 2876 · 196 · 3721, fix ≤ 26.2) · app = stdlib only, nvr calls pip
 - **dc**: `server/Dockerfile` uninstalls pip + rm `ensurepip` (same pip as a wheel) + build-time guard (`! import pip`) · nightly caller keeps `pip: true` (template skips w a warning wh no pip ➡ audit comes back by itself if deps ever land)

@@ -19,8 +19,8 @@ import org.robolectric.annotation.Config
 
 /**
  * 🆕 bg update check end 2 end vs a fake version.json (D-021 + D-023): right channel url · per installer:
- * browser/adb ➡ notification (no daily spam) · we installed ourselves on 12+ ➡ silent, no notification ·
- * Obtainium ➡ quiet 4 GRACE_H, then a notification whose tap = obtainium://refresh · store ➡ nothing · older/offline = silent
+ * browser/adb ➡ notification (no daily spam) · we installed ourselves on 12+ + ⚙️ auto ON ➡ silent · auto OFF (dflt) ➡ ask ·
+ * Obtainium ➡ notification at once (grace dropped @1114), tap = obtainium://refresh · store ➡ nothing · older/offline = silent
  */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [35], application = ShotsApp::class)
@@ -34,8 +34,8 @@ class UpdateWorkerTest {
     private var silentRuns = 0
     private val noSilent: suspend (de.strix.marxversion.data.Update.Latest) -> Unit = { silentRuns++ }
     private val notif get() = shadowOf(nm).getNotification(NOTIF_UPDATE)
-    private fun run(code: Int, installer: String? = null, sdk: Int = 35, now: Long = 0L) = runBlocking {
-        checkAndNotify(app, fake(code), installer, sdk, now, noSilent)
+    private fun run(code: Int, installer: String? = null, sdk: Int = 35, now: Long = 0L, auto: Boolean = true) = runBlocking {
+        checkAndNotify(app, fake(code), installer, sdk, now, noSilent, auto)
     }
 
     @Before fun setUp() {
@@ -65,20 +65,22 @@ class UpdateWorkerTest {
         assertEquals("9.9.9", app.getSharedPreferences("omm_update", 0).getString("silent", null))   // ➡ UpdatedReceiver
     }
 
+    @Test fun autoOffAsksEvenIfWeCouldGoSilent() {
+        assertEquals(Outcome.NOTIFIED, run(newer, me, auto = false))
+        assertEquals(0, silentRuns)
+        assertEquals("update", shadowOf(notif.contentIntent).savedIntent.getStringExtra(MainActivity.EXTRA_POP))   // tap = UpdateDialog
+    }
+
     @Test fun silentFailsFallsBackToNotification() = runBlocking {
-        val o = checkAndNotify(app, fake(newer), me, 35, 0L) { throw java.io.IOException("sha256 mismatch") }
+        val o = checkAndNotify(app, fake(newer), me, 35, 0L, { throw java.io.IOException("sha256 mismatch") }, auto = true)
         assertEquals(Outcome.NOTIFIED, o)
         assertNull(app.getSharedPreferences("omm_update", 0).getString("silent", null))
     }
 
     @Test fun oldAndroidAsks() = assertEquals(Outcome.NOTIFIED, run(newer, me, sdk = 30))
 
-    @Test fun obtainiumGetsAHeadStart() {
-        val h = 3_600_000L
-        assertEquals(Outcome.NONE, run(newer, "dev.imranr.obtainium", now = 0L))      // 1st seen
-        assertEquals(Outcome.NONE, run(newer, "dev.imranr.obtainium", now = 7 * h))   // Obtainium's 6 h check had its chance? not yet
-        assertNull(notif)
-        assertEquals(Outcome.NOTIFIED, run(newer, "dev.imranr.obtainium", now = 9 * h))
+    @Test fun obtainiumNotifiesAtOnce() {
+        assertEquals(Outcome.NOTIFIED, run(newer, "dev.imranr.obtainium", now = 0L))   // 🦠 @1114: no 8 h grace any more
         assertEquals("obtainium", shadowOf(notif.contentIntent).savedIntent.data?.scheme)
         assertEquals(0, silentRuns)
     }

@@ -33,10 +33,10 @@ import java.time.LocalDate
 import java.util.concurrent.TimeUnit
 
 // 🆕 "new version" i th background (QA r5 + am0 @1113 "Obtainium if it's there, else th website apk, as few taps as possible"):
-//   WorkManager ~daily (network) ➡ own channel's version.json (stable o DEV) ➡ by installer (Update.Via):
-//     OBTAINIUM ➡ its own 6 h bg update usually wins · still old aft GRACE_H ➡ notification, tap = obtainium://refresh
-//     SELF + we r installer o record (Android 12+) ➡ download + install SILENTLY, no tap · UpdatedReceiver says "updated ✔️"
-//     SELF otherwise (1st ti / < 12) ➡ notification ➡ tap = UpdateDialog (download + 1 confirm ➡ we become installer)
+//   WorkManager ~daily (network) + once on evy app start (🦠 @1114 "do notification immediately") ➡ own channel's version.json ➡ by installer (Update.Via):
+//     OBTAINIUM ➡ notification at once (was: 8 h grace, D-023 amended @1114), tap = obtainium://refresh
+//     SELF + ⚙️ "auto-update" ON + we r installer o record (Android 12+) ➡ download + install SILENTLY · UpdatedReceiver says "updated ✔️"
+//     SELF otherwise (dflt: ask, 🦠 @1114) ➡ notification ➡ tap = UpdateDialog (download + 1 confirm ➡ we become installer)
 //     STORE ➡ nothing
 //   nag: new version ➡ at once · same one still not installed ➡ again evy Update.RENAG days
 
@@ -62,6 +62,7 @@ suspend fun checkAndNotify(
     sdk: Int = Build.VERSION.SDK_INT,
     now: Long = System.currentTimeMillis(),
     silent: suspend (Update.Latest) -> Unit = { l -> Update.installSession(ctx, Update.download(ctx, l), bg = true) },
+    auto: Boolean = autoOn(ctx),
 ): Outcome {
     val via = Update.via(installer)
     if (via == Update.Via.STORE) return Outcome.NONE
@@ -71,12 +72,11 @@ suspend fun checkAndNotify(
     if (sp.getInt("seen_code", 0) != l.code) sp.edit().putInt("seen_code", l.code).putLong("seen_at", now).apply()
     val de = isDe(ctx)
 
-    if (via == Update.Via.SELF && l.apk != null && Update.silentOk(installer, ctx.packageName, sdk)) {
+    if (auto && via == Update.Via.SELF && l.apk != null && Update.silentOk(installer, ctx.packageName, sdk)) {
         sp.edit().putString("silent", l.version).apply()   // ➡ UpdatedReceiver aft th swap
         if (runCatching { silent(l) }.isSuccess) return Outcome.SILENT
         sp.edit().remove("silent").apply()                 // download/install failed ➡ fall back 2 asking
     }
-    if (via == Update.Via.OBTAINIUM && now - sp.getLong("seen_at", now) < Update.GRACE_H * 3_600_000L) return Outcome.NONE
     val today = LocalDate.now().toEpochDay()
     if (!Update.shouldNotify(l.code, sp.getInt("code", 0), sp.getLong("day", Long.MIN_VALUE / 2), today)) return Outcome.NONE
     val tap = if (via == Update.Via.OBTAINIUM) Update.obtainiumRefresh(ctx) else appUpdateIntent(ctx)
@@ -92,6 +92,11 @@ suspend fun checkAndNotify(
 
 private fun appUpdateIntent(ctx: Context) = Intent(ctx, MainActivity::class.java)
     .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP).putExtra(MainActivity.EXTRA_POP, "update")
+
+/** ⚙️ "auto-update" (browser installs only) · dflt off = ask (🦠 @1114) */
+private fun autoOn(ctx: Context): Boolean = runCatching {
+    runBlocking { withTimeoutOrNull(500) { (ctx.applicationContext as MarxApp).prefs.settings.first().autoUpdate } }
+}.getOrNull() ?: false
 
 /** app lang DE? (receivers + worker: DataStore read, ≤ 0.5 s) */
 private fun isDe(ctx: Context): Boolean = runCatching {
@@ -115,6 +120,10 @@ fun scheduleUpdate(ctx: Context) {
     val req = PeriodicWorkRequestBuilder<UpdateWorker>(1, TimeUnit.DAYS)
         .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()).build()
     WorkManager.getInstance(ctx).enqueueUniquePeriodicWork(WORK, ExistingPeriodicWorkPolicy.KEEP, req)
+    // + 1 check now (app start) ➡ a new version shows up at once, not up 2 a day later · same version = no re-nag (RENAG)
+    val now = androidx.work.OneTimeWorkRequestBuilder<UpdateWorker>()
+        .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()).build()
+    WorkManager.getInstance(ctx).enqueueUniqueWork("$WORK-now", androidx.work.ExistingWorkPolicy.REPLACE, now)
 }
 
 /**

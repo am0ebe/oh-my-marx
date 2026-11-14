@@ -131,6 +131,31 @@ fun SettingsScreen(vm: AppVm, askNotifPermission: () -> Unit) {
         Gap(8)
         HorizontalDivider()
 
+        // ── 🆕 updates (🦠 @1114): browser install = ask by dflt, opt-in auto · Obtainium/store = their job ──
+        run {
+            val ctx = androidx.compose.ui.platform.LocalContext.current
+            val via = remember { de.strix.marxversion.data.Update.via(ctx) }
+            if (via == de.strix.marxversion.data.Update.Via.SELF) Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(vertical = 8.dp)) {
+                Column(Modifier.weight(1f)) {
+                    Text(tr("🆕 Automatisch aktualisieren", "🆕 Update automatically"))
+                    Text(tr("Neue Versionen installieren sich ohne Nachfrage (Android 12+). Aus = du bekommst eine Nachricht und tippst.",
+                        "New versions install without asking (Android 12+). Off = you get a notification and tap."),
+                        style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                }
+                de.strix.marxversion.ui.ds.DsSwitch(s.autoUpdate, { vm.setAutoUpdate(it) })
+            }
+            // 🧪 D-036 abc test: Today hero a · b · c (DEV o Hooked/Testmodus only)
+            if (IS_DEV || s.testMode) Column(Modifier.padding(vertical = 8.dp)) {
+                Text(tr("🧪 Heute-Kopf (D-036)", "🧪 Today hero (D-036)"))
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    listOf('a' to tr("a kompakt", "a compact"), 'b' to tr("b groß", "b big"), 'c' to tr("c klappt ein", "c collapses")).forEach { (k, l) ->
+                        de.strix.marxversion.ui.ds.ChoiceChip(l, s.hero == k, { vm.setHero(k) })
+                    }
+                }
+            }
+            HorizontalDivider()
+        }
+
         // ── 👤 name ── QA r5: Mitlesen toggle + its txt gone = always on (D-020) · 1 field, label just "Name", only here (#8)
         // 💬 name = what others see i comments + Kreise (account is made w ur 1st post, lives only on this fon)
         Gap(8)

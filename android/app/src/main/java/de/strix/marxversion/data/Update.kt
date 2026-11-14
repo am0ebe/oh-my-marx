@@ -83,8 +83,7 @@ object Update {
     fun obtainiumRefresh(ctx: Context): Intent =
         Intent(Intent.ACTION_VIEW, Uri.parse("obtainium://refresh?id=" + ctx.packageName)).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 
-    /** Obtainium users: its bg check (6 h) gets a head start ➡ we only nag aft GRACE_H hours o th same version */
-    const val GRACE_H = 8
+    // (GRACE_H 8 h head start 4 Obtainium dropped @1114: 🦠 "do notification immediately")
 
     /** 🧪 DEV app only: newest build on <web>/dev/ (null = offline / not DEV) · th app says honestly if it's stale (@1107) */
     suspend fun devLatest(): Latest? = withContext(Dispatchers.IO) {
