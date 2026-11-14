@@ -12,5 +12,10 @@ on:
 jobs:
   ci:
     uses: am0/ci/.forgejo/workflows/app.yml@v1   # cross-repo ➡ am0/ci must stay public
-    with: {name: omm, dir: server, req: requirements-dev.txt, src: ".", cov: 85, image: true, android: android}
+    with:
+      {name: omm, dir: server, req: requirements-dev.txt, src: ".", cov: 85, image: true, android: android,
+       # 🩹 D-030 A (ops arch.md): 3g memcg killed run 940 (gradle 2.38G + Robolectric 630M) ➡ smaller JVMs, same cap
+       #   2nd -D wins over app.yml's -Xmx1536m · --max-workers=2 = fewer parallel heaps · test fork 512m (app/build.gradle.kts)
+       #   ➡ move into app.yml default once am0 moves v1, then drop th override here
+       gradle: '-Dorg.gradle.jvmargs="-Xmx1280m -XX:MaxMetaspaceSize=768m" --max-workers=2 lintDebug testDebugUnitTest assembleRelease'}
     secrets: inherit

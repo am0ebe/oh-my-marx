@@ -65,6 +65,8 @@ android {
     testOptions {
         unitTests.isIncludeAndroidResources = true
         unitTests.all { t ->
+            t.maxHeapSize = "512m"   // D-030: Robolectric fork · CI 3g cap = gradle 1280m + this
+            t.maxParallelForks = 1
             t.systemProperty("shots", if (project.hasProperty("shots")) "1" else "")
             t.systemProperty("shotsDir", layout.buildDirectory.dir("shots").get().asFile.path)
         }
