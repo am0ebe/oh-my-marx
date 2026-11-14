@@ -309,6 +309,9 @@ _per concept 2-3 lines_
 
 ## 🗃️ pruned fr todo_omm @1113 (detail + old ✔️)
 
+### ✂️ dropped @1114 (🦠 "drop des")
+- ✂️ 🎨 **design pass fr `pr/des/`** (17 screenshots o another app) ➡ themes · widgets · layouts · _y: dir not found + design_system.md replaces it_
+
 ### ✂️ BL hygiene @1113 — prune_1113.md applied (🦠 ✔️ via M8) · old lines verbatim
 - **dropped** (5):
   - 🌐 web/PWA 4 iPhone friends — later, rebuild (no shake, new voices) · _y: no iPhone demand logged_

@@ -23,30 +23,33 @@ _SDD: code says **wh** · th file says **y** · drift = a bug · fmt ➡ `pr/vib
 - **dc**: `server/Dockerfile` uninstalls pip + rm `ensurepip` (same pip as a wheel) + build-time guard (`! import pip`) · nightly caller keeps `pip: true` (template skips w a warning wh no pip ➡ audit comes back by itself if deps ever land)
 - **y**: no pip = nothing 2 patch, 4 good · alt `pip install -U pip` ❌ needs PyPI at build + red again on th nxt pip advisory · alt `pip: false` i nightly.yml ❌ hides th finding, pip stays i th image
 - **ck**: local build: `pip` not found · `/v1/health` ok · trivy 0.72.0 (CI flags) exit 0 · CI canary green · live = aft ops rebuilds `/srv/omm-api` (ops-owned, SERVICE.md)
-_🎨 D-029..036 @1113 = design system (🦠 decides · 🤖 pick = 1st option) · spec ➡ [design_system.md](design_system.md) § 0 = same list as a table · @1114: D-029 + D-030 ✔️ ➡ L0 built (`ui/ds/`) · D-031..036 still 💬_
-### D-036 @1113 · Today above th fold (qa-D1): compact hero + stamp tag · 💬
+_🎨 D-029..036 @1113 = design system (🦠 decides · 🤖 pick = 1st option) · spec ➡ [design_system.md](design_system.md) § 0 = same list as a table · @1114: D-029 + D-030 ✔️ ➡ L0 built (`ui/ds/`) · D-031..035 ✔️ (🦠 @1114) · D-036 💬 (mockups)_
+### D-036 @1113 · Today above th fold (qa-D1): compact hero + stamp tag · 💬 (🦠 @1114: "which is which? show me" ➡ mockups `d036_all.png` a · b · c)
 - **ctx**: 🦠 "landing shd fit verse + streak widget + read-plan btn" · now hero (star 92 + week row + stamp row + rank) + card ➡ plan entry below th fold
 - **options**: **a) compact hero 120dp (star 48 + 7 day dots + Tag "☭ 3/10"), full stamp card ➡ My Capital** (🤖 pick) · b) keep hero, shrink quote card · c) hero collapses on scroll
 - **y**: a = only one th fits both sizes by budget (412×915: 599 o 730 · 360×760: 542 o 592) + keeps th card big (it's th content) · b ❌ smaller quote = worse share img match · c ❌ nothing fits b4 th 1st scroll
 - **ck**: shots `today*` at 360×760: hero + card + actions + plan row visible · stamp card i `mine`
-### D-035 @1113 · sounds (qa-R1 "Duolingo-satisfying"): 3 tiny, dflt off · 💬
+### D-035 @1113 · sounds (qa-R1 "Duolingo-satisfying"): 3 tiny, dflt off · ✔️ b @1114 (🦠 "sure lez try", lane L6)
 - **options**: a) none, haptics only · **b) page rustle · stamp thud · badge chime (≤ 300 ms), 1 ⚙️ switch, dflt off, follows ringer** (🤖 pick, later lane L6) · c) on by dflt
 - **y**: haptics 1st = 90 % o th feel 4 0 assets · sound = opt-in (reading i bed / train) · c ❌ surprise noise = uninstall
 - **ck**: ⚙️ switch · no audio focus taken · APK + < 100 KB
-### D-034 @1113 · daily Amen fx = CheckPop · sickle swoosh = rare (rank-up / full stamp card) · 💬
+### D-034 @1113 · daily Amen fx = CheckPop · sickle swoosh = rare (rank-up / full stamp card) · ✔️ b @1114
+- **🦠 @1114**: "lez try b. not everyday (variable reward!!!) ➡ add 2 hooked mode" ➡ + 1 HookNote (Hooked mode on) at th rare swoosh: "this one is rare on purpose = variable reward (Hooked ch 4)" · lane L5 (Fx queue) + L1 (Hooks.kt)
 - **ctx**: swoosh 2.3 s evy day + Orden dialog aft a fixed 2600 ms wait ➡ daily tap feels long, rewards collide
 - **options**: a) as now · **b) daily = CheckPop 1.2 s + 📳 · swoosh + confetti only on rank-up / card full / plan done · 1 celebration at a ti (queue)** (🤖 pick)
 - **y**: variable reward (Hooked) needs rare ≠ daily · D-004 calm · 🦠 QA: wants satisfying, not slow
 - **ck**: `Fx.kt` queue · tst: 2 rewards same tap ➡ shown 1 aft th oth, no fixed delay
-### D-033 @1113 · book font = system serif now · bundled face = 🧪 later · 💬
+### D-033 @1113 · book font = system serif now · bundled face = 🧪 later · ✔️ b 🧪 @1114
+- **🦠 @1114**: "try b! maybe ab-tst / cmp" ➡ L6: bundle 1 face (Literata vs EB Garamond) ➡ side-by-side shots `chapter` ×3 (system · Literata · Garamond) 4 🦠 2 pick · then maybe ⚙️ toggle = self A/B · non-Latin langs keep system serif
 - **options**: **a) system serif (Noto Serif)** (🤖 pick) · b) bundle Literata o EB Garamond (OFL, +0.3-1 MB, Latin + Cyrillic only)
 - **y**: 13 langs incl. ar · hi · bn · ur · zh ➡ a bundled face covers 3-4 o them, rest falls back = 2 looks · APK alr 29.7 o ~30 MB · b = 🧪 aft th system lands (1 token swap)
 - **ck**: no `res/font` · `OmmType.book*` = `FontFamily.Serif`
-### D-032 @1113 · dark theme "Nachtschicht": tokens now, wire later, follow system · 💬
+### D-032 @1113 · dark theme "Nachtschicht": tokens now, wire later, follow system · ✔️ c @1114 (🦠 "C!": ⚙️ toggle light · dark · system, dflt system · lane L6)
 - **options**: a) light only · **b) follow system** (🤖 pick, L6) · c) b + ⚙️ toggle (light · dark · system)
 - **y**: night readers = real (NIGHT hero alr exists) · tokens cost nothing now + keep hard-coded colours out (guard) · wiring = own QA round (shots ×2) ➡ not i th 1st pass · c = 1 more setting, only if asked
 - **ck**: `Tokens.kt` hs both schemes · `Theme.kt` uses light til L6
-### D-031 @1113 · reader chrome: slim paper head, no bottom nav i a chapter · 💬
+### D-031 @1113 · reader chrome: slim paper head, no bottom nav i a chapter · ✔️ b (try) @1114
+- **🦠 @1114**: "not sure which is which · try b · but immersive mayb" ➡ build b i L2 · c stays 🧪 (mockups `d031_all.png` a · b · c) ➡ re-ask aft fon QA
 - **ctx**: qa-D2 "book look: old · worthy · holy" · now red top bar + lavender nav frame th page = app, not book
 - **options**: a) as now · **b) slim paper head (back · chapter · 💬 N), bottom nav hidden, status bar = page colour** (🤖 pick) · c) full immersive, tap = toggle chrome
 - **y**: b = +~100dp page + th page becomes th screen, exit stays visible · c ❌ tap is taken (verse menu · double-tap turn D-022) + hidden exit
@@ -191,7 +194,7 @@ _🎨 D-029..036 @1113 = design system (🦠 decides · 🤖 pick = 1st option) 
 - **y**: ❓ am0 · **ck**: `data/I18n.kt`
 
 ## ❓ open Qs
-- 💬 **🎨 design system D-031..036** (6 picks waiting ➡ design_system.md § 0 · D-029 + D-030 ✔️ @1114, L0 built) · L1 Today needs D-036 · L2 chrome needs D-031
+- 💬 **🎨 D-036** Today hero a · b · c (mockups `d036_all.png`) · blocks L1 Today only · rest o D-029..035 ✔️ @1114
 - 💬 **streak**: (a) any reading day · (b) plan days only · (c) hybrid chip — Mi: 2nd "done" looks meagre next 2 big streak widget
 - 💬 **Mitlesen toggle**: rm? (QA lane B removed th note only) · 💬 ☭ close btn i MarxDialog: keep/rm? · 💬 "share app" prompt aft streak/medal?
 - ❓ streak widget "shd show 2 at start" = ? (todo ‼️ A)

@@ -8,12 +8,13 @@ _contrast = WCAG 2.x, computed (text ≥ 4.5 · large txt / icon / border ≥ 3)
 |---|---|---------|---------|
 | D-029 | base rules o th spec (§ 1) | ✔️ as written · change X | ✔️ **as written** (🦠 @1114) |
 | D-030 | btn look (qa-D7, mockups § 5) | A pill tonal · B letterpress · C rubric | ✔️ **A + B's press edge on th 1 big btn** (🦠 @1114) |
-| D-031 | reader chrome | a) as now · b) slim paper head, no bottom nav · c) immersive, tap = toggle | **b** |
-| D-032 | dark theme | a) light only · b) follow system · c) + ⚙️ toggle | **tokens now, wire later = b** |
-| D-033 | book font | a) system serif · b) bundle 1 (Literata / EB Garamond, +0.3-1 MB) | **a** now · b = 🧪 later |
-| D-034 | daily Amen fx | a) sickle swoosh evy day (now) · b) CheckPop daily, swoosh = rank-up / full card | **b** |
-| D-035 | sounds (qa-R1) | a) none · b) 3 tiny (page · stamp · badge) + ⚙️ switch, dflt off | **b, later lane** |
-| D-036 | Today above th fold (qa-D1) | a) compact hero + stamp tag · b) keep hero, shrink card · c) hero collapses on scroll | **a** |
+| D-031 | reader chrome | a) as now · b) slim paper head, no bottom nav · c) immersive, tap = toggle | ✔️ **b** (try, c = 🧪) 🦠 @1114 |
+| D-032 | dark theme | a) light only · b) follow system · c) + ⚙️ toggle | ✔️ **c** 🦠 @1114 (L6) |
+| D-033 | book font | a) system serif · b) bundle 1 (Literata / EB Garamond, +0.3-1 MB) | ✔️ **b 🧪** 🦠 @1114 (cmp shots, L6) |
+| D-034 | daily Amen fx | a) sickle swoosh evy day (now) · b) CheckPop daily, swoosh = rank-up / full card | ✔️ **b** + Hooked note 🦠 @1114 |
+| D-035 | sounds (qa-R1) | a) none · b) 3 tiny (page · stamp · badge) + ⚙️ switch, dflt off | ✔️ **b** 🦠 @1114 (L6) |
+| D-036 | Today above th fold (qa-D1) | a) compact hero + stamp tag · b) keep hero, shrink card · c) hero collapses on scroll | 💬 **a** · mockups ➡ `d036_all.png` |
+- 👀 mockups 4 th 2 unsure picks (`DsChoicesTest`, test-only): `android/app/build/shots/d031_all.png` · `d036_all.png`
 
 ## 1 · 🔑 concept — a book th acts like an app
 - **3 materials**: 📄 Paper = surfaces · ✒️ Ink = text · 📘 Cloth = MEW blue (app's voice, 2nd actions)

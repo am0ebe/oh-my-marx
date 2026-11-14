@@ -104,7 +104,7 @@ class ShotsTest {
         scroll(); scroll()
         tap("Day complete!")
         rule.mainClock.advanceTimeBy(3000)
-        tap("★", true)                         // celebrate dialog (own window: back press doesn't reach it)
+        rule.onAllNodesWithContentDescription("Close").onFirst().performClick()   // ★ celebrate dialog (own window: back press doesn't reach it) · ★ = drawn since @1114, no glyph
         rule.mainClock.advanceTimeBy(3000)     // 1st reading day ➡ "new badge" dialog aft 2.6 s
         if (rule.onAllNodesWithText("Keep going!").fetchSemanticsNodes().isNotEmpty()) tap("Keep going!")
         repeat(4) { scroll() }

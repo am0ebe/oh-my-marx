@@ -19,7 +19,7 @@
 ## 📆
 
 ## 🔵
-- 🎨⭐ **design system** — spec ✔️ @1113 ➡ [design_system.md](design_system.md) (tokens · 5 btn kinds · voices · per-screen deltas) · D-029 + D-030 (A+) ✔️ @1114 · 💬 🦠: 6 picks D-031..036 (L1 needs D-036)
+- 🎨⭐ **design system** — spec ✔️ @1113 ➡ [design_system.md](design_system.md) (tokens · 5 btn kinds · voices · per-screen deltas) · D-029..035 ✔️ @1114 · 💬 🦠: D-036 Today hero (mockups `d036_all.png`, blocks L1)
   - 🤖 lanes: ✔️ L0 foundation @1114 (`ui/ds/` + guard, 👀 🦠 ds_gallery.png) ➡ L1-L5 fan-out ➡ fan-in ➡ fon QA · covers big round #7 + qa-D1 · D3 (D-015) · D5-D9
 - 🤖 **big round** left (QA r5 @1113): translate.py PlanDay xd/xe (Ludditen bridges = EN i oth langs) · #7 btn styles ➡ design system ⬆ · src qa_1112.md § r4 sweep
 - 🧪 self-update (D-021) on a real fon: 1st DEV deploy aft r5 ➡ old DEV (adb-installed) gets th notification wi ~1 d · Obtainium-installed = skipped by design
@@ -38,7 +38,6 @@
 - 🤖🔧 translate_full: log secs per call + count failed calls' toks i th meter (runaways were invisible 4 days)
 - 💡 viral: in-app Spruchkarte share ➡ `scagent.de/omm` under th card img? (check wh it has now)
 - 🔊 persona voices = lives i **pr/audio** now (`voice/` engine + `todo_audio.md`) · omm side: wait 4 audio D-010 (voice packs ok?) ➡ then `render_pack.py` · 🚫 real Merz (impression = ok)
-- ✂️ 🎨 **design pass fr `pr/des/`** (17 screenshots o another app) ➡ themes · widgets · layouts — ✂️? dir `pr/des/` not found @1113 + design_system.md exists now ➡ 🦠: drop o where r th shots?
 - 📦 **Ask Marx**: everyday problem (boss, rent, overtime) ➡ Marx answers short + punchy w a Kapital quote + ref (tap ➡ chapter)
   - 🔍 persona prompt + RAG over scored verses (must cite 1) · LLM: on-device Gemma 3 1B (~600 MB 👎) ⬄ ollama on tow/vps ⬄ API · ⚠️ no real legal/medical/money advice, crisis ➡ real help · ironic, not cringe
 - 👥 community nxt: QR invite (zxing) · ⚠️ report btn + mod tools b4 strangers join
