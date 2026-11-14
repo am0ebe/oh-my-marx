@@ -3,8 +3,10 @@
   - 🚦 rule: no version bump / ship / big new feat til th current one had ≥1 QA round on th fon · big side-quests (voice, chat infra) ➡ own pr
 
 ## ⏳
-- ▶ **RESUME @1113 eos #3** — pt 1 + M8 follow-ups ✔️ (`042ec60`, 78 tsts green, ❌ not deployed) · DEV on fon = still A (r4+r5+r5b)
-  - nxt: 🦠 fon tst updater D-023 (5 steps) ➡ fon QA r5 ➡ 📸 shots b4 UI handoff · detail + ⚠️ traps + 👤 strix Qs ➡ [notes.md § 🗃️ pruned @1113](notes.md)
+- ▶ **RESUME @1114 eos** — ds L0 + lanes L2 · L3 · L5 merged + pushed (`cb465b5`, 90 tsts green) · DEV live = `0.10.0-dev.1114.2117` (B) · prev DEV A = 1114.1620 (1st w new updater D-038)
+  - ▶ nxt: 🦠 fon: install A by hand (if not yet) ➡ open app ➡ B notification should pop ≤1 min (Obtainium path) · then browser-APK path (install B fr page ➡ 🤖 deploy C) · 🦠 D-036 abc (⚙️ "Today hero") ➡ pick ➡ 🤖 L1 Today + L4 Mine/⚙️/Hooked lanes (same worktree-agent pattern) ➡ `bin/translate.py --only ui` (new labels: Back · Install · Switch on · Copied · Reading room · Not now…)
+  - 👤 🦠: D-036 pick · fon tst updater (Obtainium + browser) · fon QA o th whole ds look · D-029 ✔️ came via M8 relay ➡ 🦠 skim design_system.md § 1
+  - ⚠️ traps: `.claude/worktrees/` 3 lane checkouts + branches `worktree-agent-*` still there (merged ➡ rm = 🦠 ok) · TodayScreen still calls fx directly ➡ L1: `fx.play(amenFx(rare))` b4 `vm.amen()` + "Day complete!" dialog into a `RewardSlot` (Fx.kt KDoc) · D-034 Hooked note not built (L1) · d036 b in-app = big hero, card NOT shrunk · kreis_detail + unlock = no shot (fon check: Leave confirm) · guard baseline = recompute aft evy merge (strict both ways) · omm-api live rebuild = ops (their refl log says done @1114, not verified here)
 
 ## ‼️
 - ⭐🧪 **QA sprint 0.9.x** — r1-r3 ✔️ · left ➡ [qa_1112.md](qa_1112.md) (🎨 10 design · 🔍 5 research · 💬 Qs) · ❓ streak widget "shd show 2 at start" = ? unanswered
@@ -20,9 +22,8 @@
 
 ## 🔵
 - 🎨⭐ **design system** — spec ✔️ @1113 ➡ [design_system.md](design_system.md) (tokens · 5 btn kinds · voices · per-screen deltas) · D-029..035 ✔️ @1114 · 💬 🦠: D-036 Today hero (mockups `d036_all.png`, blocks L1)
-  - 🤖 lanes: ✔️ L0 foundation @1114 (`ui/ds/` + guard, 👀 🦠 ds_gallery.png) ➡ L1-L5 fan-out ➡ fan-in ➡ fon QA · covers big round #7 + qa-D1 · D3 (D-015) · D5-D9
+  - 🤖 lanes: ✔️ L0 · L2 · L3 · L5 @1114 ➡ left L1 Today (needs D-036) · L4 Mine/⚙️/Hooked ➡ fan-in ➡ fon QA · L6 later (dark c · font b 🧪 · sounds b)
 - 🤖 **big round** left (QA r5 @1113): translate.py PlanDay xd/xe (Ludditen bridges = EN i oth langs) · #7 btn styles ➡ design system ⬆ · src qa_1112.md § r4 sweep
-- 🧪 self-update (D-021) on a real fon: 1st DEV deploy aft r5 ➡ old DEV (adb-installed) gets th notification wi ~1 d · Obtainium-installed = skipped by design
 - 🦠🔑 keystore: ✔️ symlink @1105 · left: KeePass note (`base64 -w0`, notes.md § 🔑) · 1 offline/restic copy · lap same `ln -s` (➡ sys ansible?)
 - 💬 ops (optional): `/omm/*` ➡ `/oh-my-marx/{path}` (Obtainium URL `scagent.de/omm/`) · `/omm/src` ➡ GitHub 302 · `/omm/dev` redirect = valid again (/dev back @1106)
 - 🪝⭐ **Hooked/Fogg pass** (aft QA sprint) — raw ➡ `re/boox/hooked/hooked.md` § 📥 @1112
@@ -52,6 +53,7 @@
 - _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm wo 🦠 ok · dropped @1113 ➡ [notes.md § 🗃️](notes.md)_
 
 ## ✔️
+- ✔️ @1114: design system L0 (`ui/ds/` + guard + ds_gallery) + lanes L2 Book · L3 Plans/Circle (Leave confirm 🐛) · L5 bars/dialogs/fx queue · D-029..035 picked · updater D-038 · omm-api no pip D-037 · DEV 1114.1620 + .2117
 - ✔️ @1113: big round pt 1 (EN data via pipeline · 📜 feed · 🔓 Hooked unlock · 🤖 Ludditen plan) + follow-ups (FÜFNZEHNTES + IdMoves D-028 · 13,120-125 align · UI/plan fan-in 11 langs) · r5 + r5b updater (D-023) · ❌ not deployed
 - ✔️ @1112: QA sprint r1-r3 (3 fan-ins: plan continuity · About cleanup · share panel + ★ close · Abzeichen + tone · arch title card · Lesesaal-Name) · arch.md SDD (D-001..016) · qa_1112 triage · r2 test lanes (lint · Update · Matrix · bin)
 - ✔️ @1108: **0.9.0 shipped** (13 langs whole book · fr ru hi bn ur id) · Obtainium DEV fixed 4 good · translate_full output cap · Feedback btn · GitHub mirror live
