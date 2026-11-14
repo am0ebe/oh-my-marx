@@ -1,11 +1,12 @@
 # 🛡️ DesignGuardTest baseline — raw design values OUTSIDE ui/ds/ (design_system.md § 11)
 # ratchet: a nr may only go DOWN · evy lane lowers its share · goal = 0 evywhere (fan-in)
 # L0 @1114 = starting point (exempt: Share.kt · Fx.kt · notify/ · Feast.kt)
-Color(0x = 48
-.sp = 174
-RoundedCornerShape( = 33
-Button( = 19
+# L2 Book @1114: ReadScreen · VerseView · Comments ➡ 0 each (Color -9 · .sp -36 · RCS -9 · Button -1 · FilterChip -1)
+Color(0x = 39
+.sp = 138
+RoundedCornerShape( = 24
+Button( = 18
 OutlinedButton( = 5
 TextButton( = 12
 AssistChip( = 9
-FilterChip( = 3
+FilterChip( = 2

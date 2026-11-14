@@ -1,68 +1,82 @@
 package de.strix.marxversion.ui
 
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.foundation.gestures.calculateZoom
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.compositionLocalOf
-import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.foundation.gestures.awaitEachGesture
-import androidx.compose.foundation.gestures.awaitFirstDown
-import androidx.compose.foundation.gestures.calculateZoom
-import androidx.compose.ui.input.pointer.PointerEventPass
-import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.input.pointer.positionChange
-import androidx.compose.ui.input.pointer.positionChanged
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.text.style.TextAlign
-import kotlin.math.abs
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.tween
-import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.detectHorizontalDragGestures
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.TransformOrigin
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.lerp
+import androidx.compose.ui.input.pointer.PointerEventPass
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.font.FontFamily
-import de.strix.marxversion.data.Verse
-import kotlinx.coroutines.launch
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.draw.clip
-import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.layout.size
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import de.strix.marxversion.data.T
+import de.strix.marxversion.data.Verse
 import de.strix.marxversion.data.f
 import de.strix.marxversion.logic.chapterDone
+import de.strix.marxversion.ui.ds.CountChip
+import de.strix.marxversion.ui.ds.Ds
+import de.strix.marxversion.ui.ds.OmmType
+import de.strix.marxversion.ui.ds.Space
+import kotlinx.coroutines.launch
 
 private val ABSCHNITTE = listOf(
     T("Vorworte", "Prefaces"), T("Ware und Geld", "Commodities and Money"),
@@ -73,50 +87,83 @@ private val ABSCHNITTE = listOf(
     T("Der Arbeitslohn", "Wages"), T("Der Akkumulationsprozeß des Kapitals", "The Process of Accumulation of Capital"),
 )
 
+/**
+ * 📚 Read list (design_system.md § 10): title-l · progress body-m + 4dp bar · Abschnitte = sticky red rubric heads (title-s)
+ *   rows 56: ✔ (ok) / ○ + chapter title serif body-l + "p. N" label-s at th end
+ */
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ReadScreen(vm: AppVm, openChapter: (String) -> Unit) {
     val readIds by vm.readIds.collectAsStateWithLifecycle()
     val s by vm.settings.collectAsStateWithLifecycle()
     val done = remember(readIds) { chapterDone(vm.content.verses, readIds) }
     val n = done.values.count { it }
-    LazyColumn(Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
+    val typo = MaterialTheme.typography
+    LazyColumn(Modifier.fillMaxWidth()) {
         item {
-            Text(tr("Das Kapital, Band 1", "Capital, Volume 1"), fontSize = 22.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(top = 12.dp))
-            // QA r5: bar + % · % = paragraphs read (moves evy page, not only per finished chapter)
-            val pct = bookPercent(readIds.size, vm.content.verses.size)
-            Text(tr("%d von %d Kapiteln erledigt", "%d of %d chapters done").f(n, done.size), fontSize = 13.sp)
-            Row(verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
-                LinearProgressIndicator(progress = { pct / 100f }, modifier = Modifier.weight(1f).padding(vertical = 6.dp))
-                Text("%d %%".f(pct), fontSize = 13.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.padding(start = 10.dp))
+            Column(Modifier.padding(horizontal = Space.gutter)) {
+                Text(tr("Das Kapital, Band 1", "Capital, Volume 1"), style = typo.titleLarge, color = Ds.ink, modifier = Modifier.padding(top = Space.l))
+                // QA r5: bar + % · % = paragraphs read (moves evy page, not only per finished chapter)
+                val pct = bookPercent(readIds.size, vm.content.verses.size)
+                Text(tr("%d von %d Kapiteln erledigt", "%d of %d chapters done").f(n, done.size), style = typo.bodyMedium, color = Ds.ink,
+                    modifier = Modifier.padding(top = Space.xs))
+                Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(vertical = Space.s)) {
+                    LinearProgressIndicator(progress = { pct / 100f }, color = Ds.red, trackColor = Ds.paperDeep, strokeCap = StrokeCap.Round,
+                        gapSize = 0.dp, drawStopIndicator = {}, modifier = Modifier.weight(1f).height(4.dp))
+                    Text("%d %%".f(pct), style = typo.labelMedium, color = Ds.inkMuted, modifier = Modifier.padding(start = Space.m))
+                }
+                HookNote(Hook.ENDOWED, s.testMode)
             }
-            HookNote(Hook.ENDOWED, s.testMode)
         }
         var lastAb = -1
         vm.content.chapters.forEach { c ->
             if (c.abschnitt != lastAb) {
                 lastAb = c.abschnitt
-                item { SectionTitle(ABSCHNITTE.getOrNull(c.abschnitt)?.let { tr(it) } ?: "") }
+                val head = ABSCHNITTE.getOrNull(c.abschnitt)
+                stickyHeader(key = "ab${c.abschnitt}") {
+                    Text(head?.let { tr(it) } ?: "", style = typo.titleSmall, color = Ds.red,
+                        modifier = Modifier.fillMaxWidth().background(Ds.paper)
+                            .padding(start = Space.gutter, end = Space.gutter, top = Space.xl, bottom = Space.s))
+                }
+                // prefaces = 1 "on the house 🎁" under th head (was repeated on all 6 rows)
+                if (c.kap.startsWith("V")) item(key = "ab${c.abschnitt}_gift") {
+                    Text(tr("geschenkt 🎁", "on the house 🎁"), style = typo.labelMedium, color = Ds.inkMuted,
+                        modifier = Modifier.padding(horizontal = Space.gutter))
+                }
             }
-            item {
+            item(key = c.kap) {
                 val key = if (c.kap.startsWith("V")) "V" else c.kap
-                val label = when {
-                    key == "V" -> tr("geschenkt 🎁", "on the house 🎁")
-                    key == "8" -> tr("schon gelebt (du arbeitest ja)", "already lived (you do work, right?)")
+                val label = when (key) {
+                    "8" -> tr("schon gelebt (du arbeitest ja)", "already lived (you do work, right?)")
                     else -> ""
                 }
-                Row(Modifier.fillMaxWidth().clickable { openChapter(c.kap) }.padding(vertical = 8.dp)) {
-                    Text(if (done[key] == true) "✔️ " else "○ ", fontSize = 15.sp)
-                    Column {
-                        Text(chapterTitle(c), fontSize = 15.sp)
-                        // sweep r4: no dangling " · " when a preface has no page
-                        Text(listOfNotNull(c.page?.let { tr("S. %d", "p. %d").f(it) }, label.ifBlank { null }).joinToString(" · "),
-                            fontSize = 11.sp, color = MaterialTheme.colorScheme.secondary)
+                val isDone = done[key] == true
+                Row(Modifier.fillMaxWidth().heightIn(min = 56.dp).clickable { openChapter(c.kap) }
+                    .padding(horizontal = Space.gutter, vertical = Space.s), verticalAlignment = Alignment.CenterVertically) {
+                    DoneMark(isDone)
+                    Column(Modifier.weight(1f).padding(horizontal = Space.m)) {
+                        Text(chapterTitle(c), style = typo.bodyLarge.copy(fontFamily = FontFamily.Serif), color = Ds.ink)
+                        if (label.isNotBlank()) Text(label, style = typo.labelMedium, color = Ds.inkMuted)
                     }
+                    c.page?.let { Text(tr("S. %d", "p. %d").f(it), style = typo.labelSmall, color = Ds.inkMuted) }
                 }
-                HorizontalDivider()
+                HorizontalDivider(color = Ds.line, modifier = Modifier.padding(horizontal = Space.gutter))
             }
         }
+    }
+}
+
+/** ✔ ok-green check (read) / ○ outline (not yet) · shape differs, not only colour (§ 9) */
+@Composable
+private fun DoneMark(done: Boolean) {
+    val state = if (done) tr("gelesen", "read") else tr("ungelesen", "unread")
+    Canvas(Modifier.size(20.dp).semantics { stateDescription = state }) {
+        val w = size.width
+        if (done) {
+            val st = 2.5.dp.toPx()
+            drawLine(Ds.ok, Offset(w * .14f, w * .54f), Offset(w * .40f, w * .80f), st, StrokeCap.Round)
+            drawLine(Ds.ok, Offset(w * .40f, w * .80f), Offset(w * .88f, w * .22f), st, StrokeCap.Round)
+        } else drawCircle(Ds.outline, radius = w * .38f, style = Stroke(1.5.dp.toPx()))
     }
 }
 
@@ -143,8 +190,9 @@ fun bookPages(all: List<Verse>): List<BookPage> {
     return out
 }
 
-private val PAPER = Color(0xFFF3E7CF)
-private val INK = Color(0xFF3B2A1A)
+/** th desk under th book (darker ink) · dog-ear flap = page w a little gold-brown · no raw hex (guard) */
+private val DESK = lerp(Ds.ink, Color.Black, .3f)
+private val FLAP_DARK = lerp(Ds.page, Ds.goldDeep, .16f)
 
 /**
  * 📖 th book (strix @1103: "like th actual old book, swipe ➡ th page turns"):
@@ -152,6 +200,7 @@ private val INK = Color(0xFF3B2A1A)
  *  🤏 pinch = font size (saved) · long page ➡ scroll down inside it
  *  verse: tap = menu · hold = menu · double-tap anywhere = turn (QA r5, was 🔖) · 📐 dog-ear = turn
  * Own pager (not HorizontalPager): th turning page must be drawn ABOVE th next one, pinned at th spine.
+ * D-031 b: slim paper head on top (back · chapter · 💬 N) · app bars hidden by MainActivity (L5)
  */
 @Composable
 fun ChapterScreen(vm: AppVm, kap: String, focus: String?, @Suppress("UNUSED_PARAMETER") goChapter: (String) -> Unit = {}) {
@@ -199,8 +248,10 @@ fun ChapterScreen(vm: AppVm, kap: String, focus: String?, @Suppress("UNUSED_PARA
     }
 
     CompositionLocalProvider(LocalReadScale provides scale, LocalPageTurn provides fwd) {
+      Column(Modifier.fillMaxSize().background(Ds.page)) {
+        SlimHead(vm, pages[index]) { talk = pages[index] }
         Box(
-            Modifier.fillMaxSize().background(Color(0xFF2A1E14))  // th desk under th book
+            Modifier.weight(1f).fillMaxWidth().background(DESK)  // th desk under th book
                 .pointerInput(Unit) {  // 🤏 pinch (Initial pass: before th page scrolls)
                     awaitEachGesture {
                         awaitFirstDown(requireUnconsumed = false)
@@ -246,7 +297,7 @@ fun ChapterScreen(vm: AppVm, kap: String, focus: String?, @Suppress("UNUSED_PARA
             // under: th page revealed (fwd: nxt page · back: current) · shadow fades as th turning page leaves
             val under = if (t < 0) index + 1 else index
             val over = if (t < 0) index else if (t > 0) index - 1 else -1
-            key(under) { Page(vm, pages[under], speaker, under, pages.size, Modifier.fillMaxSize(), flashId) { talk = pages[under] } }
+            key(under) { Page(vm, pages[under], speaker, under, pages.size, Modifier.fillMaxSize(), flashId) }
             // fwd: covered at th start (dark) ➡ revealed (light) · back: gets covered (light ➡ dark)
             if (t != 0f) Box(Modifier.fillMaxSize().background(Color.Black.copy(alpha = 0.35f * if (t < 0) 1f + t else t)))
             if (over >= 0) key(over) {
@@ -256,16 +307,56 @@ fun ChapterScreen(vm: AppVm, kap: String, focus: String?, @Suppress("UNUSED_PARA
                     transformOrigin = TransformOrigin(0f, 0.5f)
                     rotationY = angle
                     cameraDistance = cam
-                }, null) { talk = pages[over] }
+                }, null)
             }
             // 📐 dog-ear bottom-right = "this is a page, it turns" · tap = turn (indicator + 2nd way 2 do it)
             if (index < pages.lastIndex && t == 0f) DogEar(Modifier.align(Alignment.BottomEnd), fwd)
-            // 💬 hint pill (only while th peek is still on, see TURN_HINT · 6 s, then out o th way)
+            // 💬 hint pill (only while th peek is still on, see TURN_HINT · 6 s, then out o th way) · paperHi + line, label-m
             if (hintOn && index < pages.lastIndex) Text(
                 tr("⬅ wischen oder doppelt tippen = umblättern", "⬅ swipe or double-tap = turn the page"),
-                fontSize = 12.sp, color = PAPER, modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 14.dp)
-                    .background(INK.copy(alpha = 0.82f), androidx.compose.foundation.shape.RoundedCornerShape(50))
-                    .padding(horizontal = 14.dp, vertical = 6.dp))
+                style = MaterialTheme.typography.labelMedium, color = Ds.ink,
+                modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = Space.l)
+                    .background(Ds.paperHi, CircleShape).border(1.dp, Ds.line, CircleShape)
+                    .padding(horizontal = Space.l, vertical = Space.s))
+        }
+      }
+    }
+}
+
+/**
+ * D-031 b: slim paper head = back · chapter title (serif) · CountChip "💬 N" (oth ppl's notes on this page ➡ sheet)
+ * page colour, 1dp line under it · th app's top bar + bottom nav r hidden on this route (MainActivity, L5)
+ */
+@Composable
+private fun SlimHead(vm: AppVm, p: BookPage, onTalk: () -> Unit) {
+    val chapter = vm.content.chapters.firstOrNull { it.kap == p.kap }
+    val s by vm.settings.collectAsStateWithLifecycle()
+    val all by vm.comments.collectAsStateWithLifecycle()
+    val talkCount = all[p.kap]?.count { it.page == p.page } ?: 0
+    val talkOn = s.community && vm.commentsAvailable
+    val back = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
+    Column(Modifier.fillMaxWidth().background(Ds.page)) {
+        Row(Modifier.fillMaxWidth().height(Space.tap).padding(end = Space.s), verticalAlignment = Alignment.CenterVertically) {
+            BackArrow(tr("Zurück", "Back")) { back?.onBackPressed() }
+            Text(chapter?.let { chapterTitle(it) } ?: p.kap, style = OmmType.bookHead, color = Ds.ink,
+                maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f).padding(end = Space.s))
+            if (talkOn && talkCount > 0) CountChip(talkCount, onTalk, tr("%d Kommentare zu dieser Seite", "%d comments on this page").f(talkCount))
+        }
+        HorizontalDivider(color = Ds.line)
+    }
+}
+
+/** ← back, drawn (no icon font) · 48 target · mirrored i RTL · 🤖 candidate 4 ui/ds at fan-in (sub-screen bars, L5) */
+@Composable
+private fun BackArrow(desc: String, onClick: () -> Unit) {
+    val rtl = LocalLayoutDirection.current == LayoutDirection.Rtl
+    Box(Modifier.size(Space.tap).clip(CircleShape).clickable(role = Role.Button, onClick = onClick).semantics { contentDescription = desc },
+        contentAlignment = Alignment.Center) {
+        Canvas(Modifier.size(24.dp).graphicsLayer { if (rtl) scaleX = -1f }) {
+            val w = size.width; val st = 2.dp.toPx()
+            drawLine(Ds.ink, Offset(w * .2f, w * .5f), Offset(w * .82f, w * .5f), st, StrokeCap.Round)
+            val head = Path().apply { moveTo(w * .46f, w * .22f); lineTo(w * .2f, w * .5f); lineTo(w * .46f, w * .78f) }
+            drawPath(head, Ds.ink, style = Stroke(st, cap = StrokeCap.Round))
         }
     }
 }
@@ -279,59 +370,66 @@ val LocalPageTurn = compositionLocalOf<(() -> Unit)?> { null }
 /** 📐 folded page corner: desk shows thru th cut, th flap lies on th page w a soft shadow */
 @Composable
 private fun DogEar(modifier: Modifier, onClick: () -> Unit) {
-    androidx.compose.foundation.Canvas(modifier.size(36.dp).clickable(onClick = onClick)) {
-        val w = size.width; val h = size.height
-        val cut = androidx.compose.ui.graphics.Path().apply { moveTo(w, 0f); lineTo(w, h); lineTo(0f, h); close() }
-        drawPath(cut, Color(0xFF2A1E14))
-        val flap = androidx.compose.ui.graphics.Path().apply { moveTo(0f, h); lineTo(w, 0f); lineTo(0f, 0f); close() }
-        drawPath(flap, Brush.linearGradient(listOf(Color(0xFFD9C7A3), Color(0xFFEFE0C2)), start = androidx.compose.ui.geometry.Offset(w / 2, h / 2),
-            end = androidx.compose.ui.geometry.Offset(0f, 0f)))
-        drawLine(Color(0x55000000), androidx.compose.ui.geometry.Offset(0f, h), androidx.compose.ui.geometry.Offset(w, 0f), strokeWidth = 1.5f)
+    val desc = tr("Umblättern", "Turn the page")
+    // 48 target (§ 9) · th drawn corner stays 36 at th very corner
+    Box(modifier.size(Space.tap).clickable(role = Role.Button, onClick = onClick).semantics { contentDescription = desc },
+        contentAlignment = Alignment.BottomEnd) {
+        Canvas(Modifier.size(36.dp)) {
+            val w = size.width; val h = size.height
+            val cut = Path().apply { moveTo(w, 0f); lineTo(w, h); lineTo(0f, h); close() }
+            drawPath(cut, DESK)
+            val flap = Path().apply { moveTo(0f, h); lineTo(w, 0f); lineTo(0f, 0f); close() }
+            drawPath(flap, Brush.linearGradient(listOf(FLAP_DARK, Ds.page), start = Offset(w / 2, h / 2), end = Offset(0f, 0f)))
+            drawLine(Color.Black.copy(alpha = .33f), Offset(0f, h), Offset(w, 0f), strokeWidth = 1.5f)
+        }
     }
 }
 
 /** 1 sheet o old paper: running head (chapter · MEW page) · paragraphs · folio at th bottom */
 @Composable
-private fun Page(vm: AppVm, p: BookPage, speaker: Speaker, i: Int, n: Int, modifier: Modifier, flashId: String?, onTalk: () -> Unit) {
+private fun Page(vm: AppVm, p: BookPage, speaker: Speaker, i: Int, n: Int, modifier: Modifier, flashId: String?) {
     val chapter = vm.content.chapters.firstOrNull { it.kap == p.kap }
     val reads by vm.pageReads.collectAsStateWithLifecycle()
-    val s by vm.settings.collectAsStateWithLifecycle()
-    val all by vm.comments.collectAsStateWithLifecycle()
-    val talkCount = all[p.kap]?.count { it.page == p.page } ?: 0
-    val talkOn = s.community && vm.commentsAvailable
     val firstOfChapter = p.verses.first().let { f -> vm.content.chapter(p.kap).firstOrNull()?.id == f.id }
-    Box(modifier.background(PAPER).background(
+    Box(modifier.background(Ds.page).background(
         // spine shadow left + page-edge darkening right = it looks bound
-        Brush.horizontalGradient(0f to Color(0x33000000), 0.06f to Color.Transparent, 0.94f to Color.Transparent, 1f to Color(0x22000000)))) {
-        Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(start = 22.dp, end = 16.dp, top = 10.dp, bottom = 14.dp)) {
+        Brush.horizontalGradient(0f to Color.Black.copy(alpha = .2f), 0.06f to Color.Transparent, 0.94f to Color.Transparent,
+            1f to Color.Black.copy(alpha = .13f)))) {
+        Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState())
+            .padding(start = Space.readerStart, end = Space.readerEnd, top = Space.m, bottom = Space.l)) {
             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                Text((chapter?.let { chapterTitle(it) } ?: p.kap).uppercase(), fontSize = 10.sp, color = INK.copy(alpha = 0.6f),
-                    letterSpacing = 1.2.sp, maxLines = 1, modifier = Modifier.weight(1f))
-                // 👥 Mitlesen: how often this page was read (social proof, opt-in)
-                p.page?.let { pg -> reads[pg]?.let { Text("👥 %d×  ·  ".f(it), fontSize = 10.sp, color = Red.copy(alpha = 0.8f)) } }
-                // QA r5 (sweep #9): was 10 sp red txt, easy 2 miss ➡ a real chip (48 dp-ish tap target via padding)
-                if (talkOn && talkCount > 0) Text("💬 %d".f(talkCount), fontSize = 13.sp, fontWeight = FontWeight.Bold, color = Color.White,
-                    modifier = Modifier.padding(end = 8.dp).clip(androidx.compose.foundation.shape.RoundedCornerShape(50)).background(Red)
-                        .clickable(onClick = onTalk).padding(horizontal = 10.dp, vertical = 3.dp))
-                p.page?.let { Text(tr("MEW S. %d", "MEW p. %d").f(it), fontSize = 10.sp, color = INK.copy(alpha = 0.6f)) }
+                Text((chapter?.let { chapterTitle(it) } ?: p.kap).uppercase(), style = OmmType.bookMeta, color = Ds.inkMuted,
+                    maxLines = 1, modifier = Modifier.weight(1f))
+                // 👥 Mitlesen: how often this page was read (social proof, opt-in) · muted, red = act only
+                p.page?.let { pg -> reads[pg]?.let { Text("👥 %d×  ·  ".f(it), style = OmmType.bookMeta, color = Ds.inkMuted) } }
+                p.page?.let { Text(tr("MEW S. %d", "MEW p. %d").f(it), style = OmmType.bookMeta, color = Ds.inkMuted) }
             }
-            HorizontalDivider(color = INK.copy(alpha = 0.25f), modifier = Modifier.padding(vertical = 6.dp))
-            if (firstOfChapter) Text(chapter?.let { chapterTitle(it) } ?: p.kap, fontSize = 22.sp, fontWeight = FontWeight.Bold, color = INK,
-                fontFamily = FontFamily.Serif, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth().padding(vertical = 14.dp))
+            HorizontalDivider(color = Ds.line, modifier = Modifier.padding(vertical = Space.s))
+            if (firstOfChapter) Text(chapter?.let { chapterTitle(it) } ?: p.kap, style = OmmType.bookTitle, color = Ds.ink,
+                textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth().padding(vertical = Space.l))
             p.verses.forEachIndexed { k, v ->
                 val prev = p.verses.getOrNull(k - 1)
-                if (v.secTitle.isNotBlank() && v.sec != prev?.sec) SectionTitle(secTitle(v))
-                VerseView(vm, v, speaker, flash = v.id == flashId)
+                if (v.secTitle.isNotBlank() && v.sec != prev?.sec) {
+                    if (prev != null) Ornament()
+                    SectionTitle(secTitle(v))
+                }
+                VerseView(vm, v, speaker, flash = v.id == flashId, dropCap = firstOfChapter && k == 0)
                 Gap(4)
             }
             // QA r4: no share pills (r3) + no "Mitreden" btn down here = pure Marx page · writing = tap a passage ➡ ✍️ Notiz
-            //   (👥 chip there posts it 2 th Lesesaal) · reading oth's = 💬 N i th running head
+            //   (👥 chip there posts it 2 th Lesesaal) · reading oth's = 💬 N i th slim head (D-031 b)
             Gap(20)
-            Text("— ${p.page ?: (i + 1)} —", fontSize = 12.sp, color = INK.copy(alpha = 0.55f), fontFamily = FontFamily.Serif,
+            Text("— ${p.page ?: (i + 1)} —", style = OmmType.bookMeta.copy(fontFamily = FontFamily.Serif), color = Ds.inkMuted,
                 textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
             if (i == 0 || i == n - 1) Text(
                 tr("⬅ wischen oder doppelt tippen = umblättern · 🤏 zwei Finger = Schrift", "⬅ swipe or double-tap = turn the page · 🤏 two fingers = font"),
-                fontSize = 11.sp, color = INK.copy(alpha = 0.5f), textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth().padding(top = 8.dp))
+                style = MaterialTheme.typography.bodyMedium, color = Ds.inkMuted, textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth().padding(top = Space.s))
         }
     }
 }
+
+/** ❦ betw sections i th book · 30 % ink, decor only */
+@Composable
+private fun Ornament() = Text("❦", style = OmmType.bookHead, color = Ds.ink.copy(alpha = .3f), textAlign = TextAlign.Center,
+    modifier = Modifier.fillMaxWidth().padding(top = Space.l))

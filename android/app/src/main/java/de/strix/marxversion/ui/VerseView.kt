@@ -76,6 +76,23 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import de.strix.marxversion.R
 import de.strix.marxversion.ui.ds.ActStyle
 import de.strix.marxversion.ui.ds.ActionItem
+import de.strix.marxversion.ui.ds.ChoiceChip
+import de.strix.marxversion.ui.ds.Ds
+import de.strix.marxversion.ui.ds.MeBubble
+import de.strix.marxversion.ui.ds.MoreChip
+import de.strix.marxversion.ui.ds.OmmType
+import de.strix.marxversion.ui.ds.Space
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.text
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.rememberTextMeasurer
+import androidx.compose.ui.text.style.LineHeightStyle
+import androidx.compose.ui.unit.Constraints
 import de.strix.marxversion.data.Chapter
 import de.strix.marxversion.data.Lang
 import de.strix.marxversion.data.Plan
@@ -213,14 +230,54 @@ fun Modifier.tapOutsideNote(focus: FocusManager, slop: Float): Modifier = pointe
     }
 }
 
-/** 🗒️ "this is MY note, not Marx" at a glance (QA r5): comment-style — side ruler · note icon · tinted bg · sans font */
+/**
+ * 🗒️ "this is MY note, not Marx" at a glance (QA r5) = th ds "me" voice (design_system.md § 7):
+ * MeBubble = 3dp blue ruler · blueTint · r12 end corners · ✍ icon 16 · body-m blue · indent 12 under its verse
+ */
 @Composable
 private fun NoteBubble(modifier: Modifier = Modifier, content: @Composable () -> Unit) {
-    Row(modifier.fillMaxWidth().padding(top = 6.dp).height(androidx.compose.foundation.layout.IntrinsicSize.Min)
-        .clip(RoundedCornerShape(topEnd = 8.dp, bottomEnd = 8.dp)).background(Blue.copy(alpha = 0.09f))) {
-        Box(Modifier.width(3.dp).fillMaxHeight().background(Blue.copy(alpha = 0.75f)))
-        Icon(painterResource(R.drawable.ic_note), null, Modifier.padding(start = 8.dp, top = 9.dp).size(15.dp), tint = Blue)
-        Box(Modifier.weight(1f).padding(start = 8.dp, end = 10.dp, top = 7.dp, bottom = 8.dp)) { content() }
+    MeBubble(modifier.fillMaxWidth().padding(start = Space.m, top = Space.s)) {
+        Row {
+            Icon(painterResource(R.drawable.ic_note), null, Modifier.padding(top = Space.xxs, end = Space.s).size(16.dp), tint = Ds.blue)
+            Box(Modifier.weight(1f)) { content() }
+        }
+    }
+}
+
+/**
+ * 🔴 drop cap on a chapter's 1st passage (§ 10 "holy book"): 1st letter serif bold red, 3 lines tall ·
+ * th txt beside it = th lines th fit i th narrower column (measured, same width ➡ same breaks) · rest flows full width below
+ * not a letter (quote mark, "[") ➡ plain txt
+ */
+@Composable
+private fun DropCapText(t: AnnotatedString, style: TextStyle) {
+    val first = t.text.indexOfFirst { !it.isWhitespace() }
+    if (first < 0 || !t.text[first].isLetter() || t.length < first + 2) { Text(t, style = style); return }
+    val cap = t.text[first].toString()
+    val rest = t.subSequence(first + 1, t.length)
+    val capStyle = style.copy(color = Ds.red, fontWeight = FontWeight.Bold, fontSize = style.lineHeight * 2.75f, lineHeight = style.lineHeight * 3,
+        lineHeightStyle = LineHeightStyle(LineHeightStyle.Alignment.Center, LineHeightStyle.Trim.Both))
+    val measurer = rememberTextMeasurer()
+    val density = LocalDensity.current
+    BoxWithConstraints(Modifier.fillMaxWidth()) {
+        val capW = remember(cap, capStyle) { measurer.measure(cap, capStyle).size.width } + with(density) { Space.s.roundToPx() }
+        val narrow = (constraints.maxWidth - capW).coerceAtLeast(1)
+        val split = remember(rest, style, narrow) {
+            val l = measurer.measure(rest, style, constraints = Constraints(maxWidth = narrow))
+            if (l.lineCount <= 3) rest.length else l.getLineEnd(2)
+        }
+        val head = rest.subSequence(0, split)
+        val tailStart = (split until rest.length).firstOrNull { !rest.text[it].isWhitespace() } ?: rest.length
+        Column {
+            // TalkBack: 1 word, not "T · he wealth"
+            Row(Modifier.clearAndSetSemantics { text = AnnotatedString(cap + head.text) }) {
+                // box = exactly 3 lines (glyph may overhang) ➡ line 4 follows at th normal leading, no gap
+                Text(cap, style = capStyle, modifier = Modifier.width(with(density) { capW.toDp() })
+                    .height(with(density) { (style.lineHeight * 3).toDp() }).wrapContentHeight(Alignment.Top, unbounded = true))
+                Text(head, style = style, modifier = Modifier.weight(1f))
+            }
+            if (tailStart < rest.length) Text(rest.subSequence(tailStart, rest.length), style = style)
+        }
     }
 }
 
@@ -232,7 +289,10 @@ private fun NoteBubble(modifier: Modifier = Modifier, content: @Composable () ->
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun VerseView(vm: AppVm, v: Verse, speaker: Speaker? = null, showActions: Boolean = true, flash: Boolean = false, preview: Boolean = false) {
+fun VerseView(
+    vm: AppVm, v: Verse, speaker: Speaker? = null, showActions: Boolean = true, flash: Boolean = false, preview: Boolean = false,
+    dropCap: Boolean = false,
+) {
     val mark by vm.mark(v.id).collectAsStateWithLifecycle(null)
     val settings by vm.settings.collectAsStateWithLifecycle()
     val ctx = LocalContext.current
@@ -262,15 +322,19 @@ fun VerseView(vm: AppVm, v: Verse, speaker: Speaker? = null, showActions: Boolea
         textLang == Lang.EN -> tr("(dieser Absatz noch nicht übersetzt — hier: Englisch)", "(this paragraph isn't translated yet — showing English)")
         else -> tr("(dieser Absatz noch nicht übersetzt — hier: Deutsch)", "(this paragraph isn't translated yet — showing German)")
     }
-    val copied = tr("📋 kopiert", "📋 copied")
+    // 📋 copy feedback = 📳 + inline "Copied" on th control 1.2 s (§ 7: ❌ Toast)
+    var copied by remember { mutableStateOf(false) }
+    LaunchedEffect(copied) { if (copied) { delay(1200); copied = false } }
 
-    // ✨ anything th usr did (🔖 · ✍️ · old highlight) ➡ gold tint + gold frame = "this one is mine" at a glance
+    // ✨ anything th usr did (🔖 · ✍️ · old highlight) ➡ goldTint + 1.5dp gold frame r6 = "this one is mine" at a glance
+    //   open (menu showing) = 1dp outline frame · flash = red pulse (§ 7 notes)
     val marked = mark?.bookmark == true || mark?.note != null || mark?.highlight != null
-    val bg = if (marked) Gold.copy(alpha = 0.16f) else Color.Transparent
+    val bg = if (marked) Ds.goldTint else Color.Transparent
+    val r6 = MaterialTheme.shapes.extraSmall
     val frame = when {
-        glow.value > 0f -> Modifier.border(2.dp, Red.copy(alpha = glow.value), RoundedCornerShape(6.dp))
-        open -> Modifier.border(1.dp, MaterialTheme.colorScheme.tertiary, RoundedCornerShape(6.dp))
-        marked -> Modifier.border(1.5.dp, Gold.copy(alpha = 0.8f), RoundedCornerShape(6.dp))
+        glow.value > 0f -> Modifier.border(2.dp, Ds.red.copy(alpha = glow.value), r6)
+        open -> Modifier.border(1.dp, Ds.outline, r6)
+        marked -> Modifier.border(1.5.dp, Ds.gold, r6)
         else -> Modifier
     }
     val scale = LocalReadScale.current
@@ -279,8 +343,8 @@ fun VerseView(vm: AppVm, v: Verse, speaker: Speaker? = null, showActions: Boolea
     val turnPage = LocalPageTurn.current
     Box {
     Column(
-        Modifier.fillMaxWidth().bringIntoViewRequester(into).clip(RoundedCornerShape(6.dp)).background(bg)
-            .background(Gold.copy(alpha = 0.45f * glow.value)).then(frame)
+        Modifier.fillMaxWidth().bringIntoViewRequester(into).clip(r6).background(bg)
+            .background(Ds.gold.copy(alpha = 0.45f * glow.value)).then(frame)
             .then(if (showActions) Modifier.combinedClickable(
                 onClick = { open = !open },
                 onDoubleClick = turnPage,
@@ -288,28 +352,30 @@ fun VerseView(vm: AppVm, v: Verse, speaker: Speaker? = null, showActions: Boolea
             ) else Modifier)
             .padding(6.dp),
     ) {
+        // ref = quiet margin (label-s inkMuted, was bold blue) · 🔖 = gold-deep "kept" mark
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(r, fontSize = 11.sp, color = MaterialTheme.colorScheme.secondary, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
-            if (mark?.bookmark == true) Icon(painterResource(R.drawable.ic_bookmark), null, Modifier.size(14.dp), tint = Red)
+            Text(r, style = MaterialTheme.typography.labelSmall, color = Ds.inkMuted, modifier = Modifier.weight(1f))
+            if (mark?.bookmark == true) Icon(painterResource(R.drawable.ic_bookmark), tr("Lesezeichen", "Bookmarked"),
+                Modifier.size(16.dp), tint = Ds.goldDeep)
         }
-        if (fallbackNote.isNotBlank()) Text(fallbackNote, fontSize = 11.sp, color = Color.Gray)
+        if (fallbackNote.isNotBlank()) Text(fallbackNote, style = MaterialTheme.typography.bodyMedium, color = Ds.inkMuted)
         val annotated = buildAnnotatedString {
             var last = 0
             Regex("\\[(\\d+[a-z]?)]").findAll(txt).forEach { m ->
                 append(txt.substring(last, m.range.first))
                 val n = m.groupValues[1]
-                withLink(LinkAnnotation.Clickable("fn$n", TextLinkStyles(SpanStyle(color = Red, fontWeight = FontWeight.Bold))) {
+                withLink(LinkAnnotation.Clickable("fn$n", TextLinkStyles(SpanStyle(color = Ds.red, fontWeight = FontWeight.Bold))) {
                     footnote = n
                 }) { append("[$n]") }
                 last = m.range.last + 1
             }
             append(txt.substring(last))
         }
-        Text(annotated, fontFamily = FontFamily.Serif, fontSize = 16.sp * scale, lineHeight = 23.sp * scale)
-        if (cut != null) Text(tr("weiterlesen ▾ · noch ~%d Min.", "read more ▾ · ~%d min left").f(readMinutes(fullTxt.drop(cut.length))),
-            fontSize = 13.sp, fontWeight = FontWeight.Bold, color = Red,
-            modifier = Modifier.padding(top = 4.dp).clip(RoundedCornerShape(50)).clickable { expanded = true }
-                .background(Red.copy(alpha = 0.08f)).padding(horizontal = 10.dp, vertical = 4.dp))
+        // Marx voice: book-body 17/26 serif × readScale (pinch)
+        val body = OmmType.bookBody.let { it.copy(color = Ds.ink, fontSize = it.fontSize * scale, lineHeight = it.lineHeight * scale) }
+        if (dropCap && cut == null) DropCapText(annotated, body) else Text(annotated, style = body)
+        if (cut != null) MoreChip(tr("weiterlesen · noch ~%d Min.", "read more · ~%d min left").f(readMinutes(fullTxt.drop(cut.length))),
+            { expanded = true }, Modifier.padding(top = Space.xs))
         // ✍️ margin note: shown inline as a NoteBubble · tap it (or Notiz) = edit right here, same bubble, no popup
         // QA r4: no Save/Cancel words · QA r5: no ★ either · any tap (away o on th field) = close · changed ➡ saved · blank ➡ note gone
         if (editNote) {
@@ -332,41 +398,43 @@ fun VerseView(vm: AppVm, v: Verse, speaker: Speaker? = null, showActions: Boolea
             }
             Column(Modifier.fillMaxWidth().onGloballyPositioned { NoteFocus.bounds = it.boundsInRoot() }) {
                 NoteBubble {
-                    val style = androidx.compose.ui.text.TextStyle(fontSize = 14.sp, lineHeight = 19.sp, color = MaterialTheme.colorScheme.onSurface)
+                    val style = MaterialTheme.typography.bodyMedium.copy(color = Ds.blue)
                     androidx.compose.foundation.text.BasicTextField(draft, { draft = it }, textStyle = style, minLines = 2,
-                        cursorBrush = androidx.compose.ui.graphics.SolidColor(Blue),
+                        cursorBrush = androidx.compose.ui.graphics.SolidColor(Ds.blue),
                         modifier = Modifier.fillMaxWidth().focusRequester(focus).onFocusChanged {
                             if (it.isFocused) hadFocus = true else if (hadFocus) commit()
                         },
                         keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
                         decorationBox = { inner ->
-                            if (draft.isEmpty()) Text(tr("Deine Randnotiz …", "Your margin note …"), style = style.copy(color = Color.Gray))
+                            if (draft.isEmpty()) Text(tr("Deine Randnotiz …", "Your margin note …"), style = style.copy(color = Ds.inkMuted))
                             inner()
                         })
                 }
-                // 👥 same note, also public on this page (Mitlesen) = th old "Mitreden" btn, now at th passage (QA r4: 1 pattern)
-                if (settings.community && vm.commentsAvailable) FilterChip(selected = public, onClick = { public = !public },
-                    modifier = Modifier.onGloballyPositioned { NoteFocus.keep = it.boundsInRoot() },
-                    label = { Text(tr("👥 auch im Lesesaal posten — als %s", "👥 also post to the reading room — as %s").f(pubName), fontSize = 12.sp) })
+                // 👥 same note, also public on this page (Mitlesen) = th old "Mitreden" btn, now at th passage (QA r4: 1 pattern) · ds Chip Choice
+                if (settings.community && vm.commentsAvailable) ChoiceChip(
+                    tr("auch im Lesesaal posten — als %s", "also post to the reading room — as %s").f(pubName), public, { public = it },
+                    Modifier.padding(start = Space.m, top = Space.xs).onGloballyPositioned { NoteFocus.keep = it.boundsInRoot() })
             }
         } else mark?.note?.let {
-            NoteBubble(if (showActions) Modifier.clickable { editNote = true } else Modifier) {
-                Text(it, fontSize = 14.sp, lineHeight = 19.sp, color = MaterialTheme.colorScheme.onSurface)
-            }
+            NoteBubble(if (showActions) Modifier.clickable { editNote = true } else Modifier) { Text(it) }
         }
 
+        // verse menu = ActionItem Bare ×4 on a paperHi strip r12 under th verse (§ 10 · D-018: 🔊 · 🔖 · ✍️ · 📋)
         if (showActions && open) {
-            Row(Modifier.fillMaxWidth().padding(top = 6.dp)) {
+            val strip = MaterialTheme.shapes.medium
+            Row(Modifier.fillMaxWidth().padding(top = Space.s).clip(strip).background(Ds.paperHi).border(1.dp, Ds.line, strip)
+                .padding(vertical = Space.xs)) {
                 if (speaker != null) Action(R.drawable.ic_volume, if (speaker.speaking) tr("Stopp", "Stop") else tr("Vorlesen", "Listen"),
-                    if (speaker.speaking) Red else MaterialTheme.colorScheme.secondary) {
+                    if (speaker.speaking) Ds.red else Ds.blue) {
                     speaker.say(txt, textLang, Persona.of(settings.persona))
                 }
                 Action(if (mark?.bookmark == true) R.drawable.ic_bookmark else R.drawable.ic_bookmark_border,
-                    tr("Lesezeichen", "Bookmark"), if (mark?.bookmark == true) Red else MaterialTheme.colorScheme.secondary) { vm.bookmark(v.id) }
-                Action(R.drawable.ic_note, tr("Notiz", "Note"), if (mark?.note != null) Red else MaterialTheme.colorScheme.secondary) { editNote = !editNote }
-                Action(R.drawable.ic_copy, tr("Kopieren", "Copy")) {
+                    tr("Lesezeichen", "Bookmark"), if (mark?.bookmark == true) Ds.goldDeep else Ds.blue) { vm.bookmark(v.id) }
+                Action(R.drawable.ic_note, tr("Notiz", "Note"), if (mark?.note != null) Ds.goldDeep else Ds.blue) { editNote = !editNote }
+                Action(R.drawable.ic_copy, if (copied) tr("Kopiert ✓", "Copied ✓") else tr("Kopieren", "Copy")) {
                     copyText(ctx, "${lang.quote(txt)}\n— Karl Marx, $r")
-                    android.widget.Toast.makeText(ctx, copied, android.widget.Toast.LENGTH_SHORT).show()
+                    haptic.performHapticFeedback(HapticFeedbackType.Confirm)
+                    copied = true
                 }
             }
         }
@@ -384,21 +452,21 @@ fun VerseView(vm: AppVm, v: Verse, speaker: Speaker? = null, showActions: Boolea
             else -> note.de
         }
         MarxDialog({ footnote = null }, title = tr("Fußnote", "Footnote") + " $n") {
-            Text(body, fontFamily = FontFamily.Serif, fontSize = 16.sp, lineHeight = 23.sp)
+            Text(body, style = MaterialTheme.typography.bodyMedium.copy(fontFamily = FontFamily.Serif), color = Ds.ink)
         }
     }
 }
 
-/** icon + label below ➡ thin wrapper over ds `ActionItem` Bare (L0 @1114: label 10 ➡ 12sp, label-m) */
+/** icon + label below ➡ thin wrapper over ds `ActionItem` Bare (L0 @1114: label 10 ➡ 12sp, label-m) · 48 target */
 @Composable
-private fun RowScope.Action(icon: Int, label: String, tint: Color = MaterialTheme.colorScheme.secondary, onClick: () -> Unit) =
-    ActionItem(icon, label, onClick, Modifier.weight(1f), style = ActStyle.Bare, tint = tint, labelColor = MaterialTheme.colorScheme.secondary)
+private fun RowScope.Action(icon: Int, label: String, tint: Color = Ds.blue, onClick: () -> Unit) =
+    ActionItem(icon, label, onClick, Modifier.weight(1f).heightIn(min = Space.tap), style = ActStyle.Bare, tint = tint, labelColor = Ds.blue)
 
-/** small helper: section heading inside a chapter */
+/** section heading inside a chapter (+ feed) = book-head serif red rubric */
 @Composable
 fun SectionTitle(text: String) = Text(
-    text, fontWeight = FontWeight.Bold, fontSize = 15.sp, color = MaterialTheme.colorScheme.primary,
-    modifier = Modifier.padding(top = 16.dp, bottom = 4.dp),
+    text, style = OmmType.bookHead, color = Ds.red,
+    modifier = Modifier.padding(top = Space.l, bottom = Space.xs),
 )
 
 @Composable
