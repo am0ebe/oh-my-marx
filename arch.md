@@ -31,6 +31,8 @@ _SDD: code says **wh** · th file says **y** · drift = a bug · fmt ➡ `pr/vib
 - **ck**: local build: `pip` not found · `/v1/health` ok · trivy 0.72.0 (CI flags) exit 0 · CI canary green · live = aft ops rebuilds `/srv/omm-api` (ops-owned, SERVICE.md)
 _🎨 D-029..036 @1113 = design system (🦠 decides · 🤖 pick = 1st option) · spec ➡ [design_system.md](design_system.md) § 0 = same list as a table · @1114: D-029 + D-030 ✔️ ➡ L0 built (`ui/ds/`) · D-031..035 ✔️ (🦠 @1114) · D-036 💬 (mockups)_
 ### D-036 @1113 · Today above th fold (qa-D1): compact hero + stamp tag · 💬 (🦠 @1114: "which is which? show me" ➡ mockups `d036_all.png` a · b · c)
+- **🦠 @1115** (via M8): "as it was b4, o bigger" ➡ ❌ compact (a) + ❌ collapse (c) · now **A/B on 1 DEV APK** 4 friends: ⚙️ "🧪 Today hero" (DEV only) A = pre-ds hero (pixel-same) · B = bigger (star 124 · headline 30 · week + stamps fill th width) · shots `priv/img/d036/hero_ab.png` · 💬 pick aft friends ➡ drop th switch + loser
+- **ck**: `ShotsTest.hero` ➡ hero_a + hero_b · Prefs key `hero_ab` (old abc picks don't leak)
 - **ctx**: 🦠 "landing shd fit verse + streak widget + read-plan btn" · now hero (star 92 + week row + stamp row + rank) + card ➡ plan entry below th fold
 - **options**: **a) compact hero 120dp (star 48 + 7 day dots + Tag "☭ 3/10"), full stamp card ➡ My Capital** (🤖 pick) · b) keep hero, shrink quote card · c) hero collapses on scroll
 - **y**: a = only one th fits both sizes by budget (412×915: 599 o 730 · 360×760: 542 o 592) + keeps th card big (it's th content) · b ❌ smaller quote = worse share img match · c ❌ nothing fits b4 th 1st scroll
@@ -200,7 +202,7 @@ _🎨 D-029..036 @1113 = design system (🦠 decides · 🤖 pick = 1st option) 
 - **y**: ❓ am0 · **ck**: `data/I18n.kt`
 
 ## ❓ open Qs
-- 💬 **🎨 D-036** Today hero a · b · c (mockups `d036_all.png`) · blocks L1 Today only · rest o D-029..035 ✔️ @1114
+- 💬 **🎨 D-036** Today hero A (as b4) ⬄ B (bigger) · DEV ⚙️ switch, friends try both @1115 · blocks L1 Today only · rest o D-029..035 ✔️ @1114
 - 💬 **streak**: (a) any reading day · (b) plan days only · (c) hybrid chip — Mi: 2nd "done" looks meagre next 2 big streak widget
 - 💬 **Mitlesen toggle**: rm? (QA lane B removed th note only) · 💬 ☭ close btn i MarxDialog: keep/rm? · 💬 "share app" prompt aft streak/medal?
 - ❓ streak widget "shd show 2 at start" = ? (todo ‼️ A)

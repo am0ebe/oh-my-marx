@@ -137,7 +137,10 @@ class InstallReceiver : BroadcastReceiver() {
             PackageInstaller.STATUS_PENDING_USER_ACTION -> {
                 val confirm = if (Build.VERSION.SDK_INT >= 33) i.getParcelableExtra(Intent.EXTRA_INTENT, Intent::class.java)
                     else @Suppress("DEPRECATION") i.getParcelableExtra(Intent.EXTRA_INTENT)
-                if (!bg && confirm != null && runCatching { ctx.startActivity(confirm.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) }.isSuccess) return
+                // 🩹 @1115: usr left th app mid-download ➡ Android 10+ drops a bg activity start SILENTLY (no throw) ➡ only
+                //   pop th confirm while we're on screen, else th notification below (was: nothing at all)
+                if (!bg && confirm != null && onScreen() &&
+                    runCatching { ctx.startActivity(confirm.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) }.isSuccess) return
                 val de = isDe(ctx)
                 ctx.getSharedPreferences(SP, Context.MODE_PRIVATE).edit().remove("silent").apply()
                 post(ctx, if (de) "🆕 Update bereit" else "🆕 Update ready",
@@ -151,6 +154,12 @@ class InstallReceiver : BroadcastReceiver() {
         }
     }
 }
+
+/** an activity o ours is visible (= Android lets us start th install confirm) */
+private fun onScreen(): Boolean = runCatching {
+    android.app.ActivityManager.RunningAppProcessInfo().also { android.app.ActivityManager.getMyMemoryState(it) }.importance <=
+        android.app.ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND
+}.getOrDefault(true)
 
 /** ✔️ aft a SILENT update th new version starts here (MY_PACKAGE_REPLACED) ➡ quiet "updated 2 X" so it's not a mystery */
 class UpdatedReceiver : BroadcastReceiver() {

@@ -209,10 +209,8 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
             }
         }
         // ── 🔥 streak widget on top (@1112): chain + week + Stempelkarte = th 1st thing u see ──
-        //    🧪 D-036 abc test (🦠 @1114, ⚙️ "Today hero"): a = compact · b = as now · c = as now + strip pinned aft scroll
-        Box(Modifier.padding(horizontal = 16.dp).padding(bottom = 12.dp)) {
-            if (s.hero == 'a') HeroCompact(days, feast, dt, s.testMode) else Hero(days, feast, dt, s.testMode)
-        }
+        //    🧪 D-036 A/B (🦠 @1115 "as it was b4, o bigger" · ❌ compact): ⚙️ "Today hero" a = as b4 th ds work · b = bigger
+        Box(Modifier.padding(horizontal = 16.dp).padding(bottom = 12.dp)) { Hero(days, feast, dt, s.testMode, big = s.hero == 'b') }
         // ── 🃏 th cards (Hooked: reward right at th door) ──
         CardCarousel(vm, extras, vod?.let { CardItem(it, CardItem.Kind.TODAY, 0, feast) }, doneToday, speaker, persona, jump, openChapter, amen)
         Column(Modifier.padding(horizontal = 16.dp)) {
@@ -413,9 +411,6 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
         }
     }
     }  // inner padded Column
-    // 🧪 D-036 c: hero scrolled away ➡ thin strip pinned on top (star · headline · week)
-    val stripAt = with(androidx.compose.ui.platform.LocalDensity.current) { 240.dp.toPx() }
-    if (s.hero == 'c' && scroll.value > stripAt) HeroStrip(days, feast, dt)
     }  // PullToRefreshBox
 
     if (kriseFx) KriseFlash { kriseFx = false }
@@ -428,9 +423,10 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
  * 🌅 hero (à la Insight Timer's streak widget, @1106): gradient by time o day (or 🎉 feast) · nudge title
  * ("Save your chain!") · this week Mo–Su (✓ read · red ! = today still open · 🕊 Sabbat) · streak nr i a red star ·
  * 🎟️ Stempelkarte (🎁 gifts · ☭ earned · red ! = today's stamp waiting) + "N more days to <rank>".
+ * 🧪 D-036 A/B (@1115): big = false ➡ exactly th pre-ds hero (A) · true ➡ B: star 124 · headline 30 · week + stamps fill th width
  */
 @Composable
-private fun Hero(days: List<DayLog>, feast: Feast?, dt: DayTime, hooked: Boolean) {
+private fun Hero(days: List<DayLog>, feast: Feast?, dt: DayTime, hooked: Boolean, big: Boolean = false) {
     val white = Color.White
     val (st, rest) = streakInfo(days)
     val total = readingDays(days)
@@ -439,32 +435,34 @@ private fun Hero(days: List<DayLog>, feast: Feast?, dt: DayTime, hooked: Boolean
     val today = LocalDate.now()
     val read = days.map { it.date }.toSet()
     val doneToday = today.toString() in read
+    val z = if (big) 1.25f else 1f   // B = A's type × 1.25 (no new raw sizes · design guard)
     Column(
-        Modifier.fillMaxWidth().clip(RoundedCornerShape(18.dp))
+        Modifier.fillMaxWidth().clip(RoundedCornerShape(if (big) 22.dp else 18.dp))
             .background(Brush.verticalGradient((feast?.colors ?: dt.colors).take(3).map { Color(it) }))
             .background(Color.Black.copy(alpha = 0.15f))  // scrim: white txt stays readable on light stops
-            .padding(16.dp),
+            .padding(if (big) 20.dp else 16.dp),
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Column(Modifier.weight(1f)) {
                 Text(if (st > 0) tr("%d Tage Lesekapital akkumuliert", "%d days of reading capital accumulated").f(st)
-                    else tr("Schön, dass du da bist", "Good to see you"), color = white.copy(alpha = 0.9f), fontSize = 13.sp)
+                    else tr("Schön, dass du da bist", "Good to see you"), color = white.copy(alpha = 0.9f), fontSize = 13.sp * z)
                 Text(when {
                     doneToday -> tr("Schicht erledigt", "Shift done")   // ✓ lives i th week row · "akkumuliert" only once (@1107)
                     st > 0 -> tr("Weiter geht's!", "Keep it rolling!")
                     else -> tr("Fang heute an!", "Start today!")
-                }, color = white, fontSize = 24.sp, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Serif, lineHeight = 28.sp)
-                Gap(4)
+                }, color = white, fontSize = 24.sp * z, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Serif,
+                    lineHeight = 28.sp * z)
+                Gap(if (big) 6 else 4)
                 Text(feast?.let { it.emoji + "  " + tr(it.greet) } ?: tr(dt.greetOn(today)), color = white.copy(alpha = 0.9f),
-                    fontSize = 13.sp, lineHeight = 17.sp)
+                    fontSize = 13.sp * z, lineHeight = 17.sp * z)
             }
-            StreakStar(st)
+            StreakStar(st, if (big) 124.dp else 92.dp)
         }
-        Gap(12)
-        // this week, Mo ➡ Su (Insight Timer: ✓ · ! · letters)
+        Gap(if (big) 16 else 12)
+        // this week, Mo ➡ Su (Insight Timer: ✓ · ! · letters) · big = 7 dots share th width
         val monday = today.minusDays((today.dayOfWeek.value - 1).toLong())
         val lang = LocalLang.current
-        Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+        Row(if (big) Modifier.fillMaxWidth() else Modifier, horizontalArrangement = Arrangement.spacedBy(if (big) 8.dp else 6.dp)) {
             (0L..6L).map { monday.plusDays(it) }.forEach { d ->
                 val isRead = d.toString() in read
                 val (bg, fg, txt) = when {
@@ -474,98 +472,26 @@ private fun Hero(days: List<DayLog>, feast: Feast?, dt: DayTime, hooked: Boolean
                     else -> Triple(white.copy(alpha = if (d.isAfter(today)) 0.16f else 0.08f), white.copy(alpha = 0.7f),
                         d.dayOfWeek.getDisplayName(TextStyle.NARROW, lang.locale))
                 }
-                Box(Modifier.size(34.dp).clip(CircleShape).background(bg)
+                Box((if (big) Modifier.weight(1f).aspectRatio(1f) else Modifier.size(34.dp)).clip(CircleShape).background(bg)
                     .then(if (d == today) Modifier.border(2.5.dp, white, CircleShape) else Modifier), contentAlignment = Alignment.Center) {   // today = ring
-                    Text(txt, color = fg, fontSize = 15.sp, fontWeight = FontWeight.Bold)
+                    Text(txt, color = fg, fontSize = 15.sp * z, fontWeight = FontWeight.Bold)
                 }
             }
         }
         if (rest.isNotEmpty()) Text(tr("🕊️ Sabbat-Joker eingelöst — 1 Ruhetag pro Woche bricht die Kette nicht.",
-            "🕊️ Sabbath joker used — 1 rest day per week doesn't break the chain."), color = white.copy(alpha = 0.85f), fontSize = 11.sp,
-            modifier = Modifier.padding(top = 4.dp))
-        Gap(14)
+            "🕊️ Sabbath joker used — 1 rest day per week doesn't break the chain."), color = white.copy(alpha = 0.85f),
+            fontSize = 11.sp * z, modifier = Modifier.padding(top = 4.dp))
+        Gap(if (big) 18 else 14)
         // 🎟️ Stempelkarte: ☭ earned · red ! = today's stamp, still open · ○ to go ➡ ui/ds/StampCard.kt (L0 @1114: L1 + L4 share it)
-        de.strix.marxversion.ui.ds.StampRow(card, doneToday)
+        de.strix.marxversion.ui.ds.StampRow(card, doneToday, fill = big)
         // "N more days to <rank>" moved 2 th plan card (QA @1112)
-        if (ranks > 0) Text(tr("Rang: %s", "Rank: %s").f(tr(rank(ranks - 1))), color = white.copy(alpha = 0.8f), fontSize = 11.sp)
+        if (ranks > 0) Text(tr("Rang: %s", "Rank: %s").f(tr(rank(ranks - 1))), color = white.copy(alpha = 0.8f),
+            fontSize = 11.sp * z, modifier = if (big) Modifier.padding(top = 4.dp) else Modifier)
     }
     HookNote(Hook.STREAK, hooked)
     HookNote(Hook.STAMPS, hooked)
     HookNote(Hook.SABBATH, hooked)
     HookNote(if (feast != null) Hook.FEAST else Hook.DAYTIME, hooked)
-}
-
-/** this week Mo ➡ Su as dots (✓ read · 🕊 rest · today = ring + letter) · shared by th 🧪 D-036 a / c heroes */
-@Composable
-private fun WeekDots(days: List<DayLog>, dot: androidx.compose.ui.unit.Dp) {
-    val today = LocalDate.now()
-    val read = days.map { it.date }.toSet()
-    val rest = streakInfo(days).second
-    val monday = today.minusDays((today.dayOfWeek.value - 1).toLong())
-    val lang = LocalLang.current
-    Row(horizontalArrangement = Arrangement.spacedBy(if (dot < 24.dp) 3.dp else 5.dp)) {
-        (0L..6L).map { monday.plusDays(it) }.forEach { d ->
-            val (bg, fg, txt) = when {
-                d.toString() in read -> Triple(Color.White, de.strix.marxversion.ui.ds.Ds.ink, "✓")
-                d in rest -> Triple(Color.White.copy(alpha = 0.85f), de.strix.marxversion.ui.ds.Ds.ink, "🕊")
-                else -> Triple(Color.White.copy(alpha = if (d == today) 0.3f else 0.12f), Color.White.copy(alpha = if (d == today) 1f else 0.7f),
-                    d.dayOfWeek.getDisplayName(TextStyle.NARROW, lang.locale))
-            }
-            Box(Modifier.size(dot).clip(CircleShape).background(bg)
-                .then(if (d == today) Modifier.border(2.dp, Color.White, CircleShape) else Modifier), contentAlignment = Alignment.Center) {
-                Text(txt, color = fg, fontSize = (dot.value * 0.45f).sp, fontWeight = FontWeight.Bold)
-            }
-        }
-    }
-}
-
-/**
- * 🧪 D-036 a (abc test @1114): compact hero ~120dp — star 48 + headline · 7 dots 28 + Tag "☭ 3/10"
- * (full stamp card ➡ My Capital later, L4) ➡ quote card + actions + plan row fit above th fold
- */
-@Composable
-private fun HeroCompact(days: List<DayLog>, feast: Feast?, dt: DayTime, hooked: Boolean) {
-    val (st, _) = streakInfo(days)
-    val card = stampCard(readingDays(days))
-    val doneToday = LocalDate.now().toString() in days.map { it.date }
-    Column(Modifier.fillMaxWidth().clip(MaterialTheme.shapes.large)
-        .background(Brush.verticalGradient((feast?.colors ?: dt.colors).take(3).map { Color(it) }))
-        .background(Color.Black.copy(alpha = 0.15f)).padding(horizontal = 16.dp, vertical = 12.dp)) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            StreakStar(st, 48.dp)
-            Column(Modifier.padding(start = 12.dp).weight(1f)) {
-                Text(when {
-                    doneToday -> tr("Schicht erledigt", "Shift done")
-                    st > 0 -> tr("Weiter geht's!", "Keep it rolling!")
-                    else -> tr("Fang heute an!", "Start today!")
-                }, color = Color.White, style = MaterialTheme.typography.titleMedium)
-                Text(feast?.let { it.emoji + "  " + tr(it.greet) } ?: tr(dt.greetOn(LocalDate.now())), color = Color.White.copy(alpha = 0.9f),
-                    style = MaterialTheme.typography.bodyMedium, maxLines = 1, overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis)
-            }
-        }
-        Gap(8)
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            WeekDots(days, 28.dp)
-            androidx.compose.foundation.layout.Spacer(Modifier.weight(1f))
-            de.strix.marxversion.ui.ds.Tag("☭ ${card.filled}/${de.strix.marxversion.logic.CARD}", gold = true)
-        }
-    }
-    HookNote(Hook.STREAK, hooked)
-    HookNote(Hook.STAMPS, hooked)
-}
-
-/** 🧪 D-036 c: thin strip pinned on top once th hero scrolled away */
-@Composable
-private fun HeroStrip(days: List<DayLog>, feast: Feast?, dt: DayTime) {
-    val (st, _) = streakInfo(days)
-    Row(Modifier.fillMaxWidth().height(56.dp)
-        .background(Brush.horizontalGradient((feast?.colors ?: dt.colors).take(3).map { Color(it) }))
-        .background(Color.Black.copy(alpha = 0.15f)).padding(horizontal = 16.dp), verticalAlignment = Alignment.CenterVertically) {
-        StreakStar(st, 36.dp)
-        Text(if (st > 0) tr("Weiter geht's!", "Keep it rolling!") else tr("Fang heute an!", "Start today!"), color = Color.White,
-            style = MaterialTheme.typography.titleSmall, modifier = Modifier.padding(start = 10.dp).weight(1f), maxLines = 1)
-        WeekDots(days, 18.dp)
-    }
 }
 
 /** streak nr on a red star w gold rim (Insight Timer puts it i a singing bowl · we hv th Soviet star) */

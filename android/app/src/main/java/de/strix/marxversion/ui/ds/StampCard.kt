@@ -5,6 +5,8 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
@@ -25,12 +27,13 @@ import de.strix.marxversion.logic.StampCard
  * `ring` = colour o th empty slots (white on th hero gradient · `Ds.outline` on paper)
  */
 @Composable
-fun StampRow(card: StampCard, doneToday: Boolean, modifier: Modifier = Modifier, ring: Color = Ds.white.copy(alpha = 0.7f)) {
-    Row(modifier, horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+fun StampRow(card: StampCard, doneToday: Boolean, modifier: Modifier = Modifier, ring: Color = Ds.white.copy(alpha = 0.7f),
+             fill: Boolean = false) {   // fill = slots share th full width (🧪 D-036 B big hero) · else 24dp each
+    Row(if (fill) modifier.fillMaxWidth() else modifier, horizontalArrangement = Arrangement.spacedBy(5.dp)) {
         repeat(CARD) { i ->
             val waiting = !doneToday && i == card.filled
             Box(
-                Modifier.size(24.dp).clip(CircleShape)
+                (if (fill) Modifier.weight(1f).aspectRatio(1f) else Modifier.size(24.dp)).clip(CircleShape)
                     .then(when {
                         i < card.filled -> Modifier.background(Ds.gold)
                         waiting -> Modifier.background(Ds.red)
@@ -39,8 +42,8 @@ fun StampRow(card: StampCard, doneToday: Boolean, modifier: Modifier = Modifier,
                 contentAlignment = Alignment.Center,
             ) {
                 when {
-                    i < card.filled -> Text("☭", fontSize = 12.sp, color = Ds.red, fontWeight = FontWeight.Bold)
-                    waiting -> Text("!", fontSize = 13.sp, color = Ds.white, fontWeight = FontWeight.Bold)
+                    i < card.filled -> Text("☭", fontSize = if (fill) 15.sp else 12.sp, color = Ds.red, fontWeight = FontWeight.Bold)
+                    waiting -> Text("!", fontSize = if (fill) 16.sp else 13.sp, color = Ds.white, fontWeight = FontWeight.Bold)
                 }
             }
         }

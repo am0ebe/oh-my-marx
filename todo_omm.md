@@ -3,10 +3,18 @@
   - 🚦 rule: no version bump / ship / big new feat til th current one had ≥1 QA round on th fon · big side-quests (voice, chat infra) ➡ own pr
 
 ## ⏳
+- 🦠📱 **fon tst: updater on a browser-APK install** (D-038 · @1115) — DEV app, ~5 min
+  1. Chrome ➡ `scagent.de/oh-my-marx/dev/` ➡ tap th apk ➡ install OVER ur DEV (same key = data stays · now th installer o record = browser, not Obtainium)
+  2. tell 🤖 "deploy" ➡ newer DEV goes live (has D-036 A/B + th 🩹 below)
+  3. open DEV ➡ ≤1 min: notification "🆕 … is out" + Today banner ➡ tap ➡ "Install"
+  4. 1st ti: Android "allow fr this source" ➡ toggle ➡ back = goes on by itself ➡ Android confirm ➡ Update ➡ ✔️ ⚙️ shows new version · streak + notes still there
+     - 🩹 bonus: tap Install, then Home mid-download ➡ expect notification "🆕 Update ready" (was: nothing)
+  5. ⚙️ "Update automatically" ON ➡ 🤖 deploy again ➡ open app ➡ ✔️ no dialog, quiet "✔️ installed" notification (we're installer now = silent, Android 12+)
+  - ❌ any step ➡ screenshot (auto-lands i `/opt/pix_fon`) + step nr ➡ 🤖
 - ▶ **RESUME @1114 eos** — ds L0 + lanes L2 · L3 · L5 merged + pushed (`cb465b5`, 90 tsts green) · DEV live = `0.10.0-dev.1114.2117` (B) · prev DEV A = 1114.1620 (1st w new updater D-038)
-  - ▶ nxt: 🦠 fon: install A by hand (if not yet) ➡ open app ➡ B notification should pop ≤1 min (Obtainium path) · then browser-APK path (install B fr page ➡ 🤖 deploy C) · 🦠 D-036 abc (⚙️ "Today hero") ➡ pick ➡ 🤖 L1 Today + L4 Mine/⚙️/Hooked lanes (same worktree-agent pattern) ➡ `bin/translate.py --only ui` (new labels: Back · Install · Switch on · Copied · Reading room · Not now…)
+  - ▶ nxt: 🦠 fon: install A by hand (if not yet) ➡ open app ➡ B notification should pop ≤1 min (Obtainium path) · then browser-APK path (install B fr page ➡ 🤖 deploy C) · 🦠 D-036 A/B (⚙️ "🧪 Today hero", DEV, @1115) ➡ friends ➡ pick ➡ 🤖 L1 Today + L4 Mine/⚙️/Hooked lanes (same worktree-agent pattern) ➡ `bin/translate.py --only ui` (new labels: Back · Install · Switch on · Copied · Reading room · Not now…)
   - 👤 🦠: D-036 pick · fon tst updater (Obtainium + browser) · fon QA o th whole ds look · D-029 ✔️ came via M8 relay ➡ 🦠 skim design_system.md § 1
-  - ⚠️ traps: `.claude/worktrees/` 3 lane checkouts + branches `worktree-agent-*` still there (merged ➡ rm = 🦠 ok) · TodayScreen still calls fx directly ➡ L1: `fx.play(amenFx(rare))` b4 `vm.amen()` + "Day complete!" dialog into a `RewardSlot` (Fx.kt KDoc) · D-034 Hooked note not built (L1) · d036 b in-app = big hero, card NOT shrunk · kreis_detail + unlock = no shot (fon check: Leave confirm) · guard baseline = recompute aft evy merge (strict both ways) · omm-api live rebuild = ops (their refl log says done @1114, not verified here)
+  - ⚠️ traps: `.claude/worktrees/` 3 lane checkouts + branches `worktree-agent-*` still there (merged ➡ rm = 🦠 ok) · TodayScreen still calls fx directly ➡ L1: `fx.play(amenFx(rare))` b4 `vm.amen()` + "Day complete!" dialog into a `RewardSlot` (Fx.kt KDoc) · D-034 Hooked note not built (L1) · kreis_detail + unlock = no shot (fon check: Leave confirm) · guard baseline = recompute aft evy merge (strict both ways) · omm-api live rebuild = ops (their refl log says done @1114, not verified here)
 
 ## ‼️
 - ⭐🧪 **QA sprint 0.9.x** — r1-r3 ✔️ · left ➡ [qa_1112.md](qa_1112.md) (🎨 10 design · 🔍 5 research · 💬 Qs) · ❓ streak widget "shd show 2 at start" = ? unanswered

@@ -31,7 +31,7 @@ data class Settings(
     val readScale: Float = 1f,          // 🤏 pinch i th reader ➡ font size × this
     val community: Boolean = true,      // 👥 Mitlesen: anonymous daily-token counts + comments · always on since QA r5 (D-020, no ⚙️ toggle)
     val autoUpdate: Boolean = false,    // 🆕 browser installs: install updates wo asking (Android 12+) · dflt = ask (🦠 @1114)
-    val hero: Char = 'a',               // 🧪 D-036 a · b · c Today hero (Testmodus ⚙️ switch, abc test 🦠 @1114)
+    val hero: Char = 'a',               // 🧪 D-036 A/B Today hero: a = as b4 ds · b = big (DEV ⚙️ switch, 🦠 @1115)
 )
 
 /** 👥 a Lesekreis = 1 Matrix room, found by its code */
@@ -51,7 +51,7 @@ class Prefs(private val context: Context) {
         val readScale = floatPreferencesKey("read_scale")
         val community = booleanPreferencesKey("community")
         val autoUpdate = booleanPreferencesKey("auto_update")
-        val hero = stringPreferencesKey("hero")
+        val hero = stringPreferencesKey("hero_ab")   // new key @1115: old abc picks ("hero") don't leak into A/B
         val commDay = stringPreferencesKey("comm_day")      // th day th token belongs 2
         val commToken = stringPreferencesKey("comm_token")  // random, new evy day
     }
@@ -117,7 +117,7 @@ class Prefs(private val context: Context) {
             readScale = p[K.readScale] ?: 1f,
             community = true,   // QA r5 (D-020): Mitlesen always on, toggle gone ➡ an old stored "off" no longer counts
             autoUpdate = p[K.autoUpdate] ?: false,
-            hero = p[K.hero]?.firstOrNull()?.takeIf { it in "abc" } ?: 'a',
+            hero = p[K.hero]?.firstOrNull()?.takeIf { it in "ab" } ?: 'a',
         )
     }
 
