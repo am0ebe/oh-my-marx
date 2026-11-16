@@ -184,4 +184,59 @@ class MatrixTest {
         assertEquals("hello", r.body.getString("body"))
         assertNotNull(r.auth)
     }
+
+    // ── 👥 Lesekreise (todo ‼️ Matrix: JVM tst vs fake server) ──
+
+    @Test fun createKreisIsPrivateAliasedAndHistoryShared() {
+        routes["$P/createRoom"] = { 200 to JSONObject().put("room_id", "!k:scagent.de") }
+        assertEquals("!k:scagent.de", runBlocking { Matrix.createKreis(S, "Bus 42", "AB3XYZ") })
+        val b = seen.single().body
+        assertEquals("omm-kreis-ab3xyz", b.getString("room_alias_name"))   // = kreisAlias("AB3XYZ") minus # + server
+        assertEquals("#omm-kreis-ab3xyz:scagent.de", Matrix.kreisAlias("AB3XYZ"))
+        assertEquals("private", b.getString("visibility"))                 // not i th public room directory
+        assertEquals("shared", b.getJSONArray("initial_state").getJSONObject(0).getJSONObject("content").getString("history_visibility"))
+        assertTrue(b.getString("topic").contains("AB3XYZ"))
+    }
+
+    @Test fun createKreisCodeTakenIsNull() {
+        routes["$P/createRoom"] = { 400 to JSONObject().put("errcode", "M_ROOM_IN_USE") }
+        assertNull(runBlocking { Matrix.createKreis(S, "x", "AAAAAA") })
+    }
+
+    @Test fun membersFallBackToLocalpart() {
+        routes["$P/rooms/"] = { 200 to JSONObject().put("joined", JSONObject()
+            .put("@anna-1:scagent.de", JSONObject().put("display_name", "Anna"))
+            .put("@bob-2:scagent.de", JSONObject())) }
+        assertEquals(mapOf("@anna-1:scagent.de" to "Anna", "@bob-2:scagent.de" to "bob-2"), runBlocking { Matrix.members(S, "!k:scagent.de") })
+        assertTrue(seen.single().path.endsWith("/joined_members"))
+        routes["$P/rooms/"] = { 403 to JSONObject() }
+        assertTrue(runBlocking { Matrix.members(S, "!k:scagent.de") }.isEmpty())
+    }
+
+    @Test fun roomNameLeaveRedactSetName() {
+        routes["$P/rooms/"] = { r -> 200 to (if (r.path.contains("m.room.name")) JSONObject().put("name", "Bus 42") else JSONObject()) }
+        routes["$P/profile/"] = { 200 to JSONObject() }
+        runBlocking {
+            assertEquals("Bus 42", Matrix.roomName(S, "!k:scagent.de"))
+            assertTrue(Matrix.leave(S, "!k:scagent.de"))
+            assertTrue(Matrix.redact(S, "!k:scagent.de", "\$ev1"))
+            assertTrue(Matrix.setName(S, "Rosa"))
+        }
+        val (name, leave, redact, prof) = seen.toList()
+        assertEquals("GET", name.method)
+        assertEquals("POST", leave.method); assertTrue(leave.path.endsWith("/leave"))
+        assertEquals("PUT", redact.method); assertTrue(redact.path.contains("/redact/"))   // txn id unique per call
+        assertEquals("PUT", prof.method); assertEquals("Rosa", prof.body.getString("displayname"))
+        assertTrue("user id url-encoded", prof.path.contains("%40leo-ab12%3Ascagent.de"))
+        routes.clear()   // all 404 ➡ false, no crash
+        runBlocking { assertTrue(!Matrix.leave(S, "!k:scagent.de") && !Matrix.redact(S, "!k:scagent.de", "\$e") && !Matrix.setName(S, "x")) }
+    }
+
+    @Test fun kreisCodeIsReadableAloud() {
+        repeat(200) {
+            val c = Matrix.newCode()
+            assertEquals(6, c.length)
+            assertTrue(c, c.none { it in "0O1IL" } && c.all { it.isUpperCase() || it.isDigit() })
+        }
+    }
 }
