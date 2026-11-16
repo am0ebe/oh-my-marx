@@ -49,7 +49,7 @@
 - 💡 small Marx animation (🦠 @1113) — tiny, e.g. Marx reacts 2 Amen / streak · ⬄ halo states i design_system.md § 7 hero · big avatar + xp idea ➡ moved 2 `pr/cali/notes.md` § 🔵
 - 💡 app ideas: zuletzt gelesen/angeguckt · who's online (Matrix · Lesekreis) · events/Termine near u (⚠️ location implications) · personalize (Hooked: user invests data · usage analytics) · notif toggle (Android may alr do it)
 - 🔑 **cross-app insights board**: extract L fr evy app we build (omm · cali · …) ➡ shared ⬄ vibe++/kb
-- 💡 viral: in-app Spruchkarte share ➡ `scagent.de/omm` under th card img? (check wh it has now)
+- 💬 viral: in-app Spruchkarte share ➡ `scagent.de/omm` under th card img? · ✔️ checked @1116: link alw rides i th share txt (`Share.kt` shareCard, appended if missing) · on th img ❌ since QA r4 (no app-name line on th card) ➡ 🦠 only if u want it back on th img
 - 🔊 persona voices = lives i **pr/audio** now (`voice/` engine + `todo_audio.md`) · omm side: wait 4 audio D-010 (voice packs ok?) ➡ then `render_pack.py` · 🚫 real Merz (impression = ok)
 - 📦 **Ask Marx**: everyday problem (boss, rent, overtime) ➡ Marx answers short + punchy w a Kapital quote + ref (tap ➡ chapter)
   - 🔍 persona prompt + RAG over scored verses (must cite 1) · LLM: on-device Gemma 3 1B (~600 MB 👎) ⬄ ollama on tow/vps ⬄ API · ⚠️ no real legal/medical/money advice, crisis ➡ real help · ironic, not cringe
@@ -60,6 +60,10 @@
 - 📦 gestures left: "Morgen"-teaser blurred + locked · shortcut "Weiterlesen" (last-read pref) · 🪝 Hooked notes 4 th new gestures (pull = slot machine · stories · shake = variable reward)
 - 📦 "Was nervt?" free-txt + embeddings · Mehrwert-Rechner · Fußnoten-Burns plan (Dunning "300 %" = fn 24:250) · Feiertage 2 (+ political holidays + remembrance days ~evy 1-2 w · Marx as Santa · own notif txt · Black Friday ➡ Fetisch-Detox · widget colours) · export "Mein Kapital" (md/json)
 - 🔍 tags over-applied ("kapitalist" 83 %) ➡ relative re-tag
+  - ✔️ 🔍 @1116: 🐛 root = score.py `maxItems: 4` ➡ LLM pads: **1511/1511 quotes hv exactly 4 tags** · kapitalist 83 % · krise 61 % · lohn 59 %
+    - Marxoskop chips (j ≥ 3, any tag match): chef 1233/1511 · krise 917 · lohn 889 · ki 454 ⬄ miete 94 · ueberstunden 178 ➡ big chips ≈ random quote
+    - 1st tag ≠ relevance either (lohn 1st on 779 = 52 %)
+  - 🤖 nxt: retag pass (local LLM ~35 min): "0-2 tags, only if th passage is ABOUT it" + per-tag weight 1-3 ➡ chip = weight ≥ 2 · guard min ~30 quotes/chip (miete/konsum thin) · ⚠️ changes Marxoskop picks ➡ aftr th QA round, not mid
 - 🤖 aft QA: rm page fotos (boox proc step 8)
 - _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm wo 🦠 ok · dropped @1113 ➡ [notes.md § 🗃️](notes.md)_
 
