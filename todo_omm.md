@@ -5,7 +5,7 @@
 ## ⏳
 - 🦠📱 **fon tst: updater on a browser-APK install** (D-038 · @1115) — DEV app, ~5 min
   1. Chrome ➡ `scagent.de/oh-my-marx/dev/` ➡ tap th apk ➡ install OVER ur DEV (same key = data stays · now th installer o record = browser, not Obtainium)
-  2. tell 🤖 "deploy" ➡ newer DEV goes live (has D-036 A/B + th 🩹 below)
+  2. tell 🤖 "deploy" ➡ newer DEV goes live (= th 6 qa_1116 lanes + th 🩹 below)
   3. open DEV ➡ ≤1 min: notification "🆕 … is out" + Today banner ➡ tap ➡ "Install"
   4. 1st ti: Android "allow fr this source" ➡ toggle ➡ back = goes on by itself ➡ Android confirm ➡ Update ➡ ✔️ ⚙️ shows new version · streak + notes still there
      - 🩹 bonus: tap Install, then Home mid-download ➡ expect notification "🆕 Update ready" (was: nothing)
@@ -17,10 +17,10 @@
     | DEV | ✔️ fon: Obtainium 1h ck auto-updated (🦠) · app's own notif ➡ obtainium://refresh = unit tst only | ⏳ unit tsts ✔️ · fon = 5 steps above |
     | normal | ✔️ Obtainium follows th page (same as DEV) | ❌ untestable yet: 0.9.0 has th OLD banner (➡ web page, no 1-tap) · 1st real self-update = 0.10.0 ➡ 0.10.1 |
     - 0.9.0 ➡ 0.10.0 APK users: banner ➡ page ➡ install by hand 1× (then 1-tap / silent fr there)
-- ▶ **RESUME @1114 eos** — ds L0 + lanes L2 · L3 · L5 merged + pushed (`cb465b5`, 90 tsts green) · DEV live = `0.10.0-dev.1114.2117` (B) · prev DEV A = 1114.1620 (1st w new updater D-038)
-  - ▶ nxt: 🦠 fon: install A by hand (if not yet) ➡ open app ➡ B notification should pop ≤1 min (Obtainium path) · then browser-APK path (install B fr page ➡ 🤖 deploy C) · 🦠 D-036 A/B (⚙️ "🧪 Today hero", DEV, @1115) ➡ friends ➡ pick ➡ 🤖 L1 Today + L4 Mine/⚙️/Hooked lanes (same worktree-agent pattern) ➡ `bin/translate.py --only ui` (new labels: Back · Install · Switch on · Copied · Reading room · Not now…)
-  - 👤 🦠: D-036 pick · fon tst updater (Obtainium + browser) · fon QA o th whole ds look · D-029 ✔️ came via M8 relay ➡ 🦠 skim design_system.md § 1
-  - ⚠️ traps: `.claude/worktrees/` 3 lane checkouts + branches `worktree-agent-*` still there (merged ➡ rm = 🦠 ok) · TodayScreen still calls fx directly ➡ L1: `fx.play(amenFx(rare))` b4 `vm.amen()` + "Day complete!" dialog into a `RewardSlot` (Fx.kt KDoc) · D-034 Hooked note not built (L1) · kreis_detail + unlock = no shot (fon check: Leave confirm) · guard baseline = recompute aft evy merge (strict both ways) · omm-api live rebuild = ops (their refl log says done @1114, not verified here)
+- ▶ **RESUME @1116 eos** — v0.10.0 shipped (stable) · aftr it 6 ⚡ lanes fr [qa_1116.md](qa_1116.md) pushed (`1b020cd`, lint + 90 tsts green) · ❌ not deployed · DEV live = `0.10.0-dev.1116.1253` (pre-lanes)
+  - ▶ nxt: 🦠 answers 💬 Q1-Q9 (qa_1116) ➡ build th blocked lanes (feed Q4/Q7 · streak Q2 · fx Q9 · fgj Q5 · DEV unlock Q6) ➡ `bin/deploy.sh` ➡ fon QA o th lanes · then Fable design spec (🦠: AFTER this round)
+  - 👤 🦠: Qs · fon tst updater (above) · fon cold start `adb shell am start -W` (L6 before ⬄ after) · baseline profile = device run
+  - ⚠️ traps: new tr() string ➡ `bin/translate.py --only ui` or ship refuses (check_langs) · 0.10.0 notes say "read more" (r2.1 rm'd it) ➡ nxt Release says so · TodayScreen still calls fx directly (L1: `fx.play(amenFx(rare))` + RewardSlot, Fx.kt KDoc) · guard baseline strict both ways · 🔵 7 EN align gaps (ContentTest ratchet 7)
 
 ## ‼️
 - ⭐🧪 **QA @1116** ➡ [qa_1116.md](qa_1116.md) — 14 ⚡ i 6 lanes (L3 share 1st) · 3 🎨 (➡ Fable spec aftr) · 2 🔍 · 💬 6 Qs 4 🦠 · ❌ code til Qs back
@@ -68,6 +68,7 @@
 - _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm wo 🦠 ok · dropped @1113 ➡ [notes.md § 🗃️](notes.md)_
 
 ## ✔️
+- ✔️ @1116: D-030 CI OOM (gradle 1280m · 2× green) · D-036 = A · ship.sh X.Y.Z + README how-to · **v0.10.0 shipped** · qa_1116 r1+r2 triage · 6 ⚡ lanes (Book · Today · share/★ · settings · i18n 47 strings + guard · startup lazy JSON) · updater BAL fix
 - ✔️ @1114: design system L0 (`ui/ds/` + guard + ds_gallery) + lanes L2 Book · L3 Plans/Circle (Leave confirm 🐛) · L5 bars/dialogs/fx queue · D-029..035 picked · updater D-038 · omm-api no pip D-037 · DEV 1114.1620 + .2117
 - ✔️ @1113: big round pt 1 (EN data via pipeline · 📜 feed · 🔓 Hooked unlock · 🤖 Ludditen plan) + follow-ups (FÜFNZEHNTES + IdMoves D-028 · 13,120-125 align · UI/plan fan-in 11 langs) · r5 + r5b updater (D-023) · ❌ not deployed
 - ✔️ @1112: QA sprint r1-r3 (3 fan-ins: plan continuity · About cleanup · share panel + ★ close · Abzeichen + tone · arch title card · Lesesaal-Name) · arch.md SDD (D-001..016) · qa_1112 triage · r2 test lanes (lint · Update · Matrix · bin)
