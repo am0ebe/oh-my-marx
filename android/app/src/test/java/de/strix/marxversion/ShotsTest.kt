@@ -96,15 +96,6 @@ class ShotsTest {
     /** mid-screen swipe (default starts on th nav bar = no scroll) */
     private fun scroll() = rule.onRoot().performTouchInput { swipeUp(startY = height * 0.75f, endY = height * 0.2f) }
 
-    /** 🧪 D-036 A/B (🦠 @1115): real Today w hero A (as b4 th ds) ⬄ B (bigger) ➡ hero_a.png + hero_b.png */
-    @Test fun hero() {
-        rule.waitUntil(30_000) { rule.onAllNodesWithText("Today").fetchSemanticsNodes().isNotEmpty() }
-        val vm = androidx.lifecycle.ViewModelProvider(rule.activity)[de.strix.marxversion.ui.AppVm::class.java]
-        vm.setHero('a'); shot("hero_a")
-        vm.setHero('b'); shot("hero_b")
-        vm.setHero('a'); rule.waitForIdle()   // `screens` shoots th default
-    }
-
     @Test fun screens() {
         rule.waitUntil(30_000) { rule.onAllNodesWithText("Today").fetchSemanticsNodes().isNotEmpty() }
         shot("today")

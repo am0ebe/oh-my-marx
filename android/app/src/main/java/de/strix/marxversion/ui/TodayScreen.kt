@@ -209,8 +209,7 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
             }
         }
         // ── 🔥 streak widget on top (@1112): chain + week + Stempelkarte = th 1st thing u see ──
-        //    🧪 D-036 A/B (🦠 @1115 "as it was b4, o bigger" · ❌ compact): ⚙️ "Today hero" a = as b4 th ds work · b = bigger
-        Box(Modifier.padding(horizontal = 16.dp).padding(bottom = 12.dp)) { Hero(days, feast, dt, s.testMode, big = s.hero == 'b') }
+        Box(Modifier.padding(horizontal = 16.dp).padding(bottom = 12.dp)) { Hero(days, feast, dt, s.testMode) }   // D-036 = A (🦠 @1116)
         // ── 🃏 th cards (Hooked: reward right at th door) ──
         CardCarousel(vm, extras, vod?.let { CardItem(it, CardItem.Kind.TODAY, 0, feast) }, doneToday, speaker, persona, jump, openChapter, amen)
         Column(Modifier.padding(horizontal = 16.dp)) {
@@ -423,10 +422,10 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
  * 🌅 hero (à la Insight Timer's streak widget, @1106): gradient by time o day (or 🎉 feast) · nudge title
  * ("Save your chain!") · this week Mo–Su (✓ read · red ! = today still open · 🕊 Sabbat) · streak nr i a red star ·
  * 🎟️ Stempelkarte (🎁 gifts · ☭ earned · red ! = today's stamp waiting) + "N more days to <rank>".
- * 🧪 D-036 A/B (@1115): big = false ➡ exactly th pre-ds hero (A) · true ➡ B: star 124 · headline 30 · week + stamps fill th width
+ * ✔️ D-036 = A (🦠 @1116): this hero as it was b4 th ds work · B (bigger) + compact + collapse ❌ · git: 384cbab
  */
 @Composable
-private fun Hero(days: List<DayLog>, feast: Feast?, dt: DayTime, hooked: Boolean, big: Boolean = false) {
+private fun Hero(days: List<DayLog>, feast: Feast?, dt: DayTime, hooked: Boolean) {
     val white = Color.White
     val (st, rest) = streakInfo(days)
     val total = readingDays(days)
@@ -435,34 +434,32 @@ private fun Hero(days: List<DayLog>, feast: Feast?, dt: DayTime, hooked: Boolean
     val today = LocalDate.now()
     val read = days.map { it.date }.toSet()
     val doneToday = today.toString() in read
-    val z = if (big) 1.25f else 1f   // B = A's type × 1.25 (no new raw sizes · design guard)
     Column(
-        Modifier.fillMaxWidth().clip(RoundedCornerShape(if (big) 22.dp else 18.dp))
+        Modifier.fillMaxWidth().clip(RoundedCornerShape(18.dp))
             .background(Brush.verticalGradient((feast?.colors ?: dt.colors).take(3).map { Color(it) }))
             .background(Color.Black.copy(alpha = 0.15f))  // scrim: white txt stays readable on light stops
-            .padding(if (big) 20.dp else 16.dp),
+            .padding(16.dp),
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Column(Modifier.weight(1f)) {
                 Text(if (st > 0) tr("%d Tage Lesekapital akkumuliert", "%d days of reading capital accumulated").f(st)
-                    else tr("Schön, dass du da bist", "Good to see you"), color = white.copy(alpha = 0.9f), fontSize = 13.sp * z)
+                    else tr("Schön, dass du da bist", "Good to see you"), color = white.copy(alpha = 0.9f), fontSize = 13.sp)
                 Text(when {
                     doneToday -> tr("Schicht erledigt", "Shift done")   // ✓ lives i th week row · "akkumuliert" only once (@1107)
                     st > 0 -> tr("Weiter geht's!", "Keep it rolling!")
                     else -> tr("Fang heute an!", "Start today!")
-                }, color = white, fontSize = 24.sp * z, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Serif,
-                    lineHeight = 28.sp * z)
-                Gap(if (big) 6 else 4)
+                }, color = white, fontSize = 24.sp, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Serif, lineHeight = 28.sp)
+                Gap(4)
                 Text(feast?.let { it.emoji + "  " + tr(it.greet) } ?: tr(dt.greetOn(today)), color = white.copy(alpha = 0.9f),
-                    fontSize = 13.sp * z, lineHeight = 17.sp * z)
+                    fontSize = 13.sp, lineHeight = 17.sp)
             }
-            StreakStar(st, if (big) 124.dp else 92.dp)
+            StreakStar(st)
         }
-        Gap(if (big) 16 else 12)
-        // this week, Mo ➡ Su (Insight Timer: ✓ · ! · letters) · big = 7 dots share th width
+        Gap(12)
+        // this week, Mo ➡ Su (Insight Timer: ✓ · ! · letters)
         val monday = today.minusDays((today.dayOfWeek.value - 1).toLong())
         val lang = LocalLang.current
-        Row(if (big) Modifier.fillMaxWidth() else Modifier, horizontalArrangement = Arrangement.spacedBy(if (big) 8.dp else 6.dp)) {
+        Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
             (0L..6L).map { monday.plusDays(it) }.forEach { d ->
                 val isRead = d.toString() in read
                 val (bg, fg, txt) = when {
@@ -472,21 +469,20 @@ private fun Hero(days: List<DayLog>, feast: Feast?, dt: DayTime, hooked: Boolean
                     else -> Triple(white.copy(alpha = if (d.isAfter(today)) 0.16f else 0.08f), white.copy(alpha = 0.7f),
                         d.dayOfWeek.getDisplayName(TextStyle.NARROW, lang.locale))
                 }
-                Box((if (big) Modifier.weight(1f).aspectRatio(1f) else Modifier.size(34.dp)).clip(CircleShape).background(bg)
+                Box(Modifier.size(34.dp).clip(CircleShape).background(bg)
                     .then(if (d == today) Modifier.border(2.5.dp, white, CircleShape) else Modifier), contentAlignment = Alignment.Center) {   // today = ring
-                    Text(txt, color = fg, fontSize = 15.sp * z, fontWeight = FontWeight.Bold)
+                    Text(txt, color = fg, fontSize = 15.sp, fontWeight = FontWeight.Bold)
                 }
             }
         }
         if (rest.isNotEmpty()) Text(tr("🕊️ Sabbat-Joker eingelöst — 1 Ruhetag pro Woche bricht die Kette nicht.",
-            "🕊️ Sabbath joker used — 1 rest day per week doesn't break the chain."), color = white.copy(alpha = 0.85f),
-            fontSize = 11.sp * z, modifier = Modifier.padding(top = 4.dp))
-        Gap(if (big) 18 else 14)
+            "🕊️ Sabbath joker used — 1 rest day per week doesn't break the chain."), color = white.copy(alpha = 0.85f), fontSize = 11.sp,
+            modifier = Modifier.padding(top = 4.dp))
+        Gap(14)
         // 🎟️ Stempelkarte: ☭ earned · red ! = today's stamp, still open · ○ to go ➡ ui/ds/StampCard.kt (L0 @1114: L1 + L4 share it)
-        de.strix.marxversion.ui.ds.StampRow(card, doneToday, fill = big)
+        de.strix.marxversion.ui.ds.StampRow(card, doneToday)
         // "N more days to <rank>" moved 2 th plan card (QA @1112)
-        if (ranks > 0) Text(tr("Rang: %s", "Rank: %s").f(tr(rank(ranks - 1))), color = white.copy(alpha = 0.8f),
-            fontSize = 11.sp * z, modifier = if (big) Modifier.padding(top = 4.dp) else Modifier)
+        if (ranks > 0) Text(tr("Rang: %s", "Rank: %s").f(tr(rank(ranks - 1))), color = white.copy(alpha = 0.8f), fontSize = 11.sp)
     }
     HookNote(Hook.STREAK, hooked)
     HookNote(Hook.STAMPS, hooked)

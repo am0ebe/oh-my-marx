@@ -144,15 +144,6 @@ fun SettingsScreen(vm: AppVm, askNotifPermission: () -> Unit) {
                 }
                 de.strix.marxversion.ui.ds.DsSwitch(s.autoUpdate, { vm.setAutoUpdate(it) })
             }
-            // 🧪 D-036 A/B (🦠 @1115): Today hero A = as b4 · B = bigger · DEV APK only (friends try both on 1 APK)
-            if (IS_DEV) Column(Modifier.padding(vertical = 8.dp)) {
-                Text(tr("🧪 Heute-Kopf (D-036)", "🧪 Today hero (D-036)"))
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    listOf('a' to tr("A wie vorher", "A as before"), 'b' to tr("B größer", "B bigger")).forEach { (k, l) ->
-                        de.strix.marxversion.ui.ds.ChoiceChip(l, s.hero == k, { vm.setHero(k) })
-                    }
-                }
-            }
             HorizontalDivider()
         }
 
