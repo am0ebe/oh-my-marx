@@ -17,6 +17,7 @@
   - ⚠️ traps: `.claude/worktrees/` 3 lane checkouts + branches `worktree-agent-*` still there (merged ➡ rm = 🦠 ok) · TodayScreen still calls fx directly ➡ L1: `fx.play(amenFx(rare))` b4 `vm.amen()` + "Day complete!" dialog into a `RewardSlot` (Fx.kt KDoc) · D-034 Hooked note not built (L1) · kreis_detail + unlock = no shot (fon check: Leave confirm) · guard baseline = recompute aft evy merge (strict both ways) · omm-api live rebuild = ops (their refl log says done @1114, not verified here)
 
 ## ‼️
+- ⭐🧪 **QA @1116** ➡ [qa_1116.md](qa_1116.md) — 14 ⚡ i 6 lanes (L3 share 1st) · 3 🎨 (➡ Fable spec aftr) · 2 🔍 · 💬 6 Qs 4 🦠 · ❌ code til Qs back
 - ⭐🧪 **QA sprint 0.9.x** — r1-r3 ✔️ · left ➡ [qa_1112.md](qa_1112.md) (🎨 10 design · 🔍 5 research · 💬 Qs) · ❓ streak widget "shd show 2 at start" = ? unanswered
   - later (needs design): 📖 real book look · ⏰ daily verse off-switch · name entry · 🔮 Marxoskop tiles · 🔓 Lesekreis unlock · 🏷️ quotes off-topic ➡ [notes.md § 🗃️](notes.md)
 - 📨⭐ **user feedback** — 1st real users = gold · log (M · M2 · Jan · Mi) ➡ `feedback.md` + [notes.md § 🗃️](notes.md) · phase 1 ✔️ (page mail + GH issue forms + app ⚙️ btn)
