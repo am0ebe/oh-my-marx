@@ -4,6 +4,8 @@
   EN (source text) + DE (Marx's original) need none · evy oth menu lang needs
     assets/content/i18n_<xx>.json (UI + quotes) AND full_<xx>.json (th book, "v" non-empty)
   else exit 1 + list ➡ bin/ship.sh refuses (0.9.0 changelog claimed ur/hi/bn book b4 full_xx.json existed)
+  + evy tr("de", "en") / T(…) UI string i th Kotlin src needs its "ui" entry i evy i18n_<xx>.json (qa_1116 #11: 51
+    new btn labels stayed EN i all 11 langs ➡ "not all button txts switch") ➡ fix = bin/translate.py --only ui
 
   bin/check_langs.py [ROOT]      ROOT = repo root (dflt: th one above bin/) · tsts pass a fake tree
 """
@@ -25,6 +27,22 @@ def menu(root):
     return [c.strip().lower() for c in m.group(1).split(",") if c.strip()]
 
 
+SRC = "android/app/src/main/java"
+# same extraction as translate.py ui_strings() (key = EN string, unescaped · templates w $ can't be looked up ➡ skipped)
+PAIR = re.compile(r'\b(?:T|tr)\(\s*"((?:[^"\\]|\\.)*)"\s*,\s*"((?:[^"\\]|\\.)*)"\s*,?\s*\)', re.S)
+COMMENT = re.compile(r'^\s*(//|\*|/\*\*).*$', re.M)
+
+
+def ui_keys(root):
+    keys = set()
+    for f in sorted((root / SRC).rglob("*.kt")):
+        for m in PAIR.finditer(COMMENT.sub("", f.read_text(encoding="utf-8"))):
+            en = bytes(m.group(2), "utf-8").decode("unicode_escape").encode("latin-1").decode("utf-8")
+            if "$" not in en:
+                keys.add(en)
+    return keys
+
+
 def _json(f):
     try:
         return json.loads(f.read_text(encoding="utf-8"))
@@ -35,6 +53,7 @@ def _json(f):
 def problems(root):
     root = pathlib.Path(root)
     out = []
+    keys = ui_keys(root)
     for lang in menu(root):
         if lang in BUILTIN:
             continue
@@ -42,6 +61,11 @@ def problems(root):
         ui, full = _json(d / f"i18n_{lang}.json"), _json(d / f"full_{lang}.json")
         if not ui:
             out.append(f"{lang}: i18n_{lang}.json missing/empty")
+        else:
+            miss = sorted(keys - set(ui.get("ui", {})))
+            if miss:
+                out.append(f"{lang}: {len(miss)} UI strings untranslated (e.g. {', '.join(repr(m[:30]) for m in miss[:3])}) "
+                           "➡ bin/translate.py --only ui")
         if not (isinstance(full, dict) and full.get("v")):
             out.append(f"{lang}: full_{lang}.json missing/empty (no book text)")
     return out

@@ -2163,3 +2163,50 @@
 {"kind": "ui", "k": "read more ▾ · ~%d min left", "src": "weiterlesen ▾ · noch ~%d Min.\u0000read more ▾ · ~%d min left", "t": "আরও পড়ুন ▾ · আরও ~%d মিনিট"}
 {"kind": "plan", "k": "ludditen:t", "src": "Maschinenstürmer & KI\u0000Luddites & AI", "t": "মেশিন স্টুর্মার আর এআই"}
 {"kind": "plan", "k": "ludditen:d", "src": "7 Tage Kapitel 13: Webstühle, Maschinenstürmer und warum das Kapitel über Maschinerie sich heute wie ein KI-Kommentar liest. Marx' Text ist original von 1867 — nur die Brücke ins Heute ist neu.\u00007 days of chapter 13: power looms, Luddites, and why the chapter on machinery reads like a comment on AI today. Marx's text is the 1867 original — only the bridge to today is new.", "t": "13 অধ্যায়ের 7 দিন: পাওয়ার লুম, লুডিট, এবং কেন মেশিনারির অধ্যায়টি আজকের এআই-এর মন্তব্যের মতো শোনায়। মার্কসের টেক্সটটি 1867-এর মূল রচনা — শুধু আজকের সাথে সংযোগটি নতুন।"}
+{"kind": "ui", "k": "Back", "src": "Zurück\u0000Back", "t": "পিছনে"}
+{"kind": "ui", "k": "Reading plan", "src": "Leseplan\u0000Reading plan", "t": "পাঠের পরিকল্পনা"}
+{"kind": "ui", "k": "Reading circle", "src": "Lesekreis\u0000Reading circle", "t": "পাঠ বৃত্ত"}
+{"kind": "ui", "k": "🎨 New design: paper look, calmer buttons, chapters without bars — reads like a book", "src": "🎨 Neues Design: Papier-Look, ruhigere Knöpfe, Kapitel ohne Leisten — liest sich wie ein Buch\u0000🎨 New design: paper look, calmer buttons, chapters without bars — reads like a book", "t": "🎨 নতুন ডিজাইন: কাগজের দৃশ্য, শান্ত বোতাম, অধ্যায়গুলি বার ছাড়া — বইয়ের মতো পড়া যায়"}
+{"kind": "ui", "k": "🆕 New version? You hear at once · ⚙️ “Update automatically” = no asking (APK from the website)", "src": "🆕 Neue Version? Du erfährst es sofort · ⚙️ „Automatisch aktualisieren“ = ohne Nachfrage (APK von der Webseite)\u0000🆕 New version? You hear at once · ⚙️ “Update automatically” = no asking (APK from the website)", "t": "🆕 নতুন ভার্সন? তা আপনি তাত্ক্ষণিক জানবেন · ⚙️ “স্বয়ংক্রিয় আপডেট” = জিজ্ঞাসা ছাড়াই (ওয়েবসাইট থেকে APK)"}
+{"kind": "ui", "k": "✅ Amen feels better: a quick tick + buzz, the big celebration only for special moments", "src": "✅ Amen fühlt sich besser an: kurzer Haken + Vibration, die große Feier nur zu besonderen Momenten\u0000✅ Amen feels better: a quick tick + buzz, the big celebration only for special moments", "t": "✅ আমেন ভালো লাগে: দ্রুত টিক + কাঁপন, বড় উদযাপন শুধু বিশেষ মুহূর্তের জন্য"}
+{"kind": "ui", "k": "Reading room · p. %s", "src": "Lesesaal · S. %s\u0000Reading room · p. %s", "t": "পাঠ কক্ষ · পৃষ্ঠা %s"}
+{"kind": "ui", "k": "About the reading room", "src": "Hinweise zum Lesesaal\u0000About the reading room", "t": "পাঠ কক্ষ সম্পর্কে"}
+{"kind": "ui", "k": "✍ Write a margin note …", "src": "✍ Schreib eine Randnotiz …\u0000✍ Write a margin note …", "t": "✍ কাঁধের নোট লিখুন …"}
+{"kind": "ui", "k": "Reading room", "src": "Lesesaal\u0000Reading room", "t": "পাঠ কক্ষ"}
+{"kind": "ui", "k": "Public to everyone reading along.", "src": "Öffentlich für alle Mitlesenden.\u0000Public to everyone reading along.", "t": "সবার জন্য পাবলিক।"}
+{"kind": "ui", "k": "Hold your own comment = delete.", "src": "Eigenen Kommentar lange drücken = löschen.\u0000Hold your own comment = delete.", "t": "আপনার মন্তব্য দীর্ঘ ধরে ধরুন = মুছে ফেলুন।"}
+{"kind": "ui", "k": "Privacy", "src": "Datenschutz\u0000Privacy", "t": "গোপনীয়তা"}
+{"kind": "ui", "k": "Invitation to a reading circle", "src": "Einladung in einen Lesekreis\u0000Invitation to a reading circle", "t": "পাঠ বৃত্তে আমন্ত্রণ"}
+{"kind": "ui", "k": "Not now", "src": "Nicht jetzt\u0000Not now", "t": "এখন নয়"}
+{"kind": "ui", "k": "Found a circle", "src": "Kreis gründen\u0000Found a circle", "t": "বৃত্ত গঠন করুন"}
+{"kind": "ui", "k": "Circle name", "src": "Name des Kreises\u0000Circle name", "t": "বৃত্তের নাম"}
+{"kind": "ui", "k": "Join with a code", "src": "Mit Code beitreten\u0000Join with a code", "t": "কোড দিয়ে যোগ দিন"}
+{"kind": "ui", "k": "Code", "src": "Code\u0000Code", "t": "কোড"}
+{"kind": "ui", "k": "Leave circle?", "src": "Kreis verlassen?\u0000Leave circle?", "t": "বৃত্ত ছাড়ার কথা ভাবছেন?"}
+{"kind": "ui", "k": "Leave", "src": "Verlassen\u0000Leave", "t": "ছাড়ুন"}
+{"kind": "ui", "k": "Stay", "src": "Bleiben\u0000Stay", "t": "থাকুন"}
+{"kind": "ui", "k": "The chat and shared stamp card of “%s” disappear. You can rejoin with the code %s.", "src": "Chat und gemeinsame Stempelkarte von „%s“ verschwinden. Mit dem Code %s kannst du wieder beitreten.\u0000The chat and shared stamp card of “%s” disappear. You can rejoin with the code %s.", "t": "“%s”-এর চ্যাট এবং সামগ্রিক স্ট্যাম্প কার্ড অদৃশ্য হয়ে যাবে। আপনি কোড %s দিয়ে আবার যোগ দিতে পারবেন।"}
+{"kind": "ui", "k": "Code ", "src": "Code \u0000Code ", "t": "কোড"}
+{"kind": "ui", "k": "Refresh", "src": "Aktualisieren\u0000Refresh", "t": "আপডেট করুন"}
+{"kind": "ui", "k": "Close", "src": "Schließen\u0000Close", "t": "বন্ধ করুন"}
+{"kind": "ui", "k": "Bookmarks", "src": "Lesezeichen\u0000Bookmarks", "t": "বুকমার্ক"}
+{"kind": "ui", "k": "🆕 Update automatically", "src": "🆕 Automatisch aktualisieren\u0000🆕 Update automatically", "t": "🆕 স্বয়ংক্রিয় আপডেট"}
+{"kind": "ui", "k": "New versions install without asking (Android 12+). Off = you get a notification and tap.", "src": "Neue Versionen installieren sich ohne Nachfrage (Android 12+). Aus = du bekommst eine Nachricht und tippst.\u0000New versions install without asking (Android 12+). Off = you get a notification and tap.", "t": "নতুন সংস্করণগুলি জিজ্ঞাসা না করেই ইনস্টল হয় (Android 12+). বন্ধ = আপনি নোটিফিকেশন পাবেন এবং ট্যাপ করবেন।"}
+{"kind": "ui", "k": "Days", "src": "Tage\u0000Days", "t": "দিন"}
+{"kind": "ui", "k": "read", "src": "gelesen\u0000read", "t": "পড়া হয়েছে"}
+{"kind": "ui", "k": "unread", "src": "ungelesen\u0000unread", "t": "অপড়া"}
+{"kind": "ui", "k": "%d comments on this page", "src": "%d Kommentare zu dieser Seite\u0000%d comments on this page", "t": "%d পাতার উপর মন্তব্য"}
+{"kind": "ui", "k": "Previous page", "src": "Zurückblättern\u0000Previous page", "t": "আগের পাতা"}
+{"kind": "ui", "k": "Turn the page", "src": "Umblättern\u0000Turn the page", "t": "পাতা ঘোরান"}
+{"kind": "ui", "k": "Copied", "src": "Kopiert\u0000Copied", "t": "কপি করা হয়েছে"}
+{"kind": "ui", "k": "Copy link", "src": "Link kopieren\u0000Copy link", "t": "লিঙ্ক কপি করুন"}
+{"kind": "ui", "k": "Switch on", "src": "Einschalten\u0000Switch on", "t": "চালু করুন"}
+{"kind": "ui", "k": "Open web page", "src": "Webseite öffnen\u0000Open web page", "t": "ওয়েবপেজ খুলুন"}
+{"kind": "ui", "k": "Update in Obtainium", "src": "In Obtainium aktualisieren\u0000Update in Obtainium", "t": "Obtainium-এ আপডেট করুন"}
+{"kind": "ui", "k": "Allow", "src": "Erlauben\u0000Allow", "t": "অনুমতি দিন"}
+{"kind": "ui", "k": "Install", "src": "Installieren\u0000Install", "t": "ইনস্টল করুন"}
+{"kind": "ui", "k": "To the download page", "src": "Zur Download-Seite\u0000To the download page", "t": "ডাউনলোড পেজে যান"}
+{"kind": "ui", "k": "Bookmarked", "src": "Lesezeichen\u0000Bookmarked", "t": "বুকমার্ক করা হয়েছে"}
+{"kind": "ui", "k": "read more · ~%d min left", "src": "weiterlesen · noch ~%d Min.\u0000read more · ~%d min left", "t": "আরও পড়ুন · আরও ~%d মিনিট"}
+{"kind": "ui", "k": "also post to the reading room — as %s", "src": "auch im Lesesaal posten — als %s\u0000also post to the reading room — as %s", "t": "পড়ার ঘরে পোস্ট করুন — %s হিসেবে"}
+{"kind": "ui", "k": "Copied ✓", "src": "Kopiert ✓\u0000Copied ✓", "t": "কপি করা হয়েছে ✓"}

@@ -56,6 +56,15 @@ class ShipGuard(unittest.TestCase):
         r = subprocess.run([sys.executable, str(BIN / "check_langs.py"), str(root)], capture_output=True, text=True)
         self.assertEqual(r.returncode, 1); self.assertIn("ur", r.stdout); d.cleanup()
 
+    def test_untranslated_ui_string_is_refused(self):
+        # qa_1116 #11: a new tr() label w/o its i18n "ui" entry = stays EN i that lang
+        d, root = fake_tree(["en", "it"], {"i18n_it.json": {"ui": {"Back": "Indietro"}}, "full_it.json": {"v": {"1": "x"}}})
+        kt = root / check_langs.SRC / "X.kt"; kt.parent.mkdir(parents=True, exist_ok=True)
+        kt.write_text('Text(tr("Zurück", "Back")); Text(tr("Später", "Later"))\n// tr("Kommentar", "Comment") = ignored\n'
+                      'Text(tr("Hallo $n", "Hi $n"))')
+        p = check_langs.problems(root)
+        self.assertEqual(len(p), 1); self.assertIn("1 UI strings", p[0]); self.assertIn("Later", p[0]); d.cleanup()
+
     def test_real_repo_passes(self):
         self.assertEqual(check_langs.problems(BIN.parent), [])
 

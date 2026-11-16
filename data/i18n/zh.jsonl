@@ -2199,3 +2199,50 @@
 {"kind": "ui", "k": "read more ▾ · ~%d min left", "src": "weiterlesen ▾ · noch ~%d Min.\u0000read more ▾ · ~%d min left", "t": "继续阅读 ▾ · 还剩 ~%d 分钟"}
 {"kind": "plan", "k": "ludditen:t", "src": "Maschinenstürmer & KI\u0000Luddites & AI", "t": "机器暴徒与AI"}
 {"kind": "plan", "k": "ludditen:d", "src": "7 Tage Kapitel 13: Webstühle, Maschinenstürmer und warum das Kapitel über Maschinerie sich heute wie ein KI-Kommentar liest. Marx' Text ist original von 1867 — nur die Brücke ins Heute ist neu.\u00007 days of chapter 13: power looms, Luddites, and why the chapter on machinery reads like a comment on AI today. Marx's text is the 1867 original — only the bridge to today is new.", "t": "第13章7日：织布机、机器暴徒，以及为何这章关于机器的论述如今读来宛如AI评论。马克思原文诞生于1867年——唯有连接当下的桥梁是新的。"}
+{"kind": "ui", "k": "Back", "src": "Zurück\u0000Back", "t": "返回"}
+{"kind": "ui", "k": "Reading plan", "src": "Leseplan\u0000Reading plan", "t": "阅读计划"}
+{"kind": "ui", "k": "Reading circle", "src": "Lesekreis\u0000Reading circle", "t": "阅读圈"}
+{"kind": "ui", "k": "🎨 New design: paper look, calmer buttons, chapters without bars — reads like a book", "src": "🎨 Neues Design: Papier-Look, ruhigere Knöpfe, Kapitel ohne Leisten — liest sich wie ein Buch\u0000🎨 New design: paper look, calmer buttons, chapters without bars — reads like a book", "t": "🎨 新设计：纸张质感，更柔和的按钮，章节无条纹——读起来像本书"}
+{"kind": "ui", "k": "🆕 New version? You hear at once · ⚙️ “Update automatically” = no asking (APK from the website)", "src": "🆕 Neue Version? Du erfährst es sofort · ⚙️ „Automatisch aktualisieren“ = ohne Nachfrage (APK von der Webseite)\u0000🆕 New version? You hear at once · ⚙️ “Update automatically” = no asking (APK from the website)", "t": "🆕 有新版本？立刻知晓 · ⚙️ “自动更新” = 不再询问（从官网下载APK）"}
+{"kind": "ui", "k": "✅ Amen feels better: a quick tick + buzz, the big celebration only for special moments", "src": "✅ Amen fühlt sich besser an: kurzer Haken + Vibration, die große Feier nur zu besonderen Momenten\u0000✅ Amen feels better: a quick tick + buzz, the big celebration only for special moments", "t": "✅ 阿门更爽了：轻点勾选 + 震动，盛大庆祝只留给特别时刻"}
+{"kind": "ui", "k": "Reading room · p. %s", "src": "Lesesaal · S. %s\u0000Reading room · p. %s", "t": "阅读室 · 第 %s 页"}
+{"kind": "ui", "k": "About the reading room", "src": "Hinweise zum Lesesaal\u0000About the reading room", "t": "关于阅读室"}
+{"kind": "ui", "k": "✍ Write a margin note …", "src": "✍ Schreib eine Randnotiz …\u0000✍ Write a margin note …", "t": "✍ 写一条批注……"}
+{"kind": "ui", "k": "Reading room", "src": "Lesesaal\u0000Reading room", "t": "阅读室"}
+{"kind": "ui", "k": "Public to everyone reading along.", "src": "Öffentlich für alle Mitlesenden.\u0000Public to everyone reading along.", "t": "对所有共读者公开。"}
+{"kind": "ui", "k": "Hold your own comment = delete.", "src": "Eigenen Kommentar lange drücken = löschen.\u0000Hold your own comment = delete.", "t": "长按自己的评论 = 删除。"}
+{"kind": "ui", "k": "Privacy", "src": "Datenschutz\u0000Privacy", "t": "隐私"}
+{"kind": "ui", "k": "Invitation to a reading circle", "src": "Einladung in einen Lesekreis\u0000Invitation to a reading circle", "t": "邀请加入阅读圈"}
+{"kind": "ui", "k": "Not now", "src": "Nicht jetzt\u0000Not now", "t": "暂不"}
+{"kind": "ui", "k": "Found a circle", "src": "Kreis gründen\u0000Found a circle", "t": "创建圈子"}
+{"kind": "ui", "k": "Circle name", "src": "Name des Kreises\u0000Circle name", "t": "圈子名称"}
+{"kind": "ui", "k": "Join with a code", "src": "Mit Code beitreten\u0000Join with a code", "t": "用代码加入"}
+{"kind": "ui", "k": "Code", "src": "Code\u0000Code", "t": "代码"}
+{"kind": "ui", "k": "Leave circle?", "src": "Kreis verlassen?\u0000Leave circle?", "t": "退出圈子？"}
+{"kind": "ui", "k": "Leave", "src": "Verlassen\u0000Leave", "t": "离开"}
+{"kind": "ui", "k": "Stay", "src": "Bleiben\u0000Stay", "t": "留下"}
+{"kind": "ui", "k": "The chat and shared stamp card of “%s” disappear. You can rejoin with the code %s.", "src": "Chat und gemeinsame Stempelkarte von „%s“ verschwinden. Mit dem Code %s kannst du wieder beitreten.\u0000The chat and shared stamp card of “%s” disappear. You can rejoin with the code %s.", "t": "“%s”的聊天和共享打卡卡将消失。使用代码 %s 可重新加入。"}
+{"kind": "ui", "k": "Code ", "src": "Code \u0000Code ", "t": "代码"}
+{"kind": "ui", "k": "Refresh", "src": "Aktualisieren\u0000Refresh", "t": "刷新"}
+{"kind": "ui", "k": "Close", "src": "Schließen\u0000Close", "t": "关闭"}
+{"kind": "ui", "k": "Bookmarks", "src": "Lesezeichen\u0000Bookmarks", "t": "书签"}
+{"kind": "ui", "k": "🆕 Update automatically", "src": "🆕 Automatisch aktualisieren\u0000🆕 Update automatically", "t": "🆕 自动更新"}
+{"kind": "ui", "k": "New versions install without asking (Android 12+). Off = you get a notification and tap.", "src": "Neue Versionen installieren sich ohne Nachfrage (Android 12+). Aus = du bekommst eine Nachricht und tippst.\u0000New versions install without asking (Android 12+). Off = you get a notification and tap.", "t": "新版本将自动安装（Android 12+）。关闭 = 你会收到通知再手动点击。"}
+{"kind": "ui", "k": "Days", "src": "Tage\u0000Days", "t": "天"}
+{"kind": "ui", "k": "read", "src": "gelesen\u0000read", "t": "已读"}
+{"kind": "ui", "k": "unread", "src": "ungelesen\u0000unread", "t": "未读"}
+{"kind": "ui", "k": "%d comments on this page", "src": "%d Kommentare zu dieser Seite\u0000%d comments on this page", "t": "%d 条关于本页的评论"}
+{"kind": "ui", "k": "Previous page", "src": "Zurückblättern\u0000Previous page", "t": "返回上一页"}
+{"kind": "ui", "k": "Turn the page", "src": "Umblättern\u0000Turn the page", "t": "翻页"}
+{"kind": "ui", "k": "Copied", "src": "Kopiert\u0000Copied", "t": "已复制"}
+{"kind": "ui", "k": "Copy link", "src": "Link kopieren\u0000Copy link", "t": "复制链接"}
+{"kind": "ui", "k": "Switch on", "src": "Einschalten\u0000Switch on", "t": "开启"}
+{"kind": "ui", "k": "Open web page", "src": "Webseite öffnen\u0000Open web page", "t": "打开网页"}
+{"kind": "ui", "k": "Update in Obtainium", "src": "In Obtainium aktualisieren\u0000Update in Obtainium", "t": "在“获取时代”中更新"}
+{"kind": "ui", "k": "Allow", "src": "Erlauben\u0000Allow", "t": "允许"}
+{"kind": "ui", "k": "Install", "src": "Installieren\u0000Install", "t": "安装"}
+{"kind": "ui", "k": "To the download page", "src": "Zur Download-Seite\u0000To the download page", "t": "前往下载页面"}
+{"kind": "ui", "k": "Bookmarked", "src": "Lesezeichen\u0000Bookmarked", "t": "已收藏"}
+{"kind": "ui", "k": "read more · ~%d min left", "src": "weiterlesen · noch ~%d Min.\u0000read more · ~%d min left", "t": "继续阅读 · 还剩 ~%d 分钟"}
+{"kind": "ui", "k": "also post to the reading room — as %s", "src": "auch im Lesesaal posten — als %s\u0000also post to the reading room — as %s", "t": "也发到阅览室 — 以 %s 身份"}
+{"kind": "ui", "k": "Copied ✓", "src": "Kopiert ✓\u0000Copied ✓", "t": "已复制 ✓"}

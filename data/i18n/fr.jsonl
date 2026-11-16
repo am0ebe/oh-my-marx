@@ -2163,3 +2163,50 @@
 {"kind": "ui", "k": "read more ▾ · ~%d min left", "src": "weiterlesen ▾ · noch ~%d Min.\u0000read more ▾ · ~%d min left", "t": "continuer la lecture ▾ · encore ~%d min."}
 {"kind": "plan", "k": "ludditen:t", "src": "Maschinenstürmer & KI\u0000Luddites & AI", "t": "Luddites & IA"}
 {"kind": "plan", "k": "ludditen:d", "src": "7 Tage Kapitel 13: Webstühle, Maschinenstürmer und warum das Kapitel über Maschinerie sich heute wie ein KI-Kommentar liest. Marx' Text ist original von 1867 — nur die Brücke ins Heute ist neu.\u00007 days of chapter 13: power looms, Luddites, and why the chapter on machinery reads like a comment on AI today. Marx's text is the 1867 original — only the bridge to today is new.", "t": "7 jours du chapitre 13 : métiers à tisser, Luddites, et pourquoi le chapitre sur la machinerie semble aujourd'hui un commentaire sur l'IA. Le texte de Marx est de 1867 — seule la passerelle vers aujourd'hui est nouvelle."}
+{"kind": "ui", "k": "Back", "src": "Zurück\u0000Back", "t": "Retour"}
+{"kind": "ui", "k": "Reading plan", "src": "Leseplan\u0000Reading plan", "t": "Plan de lecture"}
+{"kind": "ui", "k": "Reading circle", "src": "Lesekreis\u0000Reading circle", "t": "Cercle de lecture"}
+{"kind": "ui", "k": "🎨 New design: paper look, calmer buttons, chapters without bars — reads like a book", "src": "🎨 Neues Design: Papier-Look, ruhigere Knöpfe, Kapitel ohne Leisten — liest sich wie ein Buch\u0000🎨 New design: paper look, calmer buttons, chapters without bars — reads like a book", "t": "🎨 Nouveau design : aspect papier, boutons plus doux, chapitres sans barres — comme un vrai livre"}
+{"kind": "ui", "k": "🆕 New version? You hear at once · ⚙️ “Update automatically” = no asking (APK from the website)", "src": "🆕 Neue Version? Du erfährst es sofort · ⚙️ „Automatisch aktualisieren“ = ohne Nachfrage (APK von der Webseite)\u0000🆕 New version? You hear at once · ⚙️ “Update automatically” = no asking (APK from the website)", "t": "🆕 Nouvelle version ? Vous le savez tout de suite · ⚙️ « Mettre à jour automatiquement » = sans confirmation (APK depuis le site web)"}
+{"kind": "ui", "k": "✅ Amen feels better: a quick tick + buzz, the big celebration only for special moments", "src": "✅ Amen fühlt sich besser an: kurzer Haken + Vibration, die große Feier nur zu besonderen Momenten\u0000✅ Amen feels better: a quick tick + buzz, the big celebration only for special moments", "t": "✅ Amen se ressent mieux : petit coche + vibration, la grande fête seulement pour les moments spéciaux"}
+{"kind": "ui", "k": "Reading room · p. %s", "src": "Lesesaal · S. %s\u0000Reading room · p. %s", "t": "Salle de lecture · p. %s"}
+{"kind": "ui", "k": "About the reading room", "src": "Hinweise zum Lesesaal\u0000About the reading room", "t": "À propos de la salle de lecture"}
+{"kind": "ui", "k": "✍ Write a margin note …", "src": "✍ Schreib eine Randnotiz …\u0000✍ Write a margin note …", "t": "✍ Écrivez une note dans la marge …"}
+{"kind": "ui", "k": "Reading room", "src": "Lesesaal\u0000Reading room", "t": "Salle de lecture"}
+{"kind": "ui", "k": "Public to everyone reading along.", "src": "Öffentlich für alle Mitlesenden.\u0000Public to everyone reading along.", "t": "Publique pour tous les lecteurs en train de lire."}
+{"kind": "ui", "k": "Hold your own comment = delete.", "src": "Eigenen Kommentar lange drücken = löschen.\u0000Hold your own comment = delete.", "t": "Appuyez longuement sur votre commentaire = supprimer."}
+{"kind": "ui", "k": "Privacy", "src": "Datenschutz\u0000Privacy", "t": "Confidentialité"}
+{"kind": "ui", "k": "Invitation to a reading circle", "src": "Einladung in einen Lesekreis\u0000Invitation to a reading circle", "t": "Invitation à un cercle de lecture"}
+{"kind": "ui", "k": "Not now", "src": "Nicht jetzt\u0000Not now", "t": "Pas maintenant"}
+{"kind": "ui", "k": "Found a circle", "src": "Kreis gründen\u0000Found a circle", "t": "Créer un cercle"}
+{"kind": "ui", "k": "Circle name", "src": "Name des Kreises\u0000Circle name", "t": "Nom du cercle"}
+{"kind": "ui", "k": "Join with a code", "src": "Mit Code beitreten\u0000Join with a code", "t": "Rejoindre avec un code"}
+{"kind": "ui", "k": "Code", "src": "Code\u0000Code", "t": "Code"}
+{"kind": "ui", "k": "Leave circle?", "src": "Kreis verlassen?\u0000Leave circle?", "t": "Quitter le cercle ?"}
+{"kind": "ui", "k": "Leave", "src": "Verlassen\u0000Leave", "t": "Quitter"}
+{"kind": "ui", "k": "Stay", "src": "Bleiben\u0000Stay", "t": "Restez"}
+{"kind": "ui", "k": "The chat and shared stamp card of “%s” disappear. You can rejoin with the code %s.", "src": "Chat und gemeinsame Stempelkarte von „%s“ verschwinden. Mit dem Code %s kannst du wieder beitreten.\u0000The chat and shared stamp card of “%s” disappear. You can rejoin with the code %s.", "t": "Le chat et la carte commune de « %s » disparaissent. Rejoignez à nouveau avec le code %s."}
+{"kind": "ui", "k": "Code ", "src": "Code \u0000Code ", "t": "Code"}
+{"kind": "ui", "k": "Refresh", "src": "Aktualisieren\u0000Refresh", "t": "Actualiser"}
+{"kind": "ui", "k": "Close", "src": "Schließen\u0000Close", "t": "Fermer"}
+{"kind": "ui", "k": "Bookmarks", "src": "Lesezeichen\u0000Bookmarks", "t": "Signets"}
+{"kind": "ui", "k": "🆕 Update automatically", "src": "🆕 Automatisch aktualisieren\u0000🆕 Update automatically", "t": "🆕 Actualiser automatiquement"}
+{"kind": "ui", "k": "New versions install without asking (Android 12+). Off = you get a notification and tap.", "src": "Neue Versionen installieren sich ohne Nachfrage (Android 12+). Aus = du bekommst eine Nachricht und tippst.\u0000New versions install without asking (Android 12+). Off = you get a notification and tap.", "t": "Les nouvelles versions s'installent sans demande (Android 12+). Désactivé = vous recevez une notification et cliquez."}
+{"kind": "ui", "k": "Days", "src": "Tage\u0000Days", "t": "Jours"}
+{"kind": "ui", "k": "read", "src": "gelesen\u0000read", "t": "lu"}
+{"kind": "ui", "k": "unread", "src": "ungelesen\u0000unread", "t": "non lu"}
+{"kind": "ui", "k": "%d comments on this page", "src": "%d Kommentare zu dieser Seite\u0000%d comments on this page", "t": "%d commentaires sur cette page"}
+{"kind": "ui", "k": "Previous page", "src": "Zurückblättern\u0000Previous page", "t": "Page précédente"}
+{"kind": "ui", "k": "Turn the page", "src": "Umblättern\u0000Turn the page", "t": "Tourner la page"}
+{"kind": "ui", "k": "Copied", "src": "Kopiert\u0000Copied", "t": "Copié"}
+{"kind": "ui", "k": "Copy link", "src": "Link kopieren\u0000Copy link", "t": "Copier le lien"}
+{"kind": "ui", "k": "Switch on", "src": "Einschalten\u0000Switch on", "t": "Activer"}
+{"kind": "ui", "k": "Open web page", "src": "Webseite öffnen\u0000Open web page", "t": "Ouvrir la page web"}
+{"kind": "ui", "k": "Update in Obtainium", "src": "In Obtainium aktualisieren\u0000Update in Obtainium", "t": "Mettre à jour dans Obtainium"}
+{"kind": "ui", "k": "Allow", "src": "Erlauben\u0000Allow", "t": "Autoriser"}
+{"kind": "ui", "k": "Install", "src": "Installieren\u0000Install", "t": "Installer"}
+{"kind": "ui", "k": "To the download page", "src": "Zur Download-Seite\u0000To the download page", "t": "Vers le site de téléchargement"}
+{"kind": "ui", "k": "Bookmarked", "src": "Lesezeichen\u0000Bookmarked", "t": "Marque-page"}
+{"kind": "ui", "k": "read more · ~%d min left", "src": "weiterlesen · noch ~%d Min.\u0000read more · ~%d min left", "t": "continuer à lire · encore ~%d min."}
+{"kind": "ui", "k": "also post to the reading room — as %s", "src": "auch im Lesesaal posten — als %s\u0000also post to the reading room — as %s", "t": "publier aussi dans la salle de lecture — en tant que %s"}
+{"kind": "ui", "k": "Copied ✓", "src": "Kopiert ✓\u0000Copied ✓", "t": "Copié ✓"}

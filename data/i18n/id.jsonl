@@ -2163,3 +2163,50 @@
 {"kind": "ui", "k": "read more ▾ · ~%d min left", "src": "weiterlesen ▾ · noch ~%d Min.\u0000read more ▾ · ~%d min left", "t": "lanjut baca ▾ · tersisa ~%d menit"}
 {"kind": "plan", "k": "ludditen:t", "src": "Maschinenstürmer & KI\u0000Luddites & AI", "t": "Penghancur Mesin & KI"}
 {"kind": "plan", "k": "ludditen:d", "src": "7 Tage Kapitel 13: Webstühle, Maschinenstürmer und warum das Kapitel über Maschinerie sich heute wie ein KI-Kommentar liest. Marx' Text ist original von 1867 — nur die Brücke ins Heute ist neu.\u00007 days of chapter 13: power looms, Luddites, and why the chapter on machinery reads like a comment on AI today. Marx's text is the 1867 original — only the bridge to today is new.", "t": "7 hari bab 13: mesin tenun, penghancur mesin, dan mengapa bab tentang mesin terasa seperti komentar tentang KI hari ini. Teks Marx asli tahun 1867 — hanya jembatan ke masa kini yang baru."}
+{"kind": "ui", "k": "Back", "src": "Zurück\u0000Back", "t": "Kembali"}
+{"kind": "ui", "k": "Reading plan", "src": "Leseplan\u0000Reading plan", "t": "Rencana Baca"}
+{"kind": "ui", "k": "Reading circle", "src": "Lesekreis\u0000Reading circle", "t": "Klub Baca"}
+{"kind": "ui", "k": "🎨 New design: paper look, calmer buttons, chapters without bars — reads like a book", "src": "🎨 Neues Design: Papier-Look, ruhigere Knöpfe, Kapitel ohne Leisten — liest sich wie ein Buch\u0000🎨 New design: paper look, calmer buttons, chapters without bars — reads like a book", "t": "🎨 Desain Baru: Tampilan kertas, tombol lebih tenang, bab tanpa batas — terasa seperti membaca buku"}
+{"kind": "ui", "k": "🆕 New version? You hear at once · ⚙️ “Update automatically” = no asking (APK from the website)", "src": "🆕 Neue Version? Du erfährst es sofort · ⚙️ „Automatisch aktualisieren“ = ohne Nachfrage (APK von der Webseite)\u0000🆕 New version? You hear at once · ⚙️ “Update automatically” = no asking (APK from the website)", "t": "🆕 Versi Baru? Kamu langsung tahu · ⚙️ “Perbarui otomatis” = tanpa konfirmasi (APK dari website)"}
+{"kind": "ui", "k": "✅ Amen feels better: a quick tick + buzz, the big celebration only for special moments", "src": "✅ Amen fühlt sich besser an: kurzer Haken + Vibration, die große Feier nur zu besonderen Momenten\u0000✅ Amen feels better: a quick tick + buzz, the big celebration only for special moments", "t": "✅ Amin terasa lebih baik: centang cepat + getaran, pesta besar hanya untuk momen spesial"}
+{"kind": "ui", "k": "Reading room · p. %s", "src": "Lesesaal · S. %s\u0000Reading room · p. %s", "t": "Ruang Baca · hlm. %s"}
+{"kind": "ui", "k": "About the reading room", "src": "Hinweise zum Lesesaal\u0000About the reading room", "t": "Tentang Ruang Baca"}
+{"kind": "ui", "k": "✍ Write a margin note …", "src": "✍ Schreib eine Randnotiz …\u0000✍ Write a margin note …", "t": "✍ Tulis catatan pinggir …"}
+{"kind": "ui", "k": "Reading room", "src": "Lesesaal\u0000Reading room", "t": "Ruang Baca"}
+{"kind": "ui", "k": "Public to everyone reading along.", "src": "Öffentlich für alle Mitlesenden.\u0000Public to everyone reading along.", "t": "Publik untuk semua pembaca."}
+{"kind": "ui", "k": "Hold your own comment = delete.", "src": "Eigenen Kommentar lange drücken = löschen.\u0000Hold your own comment = delete.", "t": "Tahan komentarmu = hapus."}
+{"kind": "ui", "k": "Privacy", "src": "Datenschutz\u0000Privacy", "t": "Privasi"}
+{"kind": "ui", "k": "Invitation to a reading circle", "src": "Einladung in einen Lesekreis\u0000Invitation to a reading circle", "t": "Undangan ke Klub Baca"}
+{"kind": "ui", "k": "Not now", "src": "Nicht jetzt\u0000Not now", "t": "Tidak sekarang"}
+{"kind": "ui", "k": "Found a circle", "src": "Kreis gründen\u0000Found a circle", "t": "Bentuk Klub"}
+{"kind": "ui", "k": "Circle name", "src": "Name des Kreises\u0000Circle name", "t": "Nama Klub"}
+{"kind": "ui", "k": "Join with a code", "src": "Mit Code beitreten\u0000Join with a code", "t": "Gabung dengan kode"}
+{"kind": "ui", "k": "Code", "src": "Code\u0000Code", "t": "Kode"}
+{"kind": "ui", "k": "Leave circle?", "src": "Kreis verlassen?\u0000Leave circle?", "t": "Keluar dari Klub?"}
+{"kind": "ui", "k": "Leave", "src": "Verlassen\u0000Leave", "t": "Keluar"}
+{"kind": "ui", "k": "Stay", "src": "Bleiben\u0000Stay", "t": "Tetap"}
+{"kind": "ui", "k": "The chat and shared stamp card of “%s” disappear. You can rejoin with the code %s.", "src": "Chat und gemeinsame Stempelkarte von „%s“ verschwinden. Mit dem Code %s kannst du wieder beitreten.\u0000The chat and shared stamp card of “%s” disappear. You can rejoin with the code %s.", "t": "Obrolan dan kartu cap bersama dari “%s” menghilang. Anda bisa bergabung kembali dengan kode %s."}
+{"kind": "ui", "k": "Code ", "src": "Code \u0000Code ", "t": "Kode"}
+{"kind": "ui", "k": "Refresh", "src": "Aktualisieren\u0000Refresh", "t": "Segarkan"}
+{"kind": "ui", "k": "Close", "src": "Schließen\u0000Close", "t": "Tutup"}
+{"kind": "ui", "k": "Bookmarks", "src": "Lesezeichen\u0000Bookmarks", "t": "Buku Tanda"}
+{"kind": "ui", "k": "🆕 Update automatically", "src": "🆕 Automatisch aktualisieren\u0000🆕 Update automatically", "t": "🆕 Perbarui otomatis"}
+{"kind": "ui", "k": "New versions install without asking (Android 12+). Off = you get a notification and tap.", "src": "Neue Versionen installieren sich ohne Nachfrage (Android 12+). Aus = du bekommst eine Nachricht und tippst.\u0000New versions install without asking (Android 12+). Off = you get a notification and tap.", "t": "Versi baru terinstal tanpa konfirmasi (Android 12+). Mati = Anda dapat notifikasi dan mengetuk."}
+{"kind": "ui", "k": "Days", "src": "Tage\u0000Days", "t": "Hari"}
+{"kind": "ui", "k": "read", "src": "gelesen\u0000read", "t": "dibaca"}
+{"kind": "ui", "k": "unread", "src": "ungelesen\u0000unread", "t": "belum dibaca"}
+{"kind": "ui", "k": "%d comments on this page", "src": "%d Kommentare zu dieser Seite\u0000%d comments on this page", "t": "%d komentar untuk halaman ini"}
+{"kind": "ui", "k": "Previous page", "src": "Zurückblättern\u0000Previous page", "t": "Kembali ke halaman sebelumnya"}
+{"kind": "ui", "k": "Turn the page", "src": "Umblättern\u0000Turn the page", "t": "Balik halaman"}
+{"kind": "ui", "k": "Copied", "src": "Kopiert\u0000Copied", "t": "Disalin"}
+{"kind": "ui", "k": "Copy link", "src": "Link kopieren\u0000Copy link", "t": "Salin tautan"}
+{"kind": "ui", "k": "Switch on", "src": "Einschalten\u0000Switch on", "t": "Nyalakan"}
+{"kind": "ui", "k": "Open web page", "src": "Webseite öffnen\u0000Open web page", "t": "Buka halaman web"}
+{"kind": "ui", "k": "Update in Obtainium", "src": "In Obtainium aktualisieren\u0000Update in Obtainium", "t": "Perbarui di Obtainium"}
+{"kind": "ui", "k": "Allow", "src": "Erlauben\u0000Allow", "t": "Izinkan"}
+{"kind": "ui", "k": "Install", "src": "Installieren\u0000Install", "t": "Pasang"}
+{"kind": "ui", "k": "To the download page", "src": "Zur Download-Seite\u0000To the download page", "t": "Ke halaman unduhan"}
+{"kind": "ui", "k": "Bookmarked", "src": "Lesezeichen\u0000Bookmarked", "t": "Ditandai"}
+{"kind": "ui", "k": "read more · ~%d min left", "src": "weiterlesen · noch ~%d Min.\u0000read more · ~%d min left", "t": "lanjut baca · sisa ~%d menit"}
+{"kind": "ui", "k": "also post to the reading room — as %s", "src": "auch im Lesesaal posten — als %s\u0000also post to the reading room — as %s", "t": "juga unggah ke ruang baca — sebagai %s"}
+{"kind": "ui", "k": "Copied ✓", "src": "Kopiert ✓\u0000Copied ✓", "t": "Disalin ✓"}
