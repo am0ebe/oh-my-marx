@@ -5,6 +5,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -43,6 +46,15 @@ import de.strix.marxversion.BuildConfig
 import de.strix.marxversion.R
 import de.strix.marxversion.data.f
 
+/** ⚖️ licence text (Forgejo = th home repo, GitHub = mirror) */
+private const val LICENSE_URL = "https://git.scagent.de/am0/oh-my-marx/src/branch/main/LICENSE"
+
+/** 🔖 th bookmark mark = th same vector as i th reader's margin (gold-deep "kept"), nvr th 🔖 emoji (qa_1116 r2.6) */
+@Composable
+private fun BookmarkMark(size: androidx.compose.ui.unit.Dp) =
+    androidx.compose.material3.Icon(androidx.compose.ui.res.painterResource(R.drawable.ic_bookmark), null,
+        Modifier.size(size), tint = de.strix.marxversion.ui.ds.Ds.goldDeep)
+
 /** "Mein Kapital" — evy highlight/note/bookmark = th usr's accumulated (reading) capital */
 @Composable
 fun MineScreen(vm: AppVm, openChapter: (String, String) -> Unit) {
@@ -64,12 +76,19 @@ fun MineScreen(vm: AppVm, openChapter: (String, String) -> Unit) {
                 "Nothing accumulated yet. Tap a passage ➡ Bookmark or Note — primitive accumulation starts small."))
         }
         if (marks.any { it.bookmark }) item {
-            Text(tr("🔖 Lesezeichen", "🔖 Bookmarks"), fontSize = 16.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(top = 8.dp))
+            Row(Modifier.padding(top = 8.dp), verticalAlignment = Alignment.CenterVertically) {
+                BookmarkMark(20.dp)
+                Text(tr("Lesezeichen", "Bookmarks"), fontSize = 16.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(start = 6.dp))
+            }
         }
         items(marks, key = { it.verseId }) { m ->
             vm.content.verse(m.verseId)?.let { v ->
                 Column(Modifier.fillMaxWidth().clickable { openChapter(v.kap, v.id) }.padding(vertical = 8.dp)) {
-                    Text((if (m.bookmark) "🔖 " else "") + ref(v), fontSize = 12.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.secondary)
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        if (m.bookmark) BookmarkMark(14.dp)
+                        Text(ref(v), fontSize = 12.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.secondary,
+                            modifier = Modifier.padding(start = if (m.bookmark) 4.dp else 0.dp))
+                    }
                     Text(quoted(verseQuote(v).ifBlank { verseText(v).take(160) }), fontSize = 14.sp, modifier = Modifier.padding(top = 2.dp))
                     m.note?.let { Text("✍️ $it", fontSize = 13.sp, color = MaterialTheme.colorScheme.primary) }
                 }
@@ -83,7 +102,10 @@ fun MineScreen(vm: AppVm, openChapter: (String, String) -> Unit) {
 fun SettingsScreen(vm: AppVm, askNotifPermission: () -> Unit) {
     val s by vm.settings.collectAsStateWithLifecycle()
     var pickTime by remember { mutableStateOf(false) }
-    Column(Modifier.fillMaxWidth().verticalScroll(rememberScrollState()).padding(16.dp)) {
+    // 🐛 qa_1116 L4 #8: name field stayed focused (keyboard + cursor) aft a tap ➡ any tap on th page outside a control = done
+    val focusMgr = androidx.compose.ui.platform.LocalFocusManager.current
+    Column(Modifier.fillMaxWidth().pointerInput(Unit) { detectTapGestures(onTap = { focusMgr.clearFocus() }) }
+        .verticalScroll(rememberScrollState()).padding(16.dp)) {
         Text(tr("Einstellungen", "Settings"), fontSize = 22.sp, fontWeight = FontWeight.Bold)
         Gap()
 
@@ -218,6 +240,8 @@ fun SettingsScreen(vm: AppVm, askNotifPermission: () -> Unit) {
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(20.dp, Alignment.CenterHorizontally)) {
             CardAction(R.drawable.ic_public, tr("Webseite", "Website"), Blue) { runCatching { ctx.startActivity(android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse(pageUrl))) } }
             CardAction(R.drawable.ic_send, tr("App teilen", "Share app"), Blue) { sharePanel = true }
+            // ⚖️ qa_1116 L4 #9: GPL as an icon ➡ th LICENSE file i th Forgejo repo (code link icon = 💬 Q5, not yet)
+            CardAction(R.drawable.ic_license, "GPL-3.0", Blue) { runCatching { ctx.startActivity(android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse(LICENSE_URL))) } }
             CardAction(R.drawable.ic_feedback, tr("Feedback", "Feedback"), Red) { runCatching { ctx.startActivity(android.content.Intent(android.content.Intent.ACTION_SENDTO, android.net.Uri.parse("mailto:")).apply {
                 putExtra(android.content.Intent.EXTRA_EMAIL, arrayOf("omm@scagent.de"))
                 putExtra(android.content.Intent.EXTRA_SUBJECT, "Oh My Marx $ver")
