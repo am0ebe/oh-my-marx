@@ -2257,3 +2257,5 @@
 {"kind": "ui", "k": "Stamps in total (all reading days)", "src": "Stempel gesamt (alle Lesetage)\u0000Stamps in total (all reading days)", "t": "Timbri totali (tutti i giorni di lettura)"}
 {"kind": "ui", "k": "🔓 Unlock everything (DEV)", "src": "🔓 Alles freischalten (DEV)\u0000🔓 Unlock everything (DEV)", "t": "🔓 Sblocca tutto (SVIL)"}
 {"kind": "ui", "k": "For testing: Hooked mode unlocked, all badges as preview. DEV app only.", "src": "Zum Testen: Hooked-Modus frei, alle Abzeichen als Vorschau. Nur in der DEV-App.\u0000For testing: Hooked mode unlocked, all badges as preview. DEV app only.", "t": "Per testare: modalità Hooked sbloccata, tutti i distintivi in anteprima. Solo nell'app SVIL."}
+{"kind": "ui", "k": "Read as a book with pages", "src": "Als Buch mit Seiten lesen\u0000Read as a book with pages", "t": "Leggi come un libro con le pagine"}
+{"kind": "ui", "k": "Endless scroll", "src": "Endlos scrollen\u0000Endless scroll", "t": "Scorri all'infinito"}

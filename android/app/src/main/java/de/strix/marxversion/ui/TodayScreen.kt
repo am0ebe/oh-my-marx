@@ -256,7 +256,6 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
         // ── Lesepläne ──
         val plan = s.activePlan?.let { vm.content.plan(it) }
         var nextTeaser: String? = null
-        var feedAfter: List<String>? = null   // today's snippet done ➡ 📜 feed continues aft it (#4)
         if (plan == null) {
             OutlinedButton(onClick = openPlans, modifier = Modifier.fillMaxWidth()) {
                 Text(tr("📚 Leseplan wählen — Kapital in kleinen Hostien", "📚 Pick a reading plan — Capital in communion-wafer portions"))
@@ -332,7 +331,6 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
                         fontSize = 11.sp, color = Color.Gray, modifier = Modifier.padding(top = 4.dp))
                 }
             }
-            if (planToday != null) feedAfter = day.verseIds
             Gap()
             // Hooked ch5: investment loads th nxt trigger ➡ tease tomorrow's reading
             nextTeaser = plan.days.getOrNull(idx + 1)?.verseIds?.firstNotNullOfOrNull { vm.content.verse(it) }
@@ -384,8 +382,7 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
         HookNote(Hook.FORER, s.testMode)
         // (pull/shake hint lives only under th cards: down here "pull down" doesn't work ➡ misleading, rm'd @1104)
         Gap(40)
-        // ── 📜 endless feed aft today's snippet (#4 · D-024) = th tail o Home ──
-        feedAfter?.let { ReadOnFeed(vm, it, scroll, speaker) }
+        // (📜 endless feed = th reader's 📜 mode now, qa_1116 Q4/Q7 · Home ends at Marxoskop)
 
         if (celebrate) {
             if (rankUp != null) Confetti {}  // 🎉 full card = paper rain, 1st = behind th dialog

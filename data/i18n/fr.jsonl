@@ -2220,3 +2220,5 @@
 {"kind": "ui", "k": "Stamps in total (all reading days)", "src": "Stempel gesamt (alle Lesetage)\u0000Stamps in total (all reading days)", "t": "Timbres au total (tous les jours de lecture)"}
 {"kind": "ui", "k": "🔓 Unlock everything (DEV)", "src": "🔓 Alles freischalten (DEV)\u0000🔓 Unlock everything (DEV)", "t": "🔓 Débloquer tout (DEV)"}
 {"kind": "ui", "k": "For testing: Hooked mode unlocked, all badges as preview. DEV app only.", "src": "Zum Testen: Hooked-Modus frei, alle Abzeichen als Vorschau. Nur in der DEV-App.\u0000For testing: Hooked mode unlocked, all badges as preview. DEV app only.", "t": "Pour tester : mode Accro débloqué, tous les badges en aperçu. Uniquement dans l'appli DEV."}
+{"kind": "ui", "k": "Read as a book with pages", "src": "Als Buch mit Seiten lesen\u0000Read as a book with pages", "t": "Lire comme un livre avec des pages"}
+{"kind": "ui", "k": "Endless scroll", "src": "Endlos scrollen\u0000Endless scroll", "t": "Défilement infini"}

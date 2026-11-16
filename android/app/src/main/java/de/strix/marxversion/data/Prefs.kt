@@ -30,6 +30,7 @@ data class Settings(
     val activePlan: String? = null,
     val planStart: String? = null,      // "2026-10-28"
     val readScale: Float = 1f,          // 🤏 pinch i th reader ➡ font size × this
+    val readScroll: Boolean = false,    // 📜 reader mode: false = 📖 book pages · true = endless scroll (qa_1116 Q4/Q7, remembers last)
     val community: Boolean = true,      // 👥 Mitlesen: anonymous daily-token counts + comments · always on since QA r5 (D-020, no ⚙️ toggle)
     val autoUpdate: Boolean = false,    // 🆕 browser installs: install updates wo asking (Android 12+) · dflt = ask (🦠 @1114)
 )
@@ -50,6 +51,7 @@ class Prefs(private val context: Context) {
         val activePlan = stringPreferencesKey("active_plan")
         val planStart = stringPreferencesKey("plan_start")
         val readScale = floatPreferencesKey("read_scale")
+        val readScroll = booleanPreferencesKey("read_scroll")
         val community = booleanPreferencesKey("community")
         val autoUpdate = booleanPreferencesKey("auto_update")
         val commDay = stringPreferencesKey("comm_day")      // th day th token belongs 2
@@ -116,6 +118,7 @@ class Prefs(private val context: Context) {
             activePlan = p[K.activePlan],
             planStart = p[K.planStart],
             readScale = p[K.readScale] ?: 1f,
+            readScroll = p[K.readScroll] ?: false,
             community = true,   // QA r5 (D-020): Mitlesen always on, toggle gone ➡ an old stored "off" no longer counts
             autoUpdate = p[K.autoUpdate] ?: false,
         )
@@ -128,6 +131,7 @@ class Prefs(private val context: Context) {
     suspend fun setDevUnlock(on: Boolean) = context.store.edit { it[K.devUnlock] = on }
     suspend fun setPersona(p: String) = context.store.edit { it[K.persona] = p }
     suspend fun setReadScale(s: Float) = context.store.edit { it[K.readScale] = s }
+    suspend fun setReadScroll(on: Boolean) = context.store.edit { it[K.readScroll] = on }
     suspend fun popupSeen(date: String?) = context.store.edit { if (date == null) it.remove(K.popupSeen) else it[K.popupSeen] = date }
     suspend fun setNotif(on: Boolean, hour: Int, minute: Int) = context.store.edit {
         it[K.notifOn] = on; it[K.notifHour] = hour; it[K.notifMinute] = minute

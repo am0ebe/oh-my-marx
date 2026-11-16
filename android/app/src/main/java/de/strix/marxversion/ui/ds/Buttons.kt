@@ -214,9 +214,13 @@ fun MoreChip(label: String, onClick: () -> Unit, modifier: Modifier = Modifier, 
 
 /** "💬 N" oth ppl's notes on a page ➡ comments sheet (desc 4 TalkBack) */
 @Composable
-fun CountChip(n: Int, onClick: () -> Unit, desc: String, modifier: Modifier = Modifier) =
+fun CountChip(n: Int, onClick: () -> Unit, desc: String, modifier: Modifier = Modifier) = HeadChip("💬 $n", onClick, desc, modifier)
+
+/** small paper pill i th reader's slim head (💬 N · 📖⬄📜 mode toggle) · desc 4 TalkBack */
+@Composable
+fun HeadChip(text: String, onClick: () -> Unit, desc: String, modifier: Modifier = Modifier) =
     Box(modifier.minimumInteractiveComponentSize().height(28.dp).clip(Pill).background(Ds.paperDeep)
         .clickable(role = Role.Button, onClick = onClick).semantics { contentDescription = desc }
         .padding(horizontal = 10.dp), contentAlignment = Alignment.Center) {
-        Text("💬 $n", color = Ds.ink, style = MaterialTheme.typography.labelMedium)
+        Text(text, color = Ds.ink, style = MaterialTheme.typography.labelMedium)
     }

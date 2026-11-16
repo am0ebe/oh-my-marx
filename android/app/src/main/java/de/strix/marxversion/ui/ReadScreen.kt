@@ -237,12 +237,26 @@ fun ChapterScreen(vm: AppVm, kap: String, focus: String?, @Suppress("UNUSED_PARA
         }
     }
     // (QA r5 peek + hint pill rm'd @1116 qa_1116 L2: "distracting" ➡ th dog-ears r th only hint · git: 65a2639)
+    // 📖 ⬄ 📜 (qa_1116 Q4/Q7, 🦠 @1116): 2 reading modes til 🦠 picks 1 design · toggle i th slim head · remembers last
+    //   📜 starts at th current page's 1st passage (fixed when th mode flips) · scrolled past ➡ index follows ➡ 📖 resumes there
+    val scrollMode = s.readScroll
+    val scrollFrom = remember(scrollMode) {
+        pages[index].verses.first().id.let { id -> vm.content.verses.indexOfFirst { it.id == id }.coerceAtLeast(0) }
+    }
 
     CompositionLocalProvider(LocalReadScale provides scale, LocalPageTurn provides fwd) {
       // ⌨️ imePadding: th page shrinks above th keyboard ➡ a note at th page bottom stays visible (qa_1116 r2.5)
       Column(Modifier.fillMaxSize().background(Ds.page).imePadding()) {
-        SlimHead(vm, pages[index]) { talk = pages[index] }
-        Box(
+        SlimHead(vm, pages[index], scrollMode, { vm.setReadScroll(!scrollMode) }) { talk = pages[index] }
+        if (scrollMode) {
+            val scroll = rememberScrollState()
+            Column(Modifier.weight(1f).fillMaxWidth().verticalScroll(scroll)
+                .padding(start = Space.readerStart, end = Space.readerEnd, top = Space.m)) {
+                ReadOnFeed(vm, scrollFrom, scroll, speaker) { id ->
+                    pages.indexOfFirst { p -> p.verses.any { it.id == id } }.takeIf { it >= 0 }?.let { index = it }
+                }
+            }
+        } else Box(
             Modifier.weight(1f).fillMaxWidth().background(DESK)  // th desk under th book
                 .pointerInput(Unit) {  // 🤏 pinch (Initial pass: before th page scrolls)
                     awaitEachGesture {
@@ -321,7 +335,7 @@ fun ChapterScreen(vm: AppVm, kap: String, focus: String?, @Suppress("UNUSED_PARA
  * page colour, 1dp line under it · th app's top bar + bottom nav r hidden on this route (MainActivity, L5)
  */
 @Composable
-private fun SlimHead(vm: AppVm, p: BookPage, onTalk: () -> Unit) {
+private fun SlimHead(vm: AppVm, p: BookPage, scrollMode: Boolean, onMode: () -> Unit, onTalk: () -> Unit) {
     val chapter = vm.content.chapters.firstOrNull { it.kap == p.kap }
     val s by vm.settings.collectAsStateWithLifecycle()
     val all by vm.comments.collectAsStateWithLifecycle()
@@ -334,6 +348,10 @@ private fun SlimHead(vm: AppVm, p: BookPage, onTalk: () -> Unit) {
             Text(chapter?.let { chapterTitle(it) } ?: p.kap, style = OmmType.bookHead, color = Ds.ink,
                 maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f).padding(end = Space.s))
             if (talkOn && talkCount > 0) CountChip(talkCount, onTalk, tr("%d Kommentare zu dieser Seite", "%d comments on this page").f(talkCount))
+            // 📖 ⬄ 📜: chip shows th mode u switch TO
+            de.strix.marxversion.ui.ds.HeadChip(if (scrollMode) "📖" else "📜", onMode,
+                if (scrollMode) tr("Als Buch mit Seiten lesen", "Read as a book with pages") else tr("Endlos scrollen", "Endless scroll"),
+                Modifier.padding(start = Space.xs))
         }
         HorizontalDivider(color = Ds.line)
     }

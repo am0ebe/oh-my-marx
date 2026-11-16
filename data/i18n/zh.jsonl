@@ -2256,3 +2256,5 @@
 {"kind": "ui", "k": "Stamps in total (all reading days)", "src": "Stempel gesamt (alle Lesetage)\u0000Stamps in total (all reading days)", "t": "总邮票数（所有阅读日）"}
 {"kind": "ui", "k": "🔓 Unlock everything (DEV)", "src": "🔓 Alles freischalten (DEV)\u0000🔓 Unlock everything (DEV)", "t": "🔓 解锁全部内容（开发版）"}
 {"kind": "ui", "k": "For testing: Hooked mode unlocked, all badges as preview. DEV app only.", "src": "Zum Testen: Hooked-Modus frei, alle Abzeichen als Vorschau. Nur in der DEV-App.\u0000For testing: Hooked mode unlocked, all badges as preview. DEV app only.", "t": "测试用：已解锁上瘾模式，所有徽章可预览。仅限开发版应用。"}
+{"kind": "ui", "k": "Read as a book with pages", "src": "Als Buch mit Seiten lesen\u0000Read as a book with pages", "t": "像书一样翻页阅读"}
+{"kind": "ui", "k": "Endless scroll", "src": "Endlos scrollen\u0000Endless scroll", "t": "无限滚动"}

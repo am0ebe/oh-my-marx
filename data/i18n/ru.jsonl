@@ -2220,3 +2220,5 @@
 {"kind": "ui", "k": "Stamps in total (all reading days)", "src": "Stempel gesamt (alle Lesetage)\u0000Stamps in total (all reading days)", "t": "Общее количество штампов (все дни чтения)"}
 {"kind": "ui", "k": "🔓 Unlock everything (DEV)", "src": "🔓 Alles freischalten (DEV)\u0000🔓 Unlock everything (DEV)", "t": "🔓 Разблокировать всё (РАЗРАБ)"}
 {"kind": "ui", "k": "For testing: Hooked mode unlocked, all badges as preview. DEV app only.", "src": "Zum Testen: Hooked-Modus frei, alle Abzeichen als Vorschau. Nur in der DEV-App.\u0000For testing: Hooked mode unlocked, all badges as preview. DEV app only.", "t": "Для тестирования: режим «Привязан» разблокирован, все значки как предварительный просмотр. Только в DEV-версии приложения."}
+{"kind": "ui", "k": "Read as a book with pages", "src": "Als Buch mit Seiten lesen\u0000Read as a book with pages", "t": "Читать как книгу со страницами"}
+{"kind": "ui", "k": "Endless scroll", "src": "Endlos scrollen\u0000Endless scroll", "t": "Бесконечный скролл"}

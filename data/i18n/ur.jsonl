@@ -2220,3 +2220,5 @@
 {"kind": "ui", "k": "Stamps in total (all reading days)", "src": "Stempel gesamt (alle Lesetage)\u0000Stamps in total (all reading days)", "t": "کل اسٹمپس (تمام پڑھنے کے دن)"}
 {"kind": "ui", "k": "🔓 Unlock everything (DEV)", "src": "🔓 Alles freischalten (DEV)\u0000🔓 Unlock everything (DEV)", "t": "🔓 سب کچھ کھولیں (ڈیو)"}
 {"kind": "ui", "k": "For testing: Hooked mode unlocked, all badges as preview. DEV app only.", "src": "Zum Testen: Hooked-Modus frei, alle Abzeichen als Vorschau. Nur in der DEV-App.\u0000For testing: Hooked mode unlocked, all badges as preview. DEV app only.", "t": "ٹیسٹ کے لیے: ہوکڈ موڈ کھول دیا گیا، تمام بیڈج پیشگی دکھائے گئے۔ صرف ڈیو ایپ میں۔"}
+{"kind": "ui", "k": "Read as a book with pages", "src": "Als Buch mit Seiten lesen\u0000Read as a book with pages", "t": "صفحات کے ساتھ کتاب کی طرح پڑھیں"}
+{"kind": "ui", "k": "Endless scroll", "src": "Endlos scrollen\u0000Endless scroll", "t": "بے پایا تک سکرول کریں"}

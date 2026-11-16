@@ -32,19 +32,19 @@ import de.strix.marxversion.data.f
 import de.strix.marxversion.logic.FEED_BATCH
 import de.strix.marxversion.logic.FEED_BREAK
 import de.strix.marxversion.logic.chapterPercent
-import de.strix.marxversion.logic.feedStart
 
 /**
  * 📜 Weiterlesen (big round #4 · D-024): aft today's snippet is done, Home turns into an endless feed o th book —
  * insta-style, no "weiter" tap: near th bottom ➡ th nxt [FEED_BATCH] passages load (am0 Q3 ✔️ auto-scroll)
  * 🪝 progress (chapter % bar) · movement (passages keep coming) · curiosity ("gleich: »…«" teaser o th nxt one)
  * honest: evy [FEED_BREAK] a ☕ card says th Soll is long done · scrolled-past passages count as read (Read % · badges),
- * not as plan days (D-011) · lives at th very end o Home (Marxoskop stays reachable above it)
+ * not as plan days (D-011)
+ * 📜 qa_1116 Q4/Q7 (🦠 @1116): moved fr th end o Home ➡ th reader's 📜 mode (ChapterScreen toggle) · Home ends at Marxoskop
+ * start = 1st verse index · [onPast] = id o th last passage scrolled past (reader: 📖 resumes on its page)
  */
 @Composable
-fun ReadOnFeed(vm: AppVm, after: List<String>, scroll: ScrollState, speaker: Speaker) {
+fun ReadOnFeed(vm: AppVm, start: Int, scroll: ScrollState, speaker: Speaker, onPast: (String) -> Unit = {}) {
     val verses = vm.content.verses
-    val start = remember(after) { feedStart(verses, after) }
     if (start >= verses.size) return
     var n by rememberSaveable(start) { mutableIntStateOf(FEED_BATCH) }
     val left = verses.size - start
@@ -54,16 +54,15 @@ fun ReadOnFeed(vm: AppVm, after: List<String>, scroll: ScrollState, speaker: Spe
     }
     val items = verses.subList(start, start + n)
     // everything but th newest batch was scrolled past ➡ read
-    LaunchedEffect(n) { if (n > FEED_BATCH) vm.read(items.take(n - FEED_BATCH).map { it.id }) }
+    LaunchedEffect(n) {
+        if (n > FEED_BATCH) items.take(n - FEED_BATCH).map { it.id }.let { vm.read(it); onPast(it.last()) }
+    }
     val read by vm.readIds.collectAsStateWithLifecycle()
     val cur = items.last()
     val chapter = vm.content.chapters.firstOrNull { it.kap == cur.kap }
     val pct = remember(cur.kap, read) { chapterPercent(vm.content.chapter(cur.kap), read) }
 
     Column(Modifier.fillMaxWidth()) {
-        Text(tr("📜 Weiterlesen", "📜 Keep reading"), fontWeight = FontWeight.Bold, fontSize = 18.sp, fontFamily = FontFamily.Serif)
-        Text(tr("Für die Motivierten: das Buch geht einfach weiter. Scrollen genügt.", "For the motivated: the book simply goes on. Just scroll."),
-            fontSize = 12.sp, color = MaterialTheme.colorScheme.secondary)
         Text((chapter?.let { chapterTitle(it) } ?: cur.kap) + "  ·  " + tr("%d %% gelesen", "%d %% read").f(pct),
             fontSize = 12.sp, fontWeight = FontWeight.Bold, color = Red, modifier = Modifier.padding(top = 6.dp))
         LinearProgressIndicator(progress = { pct / 100f }, color = Red, trackColor = Red.copy(alpha = 0.15f),
