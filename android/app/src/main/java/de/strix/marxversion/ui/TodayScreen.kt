@@ -179,7 +179,7 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
     val amen: (Verse) -> Unit = { v ->
         Toast.makeText(ctx, amenMsg, Toast.LENGTH_LONG).show()
         buzz(ctx, longArrayOf(0, 40, 60, 90))
-        if (fills) confetti = true else swoosh = true
+        if (fills) confetti = true else checkFx = true   // Q9 b @1116: quote-of-th-day = small ✓ pop only · ☭ swoosh = plan day done
         vm.amen(v.id)
     }
     // 🏠 Home tab tap ➡ scroll 2 top (th carousel jumps 2 card 1 itself)
@@ -341,7 +341,9 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
                 Button(onClick = {
                     val total = readingDays(days)
                     if (!doneToday && cardJustFilled(total + 1)) rankUp = cardsDone(total + 1) - 1
-                    vm.dayDone(plan.id, idx, day.verseIds); celebrate = true; checkFx = true
+                    vm.dayDone(plan.id, idx, day.verseIds); celebrate = true
+                    // 🐛 @1116: ☭ got lost i 4708ab7 (✓ pop only) ➡ back: finishing th plan day = th rare one (full card = confetti)
+                    if (rankUp != null) confetti = true else swoosh = true
                 },
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                     modifier = Modifier.fillMaxWidth()) { Text(tr("Tag geschafft! ✔️", "Day complete! ✔️"), fontSize = 18.sp) }
@@ -480,6 +482,9 @@ private fun Hero(days: List<DayLog>, feast: Feast?, dt: DayTime, hooked: Boolean
             modifier = Modifier.padding(top = 4.dp))
         Gap(14)
         // 🎟️ Stempelkarte: ☭ earned · red ! = today's stamp, still open · ○ to go ➡ ui/ds/StampCard.kt (L0 @1114: L1 + L4 share it)
+        // Q2 c @1116: week ✓ = this week · stamps = ALL reading days (D-004) ➡ keep both, say so
+        Text(tr("Stempel gesamt (alle Lesetage)", "Stamps in total (all reading days)"), color = white.copy(alpha = 0.8f), style = MaterialTheme.typography.labelMedium,
+            modifier = Modifier.padding(bottom = 4.dp))
         de.strix.marxversion.ui.ds.StampRow(card, doneToday)
         // "N more days to <rank>" moved 2 th plan card (QA @1112)
         if (ranks > 0) Text(tr("Rang: %s", "Rank: %s").f(tr(rank(ranks - 1))), color = white.copy(alpha = 0.8f), fontSize = 11.sp)
