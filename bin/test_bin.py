@@ -4,6 +4,8 @@ import importlib.util
 import io
 import json
 import pathlib
+import re
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -173,6 +175,94 @@ class AlignEn(unittest.TestCase):
         self.assertEqual(t[("15", "15.IV")], "IV. Simultaneous Variations")
         self.assertEqual(t[("24", "24.1")], "1. The Secret of Primitive Accumulation")
         self.assertNotIn(("2", ""), t)
+
+
+ROOT = BIN.parent
+
+
+def vkey(v):
+    return tuple(int(x) for x in v.split("."))
+
+
+class Notes(unittest.TestCase):
+    """notes.py ⬄ ui/Changelog.kt: release body (ship.sh) + page "What's new" both read th in-app changelog"""
+    notes = load("notes")
+
+    def test_versions_newest_first_and_semver(self):
+        vs = self.notes.versions()
+        self.assertGreater(len(vs), 3)
+        for v in vs:
+            self.assertRegex(v, r"^\d+\.\d+\.\d+$")
+        self.assertEqual(vs, sorted(vs, key=vkey, reverse=True))
+
+    def test_evy_release_has_notes(self):
+        for v in self.notes.versions():
+            self.assertTrue(self.notes.notes(v), f"Release(\"{v}\") parses 2 0 notes ➡ T(\"de\", \"en\") pairs broken?")
+
+    def test_dev_version_reads_base_and_unknown_is_empty(self):
+        v = self.notes.versions()[0]
+        self.assertEqual(self.notes.notes(f"{v}-dev.1105.1200"), self.notes.notes(v))
+        self.assertEqual(self.notes.notes("0.0.0"), [])
+
+    def test_app_version_has_notes(self):
+        ver = subprocess.run(["bash", "-c", "source bin/lib.sh; app_version"], cwd=ROOT, capture_output=True, text=True).stdout.strip()
+        self.assertIn(ver.split("-")[0], self.notes.versions(), "appVersion wo Release(…) i Changelog.kt ➡ ship.sh refuses")
+
+    def test_unicode_escapes_decode(self):
+        for v in self.notes.versions():
+            for n in self.notes.notes(v):
+                self.assertNotRegex(n, r"\\u[0-9a-fA-F]{4}|\\n", f"{v}: raw escape left i {n!r}")
+
+    def test_cli_html_plain(self):
+        v = self.notes.versions()[0]
+        r = subprocess.run([sys.executable, str(BIN / "notes.py"), v, "--html", "--plain"], capture_output=True, text=True)
+        self.assertEqual(r.returncode, 0)
+        items = re.findall(r"<li>(.*?)</li>", r.stdout)
+        self.assertEqual(len(items), len(self.notes.notes(v)))
+        for i in items:
+            self.assertRegex(i, r"^[\w„“\"(&]", f"--plain left a leading emoji: {i!r}")
+            self.assertNotRegex(i, r"<(?!/?\w)", "unescaped <")
+
+
+@unittest.skipUnless(shutil.which("qrencode"), "page() needs qrencode")
+class Page(unittest.TestCase):
+    """lib.sh page() dry-run: fake apk ➡ th 3 files th app + Obtainium + agents read (no build, no upload)"""
+
+    def render(self, chan="stable"):
+        d = tempfile.TemporaryDirectory(); self.addCleanup(d.cleanup)
+        out = pathlib.Path(d.name); ver = "0.10.0"; apk = f"OhMyMarx-{ver}.apk"
+        (out / apk).write_bytes(b"not really an apk")
+        r = subprocess.run(["bash", "-c", 'source bin/lib.sh; page "$@"', "_", str(out), ver, apk, chan],
+                           cwd=ROOT, capture_output=True, text=True)
+        self.assertEqual(r.returncode, 0, r.stderr)
+        return out, ver, apk
+
+    def test_version_json_is_what_update_kt_parses(self):
+        out, ver, apk = self.render()
+        j = json.loads((out / "version.json").read_text())
+        self.assertEqual((j["version"], j["apk"]), (ver, apk))
+        self.assertIsInstance(j["code"], int)
+        self.assertRegex(j["sha256"], r"^[0-9a-f]{64}$")
+
+    def test_stable_page(self):
+        out, ver, apk = self.render()
+        h = (out / "index.html").read_text()
+        self.assertIn(f'href="{apk}"', h)                      # Obtainium's HTML source finds th apk link
+        self.assertIn("mailto:omm@scagent.de", h)
+        self.assertIn(f"What’s new in {ver}", h)
+        self.assertGreaterEqual(h.count("<h2>"), 4)
+        self.assertNotIn("$(", h)                               # unexpanded shell
+        ld = json.loads(re.search(r'<script type="application/ld\+json">(.*?)</script>', h, re.S).group(1))
+        self.assertEqual((ld["softwareVersion"], ld["downloadUrl"].rsplit("/", 1)[1]), (ver, apk))
+        self.assertIn("<svg", h)                                # QR
+        self.assertIn(f"Version: {ver}", (out / "llms.txt").read_text())
+
+    def test_dev_page(self):
+        out, ver, apk = self.render("dev")
+        h = (out / "index.html").read_text()
+        self.assertIn(f'href="{apk}"', h)
+        self.assertIn('name="robots" content="noindex"', h)
+        self.assertFalse((out / "llms.txt").exists())
 
 
 if __name__ == "__main__":

@@ -49,8 +49,6 @@
 - 💡 small Marx animation (🦠 @1113) — tiny, e.g. Marx reacts 2 Amen / streak · ⬄ halo states i design_system.md § 7 hero · big avatar + xp idea ➡ moved 2 `pr/cali/notes.md` § 🔵
 - 💡 app ideas: zuletzt gelesen/angeguckt · who's online (Matrix · Lesekreis) · events/Termine near u (⚠️ location implications) · personalize (Hooked: user invests data · usage analytics) · notif toggle (Android may alr do it)
 - 🔑 **cross-app insights board**: extract L fr evy app we build (omm · cali · …) ➡ shared ⬄ vibe++/kb
-- 🤖🧪 ship.sh guard: evy `Lang.menu` lang hs `full_xx.json` + i18n ➡ else refuse (0.9.0 changelog claimed ur/hi/bn book b4 it existed)
-- 🤖🔧 translate_full: log secs per call + count failed calls' toks i th meter (runaways were invisible 4 days)
 - 💡 viral: in-app Spruchkarte share ➡ `scagent.de/omm` under th card img? (check wh it has now)
 - 🔊 persona voices = lives i **pr/audio** now (`voice/` engine + `todo_audio.md`) · omm side: wait 4 audio D-010 (voice packs ok?) ➡ then `render_pack.py` · 🚫 real Merz (impression = ok)
 - 📦 **Ask Marx**: everyday problem (boss, rent, overtime) ➡ Marx answers short + punchy w a Kapital quote + ref (tap ➡ chapter)
@@ -58,7 +56,6 @@
 - 👥 community nxt: QR invite (zxing) · ⚠️ report btn + mod tools b4 strangers join
 - 💡 community ideas (split @1113): Kreis plan (all same day) · real push (UnifiedPush/ntfy) instead o hourly poll · ④ Salon (forum per Abschnitt) · 💬 on cards · Randnotizen teilen (opt-in per note) · weekly Sitzung = Jitsi link · short invite `scagent.de/omm/k?c=` (ops)
 - 🔵 Mitlesen opt-in prompt on 1st start (now dflt on) · ask ops: Synapse `user_ips_max_age` shorter (dflt 28d)
-- 🤖🧪 tsts 4 @1105 glue: `Update.check` vs fake version.json (newer/older/garbage/offline) · `notes.py` vs Changelog.kt · `page()` dry-run ➡ assert `<h2>` + mailto + valid JSON
 - 🦠🤔 QA 10 sample Andachten (tone: wink, not cringe) ➡ tweak `bin/andacht.py` · ⚠️ local M Marx errors + "Heute lädt uns Marx ein" evy day ➡ regen w Claude?
 - 📦 gestures left: "Morgen"-teaser blurred + locked · shortcut "Weiterlesen" (last-read pref) · 🪝 Hooked notes 4 th new gestures (pull = slot machine · stories · shake = variable reward)
 - 📦 "Was nervt?" free-txt + embeddings · Mehrwert-Rechner · Fußnoten-Burns plan (Dunning "300 %" = fn 24:250) · Feiertage 2 (+ political holidays + remembrance days ~evy 1-2 w · Marx as Santa · own notif txt · Black Friday ➡ Fetisch-Detox · widget colours) · export "Mein Kapital" (md/json)
@@ -68,6 +65,8 @@
 
 ## ✔️
 - ✔️ @1116b (🔵 sweep, M8 order): 🩹 lint baseline — 4 err alr fixed `8b9e7f4` · warn 35 ➡ 25 (KTX toUri/edit/createBitmap/withTranslation · test deps ➡ toml · offset lambda · dead SDK<26 ck · unused ic_highlight + gold) · left on purpose: dep bumps (AGP 9 = L step) · widget preview txt · `mipmap-anydpi-v26` (AAPT can't find th adaptive icon wo it)
+  - 🧹 stale 🔵 lines out: ship.sh lang guard + translate_full secs/toks meter = alr done `fe220ef` · Update.check tsts alr i UpdateTest.kt
+  - 🧪 glue tsts (bin/test_bin.py 17 ➡ 26): `notes.py` ⬄ Changelog.kt (semver newest 1st · evy Release hs notes · dev ➡ base · appVersion hs notes · no raw escapes · --html --plain) · `page()` dry-run (version.json · stable: apk link + mailto + What's new + JSON-LD + QR + llms.txt · dev: noindex)
 - ✔️ @1116: D-030 CI OOM (gradle 1280m · 2× green) · D-036 = A · ship.sh X.Y.Z + README how-to · **v0.10.0 shipped** · qa_1116 r1+r2 triage · 6 ⚡ lanes (Book · Today · share/★ · settings · i18n 47 strings + guard · startup lazy JSON) · updater BAL fix
 - ✔️ @1114: design system L0 (`ui/ds/` + guard + ds_gallery) + lanes L2 Book · L3 Plans/Circle (Leave confirm 🐛) · L5 bars/dialogs/fx queue · D-029..035 picked · updater D-038 · omm-api no pip D-037 · DEV 1114.1620 + .2117
 - ✔️ @1113: big round pt 1 (EN data via pipeline · 📜 feed · 🔓 Hooked unlock · 🤖 Ludditen plan) + follow-ups (FÜFNZEHNTES + IdMoves D-028 · 13,120-125 align · UI/plan fan-in 11 langs) · r5 + r5b updater (D-023) · ❌ not deployed
