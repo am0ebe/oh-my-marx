@@ -19,6 +19,8 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.material3.FilterChip
 import androidx.compose.runtime.DisposableEffect
@@ -385,6 +387,10 @@ fun VerseView(
             var closed by remember { mutableStateOf(false) }
             val focus = remember { FocusRequester() }
             LaunchedEffect(Unit) { focus.requestFocus() }
+            // ⌨️ qa_1116 r2.5: keyboard up ➡ scroll th whole editor (+ Lesesaal chip) above it, not just th caret line
+            val noteInto = remember { BringIntoViewRequester() }
+            val ime = WindowInsets.ime.getBottom(LocalDensity.current)
+            LaunchedEffect(ime) { if (ime > 0) { delay(80); noteInto.bringIntoView() } }
             DisposableEffect(Unit) { onDispose { NoteFocus.bounds = null; NoteFocus.keep = null } }
             val pubName = vm.mxName.collectAsStateWithLifecycle().value ?: vm.suggestedName
             val commit = {
@@ -396,7 +402,7 @@ fun VerseView(
                     editNote = false
                 }
             }
-            Column(Modifier.fillMaxWidth().onGloballyPositioned { NoteFocus.bounds = it.boundsInRoot() }) {
+            Column(Modifier.fillMaxWidth().bringIntoViewRequester(noteInto).onGloballyPositioned { NoteFocus.bounds = it.boundsInRoot() }) {
                 NoteBubble {
                     val style = MaterialTheme.typography.bodyMedium.copy(color = Ds.blue)
                     androidx.compose.foundation.text.BasicTextField(draft, { draft = it }, textStyle = style, minLines = 2,

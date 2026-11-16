@@ -53,6 +53,7 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.pointerInput
@@ -230,25 +231,16 @@ fun ChapterScreen(vm: AppVm, kap: String, focus: String?, @Suppress("UNUSED_PARA
             turn.animateTo(-1f, tween(320)); index++; turn.snapTo(0f)
         }
     }
-    // 💡 QA r5 "page turn = NICE, but hidden": th 1st few chapters th page peeks (lifts 2× at th corner) + a hint pill,
-    //   until u turned 3 pages urself · counter i plain SharedPreferences (UI hint, not user data)
-    val ctx = androidx.compose.ui.platform.LocalContext.current
-    val hintPrefs = remember { ctx.getSharedPreferences("omm_ui", android.content.Context.MODE_PRIVATE) }
-    var turnsDone by remember { mutableIntStateOf(hintPrefs.getInt("turns", 0)) }
-    LaunchedEffect(index) {
-        if (index != start && turnsDone < TURN_HINT) { turnsDone++; hintPrefs.edit().putInt("turns", turnsDone).apply() }
+    val back: () -> Unit = {
+        if (index > 0 && !turn.isRunning && turn.value == 0f) scope.launch {
+            turn.animateTo(1f, tween(320)); index--; turn.snapTo(0f)
+        }
     }
-    var hintOn by remember { mutableStateOf(turnsDone < TURN_HINT) }   // pill: ~6 s per chapter open, gone on th 1st turn
-    LaunchedEffect(index) { if (index != start) hintOn = false }
-    LaunchedEffect(Unit) { kotlinx.coroutines.delay(6000); hintOn = false }
-    LaunchedEffect(Unit) {
-        if (turnsDone >= TURN_HINT || index >= pages.lastIndex) return@LaunchedEffect
-        kotlinx.coroutines.delay(900)
-        repeat(2) { if (turn.value == 0f) { turn.animateTo(-0.16f, tween(380)); turn.animateTo(0f, tween(420)) } }
-    }
+    // (QA r5 peek + hint pill rm'd @1116 qa_1116 L2: "distracting" ➡ th dog-ears r th only hint · git: 65a2639)
 
     CompositionLocalProvider(LocalReadScale provides scale, LocalPageTurn provides fwd) {
-      Column(Modifier.fillMaxSize().background(Ds.page)) {
+      // ⌨️ imePadding: th page shrinks above th keyboard ➡ a note at th page bottom stays visible (qa_1116 r2.5)
+      Column(Modifier.fillMaxSize().background(Ds.page).imePadding()) {
         SlimHead(vm, pages[index]) { talk = pages[index] }
         Box(
             Modifier.weight(1f).fillMaxWidth().background(DESK)  // th desk under th book
@@ -290,7 +282,14 @@ fun ChapterScreen(vm: AppVm, kap: String, focus: String?, @Suppress("UNUSED_PARA
                     )
                 }
                 // 👆👆 double-tap on th paper (margins, head, folio) = turn · on a passage VerseView routes its double-tap here too
-                .pointerInput(Unit) { detectTapGestures(onDoubleTap = { fwd() }) },
+                // 👆 1 tap on th paper's left / right quarter = back / fwd (qa_1116 r2.4, like an e-reader) · a tap on a
+                //   passage = its menu (VerseView consumes it ➡ nvr reaches here)
+                .pointerInput(index, pages.size) {
+                    detectTapGestures(onDoubleTap = { fwd() }, onTap = { o ->
+                        val w = size.width
+                        when { o.x < w * TAP_ZONE -> back(); o.x > w * (1 - TAP_ZONE) -> fwd() }
+                    })
+                },
         ) {
             val t = turn.value
             val cam = 18 * density.density
@@ -309,15 +308,9 @@ fun ChapterScreen(vm: AppVm, kap: String, focus: String?, @Suppress("UNUSED_PARA
                     cameraDistance = cam
                 }, null)
             }
-            // 📐 dog-ear bottom-right = "this is a page, it turns" · tap = turn (indicator + 2nd way 2 do it)
+            // 📐 dog-ears = "this is a page, it turns" · bottom-right = fwd · bottom-left = back (qa_1116 L2 #4) · tap = turn
             if (index < pages.lastIndex && t == 0f) DogEar(Modifier.align(Alignment.BottomEnd), fwd)
-            // 💬 hint pill (only while th peek is still on, see TURN_HINT · 6 s, then out o th way) · paperHi + line, label-m
-            if (hintOn && index < pages.lastIndex) Text(
-                tr("⬅ wischen oder doppelt tippen = umblättern", "⬅ swipe or double-tap = turn the page"),
-                style = MaterialTheme.typography.labelMedium, color = Ds.ink,
-                modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = Space.l)
-                    .background(Ds.paperHi, CircleShape).border(1.dp, Ds.line, CircleShape)
-                    .padding(horizontal = Space.l, vertical = Space.s))
+            if (index > 0 && t == 0f) DogEar(Modifier.align(Alignment.BottomStart), back, left = true)
         }
       }
     }
@@ -361,20 +354,20 @@ private fun BackArrow(desc: String, onClick: () -> Unit) {
     }
 }
 
-/** turns u do urself b4 th peek + hint pill stop */
-private const val TURN_HINT = 3
+/** 👆 tap zone per side (share o th page width) ➡ 1 tap = turn */
+private const val TAP_ZONE = 0.25f
 
 /** 👉 "turn forward" fr inside a page (VerseView double-tap) · null = not i th book (Today plan verses) */
 val LocalPageTurn = compositionLocalOf<(() -> Unit)?> { null }
 
 /** 📐 folded page corner: desk shows thru th cut, th flap lies on th page w a soft shadow */
 @Composable
-private fun DogEar(modifier: Modifier, onClick: () -> Unit) {
-    val desc = tr("Umblättern", "Turn the page")
-    // 48 target (§ 9) · th drawn corner stays 36 at th very corner
+private fun DogEar(modifier: Modifier, onClick: () -> Unit, left: Boolean = false) {
+    val desc = if (left) tr("Zurückblättern", "Previous page") else tr("Umblättern", "Turn the page")
+    // 48 target (§ 9) · th drawn corner stays 36 at th very corner · left = mirrored (back)
     Box(modifier.size(Space.tap).clickable(role = Role.Button, onClick = onClick).semantics { contentDescription = desc },
-        contentAlignment = Alignment.BottomEnd) {
-        Canvas(Modifier.size(36.dp)) {
+        contentAlignment = if (left) Alignment.BottomStart else Alignment.BottomEnd) {
+        Canvas(Modifier.size(36.dp).graphicsLayer { if (left) scaleX = -1f }) {
             val w = size.width; val h = size.height
             val cut = Path().apply { moveTo(w, 0f); lineTo(w, h); lineTo(0f, h); close() }
             drawPath(cut, DESK)
@@ -421,10 +414,6 @@ private fun Page(vm: AppVm, p: BookPage, speaker: Speaker, i: Int, n: Int, modif
             Gap(20)
             Text("— ${p.page ?: (i + 1)} —", style = OmmType.bookMeta.copy(fontFamily = FontFamily.Serif), color = Ds.inkMuted,
                 textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
-            if (i == 0 || i == n - 1) Text(
-                tr("⬅ wischen oder doppelt tippen = umblättern · 🤏 zwei Finger = Schrift", "⬅ swipe or double-tap = turn the page · 🤏 two fingers = font"),
-                style = MaterialTheme.typography.bodyMedium, color = Ds.inkMuted, textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth().padding(top = Space.s))
         }
     }
 }
