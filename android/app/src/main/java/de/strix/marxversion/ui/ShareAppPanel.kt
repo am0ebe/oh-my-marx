@@ -6,8 +6,14 @@ import android.net.Uri
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.material3.ripple
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -75,17 +81,17 @@ private val QR_ROWS = listOf(
     "11111110101001010001101101010",
 )
 
-/** mark = 1-char monogram i th row's disc (no brand logos, no emoji i chrome) */
-private class Target(val label: String, val mark: String = label.take(1), val url: (msg: String, link: String) -> String)
+/** icon = brand logo (simple-icons CC0, same files as th web page bin/icons/) tinted i its brand colour (qa_1116 L3 #5) */
+private class Target(val label: String, val icon: Int, val color: Color, val url: (msg: String, link: String) -> String)
 
-/** same set as th web page (bin/lib.sh share panel) */
+/** same set + order as th web page (bin/lib.sh share panel · ref ~/scaricati/share_app.png) */
 private val TARGETS = listOf(
-    Target("Fediverse") { m, l -> "https://s2f.kytta.dev/?text=" + Uri.encode("$m $l") },
-    Target("Bluesky") { m, l -> "https://bsky.app/intent/compose?text=" + Uri.encode("$m $l") },
-    Target("Telegram") { m, l -> "https://t.me/share/url?url=" + Uri.encode(l) + "&text=" + Uri.encode(m) },
-    Target("Reddit") { m, l -> "https://www.reddit.com/submit?url=" + Uri.encode(l) + "&title=" + Uri.encode(m) },
-    Target("WhatsApp") { m, l -> "https://wa.me/?text=" + Uri.encode("$m $l") },
-    Target("Mail", "@") { m, l -> "mailto:?subject=" + Uri.encode(APP_NAME) + "&body=" + Uri.encode("$m $l") },
+    Target("Fediverse", R.drawable.ic_mastodon, Ds.brandMastodon) { m, l -> "https://s2f.kytta.dev/?text=" + Uri.encode("$m $l") },
+    Target("Bluesky", R.drawable.ic_bluesky, Ds.brandBluesky) { m, l -> "https://bsky.app/intent/compose?text=" + Uri.encode("$m $l") },
+    Target("Telegram", R.drawable.ic_telegram, Ds.brandTelegram) { m, l -> "https://t.me/share/url?url=" + Uri.encode(l) + "&text=" + Uri.encode(m) },
+    Target("Reddit", R.drawable.ic_reddit, Ds.brandReddit) { m, l -> "https://www.reddit.com/submit?url=" + Uri.encode(l) + "&title=" + Uri.encode(m) },
+    Target("Mail", R.drawable.ic_mail, Ds.blue) { m, l -> "mailto:?subject=" + Uri.encode(APP_NAME) + "&body=" + Uri.encode("$m $l") },
+    Target("WhatsApp", R.drawable.ic_whatsapp, Ds.brandWhatsApp) { m, l -> "https://wa.me/?text=" + Uri.encode("$m $l") },
 )
 
 private fun openTarget(ctx: Context, url: String) {
@@ -97,8 +103,8 @@ private fun openTarget(ctx: Context, url: String) {
  * 📤 app share panel (QA @1112 #16) = web-style: social targets + copy link + system sheet + QR.
  * Use from any "share th app" btn: `if (show) ShareAppPanel(msg) { show = false }`
  * ⚠️ call sites (Cards.kt · MineScreen.kt) still use shareApp() ➡ switch i fan-in (other lanes' files)
- * look (§ 10 · L5 @1114): sheet-style list = rows 56 (disc · name) w hairlines + Tonal "Copy link" (📳 + inline ✓ 1.2 s, no
- * toast) + QR · no stack o outlined btns
+ * look (qa_1116 L3 #5, 🦠 "bland ➡ more color, hover/click states", web ref): 3×2 tiles (brand logo i brand colour on a
+ * 12 % tint · label) w ripple + press-shrink · Tonal "Copy link" (📳 + inline ✓ 1.2 s) + Tonal "More apps" (system sheet) · QR
  */
 @Composable
 fun ShareAppPanel(msg: String, onDismiss: () -> Unit) {
@@ -108,18 +114,16 @@ fun ShareAppPanel(msg: String, onDismiss: () -> Unit) {
     var copied by remember { mutableStateOf(false) }
     LaunchedEffect(copied) { if (copied) { delay(1200); copied = false } }
     MarxDialog(onDismiss = onDismiss, title = sheetTitle) {
-        TARGETS.forEach { t ->
-            ShareRow(t.label, { openTarget(ctx, t.url(msg, APP_LINK)) }) {
-                Text(t.mark, style = MaterialTheme.typography.titleSmall, color = Ds.blue)
+        TARGETS.chunked(3).forEach { row ->
+            Row(Modifier.fillMaxWidth().padding(bottom = Space.s), horizontalArrangement = Arrangement.spacedBy(Space.s)) {
+                row.forEach { t -> ShareTile(t, Modifier.weight(1f)) { haptics.confirm(); openTarget(ctx, t.url(msg, APP_LINK)) } }
             }
-            HorizontalDivider(color = Ds.line)
         }
-        ShareRow(tr("Mehr Apps …", "More apps …"), { shareApp(ctx, msg, sheetTitle) }) {
-            Icon(painterResource(R.drawable.ic_share), null, Modifier.size(20.dp), tint = Ds.blue)
+        Row(Modifier.fillMaxWidth().padding(top = Space.xs), horizontalArrangement = Arrangement.spacedBy(Space.s)) {
+            Tonal(if (copied) "✓ " + tr("Kopiert", "Copied") else tr("Link kopieren", "Copy link"),
+                { copyText(ctx, APP_LINK); haptics.confirm(); copied = true }, Modifier.weight(1f))
+            Tonal(tr("Mehr Apps …", "More apps …"), { shareApp(ctx, msg, sheetTitle) }, Modifier.weight(1f))
         }
-        Tonal(if (copied) "✓ " + tr("Kopiert", "Copied") else tr("Link kopieren", "Copy link"),
-            { copyText(ctx, APP_LINK); haptics.confirm(); copied = true },
-            Modifier.align(Alignment.CenterHorizontally).padding(top = Space.m))
         Canvas(Modifier.padding(top = Space.l).size(144.dp).align(Alignment.CenterHorizontally)) {
             val n = QR_ROWS.size
             val m = size.width / n
@@ -135,11 +139,17 @@ fun ShareAppPanel(msg: String, onDismiss: () -> Unit) {
     }
 }
 
-/** 1 share target: 40 disc (blueTint) + name body-l · row 56 */
+/** 1 share target tile: brand logo 26 on 12 % brand tint, label under · h 72 · ripple (brand) + shrinks 4 % while pressed */
 @Composable
-private fun ShareRow(label: String, onClick: () -> Unit, mark: @Composable () -> Unit) =
-    Row(Modifier.fillMaxWidth().height(56.dp).clip(MaterialTheme.shapes.small).clickable(role = Role.Button, onClick = onClick)
-        .padding(horizontal = Space.xs), verticalAlignment = Alignment.CenterVertically) {
-        Box(Modifier.size(40.dp).clip(CircleShape).background(Ds.blueTint), contentAlignment = Alignment.Center) { mark() }
-        Text(label, style = MaterialTheme.typography.bodyLarge, color = Ds.ink, modifier = Modifier.padding(start = Space.m).weight(1f))
+private fun ShareTile(t: Target, modifier: Modifier, onClick: () -> Unit) {
+    val src = remember { MutableInteractionSource() }
+    val pressed by src.collectIsPressedAsState()
+    val k by animateFloatAsState(if (pressed) 0.96f else 1f, label = "tile")
+    Column(modifier.height(72.dp).graphicsLayer { scaleX = k; scaleY = k }.clip(MaterialTheme.shapes.medium)
+        .background(t.color.copy(alpha = if (pressed) 0.22f else 0.12f))
+        .clickable(src, ripple(color = t.color), role = Role.Button, onClick = onClick),
+        horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+        Icon(painterResource(t.icon), null, Modifier.size(26.dp), tint = t.color)
+        Text(t.label, style = MaterialTheme.typography.labelMedium, color = Ds.ink, maxLines = 1, modifier = Modifier.padding(top = Space.xs))
     }
+}

@@ -494,20 +494,7 @@ private fun Hero(days: List<DayLog>, feast: Feast?, dt: DayTime, hooked: Boolean
 @Composable
 private fun StreakStar(n: Int, size: androidx.compose.ui.unit.Dp = 92.dp) {
     Box(Modifier.size(size), contentAlignment = Alignment.Center) {
-        Canvas(Modifier.fillMaxSize()) {
-            val c = center; val ro = this.size.minDimension / 2f; val ri = ro * 0.42f   // this.size = canvas (param `size` = th Dp)
-            val p = Path().apply {
-                for (k in 0 until 10) {
-                    val r = if (k % 2 == 0) ro else ri
-                    val a = Math.toRadians(-90.0 + k * 36.0)
-                    val x = c.x + r * kotlin.math.cos(a).toFloat(); val y = c.y + r * kotlin.math.sin(a).toFloat()
-                    if (k == 0) moveTo(x, y) else lineTo(x, y)
-                }
-                close()
-            }
-            drawPath(p, Red)
-            drawPath(p, Gold, style = Stroke(width = (size.value / 30f).dp.toPx(), join = StrokeJoin.Round))
-        }
+        de.strix.marxversion.ui.ds.StarImage(Modifier.fillMaxSize())   // th 1 star asset (qa_1116 L3 #7) · was a Path() copy
         val k = size.value / 92f   // number scales w th star (92 = th big hero)
         Text("$n", color = Color.White, fontSize = ((if (n < 100) 26 else 20) * k).sp, fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(top = (6 * k).dp))

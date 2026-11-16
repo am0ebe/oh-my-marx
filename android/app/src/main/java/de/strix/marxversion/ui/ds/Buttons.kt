@@ -182,29 +182,18 @@ fun ActionItem(
 /** ★ = close, evywhere (top-end o dialogs + sheets) · 36 visual, 48 target */
 @Composable
 fun CloseStar(onClick: () -> Unit, modifier: Modifier = Modifier, tint: Color = Ds.red, size: Dp = 36.dp, desc: String = "Close") {
-    // 🦠 @1114: star centred + bigger + gold rim = th streak star, small (was a "★" glyph: font baseline sat it off-centre)
+    // qa_1116 L3 #6 + #7: th 1 star asset (res/drawable/ic_star.xml, bbox-centred i its box = no nudge) · bigger (pad 8 %) ·
+    //   gold rim = th hero star's, scaled · circle = tint 10 % + 30 % hairline
     Surface(onClick = onClick, shape = CircleShape, color = tint.copy(alpha = 0.10f),
         border = BorderStroke(1.dp, tint.copy(alpha = 0.30f)), modifier = modifier.size(size).semantics { contentDescription = desc }) {
-        Canvas(Modifier.fillMaxSize().padding(size * 0.14f)) {
-            val r = this.size.minDimension / 2f   // DrawScope size (param `size` = th Dp)
-            val p = starPath(center + Offset(0f, r * 0.095f), r)   // star's box = top point -r ⬄ feet +0.81 r ➡ nudge down = optically centred
-            drawPath(p, tint)
-            drawPath(p, Ds.gold, style = Stroke(width = 1.5.dp.toPx(), join = StrokeJoin.Round))
-        }
+        StarImage(Modifier.fillMaxSize().padding(size * 0.08f))
     }
 }
 
-/** ☭-era 5-point star (streak star · CloseStar) · outer radius r, inner = 0.42 r, point up */
-fun starPath(c: Offset, r: Float): Path = Path().apply {
-    val ri = r * 0.42f
-    for (k in 0 until 10) {
-        val rr = if (k % 2 == 0) r else ri
-        val a = Math.toRadians(-90.0 + k * 36.0)
-        val x = c.x + rr * kotlin.math.cos(a).toFloat(); val y = c.y + rr * kotlin.math.sin(a).toFloat()
-        if (k == 0) moveTo(x, y) else lineTo(x, y)
-    }
-    close()
-}
+/** ★ th 1 star (streak hero · close) = `R.drawable.ic_star` · nvr redraw it w Path() (drift, 🦠 @1116) */
+@Composable
+fun StarImage(modifier: Modifier = Modifier) =
+    androidx.compose.foundation.Image(androidx.compose.ui.res.painterResource(de.strix.marxversion.R.drawable.ic_star), null, modifier)
 
 /** red track on · paperDeep off */
 @Composable

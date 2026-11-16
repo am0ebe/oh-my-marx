@@ -1,0 +1,7 @@
+<!-- ★ th 1 star (qa_1116 L3 #7): streak hero · close btn · evy star draws THIS file, no Path() copies (no drift)
+     5 points, inner = 0.42 outer · bbox centred i th 24 box (feet 0.81 r ➡ centre nudged down 0.0955 r, done here once)
+     red #B3261E (Ds.red) + gold rim #E8B931 (Ds.gold) · rim 0.8 = th hero's size/30 -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="24dp" android:height="24dp" android:viewportWidth="24" android:viewportHeight="24">
+    <path android:fillColor="#FFB3261E" android:strokeColor="#FFE8B931" android:strokeWidth="0.8" android:strokeLineJoin="round"
+        android:pathData="M12.000,1.689 L14.814,9.215 L22.842,9.566 L16.554,14.568 L18.701,22.311 L12.000,17.877 L5.299,22.311 L7.446,14.568 L1.158,9.566 L9.186,9.215 Z"/>
+</vector>

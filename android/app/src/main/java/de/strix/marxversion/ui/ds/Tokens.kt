@@ -36,6 +36,9 @@ object Ds {
     val ok = Color(0xFF2E7D32)         // ✔ icons ≥ 18dp only (4.4)
     val dev = Color(0xFF1565C0)        // DEV build marks only
     val white = Color.White
+    /** 📤 share targets only (qa_1116 L3 #5 "more color", web ref) · icon = brand colour · tile = 12 % o it */
+    val brandMastodon = Color(0xFF6364FF); val brandBluesky = Color(0xFF1185FE); val brandTelegram = Color(0xFF26A5E4)
+    val brandReddit = Color(0xFFFF4500); val brandWhatsApp = Color(0xFF1FA855)   // WhatsApp green darkened 4 contrast on paper
     /** 4 highlighter pens (Mark.highlight index) @ 40 % = user content, not chrome */
     val highlights = listOf(Color(0x66E8B931), Color(0x66E57373), Color(0x6681C784), Color(0x6664B5F6))
 }

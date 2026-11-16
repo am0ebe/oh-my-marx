@@ -53,7 +53,6 @@ import de.strix.marxversion.ui.ds.Space
 import de.strix.marxversion.ui.ds.StampRow
 import de.strix.marxversion.ui.ds.Tag
 import de.strix.marxversion.ui.ds.Tonal
-import de.strix.marxversion.ui.ds.starPath
 import org.junit.Assume.assumeTrue
 import org.junit.Before
 import org.junit.Rule
@@ -102,10 +101,7 @@ private fun NavBar(sel: Int) = Row(Modifier.fillMaxWidth().height(72.dp).backgro
 
 @Composable
 private fun Star(d: Dp, n: Int) = Box(Modifier.size(d), contentAlignment = Alignment.Center) {
-    Canvas(Modifier.fillMaxSize()) {
-        val r = size.minDimension / 2f; val p = starPath(center + Offset(0f, r * .095f), r)
-        drawPath(p, Ds.red); drawPath(p, Ds.gold, style = Stroke((d.value / 30f).dp.toPx(), join = StrokeJoin.Round))
-    }
+    de.strix.marxversion.ui.ds.StarImage(Modifier.fillMaxSize())   // th 1 star asset (qa_1116 L3 #7)
     Text("$n", color = Ds.white, fontWeight = FontWeight.Bold, fontSize = (d.value * .3f).sp, modifier = Modifier.padding(top = (d.value * .07f).dp))
 }
 
