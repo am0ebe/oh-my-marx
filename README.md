@@ -62,7 +62,7 @@ Bookmarks, notes, streak and settings stay on the phone. Three things talk to `s
 Germany): the update check (reads `version.json`), the anonymous *read along* counter
 ([`server/omm_api.py`](server/omm_api.py), ~200 lines of Python stdlib: page keys + a daily random token, no IPs) and,
 once you use them, comments and reading circles (a [Matrix](https://matrix.org) homeserver, config in
-[`server/matrix/`](server/matrix/)). *Read along* is always on since 0.9.1 (no switch).
+[`server/matrix/`](server/matrix/)). *Read along* is always on since 0.10.0 (no switch).
 
 ### Known gaps
 
@@ -102,12 +102,21 @@ Nobody edits it by hand: `bin/ship.sh minor|patch|major` bumps it. Two channels,
 | 🧪 dev | `bin/deploy.sh` (`-a` = also install over wireless adb) | next release + `-dev.MMDD.HHMM`, e.g. `0.9.0-dev.1107.1430` | `scagent.de/oh-my-marx/dev/` (also the 🧪 Dev tab on the page) | "Oh My Marx DEV" (`….dev`) via Obtainium |
 | 📦 stable | `bin/ship.sh minor` | `0.9.0` | `scagent.de/oh-my-marx/` + git tag + GitHub release | "Oh My Marx" |
 
-Dev builds are labelled with the coming version automatically (shipped `0.8.0` ➡ dev shows `0.9.0-dev…`).
+Dev builds are labelled with the coming version automatically (shipped `0.9.0` ➡ dev shows `0.10.0-dev…`), so
+`appVersion` lagging one step behind the DEV app is normal: it only moves when you ship.
 `versionCode` = minutes since 2026-01-01, so every build counts as newer and switching channels never needs a
-downgrade. Updates depend on who installed the app: stores update it themselves; Obtainium gets a head start and
-the app only nudges it (`obtainium://refresh`) if a version is still missing after 8 h; hand-installed APKs get a
-daily background check, a notification and a one-tap install. After that first install the app updates itself
-silently on Android 12+. The DEV app follows `scagent.de/oh-my-marx/dev/`.
+downgrade. Updates depend on who installed the app: stores update it themselves; Obtainium installs get a
+notification that opens Obtainium (`obtainium://refresh`), and Obtainium's own background check often wins;
+hand-installed APKs get a check on app start + daily, a notification and a one-tap install. After that first
+install, ⚙️ "Update automatically" lets the app update itself silently on Android 12+. The DEV app follows
+`scagent.de/oh-my-marx/dev/`.
+
+**How to ship** (TL;DR):
+
+- 🧪 DEV, any time: `bin/deploy.sh` ➡ `…/dev/` ➡ the DEV app (Obtainium or its own updater) picks it up · no commit, no tag
+- 📦 stable: write the `Release("0.10.0", …)` notes on top of `ui/Changelog.kt` ➡ commit + push ➡
+  `bin/ship.sh 0.10.0` (or `minor` / `patch`: bumped from the last tag) ➡ APK + page + tag + GitHub release
+- the version you pass = what the DEV app already shows, without `-dev…`
 
 Release cycle:
 
@@ -115,7 +124,7 @@ Release cycle:
 2. QA on the phone (feature tour: `notes.md` § QA checklist) ➡ fix ➡ back to 1
 3. New or changed UI strings? `bin/translate.py --only ui`
 4. Add `Release("0.9.0", …)` on top of `ui/Changelog.kt` (in-app notes, GitHub release, download page)
-5. Commit + push ➡ `bin/ship.sh minor` (features) or `patch` (fixes only): bumps, commits, pushes, tags, publishes.
+5. Commit + push ➡ `bin/ship.sh minor` (features), `patch` (fixes only) or an exact `X.Y.Z`: bumps, commits, pushes, tags, publishes.
    Refuses on a dirty tree, an unpushed HEAD, a missing changelog entry or an already-shipped version
 
 ## Sources

@@ -34,7 +34,11 @@ import de.strix.marxversion.data.f
 data class Release(val version: String, val date: String, val items: List<Pair<String, String>>)
 
 val RELEASES = listOf(
-    Release("0.9.1", "2026-11-12", listOf(
+    // ✏️ @1116 draft: was "0.9.1" (nvr shipped) ➡ 0.10.0 = wh DEV shows · date = set on ship day · 🦠 review b4 bin/ship.sh 0.10.0
+    Release("0.10.0", "2026-11-16", listOf(
+        T("🎨 Neues Design: Papier-Look, ruhigere Knöpfe, Kapitel ohne Leisten — liest sich wie ein Buch", "🎨 New design: paper look, calmer buttons, chapters without bars — reads like a book"),
+        T("🆕 Neue Version? Du erfährst es sofort · ⚙️ „Automatisch aktualisieren“ = ohne Nachfrage (APK von der Webseite)", "🆕 New version? You hear at once · ⚙️ “Update automatically” = no asking (APK from the website)"),
+        T("✅ Amen fühlt sich besser an: kurzer Haken + Vibration, die große Feier nur zu besonderen Momenten", "✅ Amen feels better: a quick tick + buzz, the big celebration only for special moments"),
         T("⚙️ Über: nur noch die neueste Version, schlichter Abspann, Symbolreihe mittig", "⚙️ About: newest version only, simpler credits, centred icon row"),
         T("🔖 Lesezeichen mit eigener Überschrift", "🔖 Bookmarks with their own heading"),
         T("🆕 Updates melden sich selbst: Benachrichtigung bei neuer Version, antippen = laden + installieren", "🆕 Updates announce themselves: a notification when a new version is out, tap = download + install"),

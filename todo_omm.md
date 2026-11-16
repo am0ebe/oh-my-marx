@@ -11,6 +11,12 @@
      - 🩹 bonus: tap Install, then Home mid-download ➡ expect notification "🆕 Update ready" (was: nothing)
   5. ⚙️ "Update automatically" ON ➡ 🤖 deploy again ➡ open app ➡ ✔️ no dialog, quiet "✔️ installed" notification (we're installer now = silent, Android 12+)
   - ❌ any step ➡ screenshot (auto-lands i `/opt/pix_fon`) + step nr ➡ 🤖
+  - 🧮 **updater matrix @1116** (same code both channels, only th URL differs: `/` ⬄ `/dev/`)
+    | | Obtainium | APK (browser) |
+    |--|--|--|
+    | DEV | ✔️ fon: Obtainium 1h ck auto-updated (🦠) · app's own notif ➡ obtainium://refresh = unit tst only | ⏳ unit tsts ✔️ · fon = 5 steps above |
+    | normal | ✔️ Obtainium follows th page (same as DEV) | ❌ untestable yet: 0.9.0 has th OLD banner (➡ web page, no 1-tap) · 1st real self-update = 0.10.0 ➡ 0.10.1 |
+    - 0.9.0 ➡ 0.10.0 APK users: banner ➡ page ➡ install by hand 1× (then 1-tap / silent fr there)
 - ▶ **RESUME @1114 eos** — ds L0 + lanes L2 · L3 · L5 merged + pushed (`cb465b5`, 90 tsts green) · DEV live = `0.10.0-dev.1114.2117` (B) · prev DEV A = 1114.1620 (1st w new updater D-038)
   - ▶ nxt: 🦠 fon: install A by hand (if not yet) ➡ open app ➡ B notification should pop ≤1 min (Obtainium path) · then browser-APK path (install B fr page ➡ 🤖 deploy C) · 🦠 D-036 A/B (⚙️ "🧪 Today hero", DEV, @1115) ➡ friends ➡ pick ➡ 🤖 L1 Today + L4 Mine/⚙️/Hooked lanes (same worktree-agent pattern) ➡ `bin/translate.py --only ui` (new labels: Back · Install · Switch on · Copied · Reading room · Not now…)
   - 👤 🦠: D-036 pick · fon tst updater (Obtainium + browser) · fon QA o th whole ds look · D-029 ✔️ came via M8 relay ➡ 🦠 skim design_system.md § 1

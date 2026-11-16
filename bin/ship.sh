@@ -6,13 +6,15 @@ cd "$(dirname "$0")/.."
 
 usage() {
     cat <<EOF
-usage: bin/ship.sh [patch|minor|major] [-p|--page] [-h|--help|-?]
+usage: bin/ship.sh [patch|minor|major|X.Y.Z] [-p|--page] [-h|--help|-?]
 
   📦 release: build release APK ➡ $WEB/ (page, Obtainium follows it) + GitHub release v<version>
   minor       0.7.0 ➡ 0.8.0 = new features  ┐ bumps fr th last shipped tag ➡ writes appVersion ➡
   patch       0.8.0 ➡ 0.8.1 = only fixes    ├ commits "vX.Y.Z" + pushes ➡ ships
   major       0.8.0 ➡ 1.0.0                 ┘
+  X.Y.Z       exactly this version (= wh th DEV app shows, e.g. 0.10.0) · must be > th last shipped tag
   (none)      ship appVersion as it is (must not be shipped yet)
+  ⚠️ appVersion = th LAST SHIPPED version (0.9.0) · DEV builds show th NEXT one (0.10.0-dev…) ➡ that gap is normal
   -p --page   only re-render + upload th page (lib.sh page() changed) 4 th last shipped version · no build, no tag
 
   before:
@@ -25,7 +27,11 @@ EOF
     tools
 }
 level=""
-case "${1:-}" in -h|--help|-\?) usage; exit 0 ;; -p|--page) only_page=1 ;; patch|minor|major) level=$1 ;; "") ;; *) usage; exit 1 ;; esac
+case "${1:-}" in
+    -h|--help|-\?) usage; exit 0 ;; -p|--page) only_page=1 ;; patch|minor|major) level=$1 ;;
+    [0-9]*.[0-9]*.[0-9]*) [[ $1 =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || { usage; exit 1; }; level=exact; want=$1 ;;   # @1116 🦠 "ship 0.10.0"
+    "") ;; *) usage; exit 1 ;;
+esac
 
 if [ -n "${only_page:-}" ]; then
     # last shipped = newest v* tag · apk comes fr th server (size + sha + versionCode = exactly what ppl download)
@@ -52,7 +58,10 @@ bin/check_langs.py || exit 1
 if [ -n "$level" ]; then
     last=$(git tag -l 'v*' --sort=-v:refname | head -1); last=${last#v}
     IFS=. read -r ma mi pa <<<"${last:-0.0.0}"
-    case "$level" in major) next="$((ma + 1)).0.0" ;; minor) next="$ma.$((mi + 1)).0" ;; patch) next="$ma.$mi.$((pa + 1))" ;; esac
+    case "$level" in major) next="$((ma + 1)).0.0" ;; minor) next="$ma.$((mi + 1)).0" ;; patch) next="$ma.$mi.$((pa + 1))" ;; exact) next=$want ;; esac
+    # X.Y.Z must be newer than th last tag (sort -V: 0.10.0 > 0.9.0, not string order)
+    newest=$(printf '%s\n%s\n' "${last:-0.0.0}" "$next" | sort -V | tail -1)
+    if [ "$next" = "${last:-}" ] || [ "$newest" != "$next" ]; then echo "❌ $next ≤ last shipped v${last:-–} ➡ pick a newer version"; exit 1; fi
     if [ "$next" != "$ver" ]; then
         [ -n "$(bin/notes.py "$next")" ] || { echo "❌ no Release(\"$next\", …) i ui/Changelog.kt ➡ write th notes 1st"; exit 1; }
         sed -i -E "s/^val appVersion = \"[^\"]+\"/val appVersion = \"$next\"/" android/app/build.gradle.kts
