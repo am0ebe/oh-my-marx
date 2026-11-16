@@ -38,7 +38,6 @@
 ## 🔵
 - 🎨⭐ **design system** — spec ✔️ @1113 ➡ [design_system.md](design_system.md) (tokens · 5 btn kinds · voices · per-screen deltas) · D-029..035 ✔️ @1114 · 💬 🦠: D-036 Today hero (mockups `d036_all.png`, blocks L1)
   - 🤖 lanes: ✔️ L0 · L2 · L3 · L5 @1114 ➡ left L1 Today (needs D-036) · L4 Mine/⚙️/Hooked ➡ fan-in ➡ fon QA · L6 later (dark c · font b 🧪 · sounds b)
-- 🤖 **big round** left (QA r5 @1113): translate.py PlanDay xd/xe (Ludditen bridges = EN i oth langs) · #7 btn styles ➡ design system ⬆ · src qa_1112.md § r4 sweep
 - 🦠🔑 keystore: ✔️ symlink @1105 · left: KeePass note (`base64 -w0`, notes.md § 🔑) · 1 offline/restic copy · lap same `ln -s` (➡ sys ansible?)
 - 💬 ops (optional): `/omm/*` ➡ `/oh-my-marx/{path}` (Obtainium URL `scagent.de/omm/`) · `/omm/src` ➡ GitHub 302 · `/omm/dev` redirect = valid again (/dev back @1106)
 - 🪝⭐ **Hooked/Fogg pass** (aft QA sprint) — raw ➡ `re/boox/hooked/hooked.md` § 📥 @1112
@@ -70,6 +69,7 @@
 ## ✔️
 - ✔️ @1116b (🔵 sweep, M8 order): 🩹 lint baseline — 4 err alr fixed `8b9e7f4` · warn 35 ➡ 25 (KTX toUri/edit/createBitmap/withTranslation · test deps ➡ toml · offset lambda · dead SDK<26 ck · unused ic_highlight + gold) · left on purpose: dep bumps (AGP 9 = L step) · widget preview txt · `mipmap-anydpi-v26` (AAPT can't find th adaptive icon wo it)
   - 🧹 stale 🔵 lines out: ship.sh lang guard + translate_full secs/toks meter = alr done `fe220ef` · Update.check tsts alr i UpdateTest.kt
+  - 🌍 big round left ✔️: Ludditen "Und heute?" bridges (PlanDay xd/xe) were EN i all 11 langs ➡ translate.py kind `x` (key plan:dayIdx like `a`) + `Tr.x` + `bridge()` lookup · 7 × 11 langs (local qwen3 30b) · 🩹 ur missed Andacht montag:3 ➡ filled · guard: check_langs.py now refuses missing `a` / `x` per lang · #7 btn styles = done by ds (D-030 · L0)
   - 🧪 glue tsts (bin/test_bin.py 17 ➡ 26): `notes.py` ⬄ Changelog.kt (semver newest 1st · evy Release hs notes · dev ➡ base · appVersion hs notes · no raw escapes · --html --plain) · `page()` dry-run (version.json · stable: apk link + mailto + What's new + JSON-LD + QR + llms.txt · dev: noindex)
 - ✔️ @1116: D-030 CI OOM (gradle 1280m · 2× green) · D-036 = A · ship.sh X.Y.Z + README how-to · **v0.10.0 shipped** · qa_1116 r1+r2 triage · 6 ⚡ lanes (Book · Today · share/★ · settings · i18n 47 strings + guard · startup lazy JSON) · updater BAL fix
 - ✔️ @1114: design system L0 (`ui/ds/` + guard + ds_gallery) + lanes L2 Book · L3 Plans/Circle (Leave confirm 🐛) · L5 bars/dialogs/fx queue · D-029..035 picked · updater D-038 · omm-api no pip D-037 · DEV 1114.1620 + .2117

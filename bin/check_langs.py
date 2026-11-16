@@ -6,6 +6,8 @@
   else exit 1 + list ➡ bin/ship.sh refuses (0.9.0 changelog claimed ur/hi/bn book b4 full_xx.json existed)
   + evy tr("de", "en") / T(…) UI string i th Kotlin src needs its "ui" entry i evy i18n_<xx>.json (qa_1116 #11: 51
     new btn labels stayed EN i all 11 langs ➡ "not all button txts switch") ➡ fix = bin/translate.py --only ui
+  + evy plan day's Andacht ("a") + "Und heute?" bridge ("x", Ludditen) i plans.json needs its entry too
+    (@1116: bridges were EN i all 11 langs · ur missed 1 Andacht) ➡ bin/translate.py --only a x
 
   bin/check_langs.py [ROOT]      ROOT = repo root (dflt: th one above bin/) · tsts pass a fake tree
 """
@@ -50,10 +52,21 @@ def _json(f):
         return None
 
 
+def day_keys(root):
+    """{"a": {"plan:dayIdx", …}, "x": {…}} fr plans.json (same keys as translate.py · no plans.json = none)"""
+    out = {"a": set(), "x": set()}
+    for p in _json(root / CONTENT / "plans.json") or []:
+        for i, d in enumerate(p.get("days", [])):
+            for kind, field in (("a", "ad"), ("x", "xd")):
+                if d.get(field):
+                    out[kind].add(f"{p['id']}:{i}")
+    return out
+
+
 def problems(root):
     root = pathlib.Path(root)
     out = []
-    keys = ui_keys(root)
+    keys, days = ui_keys(root), day_keys(root)
     for lang in menu(root):
         if lang in BUILTIN:
             continue
@@ -66,6 +79,11 @@ def problems(root):
             if miss:
                 out.append(f"{lang}: {len(miss)} UI strings untranslated (e.g. {', '.join(repr(m[:30]) for m in miss[:3])}) "
                            "➡ bin/translate.py --only ui")
+            for kind, name in (("a", "Andachten"), ("x", "bridges")):
+                miss = sorted(days[kind] - set(ui.get(kind, {})))
+                if miss:
+                    out.append(f"{lang}: {len(miss)} {name} untranslated (e.g. {', '.join(miss[:3])}) "
+                               f"➡ bin/translate.py --only {kind}")
         if not (isinstance(full, dict) and full.get("v")):
             out.append(f"{lang}: full_{lang}.json missing/empty (no book text)")
     return out

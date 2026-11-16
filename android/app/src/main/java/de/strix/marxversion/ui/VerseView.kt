@@ -167,9 +167,10 @@ const val SNIPPET = 320
 fun readMinutes(t: String) = maxOf(1, if (t.count { it == ' ' } < t.length / 20) t.length / 400 else (t.count { it == ' ' } + 1) / 200)
 
 @Composable
-fun bridge(d: PlanDay): String = when (LocalLang.current) {
+fun bridge(planId: String, idx: Int, d: PlanDay): String = when (LocalLang.current) {
     Lang.DE -> d.bridgeDe
-    else -> d.bridgeEn   // oth langs: EN til translate.py learns xd/xe (fan-in pass)
+    Lang.EN -> d.bridgeEn
+    else -> LocalTr.current?.x?.get("$planId:$idx") ?: d.bridgeEn   // translate.py kind x · missing ➡ EN
 }
 
 @Composable

@@ -4,6 +4,7 @@
 what gets translated (fr th built assets, so run AFT build.py):
   q     quotes (Vers des Tages, Marxoskop, Mein Kapital)  · fr DE original, EN as reference
   a     Andachten (plan days)                             · keep th wink
+  x     "Und heute?" bridges (plan days w xd/xe, eg Ludditen: Marx ⬄ KI) · key = "plan:dayIdx" like a
   plan  plan title + description
   chap  chapter + Abschnitt titles
   ui    UI strings: evy T("de", "en") / tr("de", "en") pair i th Kotlin source (key = EN string)
@@ -42,6 +43,9 @@ STYLE = {
     "a": "These are short tongue-in-cheek 'devotionals' from a playful app that presents Marx' Kapital like a Bible app. "
          "Keep the dry, cheeky wink and the gentle Bible-app parody tone; keep the closing question. Adapt jokes so they "
          "work for native readers; keep the length.",
+    "x": "These are short 'And today?' notes from a playful Marx-as-Bible app: each links a passage of Marx' Kapital to "
+         "today (AI, automation, platform work). Plain, punchy modern prose, a dry wink, no pathos. Keep names and "
+         "references (Aristotle, Hephaestus, Luddites …) in their established form in the target language; keep the length.",
     "plan": "These are reading-plan titles and descriptions from a playful Marx-as-Bible app. Keep puns and the wink; "
             "titles stay short.",
     "chap": "These are chapter titles of Marx' 'Das Kapital' vol. 1. Use the established title in the target language if one exists.",
@@ -60,15 +64,16 @@ def src_items(only):
         for v in load("verses.json"):
             if v.get("qd"):
                 yield "q", v["id"], v["qd"], v.get("qe", "")
-    if "a" in only or "plan" in only:
+    if {"a", "x", "plan"} & set(only):
         for p in load("plans.json"):
             if "plan" in only:
                 yield "plan", p["id"] + ":t", p["tde"], p["ten"]
                 yield "plan", p["id"] + ":d", p["dde"], p["den"]
-            if "a" in only:
-                for i, d in enumerate(p["days"]):
-                    if d.get("ad"):
-                        yield "a", f"{p['id']}:{i}", d["ad"], d.get("ae", "")
+            for i, d in enumerate(p["days"]):
+                if "a" in only and d.get("ad"):
+                    yield "a", f"{p['id']}:{i}", d["ad"], d.get("ae", "")
+                if "x" in only and d.get("xd"):
+                    yield "x", f"{p['id']}:{i}", d["xd"], d.get("xe", "")
     if "chap" in only:
         for c in load("chapters.json"):
             yield "chap", c["kap"], c["de"], c["en"]
@@ -126,7 +131,7 @@ def load_cache(lang):
     return c
 
 def export(lang, cache):
-    out = {"q": {}, "a": {}, "plan": {}, "chap": {}, "ui": {}}
+    out = {"q": {}, "a": {}, "x": {}, "plan": {}, "chap": {}, "ui": {}}
     for (kind, k), x in cache.items():
         out[kind][k] = x["t"]
     plans = {}
@@ -141,7 +146,7 @@ def export(lang, cache):
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--langs", nargs="*", default=list(LANGS))
-    ap.add_argument("--only", nargs="*", default=["ui", "chap", "plan", "a", "q"])
+    ap.add_argument("--only", nargs="*", default=["ui", "chap", "plan", "x", "a", "q"])
     ap.add_argument("--export-only", action="store_true")
     ap.add_argument("-m", "--model", default="qwen3:30b-a3b-instruct-2507-q4_K_M")
     ap.add_argument("--url", default="http://localhost:11434/api/generate")

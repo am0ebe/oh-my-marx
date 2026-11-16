@@ -52,6 +52,7 @@ data class Tr(
     val ui: Map<String, String> = emptyMap(),           // EN string ➡ translation
     val q: Map<String, String> = emptyMap(),            // verse id ➡ quote
     val a: Map<String, String> = emptyMap(),            // "plan:dayIdx" ➡ Andacht
+    val x: Map<String, String> = emptyMap(),            // "plan:dayIdx" ➡ "Und heute?" bridge (PlanDay xd/xe)
     val plan: Map<String, List<String>> = emptyMap(),   // plan id ➡ [title, desc]
     val chap: Map<String, String> = emptyMap(),         // kap ➡ title
 )

@@ -322,7 +322,7 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
             // qa_1116 r2.1: full txt, no "weiterlesen · ~1 min" expand (big round #3 snippet off · VerseView `preview` stays 4 later)
             day.verseIds.mapNotNull { vm.content.verse(it) }.forEach { VerseView(vm, it, speaker); Gap(4) }
             // 💡 curated plans (🤖 Ludditen): NEW bridge txt Marx ➡ today, under th original passage (#6)
-            val br = bridge(day)
+            val br = bridge(plan.id, idx, day)
             if (br.isNotBlank()) {
                 Gap(4)
                 Column(Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).background(Blue.copy(alpha = 0.07f)).padding(12.dp)) {

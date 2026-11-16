@@ -67,6 +67,23 @@ class ShipGuard(unittest.TestCase):
         p = check_langs.problems(root)
         self.assertEqual(len(p), 1); self.assertIn("1 UI strings", p[0]); self.assertIn("Later", p[0]); d.cleanup()
 
+    def test_untranslated_plan_day_is_refused(self):
+        # @1116: Ludditen "Und heute?" bridges (xd) were EN i all 11 langs · ur missed 1 Andacht
+        plans = [{"id": "lud", "days": [{"ad": "A0", "xd": "X0"}, {"ad": "A1"}, {}]}]
+        d, root = fake_tree(["en", "it"], {"plans.json": plans, "full_it.json": {"v": {"1": "x"}},
+                                           "i18n_it.json": {"ui": {}, "a": {"lud:0": "a"}}})
+        p = check_langs.problems(root)
+        self.assertEqual(len(p), 2)
+        self.assertIn("1 Andachten", p[0]); self.assertIn("lud:1", p[0]); self.assertIn("--only a", p[0])
+        self.assertIn("1 bridges", p[1]); self.assertIn("lud:0", p[1]); self.assertIn("--only x", p[1]); d.cleanup()
+
+    def test_translate_py_yields_bridges_w_andacht_keys(self):
+        tr = load("translate")
+        items = list(tr.src_items({"a", "x"}))
+        xs = {k for kind, k, *_ in items if kind == "x"}
+        self.assertTrue(xs, "plans.json hs no xd bridges anymore?")
+        self.assertEqual(xs, check_langs.day_keys(BIN.parent)["x"])
+
     def test_real_repo_passes(self):
         self.assertEqual(check_langs.problems(BIN.parent), [])
 
