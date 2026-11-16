@@ -316,6 +316,7 @@ class AppVm(app: Application) : AndroidViewModel(app) {
     fun startPlan(id: String) = viewModelScope.launch { marx.prefs.startPlan(id, today()) }
     fun setLang(l: Lang) = viewModelScope.launch { loadFull(l); marx.prefs.setLang(l); widgets() }
     fun setTestMode(on: Boolean) = viewModelScope.launch { marx.prefs.setTestMode(on) }
+    fun setDevUnlock(on: Boolean) = viewModelScope.launch { marx.prefs.setDevUnlock(on) }
     fun setAutoUpdate(on: Boolean) = viewModelScope.launch { marx.prefs.setAutoUpdate(on) }
     fun setPersona(p: Persona) = viewModelScope.launch { marx.prefs.setPersona(p.name) }
     fun setReadScale(s: Float) = viewModelScope.launch { marx.prefs.setReadScale(s.coerceIn(0.7f, 2f)) }

@@ -71,7 +71,8 @@ fun MineScreen(vm: AppVm, openChapter: (String, String) -> Unit) {
                 "Your objectified reading labour. Inalienable — export coming."), fontSize = 12.sp, color = MaterialTheme.colorScheme.secondary)
             HookNote(Hook.INVESTMENT, s.testMode)
             val orden by vm.orden.collectAsStateWithLifecycle()
-            OrdenSection(orden, s.testMode)
+            // 🔓 DEV unlock = medals preview: all shown as earned (display only, nothing stored)
+            OrdenSection(if (IS_DEV && s.devUnlock) de.strix.marxversion.logic.Orden.entries.toSet() else orden, s.testMode)
             Gap(10)
             if (marks.isEmpty()) Text("\n" + tr("Noch nichts akkumuliert. Tipp auf einen Absatz ➡ Lesezeichen oder Notiz — ursprüngliche Akkumulation beginnt klein.",
                 "Nothing accumulated yet. Tap a passage ➡ Bookmark or Note — primitive accumulation starts small."))
@@ -195,7 +196,7 @@ fun SettingsScreen(vm: AppVm, askNotifPermission: () -> Unit) {
         // 🔓 progressive disclosure (big round #5 · D-025): locked til 7 reading days / 1st finished plan · alr on = stays
         val earned by vm.orden.collectAsStateWithLifecycle()
         val logDays by vm.days.collectAsStateWithLifecycle()
-        if (de.strix.marxversion.logic.Orden.HOOKED !in earned && !s.testMode) Column(Modifier.padding(vertical = 8.dp)) {
+        if (de.strix.marxversion.logic.Orden.HOOKED !in earned && !s.testMode && !(IS_DEV && s.devUnlock)) Column(Modifier.padding(vertical = 8.dp)) {
             val left = de.strix.marxversion.logic.hookedDaysLeft(de.strix.marxversion.logic.readingDays(logDays))
             Text(tr("🔒 Hooked-Modus", "🔒 Hooked mode"), color = Color.Gray)
             Text(tr("Ein Blick hinter die Kulissen der App — schaltet sich frei nach 7 Lesetagen oder deinem ersten fertigen Leseplan. Noch %d Tage.",
@@ -213,6 +214,20 @@ fun SettingsScreen(vm: AppVm, askNotifPermission: () -> Unit) {
         }
         if (s.testMode) TextButton(onClick = openHooked) { Text(tr("📖 Hooked erklärt ➡", "📖 Hooked explained ➡")) }
         HorizontalDivider()
+
+        // ── 🔓 DEV only (qa_1116 #10 · Q6 a): 1 master switch 4 testing ➡ Hooked unlocked + all badges previewed · nvr i stable ──
+        if (IS_DEV) {
+            Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(vertical = 8.dp)) {
+                Column(Modifier.weight(1f)) {
+                    Text(tr("🔓 Alles freischalten (DEV)", "🔓 Unlock everything (DEV)"))
+                    Text(tr("Zum Testen: Hooked-Modus frei, alle Abzeichen als Vorschau. Nur in der DEV-App.",
+                        "For testing: Hooked mode unlocked, all badges as preview. DEV app only."),
+                        style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                }
+                de.strix.marxversion.ui.ds.DsSwitch(s.devUnlock, { vm.setDevUnlock(it) })
+            }
+            HorizontalDivider()
+        }
 
         // ── 📜 release notes (ui/Changelog.kt) ──
         Gap(8)

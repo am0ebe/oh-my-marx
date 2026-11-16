@@ -24,6 +24,7 @@ data class Settings(
     val notifHour: Int = 8,
     val notifMinute: Int = 55,          // Mo 8:55 = 5 min b4 th Arbeitstag starts
     val testMode: Boolean = false,      // 🧪 Testmodus: shows th app's own Hooked tricks + test buttons
+    val devUnlock: Boolean = false,     // 🔓 DEV app only (qa_1116 Q6 a): 1 master switch ➡ evy progressive-disclosure gate open
     val persona: String = "GOTTVATER",  // TTS voice preset (ui/Share.kt Persona)
     val popupSeen: String? = null,      // date th Losung popup was last shown ("2026-10-31")
     val activePlan: String? = null,
@@ -43,6 +44,7 @@ class Prefs(private val context: Context) {
         val notifHour = intPreferencesKey("notif_hour")
         val notifMinute = intPreferencesKey("notif_minute")
         val testMode = booleanPreferencesKey("test_mode")
+        val devUnlock = booleanPreferencesKey("dev_unlock")
         val persona = stringPreferencesKey("persona")
         val popupSeen = stringPreferencesKey("popup_seen")
         val activePlan = stringPreferencesKey("active_plan")
@@ -108,6 +110,7 @@ class Prefs(private val context: Context) {
             notifHour = p[K.notifHour] ?: 8,
             notifMinute = p[K.notifMinute] ?: 55,
             testMode = p[K.testMode] ?: false,
+            devUnlock = p[K.devUnlock] ?: false,
             persona = p[K.persona] ?: "GOTTVATER",
             popupSeen = p[K.popupSeen],
             activePlan = p[K.activePlan],
@@ -122,6 +125,7 @@ class Prefs(private val context: Context) {
 
     suspend fun setLang(l: Lang) = context.store.edit { it[K.lang] = l.name }
     suspend fun setTestMode(on: Boolean) = context.store.edit { it[K.testMode] = on }
+    suspend fun setDevUnlock(on: Boolean) = context.store.edit { it[K.devUnlock] = on }
     suspend fun setPersona(p: String) = context.store.edit { it[K.persona] = p }
     suspend fun setReadScale(s: Float) = context.store.edit { it[K.readScale] = s }
     suspend fun popupSeen(date: String?) = context.store.edit { if (date == null) it.remove(K.popupSeen) else it[K.popupSeen] = date }
