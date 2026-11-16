@@ -3,6 +3,7 @@ package de.strix.marxversion.ui
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import androidx.core.net.toUri
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -95,7 +96,7 @@ private val TARGETS = listOf(
 )
 
 private fun openTarget(ctx: Context, url: String) {
-    runCatching { ctx.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) }
+    runCatching { ctx.startActivity(Intent(Intent.ACTION_VIEW, url.toUri()).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) }
         .onSuccess { (ctx.applicationContext as? MarxApp)?.let { a -> a.scope.launch { a.prefs.shared() } } }
 }
 

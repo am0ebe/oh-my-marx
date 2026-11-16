@@ -4,10 +4,10 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageInstaller
-import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import androidx.core.content.FileProvider
+import androidx.core.net.toUri
 import de.strix.marxversion.BuildConfig
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -81,7 +81,7 @@ object Update {
 
     /** 🔄 Obtainium: check this 1 app now (wiki "Deep Links": obtainium://refresh?id=<app id>, id = package) */
     fun obtainiumRefresh(ctx: Context): Intent =
-        Intent(Intent.ACTION_VIEW, Uri.parse("obtainium://refresh?id=" + ctx.packageName)).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        Intent(Intent.ACTION_VIEW, ("obtainium://refresh?id=" + ctx.packageName).toUri()).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 
     // (GRACE_H 8 h head start 4 Obtainium dropped @1114: 🦠 "do notification immediately")
 
@@ -156,11 +156,11 @@ object Update {
         out
     }
 
-    /** Android 8+: th usr must allow "install unknown apps" 4 us once */
-    fun canInstall(ctx: Context) = Build.VERSION.SDK_INT < 26 || ctx.packageManager.canRequestPackageInstalls()
+    /** th usr must allow "install unknown apps" 4 us once (minSdk 26 = alw asked) */
+    fun canInstall(ctx: Context) = ctx.packageManager.canRequestPackageInstalls()
 
     /** ⚙️ th system page where th usr allows it (comes back 2 th app aft) */
-    fun allowIntent(ctx: Context) = Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, Uri.parse("package:" + ctx.packageName))
+    fun allowIntent(ctx: Context) = Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, ("package:" + ctx.packageName).toUri())
 
     /** 📦 Android's install dialog 4 th downloaded apk (FileProvider ➡ res/xml/file_paths.xml "update") · fallback only */
     fun installIntent(ctx: Context, apk: File): Intent = Intent(Intent.ACTION_VIEW)

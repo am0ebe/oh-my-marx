@@ -46,7 +46,6 @@
 - 📊 **in-app analytics** (priv-friendly) — DLs by version · screen dwell · filter out am0 ➡ dash = ops 📊 bin (`todo_ops`)
 - 📄 **README ⬄ GH ⬄ scagent.de/omm polish** (merged 2 dups) — README mirrors page (Obtainium 1st ➡ DL ➡ src Forgejo + GH) · rm iPhone line · badges row (discussion · matrix · license) · lang btn · 😉 fake star-history 0➡1 · stats row · 🔑 T: 1 SSOT ➡ gen both (md + html) = pattern 4 ALL docs (wiki · kb · pr scaffold)
 - ❓ **AGPL-3 ⬄ GPL-3** (scrap @1112) — M8 A: same copyleft + AGPL also triggers on **network use** · ➡ app = GPL fine · 🤔 `server/` (omm_api) ➡ AGPL if u want forks o th server 2 share back
-- 🤖 🩹 **lint baseline** (CI @1108, `android/app/lint-baseline.xml`): 4 err known ➡ fix + `./gradlew updateLintBaseline` · `LosungTile.kt:25` (`@SuppressLint("StartActivityAndCollapseDeprecated")`) · `ReadScreen.kt:197` unused BoxWithConstraints scope · `app_name` not translated "en" ×2 (➡ `translatable="false"`) · + 29 warn
 - 💡 small Marx animation (🦠 @1113) — tiny, e.g. Marx reacts 2 Amen / streak · ⬄ halo states i design_system.md § 7 hero · big avatar + xp idea ➡ moved 2 `pr/cali/notes.md` § 🔵
 - 💡 app ideas: zuletzt gelesen/angeguckt · who's online (Matrix · Lesekreis) · events/Termine near u (⚠️ location implications) · personalize (Hooked: user invests data · usage analytics) · notif toggle (Android may alr do it)
 - 🔑 **cross-app insights board**: extract L fr evy app we build (omm · cali · …) ➡ shared ⬄ vibe++/kb
@@ -68,6 +67,7 @@
 - _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm wo 🦠 ok · dropped @1113 ➡ [notes.md § 🗃️](notes.md)_
 
 ## ✔️
+- ✔️ @1116b (🔵 sweep, M8 order): 🩹 lint baseline — 4 err alr fixed `8b9e7f4` · warn 35 ➡ 25 (KTX toUri/edit/createBitmap/withTranslation · test deps ➡ toml · offset lambda · dead SDK<26 ck · unused ic_highlight + gold) · left on purpose: dep bumps (AGP 9 = L step) · widget preview txt · `mipmap-anydpi-v26` (AAPT can't find th adaptive icon wo it)
 - ✔️ @1116: D-030 CI OOM (gradle 1280m · 2× green) · D-036 = A · ship.sh X.Y.Z + README how-to · **v0.10.0 shipped** · qa_1116 r1+r2 triage · 6 ⚡ lanes (Book · Today · share/★ · settings · i18n 47 strings + guard · startup lazy JSON) · updater BAL fix
 - ✔️ @1114: design system L0 (`ui/ds/` + guard + ds_gallery) + lanes L2 Book · L3 Plans/Circle (Leave confirm 🐛) · L5 bars/dialogs/fx queue · D-029..035 picked · updater D-038 · omm-api no pip D-037 · DEV 1114.1620 + .2117
 - ✔️ @1113: big round pt 1 (EN data via pipeline · 📜 feed · 🔓 Hooked unlock · 🤖 Ludditen plan) + follow-ups (FÜFNZEHNTES + IdMoves D-028 · 13,120-125 align · UI/plan fan-in 11 langs) · r5 + r5b updater (D-023) · ❌ not deployed

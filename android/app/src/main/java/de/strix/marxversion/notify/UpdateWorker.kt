@@ -13,6 +13,7 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.edit
 import androidx.work.Constraints
 import androidx.work.CoroutineWorker
 import androidx.work.ExistingPeriodicWorkPolicy
@@ -69,13 +70,13 @@ suspend fun checkAndNotify(
     val fetch = get ?: Update::fetchText
     val l = Update.newer(BuildConfig.VERSION_CODE) { fetch(Update.base() + "version.json") } ?: return Outcome.NONE
     val sp = ctx.getSharedPreferences(SP, Context.MODE_PRIVATE)
-    if (sp.getInt("seen_code", 0) != l.code) sp.edit().putInt("seen_code", l.code).putLong("seen_at", now).apply()
+    if (sp.getInt("seen_code", 0) != l.code) sp.edit { putInt("seen_code", l.code).putLong("seen_at", now) }
     val de = isDe(ctx)
 
     if (auto && via == Update.Via.SELF && l.apk != null && Update.silentOk(installer, ctx.packageName, sdk)) {
-        sp.edit().putString("silent", l.version).apply()   // ➡ UpdatedReceiver aft th swap
+        sp.edit { putString("silent", l.version) }   // ➡ UpdatedReceiver aft th swap
         if (runCatching { silent(l) }.isSuccess) return Outcome.SILENT
-        sp.edit().remove("silent").apply()                 // download/install failed ➡ fall back 2 asking
+        sp.edit { remove("silent") }                 // download/install failed ➡ fall back 2 asking
     }
     val today = LocalDate.now().toEpochDay()
     if (!Update.shouldNotify(l.code, sp.getInt("code", 0), sp.getLong("day", Long.MIN_VALUE / 2), today)) return Outcome.NONE
@@ -86,7 +87,7 @@ suspend fun checkAndNotify(
     }
     val title = if (de) "🆕 Oh My Marx %s ist da".format(l.version) else "🆕 Oh My Marx %s is out".format(l.version)
     if (!post(ctx, title, text, tap, de)) return Outcome.NONE
-    sp.edit().putInt("code", l.code).putLong("day", today).apply()
+    sp.edit { putInt("code", l.code).putLong("day", today) }
     return Outcome.NOTIFIED
 }
 
@@ -142,13 +143,13 @@ class InstallReceiver : BroadcastReceiver() {
                 if (!bg && confirm != null && onScreen() &&
                     runCatching { ctx.startActivity(confirm.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) }.isSuccess) return
                 val de = isDe(ctx)
-                ctx.getSharedPreferences(SP, Context.MODE_PRIVATE).edit().remove("silent").apply()
+                ctx.getSharedPreferences(SP, Context.MODE_PRIVATE).edit { remove("silent") }
                 post(ctx, if (de) "🆕 Update bereit" else "🆕 Update ready",
                     if (de) "Antippen = installieren" else "Tap = install", appUpdateIntent(ctx), de)
             }
             PackageInstaller.STATUS_SUCCESS -> {}   // we r being replaced ➡ UpdatedReceiver takes over
             else -> {
-                ctx.getSharedPreferences(SP, Context.MODE_PRIVATE).edit().remove("silent").apply()
+                ctx.getSharedPreferences(SP, Context.MODE_PRIVATE).edit { remove("silent") }
                 Update.installError.value = (i.getStringExtra(PackageInstaller.EXTRA_STATUS_MESSAGE) ?: "") + " ($st)"
             }
         }
@@ -167,7 +168,7 @@ class UpdatedReceiver : BroadcastReceiver() {
         if (i.action != Intent.ACTION_MY_PACKAGE_REPLACED) return
         val sp = ctx.getSharedPreferences(SP, Context.MODE_PRIVATE)
         sp.getString("silent", null) ?: return
-        sp.edit().remove("silent").apply()
+        sp.edit { remove("silent") }
         val de = isDe(ctx)
         post(ctx, if (de) "✔️ Oh My Marx %s installiert".format(BuildConfig.VERSION_NAME) else "✔️ Oh My Marx %s installed".format(BuildConfig.VERSION_NAME),
             if (de) "Von selbst aktualisiert — deine Daten sind noch da" else "Updated by itself — your data is still there",

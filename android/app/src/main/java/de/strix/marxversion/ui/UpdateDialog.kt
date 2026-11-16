@@ -1,7 +1,7 @@
 package de.strix.marxversion.ui
 
 import android.content.Intent
-import android.net.Uri
+import androidx.core.net.toUri
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -43,7 +43,7 @@ fun UpdateDialog(vm: AppVm, onDismiss: () -> Unit) {
     var apk by remember { mutableStateOf<File?>(null) }
     var failed by remember { mutableStateOf(false) }
     var waitAllow by remember { mutableStateOf(false) }
-    val openPage = { runCatching { ctx.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(Update.page))) }; onDismiss() }
+    val openPage = { runCatching { ctx.startActivity(Intent(Intent.ACTION_VIEW, Update.page.toUri())) }; onDismiss() }
 
     // ❌ session failed (notify/InstallReceiver) ➡ web fallback
     val err by Update.installError.collectAsStateWithLifecycle()

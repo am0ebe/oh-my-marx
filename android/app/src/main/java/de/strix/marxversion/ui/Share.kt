@@ -41,6 +41,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.FileProvider
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.createBitmap
+import androidx.core.graphics.withTranslation
 import de.strix.marxversion.data.Lang
 import de.strix.marxversion.data.T
 import de.strix.marxversion.logic.Feast
@@ -90,7 +92,7 @@ private val KRISE_COLORS = intArrayOf(0xFF000000.toInt(), 0xFF3A0000.toInt(), 0x
  */
 fun cardBitmap(ctx: Context, quote: String, ref: String, lang: Lang, feast: Feast? = null, krise: Boolean = false, title: String? = null): Bitmap {
     val w = CARD_W; val h = CARD_H
-    val bmp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
+    val bmp = createBitmap(w, h)
     val c = Canvas(bmp)
     // Kalenderspruch-Sonnenuntergang (or th feast's palette / crisis)
     val bg = Paint().apply {
@@ -170,7 +172,7 @@ fun cardBitmap(ctx: Context, quote: String, ref: String, lang: Lang, feast: Feas
             .setAlignment(Layout.Alignment.ALIGN_CENTER).setLineSpacing(0f, 1.15f)
             .setMaxLines(lines).setEllipsize(android.text.TextUtils.TruncateAt.END).build()
     }
-    c.save(); c.translate(80f, (mid - layout.height / 2f).coerceAtLeast(minTop)); layout.draw(c); c.restore()
+    c.withTranslation(80f, (mid - layout.height / 2f).coerceAtLeast(minTop)) { layout.draw(this) }
 
     val small = TextPaint(tp).apply { textSize = 40f; typeface = Typeface.create(Typeface.SERIF, Typeface.NORMAL) }
     val by = "— Karl Marx, $ref"

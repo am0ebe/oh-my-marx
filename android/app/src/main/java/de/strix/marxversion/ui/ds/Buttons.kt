@@ -51,6 +51,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -104,7 +105,7 @@ fun Primary(
     Box(modifier.then(width).minimumInteractiveComponentSize().height(h + edge)
         .semantics(mergeDescendants = true) {}.press(src, enabled && !loading, onClick)) {
         if (edge > 0.dp) Box(Modifier.matchParentSize().padding(top = edge).background(Ds.redDeep, Pill))
-        Box(width.offset(y = sink).height(h).defaultMinSize(minWidth = 64.dp).background(bg, Pill).padding(horizontal = 24.dp),
+        Box(width.offset { IntOffset(0, sink.roundToPx()) }.height(h).defaultMinSize(minWidth = 64.dp).background(bg, Pill).padding(horizontal = 24.dp),
             contentAlignment = Alignment.Center) {
             Label(label, if (enabled) Ds.white else OnDisabled, if (large) OmmType.primaryL else OmmType.primaryS, loading)
         }

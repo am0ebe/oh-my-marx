@@ -117,10 +117,10 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
 
     testImplementation(libs.junit)
-    testImplementation("org.json:json:20240303")  // android.jar stubs throw on JVM ➡ real org.json for MatrixTest
+    testImplementation(libs.org.json)  // android.jar stubs throw on JVM ➡ real org.json for MatrixTest
     // 📸 ShotsTest (see testOptions)
-    testImplementation("org.robolectric:robolectric:4.16")
+    testImplementation(libs.robolectric)
     testImplementation(platform(libs.compose.bom))
-    testImplementation("androidx.compose.ui:ui-test-junit4")
-    debugImplementation("androidx.compose.ui:ui-test-manifest")
+    testImplementation(libs.compose.ui.test.junit4)
+    debugImplementation(libs.compose.ui.test.manifest)
 }

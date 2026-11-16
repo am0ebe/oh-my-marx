@@ -41,6 +41,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import de.strix.marxversion.BuildConfig
 import de.strix.marxversion.R
@@ -238,11 +239,11 @@ fun SettingsScreen(vm: AppVm, askNotifPermission: () -> Unit) {
         val mailBody = tr("Was ist passiert / was wünschst du dir?\n\n\n(Version %s — ein Screenshot hilft)", "What happened / what would you like?\n\n\n(version %s — a screenshot helps)").f(ver)
         Gap(10)
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(20.dp, Alignment.CenterHorizontally)) {
-            CardAction(R.drawable.ic_public, tr("Webseite", "Website"), Blue) { runCatching { ctx.startActivity(android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse(pageUrl))) } }
+            CardAction(R.drawable.ic_public, tr("Webseite", "Website"), Blue) { runCatching { ctx.startActivity(android.content.Intent(android.content.Intent.ACTION_VIEW, pageUrl.toUri())) } }
             CardAction(R.drawable.ic_send, tr("App teilen", "Share app"), Blue) { sharePanel = true }
             // ⚖️ qa_1116 L4 #9: GPL as an icon ➡ th LICENSE file i th Forgejo repo (code link icon = 💬 Q5, not yet)
-            CardAction(R.drawable.ic_license, "GPL-3.0", Blue) { runCatching { ctx.startActivity(android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse(LICENSE_URL))) } }
-            CardAction(R.drawable.ic_feedback, tr("Feedback", "Feedback"), Red) { runCatching { ctx.startActivity(android.content.Intent(android.content.Intent.ACTION_SENDTO, android.net.Uri.parse("mailto:")).apply {
+            CardAction(R.drawable.ic_license, "GPL-3.0", Blue) { runCatching { ctx.startActivity(android.content.Intent(android.content.Intent.ACTION_VIEW, LICENSE_URL.toUri())) } }
+            CardAction(R.drawable.ic_feedback, tr("Feedback", "Feedback"), Red) { runCatching { ctx.startActivity(android.content.Intent(android.content.Intent.ACTION_SENDTO, "mailto:".toUri()).apply {
                 putExtra(android.content.Intent.EXTRA_EMAIL, arrayOf("omm@scagent.de"))
                 putExtra(android.content.Intent.EXTRA_SUBJECT, "Oh My Marx $ver")
                 putExtra(android.content.Intent.EXTRA_TEXT, mailBody)

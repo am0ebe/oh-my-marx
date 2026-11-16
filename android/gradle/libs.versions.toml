@@ -30,6 +30,10 @@ room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
 work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "work" }
+compose-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4" }
+compose-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
+org-json = { module = "org.json:json", version = "20240303" }
+robolectric = { module = "org.robolectric:robolectric", version = "4.16" }
 junit = { module = "junit:junit", version = "4.13.2" }
 kotlinx-serialization-json ={ module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
 
