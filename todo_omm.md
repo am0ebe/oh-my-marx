@@ -22,7 +22,7 @@
   - 🚀 DEV live = `0.11.0-dev.1116.2227` (@1116 22:27 = all lanes + sweep + answers, `4cd7962`)
   - ▶ nxt: 🦠 fon QA o th lanes ➡ Fable design spec (🦠: AFTER this round)
   - 👤 🦠: fon tst updater (above) · fon cold start `adb shell am start -W` (L6 before ⬄ after) · baseline profile = device run
-  - ⚠️ traps: new tr() string ➡ `bin/translate.py --only ui` or ship refuses (check_langs) · 0.10.0 notes say "read more" (r2.1 rm'd it) ➡ nxt Release says so · TodayScreen still calls fx directly (L1: `fx.play(amenFx(rare))` + RewardSlot, Fx.kt KDoc) · guard baseline strict both ways · 🔵 7 EN align gaps (ContentTest ratchet 7)
+  - ⚠️ traps: new tr() string ➡ `bin/translate.py --only ui` or ship refuses (check_langs) · 0.10.0 notes say "read more" (r2.1 rm'd it) ➡ nxt Release says so · guard baseline strict both ways · new plan days ➡ `translate.py --only a x` · EN gaps = 0 (ContentTest fails on any blank ➡ fix i align.py: PIN / labels)
 
 ## ‼️
 - ⭐🧪 **QA @1116** ➡ [qa_1116.md](qa_1116.md) — 14 ⚡ i 6 lanes (L3 share 1st) · 3 🎨 (➡ Fable spec aftr) · 2 🔍 · 💬 Qs ✔️ answered @1116 ➡ lanes built (D-039 · D-040) · Q8 revised = no Werkbank (D-041) · left: D3 joker · fon items

@@ -155,15 +155,13 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
     // 🃏 cards: 🔮 pull down = oracle card · 📳 shake = crisis card (+ red flash) — both land i front i th carousel
     val extras by vm.extraCards.collectAsStateWithLifecycle()
     val jump by vm.homeJump.collectAsStateWithLifecycle()
-    var kriseFx by remember { mutableStateOf(false) }
-    var swoosh by remember { mutableStateOf(false) }
-    var checkFx by remember { mutableStateOf(false) }   // "Tag geschafft" = ✔️ pop (≠ ☭, QA @1112)
-    var confetti by remember { mutableStateOf(false) }
+    // 🎉 fx = th app's 1 celebration queue (Fx.kt, MainActivity host) ➡ nvr on top o a badge dialog · was 4 direct overlays
+    val fx = LocalCelebrations.current
     val scroll = rememberScrollState()
     val scope = rememberCoroutineScope()
     val roast: () -> Unit = {
         vm.content.verses.filter { it.polemic && it.quoteDe.isNotBlank() }.randomOrNull()?.let {
-            vm.addCard(CardItem(it, CardItem.Kind.KRISE)); kriseFx = true
+            vm.addCard(CardItem(it, CardItem.Kind.KRISE)); fx?.play(Fx.Krise)
             if (de.strix.marxversion.logic.Orden.KRISE !in vm.orden.value) vm.flag("krise:" + System.currentTimeMillis())   // 1 flag per shake, stops once earned
  scope.launch { scroll.animateScrollTo(0) }
         }
@@ -179,8 +177,8 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
     val amen: (Verse) -> Unit = { v ->
         Toast.makeText(ctx, amenMsg, Toast.LENGTH_LONG).show()
         buzz(ctx, longArrayOf(0, 40, 60, 90))
-        if (fills) confetti = true else checkFx = true   // Q9 b @1116: quote-of-th-day = small ✓ pop only · ☭ swoosh = plan day done
-        vm.amen(v.id)
+        fx?.play(if (fills) Fx.Confetti else Fx.Check)   // D-039: quote-of-th-day = small ✓ pop only · ☭ swoosh = plan day done
+        vm.amen(v.id)   // AFTER play ➡ a new badge dialog queues behind th fx
     }
     // 🏠 Home tab tap ➡ scroll 2 top (th carousel jumps 2 card 1 itself)
     LaunchedEffect(jump) { if (jump > 0) scroll.animateScrollTo(0) }
@@ -339,9 +337,9 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
                 Button(onClick = {
                     val total = readingDays(days)
                     if (!doneToday && cardJustFilled(total + 1)) rankUp = cardsDone(total + 1) - 1
+                    // 🐛 @1116: ☭ got lost i 4708ab7 (✓ pop only) ➡ back (D-039): finishing th plan day = th rare one (full card = confetti)
+                    fx?.play(if (rankUp != null) Fx.Confetti else Fx.Swoosh)
                     vm.dayDone(plan.id, idx, day.verseIds); celebrate = true
-                    // 🐛 @1116: ☭ got lost i 4708ab7 (✓ pop only) ➡ back: finishing th plan day = th rare one (full card = confetti)
-                    if (rankUp != null) confetti = true else swoosh = true
                 },
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                     modifier = Modifier.fillMaxWidth()) { Text(tr("Tag geschafft! ✔️", "Day complete! ✔️"), fontSize = 18.sp) }
@@ -411,10 +409,6 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
     }  // inner padded Column
     }  // PullToRefreshBox
 
-    if (kriseFx) KriseFlash { kriseFx = false }
-    if (swoosh) SickleSwoosh { swoosh = false }
-    if (checkFx) CheckPop { checkFx = false }
-    if (confetti) Confetti { confetti = false }
 }
 
 /**

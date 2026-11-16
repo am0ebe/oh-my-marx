@@ -83,7 +83,7 @@ import kotlin.random.Random
  * - **D-034**: daily Amen = [Fx.Check] (CheckPop ≈ 1.2 s, ok ring, 📳 Confirm) · rare (rank-up · full stamp card · plan done) =
  *   [Fx.Big] (sickle swoosh + confetti) ➡ [amenFx]
  * - direct composables ([CheckPop] · [SickleSwoosh] · [Confetti] · [KriseFlash]) still work + hold th queue while they show
- *   (transition: TodayScreen calls them directly til it's moved 2 `fx.play`)
+ *   (TodayScreen moved 2 `fx.play` @1116 · left direct: confetti behind th "Stamp card full" dialog · NewOrdenDialog)
  * - **reduced motion** (animator duration scale 0): no movement, end state shown still ~0.8 s, 📳 + txt kept · confetti skipped
  * - **overlays never block input**: touches + back pass thru aft [PASS_THRU_MS]
  * - **📳 map** ([Haptics], `rememberHaptics()`): Primary = `confirm()` · toggle = `toggle(on)` · page turn = `tick()` ·
