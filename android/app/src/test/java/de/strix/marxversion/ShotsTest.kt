@@ -127,7 +127,7 @@ class ShotsTest {
         tap("Plans", true); tap("Luddites & AI"); shot("plan_detail")
     }
 
-    /** big round #4: day done ➡ 📜 Weiterlesen feed at th tail o Home (scroll ➡ more loads) */
+    /** day done ➡ Home ends at Marxoskop · 📜 endless feed = th reader's 📜 mode now (qa_1116 Q4/Q7) ➡ chapter_scroll */
     //   named z… = runs LAST: Room's marx.db survives between tests i 1 JVM ➡ a done day would leak into `screens`
     @Test fun zFeed() {
         rule.waitUntil(30_000) { rule.onAllNodesWithText("Today").fetchSemanticsNodes().isNotEmpty() }
@@ -138,9 +138,13 @@ class ShotsTest {
         rule.mainClock.advanceTimeBy(3000)     // 1st reading day ➡ "new badge" dialog, queued behind th CheckPop (ui/Fx.kt)
         if (rule.onAllNodesWithText("Keep going!").fetchSemanticsNodes().isNotEmpty()) { dialogShot("orden"); tap("Keep going!") }
         repeat(4) { scroll() }
-        shot("feed")
-        repeat(4) { scroll() }
-        shot("feed_2")
+        shot("feed")   // = Home's end (Marxoskop), no feed tail
+        // 📜 mode (runs last: th saved read_scroll can't leak into `screens`)
+        tap("Read", true); tap("p. 49")
+        rule.onAllNodesWithContentDescription("Endless scroll").onFirst().performClick()
+        rule.mainClock.advanceTimeBy(1000)
+        repeat(3) { scroll() }
+        shot("chapter_scroll")
     }
 
     @Test fun cards() {
