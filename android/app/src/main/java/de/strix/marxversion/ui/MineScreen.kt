@@ -48,7 +48,8 @@ import de.strix.marxversion.R
 import de.strix.marxversion.data.f
 
 /** ⚖️ licence text (Forgejo = th home repo, GitHub = mirror) */
-private const val LICENSE_URL = "https://git.scagent.de/am0/oh-my-marx/src/branch/main/LICENSE"
+private const val REPO_URL = "https://git.scagent.de/am0/oh-my-marx"
+private const val LICENSE_URL = "$REPO_URL/src/branch/main/LICENSE"
 
 /** 🔖 th bookmark mark = th same vector as i th reader's margin (gold-deep "kept"), nvr th 🔖 emoji (qa_1116 r2.6) */
 @Composable
@@ -253,10 +254,13 @@ fun SettingsScreen(vm: AppVm, askNotifPermission: () -> Unit) {
         val ver = BuildConfig.VERSION_NAME
         val mailBody = tr("Was ist passiert / was wünschst du dir?\n\n\n(Version %s — ein Screenshot hilft)", "What happened / what would you like?\n\n\n(version %s — a screenshot helps)").f(ver)
         Gap(10)
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(20.dp, Alignment.CenterHorizontally)) {
+        // 5 icons × 64dp: fixed 20dp gaps overflow a 360dp fon ➡ equal gaps (SpaceEvenly), all same size (qa_1116 Q5)
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
             CardAction(R.drawable.ic_public, tr("Webseite", "Website"), Blue) { runCatching { ctx.startActivity(android.content.Intent(android.content.Intent.ACTION_VIEW, pageUrl.toUri())) } }
             CardAction(R.drawable.ic_send, tr("App teilen", "Share app"), Blue) { sharePanel = true }
-            // ⚖️ qa_1116 L4 #9: GPL as an icon ➡ th LICENSE file i th Forgejo repo (code link icon = 💬 Q5, not yet)
+            // 💻 qa_1116 Q5 ✔️ (🦠 @1116: reverses r1's "can b seen on web") ➡ th code on Forgejo (home repo, GitHub = mirror)
+            CardAction(R.drawable.ic_forgejo, tr("Code", "Code"), Blue) { runCatching { ctx.startActivity(android.content.Intent(android.content.Intent.ACTION_VIEW, REPO_URL.toUri())) } }
+            // ⚖️ qa_1116 L4 #9: GPL as an icon ➡ th LICENSE file i th Forgejo repo
             CardAction(R.drawable.ic_license, "GPL-3.0", Blue) { runCatching { ctx.startActivity(android.content.Intent(android.content.Intent.ACTION_VIEW, LICENSE_URL.toUri())) } }
             CardAction(R.drawable.ic_feedback, tr("Feedback", "Feedback"), Red) { runCatching { ctx.startActivity(android.content.Intent(android.content.Intent.ACTION_SENDTO, "mailto:".toUri()).apply {
                 putExtra(android.content.Intent.EXTRA_EMAIL, arrayOf("omm@scagent.de"))
