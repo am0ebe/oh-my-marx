@@ -18,6 +18,11 @@ _SDD: code says **wh** · th file says **y** · drift = a bug · fmt ➡ `pr/vib
 - 🔥 hot files (1 owner at a ti — fan-out lanes nvr split these): `assets/content/i18n_*.json` + `data/i18n/*.jsonl` (translate pass = fan-in only) · `android/app/build.gradle.kts` (version) · `ui/Changelog.kt` · `res/values*/strings.xml` · `TodayScreen.kt` · `MineScreen.kt` · `Share.kt`
 
 ## 🧾 decisions (newest on top)
+### D-041 @1116 · no Werkbank tab · Circles stays · Hooked entry stays i th top bar · ✔️ (🦠 qa_1116 Q8 revised)
+- **ctx**: qa_1116 D5 proposed a "Werkbank" bottom tab (Hooked notes + tools) · Q8 1st answer = b (replace Circle) ➡ revised same day
+- **dc**: 5 tabs stay (Today · Plans · Read · Circle · My Capital) · 🪝 Hooked entry stays at th top as now
+- **y**: 6 tabs = 2 much (M3 max 5) · Circles comes alive once Matrix is tested (later) · top 🪝 = a bit odd, accepted
+- **alt**: Werkbank replaces Circle (❌ Circles has a future) · 6th tab (❌ crowded)
 ### D-040 @1116 · reader = 2 modes (📖 pages ⬄ 📜 endless) til 🦠 picks 1 · feed leaves Home · ✔️ (🦠 qa_1116 Q4 + Q7)
 - **ctx**: endless feed lived at th end o Home (D-024) ⬄ "daily ≤2 min" goal · 🦠 r2: Read = 2 modes, Home ends at Marxoskop
 - **dc**: toggle chip i th chapter's slim head (D-031 b) · remembers last (Prefs `read_scroll`) · 📜 = `ReadOnFeed` fr th current page · Home: no feed tail
