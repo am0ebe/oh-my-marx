@@ -18,6 +18,15 @@ _SDD: code says **wh** · th file says **y** · drift = a bug · fmt ➡ `pr/vib
 - 🔥 hot files (1 owner at a ti — fan-out lanes nvr split these): `assets/content/i18n_*.json` + `data/i18n/*.jsonl` (translate pass = fan-in only) · `android/app/build.gradle.kts` (version) · `ui/Changelog.kt` · `res/values*/strings.xml` · `TodayScreen.kt` · `MineScreen.kt` · `Share.kt`
 
 ## 🧾 decisions (newest on top)
+### D-040 @1116 · reader = 2 modes (📖 pages ⬄ 📜 endless) til 🦠 picks 1 · feed leaves Home · ✔️ (🦠 qa_1116 Q4 + Q7)
+- **ctx**: endless feed lived at th end o Home (D-024) ⬄ "daily ≤2 min" goal · 🦠 r2: Read = 2 modes, Home ends at Marxoskop
+- **dc**: toggle chip i th chapter's slim head (D-031 b) · remembers last (Prefs `read_scroll`) · 📜 = `ReadOnFeed` fr th current page · Home: no feed tail
+- **y**: 🦠 wants both tried b4 picking 1 design (Fable spec aftr this round) · **alt**: ⚙️ toggle · 1st-open choice (❌ Q7 a)
+- **ck**: `ShotsTest.zFeed` ➡ `chapter_scroll` · `ReadScreen.kt` ChapterScreen
+### D-039 @1116 · ☭ swoosh = plan day done · quote-of-th-day Amen = small ✓ pop · amends D-034 · ✔️ (🦠 Q9 b + 🐛)
+- **ctx**: D-034 b (swoosh = rare) + QA r2 `4708ab7` turned "Day complete!" into a ✓ pop ➡ th hammer + sickle nvr showed · 🦠: "finish th day's read plan ➡ boom"
+- **dc**: "Day complete!" ➡ ☭ swoosh (full stamp card ➡ confetti instead) · quote-of-th-day Amen ➡ ✓ pop (full card ➡ confetti)
+- **y**: th plan day = th real effort ➡ th big reward · th quote tap = cheap ➡ small · **ck**: `TodayScreen.kt` `amen` + plan Button
 ### D-038 @1114 · updater: notify at once (all installers) · browser installs ASK by dflt, ⚙️ opt-in auto · amends D-023 · ✔️ (fon tst pending)
 - **ctx**: 🦠 deployed 1114, DEV (1113, Obtainium) showed nothing ("app doesnt show UPDATE popup") · Obtainium path waited 8 h (GRACE_H) + worker ran ~daily only ➡ nothing visible 4 hours
 - **dc**: 🦠 "do notification immediately" ➡ GRACE_H dropped · + 1 OneTime check on evy app start (WorkManager, network) next 2 th daily one · "browser apk selfupdate shd ask user … o they select autoupdate in settings" ➡ `Settings.autoUpdate` dflt OFF ➡ notification ➡ tap = UpdateDialog (1 confirm) · ON (⚙️ row, browser installs only) + Android 12+ + we r installer ➡ silent (D-023 path)

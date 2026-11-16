@@ -18,12 +18,13 @@
     | normal | ✔️ Obtainium follows th page (same as DEV) | ❌ untestable yet: 0.9.0 has th OLD banner (➡ web page, no 1-tap) · 1st real self-update = 0.10.0 ➡ 0.10.1 |
     - 0.9.0 ➡ 0.10.0 APK users: banner ➡ page ➡ install by hand 1× (then 1-tap / silent fr there)
 - ▶ **RESUME @1116 eos** — v0.10.0 shipped (stable) · aftr it 6 ⚡ lanes fr [qa_1116.md](qa_1116.md) pushed (`1b020cd`, lint + 90 tsts green) · ❌ not deployed · DEV live = `0.10.0-dev.1116.1253` (pre-lanes)
-  - ▶ nxt: 🦠 answers 💬 Q1-Q9 (qa_1116) ➡ build th blocked lanes (feed Q4/Q7 · streak Q2 · fx Q9 · fgj Q5 · DEV unlock Q6) ➡ `bin/deploy.sh` ➡ fon QA o th lanes · then Fable design spec (🦠: AFTER this round)
-  - 👤 🦠: Qs · fon tst updater (above) · fon cold start `adb shell am start -W` (L6 before ⬄ after) · baseline profile = device run
+  - ✔️ Q1-Q9 answered + built @1116 (qa_1116 § answers: ☭ back · 📖⬄📜 · DEV unlock · Forgejo icon · stamps label) · ❌ deployed
+  - ▶ nxt: `bin/deploy.sh` ➡ fon QA o th lanes · Q8 Werkbank = wh goes in (D5) ➡ Fable design spec (🦠: AFTER this round)
+  - 👤 🦠: Werkbank contents (Circles inside?) · fon tst updater (above) · fon cold start `adb shell am start -W` (L6 before ⬄ after) · baseline profile = device run
   - ⚠️ traps: new tr() string ➡ `bin/translate.py --only ui` or ship refuses (check_langs) · 0.10.0 notes say "read more" (r2.1 rm'd it) ➡ nxt Release says so · TodayScreen still calls fx directly (L1: `fx.play(amenFx(rare))` + RewardSlot, Fx.kt KDoc) · guard baseline strict both ways · 🔵 7 EN align gaps (ContentTest ratchet 7)
 
 ## ‼️
-- ⭐🧪 **QA @1116** ➡ [qa_1116.md](qa_1116.md) — 14 ⚡ i 6 lanes (L3 share 1st) · 3 🎨 (➡ Fable spec aftr) · 2 🔍 · 💬 6 Qs 4 🦠 · ❌ code til Qs back
+- ⭐🧪 **QA @1116** ➡ [qa_1116.md](qa_1116.md) — 14 ⚡ i 6 lanes (L3 share 1st) · 3 🎨 (➡ Fable spec aftr) · 2 🔍 · 💬 Qs ✔️ answered @1116 ➡ lanes built (D-039 · D-040) · left: Q8 Werkbank (D5 design) · D3 joker · fon items
 - ⭐🧪 **QA sprint 0.9.x** — r1-r3 ✔️ · left ➡ [qa_1112.md](qa_1112.md) (🎨 10 design · 🔍 5 research · 💬 Qs) · ❓ streak widget "shd show 2 at start" = ? unanswered
   - later (needs design): 📖 real book look · ⏰ daily verse off-switch · name entry · 🔮 Marxoskop tiles · 🔓 Lesekreis unlock · 🏷️ quotes off-topic ➡ [notes.md § 🗃️](notes.md)
 - 📨⭐ **user feedback** — 1st real users = gold · log (M · M2 · Jan · Mi) ➡ `feedback.md` + [notes.md § 🗃️](notes.md) · phase 1 ✔️ (page mail + GH issue forms + app ⚙️ btn)
