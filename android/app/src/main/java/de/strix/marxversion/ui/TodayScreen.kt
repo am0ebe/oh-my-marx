@@ -319,8 +319,8 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
                 }
             }
             Gap(8)
-            // big round #3: snippet + "weiterlesen" (was a 2-3 k char wall above "Tag geschafft")
-            day.verseIds.mapNotNull { vm.content.verse(it) }.forEach { VerseView(vm, it, speaker, preview = true); Gap(4) }
+            // qa_1116 r2.1: full txt, no "weiterlesen · ~1 min" expand (big round #3 snippet off · VerseView `preview` stays 4 later)
+            day.verseIds.mapNotNull { vm.content.verse(it) }.forEach { VerseView(vm, it, speaker); Gap(4) }
             // 💡 curated plans (🤖 Ludditen): NEW bridge txt Marx ➡ today, under th original passage (#6)
             val br = bridge(day)
             if (br.isNotBlank()) {
