@@ -74,8 +74,7 @@ class ContentRepo(private val context: Context) {
     lateinit var chapters: List<Chapter>; private set
     lateinit var plans: List<Plan>; private set
     private lateinit var byId: Map<String, Verse>
-    private lateinit var notes: Map<Pair<String, String>, Note>
-    private var tables: Map<Lang, Tr> = emptyMap()
+    private val tables = java.util.concurrent.ConcurrentHashMap<Lang, java.util.Optional<Tr>>()
 
     var loaded = false; private set
 
@@ -89,18 +88,25 @@ class ContentRepo(private val context: Context) {
         verses = read("verses.json")
         chapters = read("chapters.json")
         plans = read("plans.json")
-        notes = read<List<Note>>("notes.json").associateBy { it.kap to it.n }
         byId = verses.associateBy { it.id }
-        // translation tables: missing file (not yet translated) = fine ➡ EN fallback
-        tables = Lang.entries.mapNotNull { l -> runCatching { l to read<Tr>(l.file) }.getOrNull() }.toMap()
+        // ⚡ qa_1116 L6 (startup 2-3 s): was 11 i18n tables (5.3 MB) + footnotes (1.1 MB) parsed here = 62 % o th 10.4 MB
+        //   ➡ now lazy: tr(lang) parses only th lang u use (DE/EN: none) · footnotes on 1st use / warm() aftr th 1st frame
         loaded = true
     }
 
+    /** footnotes (1.1 MB) · lazy = synchronized ➡ worker + UI safe */
+    private val notesMap by lazy { read<List<Note>>("notes.json").associateBy { it.kap to it.n } }
+
+    /** parse wh th 1st screen doesn't need, off th main thread, aftr it's up (AppVm) ➡ 1st footnote tap = no hitch */
+    fun warm() { notesMap.size }
+
     fun verse(id: String): Verse? = byId[id]
-    fun note(kap: String, n: String): Note? = notes[kap to n]
+    fun note(kap: String, n: String): Note? = notesMap[kap to n]
     fun chapter(kap: String): List<Verse> = verses.filter { it.kap == kap }
     fun plan(id: String): Plan? = plans.firstOrNull { it.id == id }
-    fun tr(lang: Lang): Tr? = tables[lang]
+    /** th lang's UI + quotes table, parsed on 1st ask + kept · missing file (DE/EN, not yet translated) = null ➡ EN fallback
+     *  AppVm asks on IO 1st (start + lang change) ➡ th composition's call = a cache hit, nvr a parse on th main thread */
+    fun tr(lang: Lang): Tr? = tables.getOrPut(lang) { java.util.Optional.ofNullable(runCatching { read<Tr>(lang.file) }.getOrNull()) }.orElse(null)
 
     // full text: only th cur lang i memory (5 × ~2.5 MB parsed = too much 4 small fons) · DE/EN live i verses.json
     private var fullLang: Lang? = null

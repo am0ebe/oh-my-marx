@@ -27,6 +27,7 @@ import de.strix.marxversion.notify.schedule
 import de.strix.marxversion.data.Update
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -223,12 +224,20 @@ class AppVm(app: Application) : AndroidViewModel(app) {
     private val _full = MutableStateFlow<Pair<Lang, Full?>?>(null)
     val full: StateFlow<Pair<Lang, Full?>?> = _full
     private suspend fun loadFull(l: Lang) {
-        if (_full.value?.first != l) _full.value = l to withContext(Dispatchers.IO) { content.full(l) }
+        if (_full.value?.first != l) _full.value = l to withContext(Dispatchers.IO) {
+            content.tr(l)   // ⚡ L6: this lang's UI table parsed here (IO), b4 th UI flips ➡ MainActivity's tr() = cache hit
+            content.full(l)
+        }
     }
 
     init {
         // parsing ~6 MB JSON on th main thread would freeze th UI ➡ IO dispatcher
-        viewModelScope.launch(Dispatchers.IO) { content.load(); _loaded.value = true; refreshWidgets(app) }
+        viewModelScope.launch(Dispatchers.IO) {
+            content.load()
+            content.tr(marx.prefs.settings.first().lang)   // ⚡ L6: saved lang's table b4 `loaded` ➡ 1st frame nvr parses on main
+            _loaded.value = true; refreshWidgets(app)
+            content.warm()                                 // footnotes, aftr th 1st screen is up
+        }
         // 🔁 pipeline renamed verse ids (FÜFNZEHNTES fix @1113) ➡ marks + read log follow, once (data/IdMoves.kt)
         viewModelScope.launch(Dispatchers.IO) { de.strix.marxversion.data.IdMoves.migrate(app, marx.db, marx.prefs) }
         // app start (+ any lang change not via setLang) ➡ load th book 4 th saved lang · no-op if setLang alr did
