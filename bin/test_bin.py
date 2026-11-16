@@ -167,6 +167,27 @@ class AlignEn(unittest.TestCase):
         self.assertEqual(parts, ["A first para.", "B second para."])
         self.assertEqual(align.split_en("Only one.", [5, 5]), ["Only one.", ""])
 
+    # qa_1116 #12 (7 EN gaps ➡ 0)
+    def test_sentence_ends_aftr_closing_quote_not_aftr_mr(self):
+        s = align.sentences("He sums up: “long hours.” The report trusts “a manufacture”. Says Mr. Redgrave, fine.", align.SENT)
+        self.assertEqual(s, ["He sums up:", "“long hours.”", "The report trusts “a manufacture”.", "Says Mr. Redgrave, fine."])
+
+    def test_too_few_sentences_cut_at_semicolon_then_longest_absatz_wins(self):
+        # 23,215/216: short DE heading + body ⬄ 1 EN sentence ➡ body gets it, not th heading
+        self.assertEqual(align.split_en("Not so excessive yet here", [19, 121]), ["", "Not so excessive yet here"])
+        # 13,107/109: 2 quotes joined by `;” and` ➡ 1 each
+        self.assertEqual(align.split_en("“Co-operation of workpeople;” and on the other hand, as “a vast automaton.”", [248, 297]),
+                         ["“Co-operation of workpeople;”", "and on the other hand, as “a vast automaton.”"])
+        # tables: old rule (all on th 1st)
+        self.assertEqual(align.split_en("A | b | c", [5, 50], first=True), ["A | b | c", ""])
+
+    def test_pin_forces_bead_start(self):
+        de = ["Kurz.", "Grotesk erscheint dies in Druckereien.", "Jedes Kind muss vorher die Schule besuchen, sagt das Gesetz."]
+        en = ["Short, and also a sentence about grotesque things.", "Horribly grotesque in print works.", "Every child must attend school, says the act."]
+        pinned = align.align(de, en, pins={1: "Horribly grotesque"})
+        self.assertTrue(any(d and d[0] == 1 and e and e[0] == 1 for d, e in pinned), pinned)   # DE 1 starts a bead at EN 1
+        self.assertFalse(any(1 in d and d[0] != 1 for d, _ in pinned), pinned)                 # nvr glued 2 DE 0
+
     def test_toc_dropped(self):
         body = '<h3>Chapter One</h3><p class="toc">Contents</p><p class="index">A. Elementary</p><h3>SECTION 1</h3><p>The wealth'
         out = align.drop_toc(body)

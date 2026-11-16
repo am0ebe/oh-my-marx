@@ -49,9 +49,10 @@ class ContentTest {
     @Test fun englishReaderData() {
         assertTrue("1,1 EN = th opening, not th TOC", verses.first { it.id == "1,1" }.en.startsWith("The wealth of those societies"))
         assertTrue("no TOC lines as body", verses.none { Regex("""^(A\. Elementary|Section 1 [—-])""").containsMatchIn(it.en) })
-        // ratchet (qa_1116 #12 "German passages i EN"): 7 left = align misses 8,52-53 · 13,58 · 13,109 · 20,13 · 23,83 · 23,216
-        //   app shows them w "(no English paragraph here — German original:)" · fill i align.py ➡ lower this nr
-        assertTrue("≤ 7 verses wo EN (was 199)", verses.count { it.en.isBlank() } <= 7)
+        // qa_1116 #12 "German passages i EN": 199 ➡ 7 ➡ 0 @1116 (align.py: quote-aware sentences · Mr. · 📌 PIN · 🏷️ labels)
+        //   a blank one = app shows "(no English paragraph here — German original:)" ➡ fix i align.py, don't raise this
+        assertEquals("verses wo EN (was 199)", emptyList<String>(), verses.filter { it.en.isBlank() }.map { it.id })
+        assertTrue("20,13 = Redgrave's comparison (was glued 2 20,14)", verses.first { it.id == "20,13" }.en.startsWith("“This comparison"))
         val titled = verses.filter { it.secTitle.isNotBlank() }
         assertTrue("evy DE section title hs an EN one", titled.all { it.secTitleEn.isNotBlank() })
         assertEquals("4. The Fetishism of Commodities and the Secret Thereof", verses.first { it.sec == "1.4" }.secTitleEn)

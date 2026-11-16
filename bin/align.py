@@ -22,6 +22,13 @@ EN_PREFACES = {"V1": ["p1"], "V2": ["p3"], "V3": ["p2", "p4"], "V4": ["p5"], "V5
 BEADS = {(1, 1): 0.0, (1, 2): 0.6, (2, 1): 0.6, (2, 2): 1.2, (1, 0): 2.5, (0, 1): 2.5} \
         | {(k, 1): 0.5 + 0.4 * k for k in range(3, 7)} | {(1, k): 0.5 + 0.4 * k for k in range(3, 7)}
 # ⬆ k-1 beads: marxists.org merges paragraphs i places (ch33: 12 EN ⬄ 34 DE)
+# 📌 DP misses (qa_1116 #12): DE id ➡ its EN paragraph's opening · th pinned DE Absatz must START a bead that starts at
+#   that EN paragraph (13,58 ⬄ "Horribly grotesque" · 20,13 ⬄ "This comparison": DP glued them 2 th neighbour)
+PIN = {"13,58": "Horribly grotesque", "20,13": "“This comparison"}
+# 🏷️ language-neutral DE labels: footnote mark only ("[95]") · numbered place name ("12. Worcestershire.", ch.23) whose
+#   name is i th EN chapter txt too ➡ nvr eat an EN sentence · their EN = th DE label (was: 1st sentence o th body ➡ shifted)
+MARKS_ONLY = re.compile(r"^(\[\d+[a-z]?\]\s*)+$")
+PLACE = re.compile(r"^\d+\.\s+([A-ZÄÖÜ][\w\-]{1,30})\.$")
 
 def clean(frag):
     frag = re.sub(r'<sup class="enote">\s*<a [^>]*>\s*\[?(\d+[a-z]?)\]?\s*</a>\s*</sup>', r" [\1] ", frag, flags=re.S | re.I)
@@ -107,15 +114,43 @@ class Heads:
     def cur(self):
         return [self.stack[k] for k in sorted(self.stack)]
 
-SENT = r"(?<=[.!?:;])\s+(?=[A-Z“\"‘(\[0-9])"
+# sentence end = . ! ? : ; (+ a closing quote/bracket: `…power.” Then` was 1 sentence ➡ 8,52-53 got no EN)
+SENT = r"(?:(?<=[.!?:;])|(?<=[.!?:;][”\"’)]))\s+(?=[A-Z“\"‘(\[0-9])"
+SOFT = r"(?:(?<=[;:])|(?<=[;:][”\"’]))\s+"   # fallback when a chunk hs fewer sentences than DE Absätze (`…power;” and on th oth hand`)
+ABBR = re.compile(r"\b(?:Mr|Mrs|Messrs|Dr|St|Rev|Sir|viz|cf)\.$")   # "says Mr. Redgrave" ≠ sentence end
 
-def split_en(en_txt, de_lens):
+
+def sentences(txt, pat):
+    out = []
+    for x in (y.strip() for y in re.split(r"\s*¶\s*|" + pat, txt) if y and y.strip()):
+        if out and ABBR.search(out[-1]):
+            out[-1] += " " + x
+        else:
+            out.append(x)
+    return out
+
+
+def split_en(en_txt, de_lens, first=False):
     """1 EN chunk ⬄ k DE Absätze ➡ k EN pieces, cut at th sentence boundary closest 2 each DE cumulative length share
-    (monotonic · evy piece ≥1 sentence while there r enough) · was: all EN on th 1st Absatz, rest "no English paragraph here\""""
+    (monotonic · evy piece ≥1 sentence while there r enough) · was: all EN on th 1st Absatz, rest "no English paragraph here\"
+    fewer sentences than Absätze ➡ also cut at ; / : · still fewer ➡ th LONGEST Absätze get them (short ones stay empty)
+    first = old rule 4 beads w tables: 1 piece ➡ all on th 1st Absatz, no ; / : cuts"""
     k = len(de_lens)
-    sents = [x.strip() for x in re.split(r"\s*¶\s*|" + SENT, en_txt) if x and x.strip()]
-    if k == 1 or len(sents) < 2:
+    sents = sentences(en_txt, SENT)
+    if first and len(sents) < 2:
         return [en_txt] + [""] * (k - 1)
+    if k > 1 and len(sents) < k and not first:
+        sents = [p for s in sents for p in sentences(s, SOFT)]
+    if k == 1 or len(sents) < 2:
+        out = [""] * k
+        out[max(range(k), key=lambda i: de_lens[i])] = en_txt
+        return out
+    if len(sents) < k and not first:
+        keep = sorted(sorted(range(k), key=lambda i: -de_lens[i])[:len(sents)])
+        out = [""] * k
+        for i, s in zip(keep, sents):
+            out[i] = s
+        return out
     total_de, total_en = sum(de_lens) or 1, sum(len(x) for x in sents) or 1
     cum, acc = [], 0
     for x in sents:
@@ -149,7 +184,18 @@ def words_de(t):
     ws = set(re.findall(r"\w+", t))
     return ws | {w[:-1] for w in ws if w.endswith("s")}
 
-def align(de, en, de_fn=None):
+def pinned_ok(i, a, j, b, pin_de, pin_en):
+    """📌 a bead (DE i..a, EN j..b) may not swallow a pinned DE Absatz o EN paragraph unless it STARTS w both"""
+    for p in range(i, a):
+        if p in pin_de and not (p == i and b > j and pin_en.get(j) == p):
+            return False
+    for q in range(j, b):
+        if q in pin_en and not (q == j and a > i and pin_en[q] == i):
+            return False
+    return True
+
+
+def align(de, en, de_fn=None, pins=None):
     """DP ➡ list o (de_idx[], en_idx[]) beads
     de_fn[i] = txt o th footnotes DE Absatz i cites · Moore/Aveling sometimes inline a long fn as paragraphs (13,125 ⬄
     fn 194: Danzig · Leyden · Boxhorn) ➡ length may match txt OR txt + fns (+ FN_PEN) · fn names count as DE words"""
@@ -161,6 +207,9 @@ def align(de, en, de_fn=None):
     N_en = [names_en(x) for x in en]
     W_de = [words_de(x + " " + (de_fn[i] if de_fn else "")) for i, x in enumerate(de)]
     n, m = len(de), len(en)
+    pin_de = dict(pins or {})   # DE idx ➡ EN opening
+    pin_en = {j: i for i, pre in pin_de.items() for j in range(m) if en[j].startswith(pre)}
+    pin_de = {i: pre for i, pre in pin_de.items() if i in pin_en.values()}   # opening not found ➡ pin ignored
     INF = float("inf")
     D = [[INF] * (m + 1) for _ in range(n + 1)]
     B = [[None] * (m + 1) for _ in range(n + 1)]
@@ -171,7 +220,7 @@ def align(de, en, de_fn=None):
                 continue
             for (di, dj), pen in BEADS.items():
                 a, b = i + di, j + dj
-                if a > n or b > m:
+                if a > n or b > m or (pin_de and not pinned_ok(i, a, j, b, pin_de, pin_en)):
                     continue
                 ld = sum(len(x) for x in de[i:a])
                 le = sum(len(x) for x in en[j:b])
@@ -211,14 +260,21 @@ def main():
         en_notes_all |= en_notes
         vs = [v for v in verses if v["kap"] == k]
         fn_txt = {x["n"]: x["de"] for x in notes_de if x["kap"] == k}
-        beads = align([v["de"] for v in vs], [p["en"] for p in en_paras], [" ".join(fn_txt.get(f, "") for f in v["fn"]) for v in vs])
+        pins = {i: PIN[v["id"]] for i, v in enumerate(vs) if v["id"] in PIN}
+        beads = align([v["de"] for v in vs], [p["en"] for p in en_paras], [" ".join(fn_txt.get(f, "") for f in v["fn"]) for v in vs], pins)
+        en_raw = clean(" ".join((EN / f"{s}.htm").read_text(encoding="utf-8") for s in stems)).lower()   # incl. EN headings
+        label = {i for i, v in enumerate(vs) if v["kind"] != "meta" and (MARKS_ONLY.match(v["de"])
+                 or ((m := PLACE.match(v["de"])) and m.group(1).lower() in en_raw))}
         for di, ej in beads:
             en_txt = " ¶ ".join(en_paras[j]["en"] for j in ej)
             en_ch = en_paras[ej[0]]["ch"] if ej else None
-            text_di = [i for i in di if vs[i]["kind"] != "meta"] or di   # headings don't eat EN sentences
-            pieces = dict(zip(text_di, split_en(en_txt, [len(vs[i]["de"]) for i in text_di]))) if en_txt else {}
+            # headings + 🏷️ labels don't eat EN sentences
+            text_di = [i for i in di if vs[i]["kind"] != "meta" and i not in label] or [i for i in di if i not in label] or di
+            # tables i th bead ➡ no "longest Absatz" fallback (it moved table EN off th 1st table · 13,140)
+            tables = any(vs[i]["kind"] == "table" for i in text_di)
+            pieces = dict(zip(text_di, split_en(en_txt, [len(vs[i]["de"]) for i in text_di], tables))) if en_txt else {}
             for i in di:
-                vs[i]["en"] = pieces.get(i, "")  # k-1 bead ➡ EN split by sentences (was: all on th 1st DE Absatz)
+                vs[i]["en"] = vs[i]["de"] if i in label else pieces.get(i, "")  # k-1 bead ➡ EN split by sentences
                 vs[i]["en_ch"] = en_ch
                 vs[i]["en_head"] = en_paras[ej[0]]["head"] if ej else []
                 vs[i]["bead"] = f"{len(di)}-{len(ej)}"
