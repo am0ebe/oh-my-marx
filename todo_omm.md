@@ -17,9 +17,10 @@
     | DEV | ✔️ fon: Obtainium 1h ck auto-updated (🦠) · app's own notif ➡ obtainium://refresh = unit tst only | ⏳ unit tsts ✔️ · fon = 5 steps above |
     | normal | ✔️ Obtainium follows th page (same as DEV) | ❌ untestable yet: 0.9.0 has th OLD banner (➡ web page, no 1-tap) · 1st real self-update = 0.10.0 ➡ 0.10.1 |
     - 0.9.0 ➡ 0.10.0 APK users: banner ➡ page ➡ install by hand 1× (then 1-tap / silent fr there)
-- ▶ **RESUME @1116 eos** — v0.10.0 shipped (stable) · aftr it 6 ⚡ lanes fr [qa_1116.md](qa_1116.md) pushed (`1b020cd`, lint + 90 tsts green) · ❌ not deployed · DEV live = `0.10.0-dev.1116.1253` (pre-lanes)
-  - ✔️ Q1-Q9 answered + built @1116 (qa_1116 § answers: ☭ back · 📖⬄📜 · DEV unlock · Forgejo icon · stamps label) · ❌ deployed
-  - ▶ nxt: `bin/deploy.sh` ➡ fon QA o th lanes ➡ Fable design spec (🦠: AFTER this round)
+- ▶ **RESUME @1116 eos** — v0.10.0 shipped (stable) · aftr it 6 ⚡ lanes fr [qa_1116.md](qa_1116.md) pushed (`1b020cd`, lint + 90 tsts green)
+  - ✔️ Q1-Q9 answered + built @1116 (qa_1116 § answers: ☭ back · 📖⬄📜 · DEV unlock · Forgejo icon · stamps label)
+  - 🚀 DEV live = `0.11.0-dev.1116.2227` (@1116 22:27 = all lanes + sweep + answers, `4cd7962`)
+  - ▶ nxt: 🦠 fon QA o th lanes ➡ Fable design spec (🦠: AFTER this round)
   - 👤 🦠: fon tst updater (above) · fon cold start `adb shell am start -W` (L6 before ⬄ after) · baseline profile = device run
   - ⚠️ traps: new tr() string ➡ `bin/translate.py --only ui` or ship refuses (check_langs) · 0.10.0 notes say "read more" (r2.1 rm'd it) ➡ nxt Release says so · TodayScreen still calls fx directly (L1: `fx.play(amenFx(rare))` + RewardSlot, Fx.kt KDoc) · guard baseline strict both ways · 🔵 7 EN align gaps (ContentTest ratchet 7)
 
