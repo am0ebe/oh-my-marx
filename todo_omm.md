@@ -17,10 +17,9 @@
     | DEV | ✔️ fon: Obtainium 1h ck auto-updated (🦠) · app's own notif ➡ obtainium://refresh = unit tst only | ⏳ unit tsts ✔️ · fon = 5 steps above |
     | normal | ✔️ Obtainium follows th page (same as DEV) | ❌ untestable yet: 0.9.0 has th OLD banner (➡ web page, no 1-tap) · 1st real self-update = 0.10.0 ➡ 0.10.1 |
     - 0.9.0 ➡ 0.10.0 APK users: banner ➡ page ➡ install by hand 1× (then 1-tap / silent fr there)
-- ▶ **RESUME @1116 eos** — v0.10.0 shipped (stable) · aftr it 6 ⚡ lanes fr [qa_1116.md](qa_1116.md) pushed (`1b020cd`, lint + 90 tsts green)
-  - ✔️ Q1-Q9 answered + built @1116 (qa_1116 § answers: ☭ back · 📖⬄📜 · DEV unlock · Forgejo icon · stamps label)
-  - 🚀 DEV live = `0.11.0-dev.1116.2227` (@1116 22:27 = all lanes + sweep + answers, `4cd7962`)
-  - ▶ nxt: 🦠 fon QA o th lanes ➡ Fable design spec (🦠: AFTER this round)
+- ▶ **RESUME @1117 eos** — v0.10.0 = stable · qa_1116 Q1-Q9 answered + built (D-039/040/041) · lint + 95 Kotlin + 31 py tsts green · all pushed
+  - 🚀 DEV live = `0.11.0-dev.1116.2227` (`4cd7962`) · ⚠️ NOT on it yet: EN gaps 0 (`d162d80`) · fx queue (`2162823`) · Matrix tsts · 0.11.0 notes draft (`230988f`)
+  - ▶ nxt: `bin/deploy.sh` (aftr 🦠's fon QA o 2227, or on "deploy") ➡ fon QA ➡ Fable design spec (🦠: AFTER this round)
   - 👤 🦠: fon tst updater (above) · fon cold start `adb shell am start -W` (L6 before ⬄ after) · baseline profile = device run
   - ⚠️ traps: new tr() string ➡ `bin/translate.py --only ui` or ship refuses (check_langs) · `Release("0.11.0")` = 🤖 DRAFT i Changelog.kt (10 lines, fixes 0.10.0's "read more") ➡ 🦠 review + date b4 `bin/ship.sh 0.11.0` · guard baseline strict both ways · new plan days ➡ `translate.py --only a x` · EN gaps = 0 (ContentTest fails on any blank ➡ fix i align.py: PIN / labels)
 
@@ -62,18 +61,14 @@
 - 📦 gestures left: "Morgen"-teaser blurred + locked · shortcut "Weiterlesen" (last-read pref) · 🪝 Hooked notes 4 th new gestures (pull = slot machine · stories · shake = variable reward)
 - 📦 "Was nervt?" free-txt + embeddings · Mehrwert-Rechner · Fußnoten-Burns plan (Dunning "300 %" = fn 24:250) · Feiertage 2 (+ political holidays + remembrance days ~evy 1-2 w · Marx as Santa · own notif txt · Black Friday ➡ Fetisch-Detox · widget colours) · export "Mein Kapital" (md/json)
 - 🔍 tags over-applied ("kapitalist" 83 %) ➡ relative re-tag
-  - ✔️ 🔍 @1116: 🐛 root = score.py `maxItems: 4` ➡ LLM pads: **1511/1511 quotes hv exactly 4 tags** · kapitalist 83 % · krise 61 % · lohn 59 %
-    - Marxoskop chips (j ≥ 3, any tag match): chef 1233/1511 · krise 917 · lohn 889 · ki 454 ⬄ miete 94 · ueberstunden 178 ➡ big chips ≈ random quote
-    - 1st tag ≠ relevance either (lohn 1st on 779 = 52 %)
-  - 🤖 nxt: retag pass (local LLM ~35 min): "0-2 tags, only if th passage is ABOUT it" + per-tag weight 1-3 ➡ chip = weight ≥ 2 · guard min ~30 quotes/chip (miete/konsum thin) · ⚠️ changes Marxoskop picks ➡ aftr th QA round, not mid
+  - ✔️ 🔍 @1116: root = score.py `maxItems: 4` ➡ LLM pads evy quote 2 4 tags ➡ chip "chef" 1233/1511 ≈ random (miete only 94)
+  - 🤖 nxt (aftr QA round): retag "0-2 tags, only if ABOUT it" + weight 1-3 · chip = weight ≥ 2 · guard ≥ ~30 quotes/chip
+- 🤖🏗️ **plan versioning** b4 any plan content fix (R1 🟡 wertform cuts · jahr 365 · qa_1116 § R1): days r addressed by index ➡ changing cuts shifts ppl mid-plan ➡ keep old cut fr running plans (plan id + version i Prefs)
 - 🤖 aft QA: rm page fotos (boox proc step 8)
 - _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm wo 🦠 ok · dropped @1113 ➡ [notes.md § 🗃️](notes.md)_
 
 ## ✔️
-- ✔️ @1116b (🔵 sweep, M8 order): 🩹 lint baseline — 4 err alr fixed `8b9e7f4` · warn 35 ➡ 25 (KTX toUri/edit/createBitmap/withTranslation · test deps ➡ toml · offset lambda · dead SDK<26 ck · unused ic_highlight + gold) · left on purpose: dep bumps (AGP 9 = L step) · widget preview txt · `mipmap-anydpi-v26` (AAPT can't find th adaptive icon wo it)
-  - 🧹 stale 🔵 lines out: ship.sh lang guard + translate_full secs/toks meter = alr done `fe220ef` · Update.check tsts alr i UpdateTest.kt
-  - 🌍 big round left ✔️: Ludditen "Und heute?" bridges (PlanDay xd/xe) were EN i all 11 langs ➡ translate.py kind `x` (key plan:dayIdx like `a`) + `Tr.x` + `bridge()` lookup · 7 × 11 langs (local qwen3 30b) · 🩹 ur missed Andacht montag:3 ➡ filled · guard: check_langs.py now refuses missing `a` / `x` per lang · #7 btn styles = done by ds (D-030 · L0)
-  - 🧪 glue tsts (bin/test_bin.py 17 ➡ 26): `notes.py` ⬄ Changelog.kt (semver newest 1st · evy Release hs notes · dev ➡ base · appVersion hs notes · no raw escapes · --html --plain) · `page()` dry-run (version.json · stable: apk link + mailto + What's new + JSON-LD + QR + llms.txt · dev: noindex)
+- ✔️ @1116b-1117: 🔵 sweep (lint warn 35 ➡ 25 · glue tsts · Ludditen bridges ×11 · README · tags 🔍) · qa_1116 Q1-Q9 lanes (☭ back · 📖⬄📜 · DEV unlock · Forgejo icon · stamps total) · D-039/040/041 · DEV 2227 · EN gaps 7 ➡ 0 · fx queue · MatrixTest 13 · R1 plan table · 0.11.0 notes draft
 - ✔️ @1116: D-030 CI OOM (gradle 1280m · 2× green) · D-036 = A · ship.sh X.Y.Z + README how-to · **v0.10.0 shipped** · qa_1116 r1+r2 triage · 6 ⚡ lanes (Book · Today · share/★ · settings · i18n 47 strings + guard · startup lazy JSON) · updater BAL fix
 - ✔️ @1114: design system L0 (`ui/ds/` + guard + ds_gallery) + lanes L2 Book · L3 Plans/Circle (Leave confirm 🐛) · L5 bars/dialogs/fx queue · D-029..035 picked · updater D-038 · omm-api no pip D-037 · DEV 1114.1620 + .2117
 - ✔️ @1113: big round pt 1 (EN data via pipeline · 📜 feed · 🔓 Hooked unlock · 🤖 Ludditen plan) + follow-ups (FÜFNZEHNTES + IdMoves D-028 · 13,120-125 align · UI/plan fan-in 11 langs) · r5 + r5b updater (D-023) · ❌ not deployed
