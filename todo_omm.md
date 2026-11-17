@@ -34,6 +34,7 @@
 ## 📆
 
 ## 🔵
+- ⭐🧪 **QA @1117** (scrap) ➡ [qa_1117.md](qa_1117.md) — 🦠 raw, 3 rounds (~30 items: close-x · share popup · streak sync + freeze/joker + lvl-ups · i18n gaps · readpage hints · notes = comment UI · holiday design phase · startup 2-3s) ➡ 🤖 triage like qa_1116 · design spec w Fable AFTER this round
 - 🎨⭐ **design system** — spec ✔️ @1113 ➡ [design_system.md](design_system.md) (tokens · 5 btn kinds · voices · per-screen deltas) · D-029..035 ✔️ @1114 · D-036 = A ✔️ @1116
   - 🤖 lanes: ✔️ L0 · L2 · L3 · L5 @1114 ➡ left L1 Today · L4 Mine/⚙️/Hooked ➡ fan-in ➡ fon QA · L6 later (dark c · font b 🧪 · sounds b)
 - 🦠🔑 keystore: ✔️ symlink @1105 · left: KeePass note (`base64 -w0`, notes.md § 🔑) · 1 offline/restic copy · lap same `ln -s` ✔️ IaC @1117 (sys `lap.yml --tags keystore`, applies on lap catch-up · real file i th way = left + warn)
