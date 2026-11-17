@@ -6,6 +6,8 @@ import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.captureToImage
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onAllNodesWithText
+import androidx.compose.ui.test.hasSetTextAction
+import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.onAllNodesWithContentDescription
 import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.onRoot
@@ -104,8 +106,11 @@ class ShotsTest {
         tap("Plans", true); shot("plans")
         tap("Read", true); shot("read")
         tap("p. 49"); shot("chapter")
-        tap("Capital 1,"); shot("verse_menu")
+        tap("wealth of those societies"); shot("verse_menu")   // ref line "Capital 1,1" gone i th reader (qa_1117)
         tap("Note"); shot("note_edit")
+        // qa_1117 r2: tap away = save only ➡ th verse menu below stays open
+        rule.onAllNodes(hasSetTextAction()).onFirst().performTextInput("Ware = Zelle")
+        tap("Two Factors"); shot("note_saved")
         rule.activity.onBackPressedDispatcher.let { d -> rule.runOnUiThread { d.onBackPressed() } }
         tap("Circle", true); shot("kreis")
         tap("My Capital", true); shot("mine")
@@ -145,6 +150,16 @@ class ShotsTest {
         rule.mainClock.advanceTimeBy(1000)
         repeat(3) { scroll() }
         shot("chapter_scroll")
+    }
+
+    /** 🪝 Hooked on (DEV unlock) ➡ Today: does th top hook cover th streak hero? (qa_1117 r3) · runs aftr zFeed */
+    @Test fun zHooked() {
+        rule.waitUntil(30_000) { rule.onAllNodesWithText("Today").fetchSemanticsNodes().isNotEmpty() }
+        val vm = androidx.lifecycle.ViewModelProvider(rule.activity)[de.strix.marxversion.ui.AppVm::class.java]
+        rule.runOnUiThread { vm.setTestMode(true) }
+        rule.mainClock.advanceTimeBy(2000)
+        tap("Today", true); shot("today_hooked")
+        rule.runOnUiThread { vm.setTestMode(false) }
     }
 
     @Test fun cards() {
