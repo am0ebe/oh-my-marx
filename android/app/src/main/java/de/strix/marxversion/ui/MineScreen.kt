@@ -259,16 +259,18 @@ fun SettingsScreen(vm: AppVm, askNotifPermission: () -> Unit) {
             CardAction(R.drawable.ic_public, tr("Webseite", "Website"), Blue) { runCatching { ctx.startActivity(android.content.Intent(android.content.Intent.ACTION_VIEW, pageUrl.toUri())) } }
             CardAction(R.drawable.ic_send, tr("App teilen", "Share app"), Blue) { sharePanel = true }
             // 💻 qa_1116 Q5 ✔️ (🦠 @1116: reverses r1's "can b seen on web") ➡ th code on Forgejo (home repo, GitHub = mirror)
-            CardAction(R.drawable.ic_forgejo, tr("Code", "Code"), Blue) { runCatching { ctx.startActivity(android.content.Intent(android.content.Intent.ACTION_VIEW, REPO_URL.toUri())) } }
+            // qa_1117 r2 "low 3 btns unclear" ➡ labels say wh (Quellcode · Lizenz, not "Code" · "GPL-3.0") + caption below
+            CardAction(R.drawable.ic_forgejo, tr("Quellcode", "Source"), Blue) { runCatching { ctx.startActivity(android.content.Intent(android.content.Intent.ACTION_VIEW, REPO_URL.toUri())) } }
             // ⚖️ qa_1116 L4 #9: GPL as an icon ➡ th LICENSE file i th Forgejo repo
-            CardAction(R.drawable.ic_license, "GPL-3.0", Blue) { runCatching { ctx.startActivity(android.content.Intent(android.content.Intent.ACTION_VIEW, LICENSE_URL.toUri())) } }
+            CardAction(R.drawable.ic_license, tr("Lizenz", "Licence"), Blue) { runCatching { ctx.startActivity(android.content.Intent(android.content.Intent.ACTION_VIEW, LICENSE_URL.toUri())) } }
             CardAction(R.drawable.ic_feedback, tr("Feedback", "Feedback"), Red) { runCatching { ctx.startActivity(android.content.Intent(android.content.Intent.ACTION_SENDTO, "mailto:".toUri()).apply {
                 putExtra(android.content.Intent.EXTRA_EMAIL, arrayOf("omm@scagent.de"))
                 putExtra(android.content.Intent.EXTRA_SUBJECT, "Oh My Marx $ver")
                 putExtra(android.content.Intent.EXTRA_TEXT, mailBody)
             }) } }
         }
-        Text(tr("Feedback = Mail an uns: Bug, Idee, Lob — alles willkommen", "Feedback = mail to us: bug, idea, praise — all welcome"),
+        Text(tr("Quellcode + Lizenz (GPL-3.0) = offen auf Forgejo · Feedback = Mail an uns: Bug, Idee, Lob",
+            "Source + licence (GPL-3.0) = open on Forgejo · Feedback = mail to us: bug, idea, praise"),
             fontSize = 11.sp, color = MaterialTheme.colorScheme.secondary, textAlign = androidx.compose.ui.text.style.TextAlign.Center,
             modifier = Modifier.fillMaxWidth().padding(top = 6.dp))
     }
