@@ -207,7 +207,8 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
             }
         }
         // ── 🔥 streak widget on top (@1112): chain + week + Stempelkarte = th 1st thing u see ──
-        Box(Modifier.padding(horizontal = 16.dp).padding(bottom = 12.dp)) { Hero(days, feast, dt, s.testMode) }   // D-036 = A (🦠 @1116)
+        // Column, not Box: Hero emits th widget + its 4 HookNotes as siblings ➡ i a Box they stacked ON th hero (qa_1117 r3 🐛 "top hook occludes")
+        Column(Modifier.padding(horizontal = 16.dp).padding(bottom = 12.dp)) { Hero(days, feast, dt, s.testMode) }   // D-036 = A (🦠 @1116)
         // ── 🃏 th cards (Hooked: reward right at th door) ──
         CardCarousel(vm, extras, vod?.let { CardItem(it, CardItem.Kind.TODAY, 0, feast) }, doneToday, speaker, persona, jump, openChapter, amen)
         Column(Modifier.padding(horizontal = 16.dp)) {
@@ -435,7 +436,8 @@ private fun Hero(days: List<DayLog>, feast: Feast?, dt: DayTime, hooked: Boolean
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Column(Modifier.weight(1f)) {
-                Text(if (st > 0) tr("%d Tage Lesekapital akkumuliert", "%d days of reading capital accumulated").f(st)
+                Text(if (st == 1) tr("1 Tag Lesekapital akkumuliert", "1 day of reading capital accumulated")   // qa_1117: was "1 days"
+                    else if (st > 0) tr("%d Tage Lesekapital akkumuliert", "%d days of reading capital accumulated").f(st)
                     else tr("Schön, dass du da bist", "Good to see you"), color = white.copy(alpha = 0.9f), fontSize = 13.sp)
                 Text(when {
                     doneToday -> tr("Schicht erledigt", "Shift done")   // ✓ lives i th week row · "akkumuliert" only once (@1107)
