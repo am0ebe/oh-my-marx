@@ -35,7 +35,8 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
 - ‼️ 🌍 **LLM book qy** — 👤 native QA zh/ar/hi/bn/ur · `bin/translate_full.py --show 5 --langs it es` · alt = existing translations (© check) ➡ [notes.md § 🗃️](notes.md)
 - 🦠 ‼️ **P3 habit test 2w** — aft th nxt big version is out, w audio (🦠 @1114) · Hooked ch 8: identify ➡ codify ➡ modify · start = 🦠's 1st day, log it here
 - 🦠📚 ‼️ **Matrix + chat: K + tst** — 🦠 re notes § 🏗️ technical + `server/matrix/README.md` · 🤖🧪 `bin/matrix_e2e.py` smoke vs live (⚠️ makes real accounts/rooms on th live Synapse ➡ 🦠 ok 1st) · ✔️ `Matrix.kt` JVM tst (fake server) @1116: MatrixTest 8 ➡ 13, all calls covered (+ Lesekreis: create · members · name · leave · redact · setName · code)
-- ⭐🧪 **QA @1117** (scrap) ➡ [qa_1117.md](qa_1117.md) — 🦠 raw, 3 rounds (~30 items: close-x · share popup · streak sync + freeze/joker + lvl-ups · i18n gaps · readpage hints · notes = comment UI · holiday design phase · startup 2-3s) ➡ 🤖 triage like qa_1116 · design spec w Fable AFTER this round
+- ‼️ ⭐🧪 **QA @1117** ➡ [qa_1117.md](qa_1117.md) § triage — r1 = qa_1116 again (✔️) · ⚡ L1-L5 built @1117 (🐛 Hooked notes on hero · reader hints · ¶ ref gone · labels) = 👀 ck on DEV · 🎨 D6 streak game · D7 note = comment · D8 holidays · D9 close variants · 🔍 R3 Duolingo · R4 holiday gaps
+  - 💬 🦠: Q1-Q9 i th file (Q1 one score + Q2 milestones unlock th streak work)
 - 🎨⭐ **design system** — spec ✔️ @1113 ➡ [design_system.md](design_system.md) (tokens · 5 btn kinds · voices · per-screen deltas) · D-029..035 ✔️ @1114 · D-036 = A ✔️ @1116
   - 🤖 lanes: ✔️ L0 · L2 · L3 · L5 @1114 ➡ left L1 Today · L4 Mine/⚙️/Hooked ➡ fan-in ➡ fon QA · L6 later (dark c · font b 🧪 · sounds b)
 - 🦠🔑 keystore: ✔️ symlink @1105 · left: KeePass note (`base64 -w0`, notes.md § 🔑) · 1 offline/restic copy · lap same `ln -s` ✔️ IaC @1117 (sys `lap.yml --tags keystore`, applies on lap catch-up · real file i th way = left + warn)
