@@ -62,6 +62,7 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
   - 🤖 nxt (aftr QA round): retag "0-2 tags, only if ABOUT it" + weight 1-3 · chip = weight ≥ 2 · guard ≥ ~30 quotes/chip
 - 🤖🏗️ **plan versioning** b4 any plan content fix (R1 🟡 wertform cuts · jahr 365 · qa_1116 § R1): days r addressed by index ➡ changing cuts shifts ppl mid-plan ➡ keep old cut fr running plans (plan id + version i Prefs)
 - 🤖 aft QA: rm page fotos (boox proc step 8)
+- 👀 ck: fon update banner on Today · DEV 0.11.0-dev + stable 0.11.0 (fr M8 board #125)
 
 ## ✔️
 - ✔️ @1117 bl_triage (🦠 via M8 #139): ❌ in-app analytics (dupe ops 📊) · ❌ persona voices pointer (lives i pr/audio) · ✂️ rule ➡ file header · Matrix public room = yes · `/omm` + Spruchkarte As inline
