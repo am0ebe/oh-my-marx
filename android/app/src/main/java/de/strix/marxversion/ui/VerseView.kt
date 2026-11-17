@@ -289,12 +289,14 @@ private fun DropCapText(t: AnnotatedString, style: TextStyle) {
  * ✍️ Notiz = th 1 way 2 write on a passage: private by dflt · 👥 chip = also post it 2 th page's Lesesaal (Mitlesen on)
  * Footnote refs [52] r clickable ➡ dialog w th note (Marx' footnotes = where th roasts live).
  * flash = "Im Buch" landed here ➡ scroll into view + pulse 2× so th eye finds it (QA r4)
+ * showRef = "Capital 1,1 · MEW p. 49" over th passage · reader = off (qa_1117 r3: "metadata, usr no need" ➡ page head hs th MEW
+ *   page) · Today plan = on (passages fr all over th book)
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun VerseView(
     vm: AppVm, v: Verse, speaker: Speaker? = null, showActions: Boolean = true, flash: Boolean = false, preview: Boolean = false,
-    dropCap: Boolean = false,
+    dropCap: Boolean = false, showRef: Boolean = true,
 ) {
     val mark by vm.mark(v.id).collectAsStateWithLifecycle(null)
     val settings by vm.settings.collectAsStateWithLifecycle()
@@ -356,8 +358,8 @@ fun VerseView(
             .padding(6.dp),
     ) {
         // ref = quiet margin (label-s inkMuted, was bold blue) · 🔖 = gold-deep "kept" mark
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(r, style = MaterialTheme.typography.labelSmall, color = Ds.inkMuted, modifier = Modifier.weight(1f))
+        if (showRef || mark?.bookmark == true) Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(if (showRef) r else "", style = MaterialTheme.typography.labelSmall, color = Ds.inkMuted, modifier = Modifier.weight(1f))
             if (mark?.bookmark == true) Icon(painterResource(R.drawable.ic_bookmark), tr("Lesezeichen", "Bookmarked"),
                 Modifier.size(16.dp), tint = Ds.goldDeep)
         }

@@ -4,6 +4,7 @@ import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
+import kotlinx.coroutines.delay
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -244,10 +245,18 @@ fun ChapterScreen(vm: AppVm, kap: String, focus: String?, @Suppress("UNUSED_PARA
         pages[index].verses.first().id.let { id -> vm.content.verses.indexOfFirst { it.id == id }.coerceAtLeast(0) }
     }
 
+    // 💡 qa_1117 r3: mode chip pressed ➡ show wh th new mode does: 📖 page lifts a bit + "tap edge / swipe" pill ·
+    //   📜 bouncing ⬇ + "scroll on" pill · 2.5 s, then gone (only on press: th r5 always-on peek was "distracting")
+    var hintKey by remember { mutableIntStateOf(0) }
+    LaunchedEffect(hintKey) {
+        if (hintKey > 0 && !scrollMode && turn.value == 0f) { turn.animateTo(-0.14f, tween(380)); turn.animateTo(0f, tween(320)) }
+    }
+
     CompositionLocalProvider(LocalReadScale provides scale, LocalPageTurn provides fwd) {
+     Box(Modifier.fillMaxSize()) {
       // ⌨️ imePadding: th page shrinks above th keyboard ➡ a note at th page bottom stays visible (qa_1116 r2.5)
       Column(Modifier.fillMaxSize().background(Ds.page).imePadding()) {
-        SlimHead(vm, pages[index], scrollMode, { vm.setReadScroll(!scrollMode) }) { talk = pages[index] }
+        SlimHead(vm, pages[index], scrollMode, { vm.setReadScroll(!scrollMode); hintKey++ }) { talk = pages[index] }
         if (scrollMode) {
             val scroll = rememberScrollState()
             Column(Modifier.weight(1f).fillMaxWidth().verticalScroll(scroll)
@@ -322,11 +331,30 @@ fun ChapterScreen(vm: AppVm, kap: String, focus: String?, @Suppress("UNUSED_PARA
                     cameraDistance = cam
                 }, null)
             }
-            // 📐 dog-ears = "this is a page, it turns" · bottom-right = fwd · bottom-left = back (qa_1116 L2 #4) · tap = turn
+            // 📐 dog-ear = "this is a page, it turns" · bottom-right = fwd · tap = turn
+            //   left (back) one rm'd qa_1117 r3 · going back = tap th left quarter o swipe ➡ still works
             if (index < pages.lastIndex && t == 0f) DogEar(Modifier.align(Alignment.BottomEnd), fwd)
-            if (index > 0 && t == 0f) DogEar(Modifier.align(Alignment.BottomStart), back, left = true)
         }
       }
+      if (hintKey > 0) key(hintKey) { ModeHint(scrollMode, Modifier.align(Alignment.BottomCenter).padding(bottom = Space.xl)) }
+     }
+    }
+}
+
+/** 💡 2.5 s pill aftr th mode chip: wh th new mode does · 📜 ⬇ bounces · fades out (qa_1117 r3) */
+@Composable
+private fun ModeHint(scrollMode: Boolean, modifier: Modifier) {
+    val a = remember { Animatable(0f) }
+    val bob = remember { Animatable(0f) }
+    LaunchedEffect(Unit) { a.animateTo(1f, tween(200)); delay(2300); a.animateTo(0f, tween(400)) }
+    LaunchedEffect(Unit) { if (scrollMode) repeat(3) { bob.animateTo(1f, tween(260)); bob.animateTo(0f, tween(260)) } }
+    Row(modifier.graphicsLayer { alpha = a.value }.clip(CircleShape)   // pill = ds Pill (CircleShape).background(Ds.ink.copy(alpha = .82f))
+        .padding(horizontal = Space.m, vertical = Space.s), verticalAlignment = Alignment.CenterVertically) {
+        if (scrollMode) Text("⬇", color = Ds.page, style = OmmType.bookMeta,
+            modifier = Modifier.graphicsLayer { translationY = bob.value * 6 * density }.padding(end = Space.s))
+        Text(if (scrollMode) tr("Endlos: einfach nach unten scrollen", "Endless: just keep scrolling down")
+            else tr("Buch: Rand antippen oder wischen = umblättern", "Book: tap the edge or swipe to turn the page"),
+            color = Ds.page, style = OmmType.bookMeta)
     }
 }
 
@@ -348,8 +376,8 @@ private fun SlimHead(vm: AppVm, p: BookPage, scrollMode: Boolean, onMode: () -> 
             Text(chapter?.let { chapterTitle(it) } ?: p.kap, style = OmmType.bookHead, color = Ds.ink,
                 maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f).padding(end = Space.s))
             if (talkOn && talkCount > 0) CountChip(talkCount, onTalk, tr("%d Kommentare zu dieser Seite", "%d comments on this page").f(talkCount))
-            // 📖 ⬄ 📜: chip shows th mode u switch TO
-            de.strix.marxversion.ui.ds.HeadChip(if (scrollMode) "📖" else "📜", onMode,
+            // 📖 ⬄ 📜: chip shows th mode u switch TO · + 1 word (qa_1117 r3: emoji alone = "wh does it do?")
+            de.strix.marxversion.ui.ds.HeadChip(if (scrollMode) "📖 " + tr("Seiten", "Pages") else "📜 " + tr("Scrollen", "Scroll"), onMode,
                 if (scrollMode) tr("Als Buch mit Seiten lesen", "Read as a book with pages") else tr("Endlos scrollen", "Endless scroll"),
                 Modifier.padding(start = Space.xs))
         }
@@ -424,7 +452,7 @@ private fun Page(vm: AppVm, p: BookPage, speaker: Speaker, i: Int, n: Int, modif
                     if (prev != null) Ornament()
                     SectionTitle(secTitle(v))
                 }
-                VerseView(vm, v, speaker, flash = v.id == flashId, dropCap = firstOfChapter && k == 0)
+                VerseView(vm, v, speaker, flash = v.id == flashId, dropCap = firstOfChapter && k == 0, showRef = false)
                 Gap(4)
             }
             // QA r4: no share pills (r3) + no "Mitreden" btn down here = pure Marx page · writing = tap a passage ➡ ✍️ Notiz
@@ -432,6 +460,11 @@ private fun Page(vm: AppVm, p: BookPage, speaker: Speaker, i: Int, n: Int, modif
             Gap(20)
             Text("— ${p.page ?: (i + 1)} —", style = OmmType.bookMeta.copy(fontFamily = FontFamily.Serif), color = Ds.inkMuted,
                 textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
+            // 👆 wh u can press (qa_1117 r3, like Today's "⬅ swipe · ⬇ pull · 📳 shake" line) · tiny + muted, under th folio
+            Text(tr("👆 Rand antippen · ↔ wischen = blättern · Absatz antippen = Menü · 🤏 Schriftgröße",
+                "👆 tap the edge · ↔ swipe = turn · tap a passage = menu · 🤏 pinch = text size"),
+                style = OmmType.bookMeta, color = Ds.inkMuted.copy(alpha = .7f), textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth().padding(top = Space.s))
         }
     }
 }

@@ -74,7 +74,7 @@ fun ReadOnFeed(vm: AppVm, start: Int, scroll: ScrollState, speaker: Speaker, onP
                     textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp))
             }
             if (v.secTitle.isNotBlank() && v.sec != prev?.sec) SectionTitle(secTitle(v))
-            VerseView(vm, v, speaker)   // qa_1116 r2.1: full txt, no expand btn
+            VerseView(vm, v, speaker, showRef = false)   // qa_1116 r2.1: full txt, no expand btn · qa_1117: no ref line
             Gap(6)
             if ((k + 1) % FEED_BREAK == 0) BreakCard(k + 1)
         }
