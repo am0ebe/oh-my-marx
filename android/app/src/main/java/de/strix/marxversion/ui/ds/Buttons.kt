@@ -173,7 +173,8 @@ fun ActionItem(
                     .background(tint.copy(alpha = if (pressed) .18f else .10f)), contentAlignment = Alignment.Center) { glyphView() }
             }
         } else glyphView()
-        Text(label, color = labelColor, style = MaterialTheme.typography.labelMedium, maxLines = 1,
+        // qa_1117 r3: "Karte teilen" cut at 64dp ➡ long labels wrap 2 2 lines (centred) instead o clipping
+        Text(label, color = labelColor, style = MaterialTheme.typography.labelMedium, maxLines = 2, textAlign = TextAlign.Center,
             modifier = Modifier.padding(top = if (style == ActStyle.Circle) 0.dp else Space.xxs))
     }
 }
@@ -185,9 +186,12 @@ fun ActionItem(
 fun CloseStar(onClick: () -> Unit, modifier: Modifier = Modifier, tint: Color = Ds.red, size: Dp = 36.dp, desc: String = "Close") {
     // qa_1116 L3 #6 + #7: th 1 star asset (res/drawable/ic_star.xml, bbox-centred i its box = no nudge) · bigger (pad 8 %) ·
     //   gold rim = th hero star's, scaled · circle = tint 10 % + 30 % hairline
+    // qa_1117 r1 "star too low + too big i th circle": pad 8 ➡ 18 % · bbox-centred ≠ optically centred (th star's mass =
+    //   its circumcentre, 1.09/24 below th bbox centre) ➡ lift by that share o th star's drawn size · hero star untouched
+    val star = size * (1 - 2 * 0.18f)
     Surface(onClick = onClick, shape = CircleShape, color = tint.copy(alpha = 0.10f),
         border = BorderStroke(1.dp, tint.copy(alpha = 0.30f)), modifier = modifier.size(size).semantics { contentDescription = desc }) {
-        StarImage(Modifier.fillMaxSize().padding(size * 0.08f))
+        Box(contentAlignment = Alignment.Center) { StarImage(Modifier.size(star).offset(y = -star * (1.09f / 24f))) }
     }
 }
 
