@@ -17,11 +17,11 @@
     | DEV | ✔️ fon: Obtainium 1h ck auto-updated (🦠) · app's own notif ➡ obtainium://refresh = unit tst only | ⏳ unit tsts ✔️ · fon = 5 steps above |
     | normal | ✔️ Obtainium follows th page (same as DEV) | ❌ untestable yet: 0.9.0 has th OLD banner (➡ web page, no 1-tap) · 1st real self-update = 0.10.0 ➡ 0.10.1 |
     - 0.9.0 ➡ 0.10.0 APK users: banner ➡ page ➡ install by hand 1× (then 1-tap / silent fr there)
-- ▶ **RESUME @1117 eos** — v0.10.0 = stable · qa_1116 Q1-Q9 answered + built (D-039/040/041) · lint + 95 Kotlin + 31 py tsts green · all pushed
-  - 🚀 DEV live = `0.11.0-dev.1116.2227` (`4cd7962`) · ⚠️ NOT on it yet: EN gaps 0 (`d162d80`) · fx queue (`2162823`) · Matrix tsts · 0.11.0 notes draft (`230988f`)
-  - ▶ nxt: `bin/deploy.sh` (aftr 🦠's fon QA o 2227, or on "deploy") ➡ fon QA ➡ Fable design spec (🦠: AFTER this round)
+- ▶ **RESUME @1117 ship** — v0.11.0 = stable (shipped @1117, GH release ✔️) · DEV = `0.11.0-dev.1117.1108` (`a859d58`, = all commits) · lint + unit + 31 py green · all pushed
+  - 👤 🦠: fon tst in-app update msg on BOTH: DEV 2227 ➡ 1108 · normal 0.10.0 ➡ 0.11.0 (Today banner on app start)
+  - ▶ nxt: fon QA ➡ Fable design spec (🦠: AFTER this round) · nxt `bin/deploy.sh` = `0.12.0-dev…`
   - 👤 🦠: fon tst updater (above) · fon cold start `adb shell am start -W` (L6 before ⬄ after) · baseline profile = device run
-  - ⚠️ traps: new tr() string ➡ `bin/translate.py --only ui` or ship refuses (check_langs) · `Release("0.11.0")` = 🤖 DRAFT i Changelog.kt (10 lines, fixes 0.10.0's "read more") ➡ 🦠 review + date b4 `bin/ship.sh 0.11.0` · guard baseline strict both ways · new plan days ➡ `translate.py --only a x` · EN gaps = 0 (ContentTest fails on any blank ➡ fix i align.py: PIN / labels)
+  - ⚠️ traps: new tr() string ➡ `bin/translate.py --only ui` or ship refuses (check_langs) · guard baseline strict both ways · new plan days ➡ `translate.py --only a x` · EN gaps = 0 (ContentTest fails on any blank ➡ fix i align.py: PIN / labels)
 
 ## ‼️
 - ⭐🧪 **QA @1116** ➡ [qa_1116.md](qa_1116.md) — 14 ⚡ i 6 lanes (L3 share 1st) · 3 🎨 (➡ Fable spec aftr) · 2 🔍 · 💬 Qs ✔️ answered @1116 ➡ lanes built (D-039 · D-040) · Q8 revised = no Werkbank (D-041) · left: D3 joker · fon items
