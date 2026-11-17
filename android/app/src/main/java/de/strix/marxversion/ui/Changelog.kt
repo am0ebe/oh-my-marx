@@ -34,9 +34,8 @@ import de.strix.marxversion.data.f
 data class Release(val version: String, val date: String, val items: List<Pair<String, String>>)
 
 val RELEASES = listOf(
-    // ✏️ @1116 DRAFT (🤖, fr th qa_1116 lanes) = wh DEV 0.11.0-dev shows · date = set on ship day · 🦠 review b4 bin/ship.sh 0.11.0
-    //   "full passages" line corrects 0.10.0's "read more" (r2.1 rm'd it)
-    Release("0.11.0", "2026-11-16", listOf(
+    // 0.11.0 = qa_1116 lanes · "full passages" line corrects 0.10.0's "read more" (r2.1 rm'd it)
+    Release("0.11.0", "2026-11-17", listOf(
         T("📖📜 Zwei Arten zu lesen: Buch mit Seiten oder endlos scrollen — umschalten oben im Kapitel", "📖📜 Two ways to read: a book with pages or endless scroll — switch at the top of a chapter"),
         T("☭ Hammer und Sichel sind zurück: wenn du das Tagespensum deines Leseplans schaffst · Zitat des Tages = kurzer Haken", "☭ Hammer and sickle are back: when you finish your reading plan's daily portion · quote of the day = a quick tick"),
         T("📤 Neues Teilen-Fenster: echte Logos, Farbe, QR-Code", "📤 New share panel: real logos, colour, QR code"),
@@ -45,8 +44,6 @@ val RELEASES = listOf(
         T("🌍 Alle Knöpfe in allen 13 Sprachen · „Und heute?“-Texte im Maschinenstürmer-Plan übersetzt", "🌍 Every button in all 13 languages · “And today?” notes in the Luddites plan translated"),
         T("🇬🇧 Englisch: jetzt wirklich jeder Absatz auf Englisch", "🇬🇧 English: now truly every paragraph in English"),
         T("⚡ Schnellerer Start: Sprachen werden erst geladen, wenn du sie brauchst", "⚡ Faster start: languages load only when you need them"),
-        T("🎟️ Stempelkarte zeigt jetzt klar: alle Lesetage zusammen", "🎟️ Stamp card now says it clearly: all reading days in total"),
-        T("⚙️ Über: Code und Lizenz als Symbole · Namensfeld schließt beim Tippen daneben · Lesezeichen-Symbol statt Emoji", "⚙️ About: code and licence as icons · name field closes when you tap elsewhere · a bookmark icon instead of an emoji"),
     )),
     Release("0.10.0", "2026-11-16", listOf(
         T("🎨 Neues Design: Papier-Look, ruhigere Knöpfe, Kapitel ohne Leisten — liest sich wie ein Buch", "🎨 New design: paper look, calmer buttons, chapters without bars — reads like a book"),
