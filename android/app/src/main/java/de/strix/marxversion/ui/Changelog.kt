@@ -34,6 +34,14 @@ import de.strix.marxversion.data.f
 data class Release(val version: String, val date: String, val items: List<Pair<String, String>>)
 
 val RELEASES = listOf(
+    // 0.12.0 = qa_1117 ⚡ lanes (L1-L5)
+    Release("0.12.0", "2026-11-18", listOf(
+        T("📖 Ruhigere Seiten: keine Quellenzeile mehr über jedem Absatz", "📖 Calmer pages: no more reference line above every paragraph"),
+        T("📜 Der Lesemodus-Knopf sagt jetzt, was er tut — und zeigt kurz, wie man blättert oder scrollt", "📜 The reading-mode button now says what it does — and briefly shows how to turn or scroll"),
+        T("🪝 Hooked-Modus: die Erklärungen verdecken deine Serie nicht mehr", "🪝 Hooked mode: the explanations no longer cover your streak"),
+        T("🔤 Keine abgeschnittenen Knöpfe mehr („Karte teilen“) · Über: Quellcode und Lizenz klar beschriftet", "🔤 No more cut-off buttons (“Share card”) · About: source and licence clearly labelled"),
+        T("★ Schließen-Stern: kleiner und mittig im Kreis", "★ Close star: smaller and centred in its circle"),
+    )),
     // 0.11.0 = qa_1116 lanes · "full passages" line corrects 0.10.0's "read more" (r2.1 rm'd it)
     Release("0.11.0", "2026-11-17", listOf(
         T("📖📜 Zwei Arten zu lesen: Buch mit Seiten oder endlos scrollen — umschalten oben im Kapitel", "📖📜 Two ways to read: a book with pages or endless scroll — switch at the top of a chapter"),
