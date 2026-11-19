@@ -175,11 +175,17 @@ def plans(V):
                   dde="Der Fetischcharakter der Ware, komplett, in 7 Portionen. Danach siehst du jeden Warenkorb mit anderen Augen.",
                   den="The fetishism of commodities, complete, in 7 portions. Afterwards you'll see every shopping cart differently.",
                   days=[[v["id"] for v in fet[i * len(fet) // 7:(i + 1) * len(fet) // 7]] for i in range(7)]))
+    # 🔢 v2 @1118 (R1 🟡 · D-042): cut at Marx' own sub-section heads, not by count (v1: 4/7 days began mid-argument) ·
+    #   8 days · running v1 plans stay on v1 (data/plan_versions.json)
+    wf_cut = [["1.3", "1.3.A", "1.3.A.1"], ["1.3.A.2.a"], ["1.3.A.2.b"], ["1.3.A.3"], ["1.3.A.4"],
+              ["1.3.B", "1.3.B.1", "1.3.B.2", "1.3.B.3"], ["1.3.C", "1.3.C.1", "1.3.C.2", "1.3.C.3"], ["1.3.D"]]
     wf = [v for v in T if in_secs(v, "1", ["1.3"])]
+    wf_days = [[v["id"] for v in wf if v["sec"] in secs] for secs in wf_cut]
+    assert sum(map(len, wf_days)) == len(wf), "wertform cut lost a paragraph (new sub-section id?)"
     P.append(dict(id="wertform", emoji="🧠", tde="Wertform – für Masochisten", ten="The Value-Form – for Masochists",
                   dde="20 Ellen Leinwand = 1 Rock. Kapitel 1.3 komplett. Marx selbst: »Aller Anfang ist schwer.« Wir haben dich gewarnt.",
                   den="20 yards of linen = 1 coat. Section 1.3 in full. Marx himself: “Every beginning is difficult.” You've been warned.",
-                  days=[[v["id"] for v in wf[i * len(wf) // 7:(i + 1) * len(wf) // 7]] for i in range(7)]))
+                  days=wf_days))
 
     # ── das ganze Kapital i 1 Jahr, Althusser-Reihenfolge: Vorworte, Abschnitt 2-7, dann Abschnitt 1 ──
     order = [v for v in T if v["kap"].startswith("V")] + [v for v in T if v["kap"].isdigit() and int(v["kap"]) >= 4] \
@@ -191,8 +197,8 @@ def plans(V):
         if size >= budget: days.append(cur); cur, size = [], 0
     if cur: days.append(cur)
     P.append(dict(id="jahr", emoji="📅", tde="Das ganze Kapital in einem Jahr", ten="All of Capital in One Year",
-                  dde=f"Alles, {len(days)} Tage à ~10 Minuten. Reihenfolge nach Althusser: erst Arbeitstag & Akkumulation, die Wertform zum Schluss.",
-                  den=f"Everything, {len(days)} days of ~10 minutes. Althusser's order: working day & accumulation first, value-form at the end.",
+                  dde=f"Alles, {len(days)} Tage à ~5 Minuten. Reihenfolge nach Althusser: erst Arbeitstag & Akkumulation, die Wertform zum Schluss.",
+                  den=f"Everything, {len(days)} days of ~5 minutes. Althusser's order: working day & accumulation first, value-form at the end.",
                   days=days))
     return P
 
@@ -253,7 +259,9 @@ def main():
         out.append(o)
 
     P = plans(out)
-    P[1:1] = extra_plans({o["id"] for o in out if o["kind"] == "text"})   # curated (🤖 Ludditen) right aft th flagship
+    X = extra_plans({o["id"] for o in out if o["kind"] == "text"})
+    P[1:1] = [p for p in X if not p.get("lock")]   # curated (🤖 Ludditen) right aft th flagship
+    P += [p for p in X if p.get("lock")]            # 🔒 D-043: locked = at th end (mystery cards below th open ones)
     andachten = {(a["plan"], a["day"]): a for a in jl("andachten.jsonl")}
     for p in P:
         p["days"] = [{"v": ids} | ({"ad": andachten[(p["id"], i)]["de"], "ae": andachten[(p["id"], i)]["en"]}

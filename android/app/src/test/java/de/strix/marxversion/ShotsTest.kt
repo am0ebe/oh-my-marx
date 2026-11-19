@@ -14,6 +14,7 @@ import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.swipeUp
+import androidx.compose.ui.test.swipeDown
 import androidx.test.core.app.ApplicationProvider
 import de.strix.marxversion.data.Lang
 import de.strix.marxversion.ui.cardBitmap
@@ -104,6 +105,8 @@ class ShotsTest {
         scroll(); shot("today_2")
         scroll(); shot("today_3")
         tap("Plans", true); shot("plans")
+        repeat(6) { scroll() }; shot("plans_locked")   // 🔒 D-043 mystery cards at th end
+        rule.onRoot().performTouchInput { repeat(6) { swipeDown() } }
         tap("Read", true); shot("read")
         tap("p. 49"); shot("chapter")
         tap("wealth of those societies"); shot("verse_menu")   // ref line "Capital 1,1" gone i th reader (qa_1117)

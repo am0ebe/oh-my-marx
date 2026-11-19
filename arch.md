@@ -18,6 +18,20 @@ _SDD: code says **wh** · th file says **y** · drift = a bug · fmt ➡ `pr/vib
 - 🔥 hot files (1 owner at a ti — fan-out lanes nvr split these): `assets/content/i18n_*.json` + `data/i18n/*.jsonl` (translate pass = fan-in only) · `android/app/build.gradle.kts` (version) · `ui/Changelog.kt` · `res/values*/strings.xml` · `TodayScreen.kt` · `MineScreen.kt` · `Share.kt`
 
 ## 🧾 decisions (newest on top)
+### D-043 @1118 · new reading plans unlock progressively (bonus levels, not a paywall) · ✔️ (🦠 qa_1117 Q10 yes · Q12)
+- **ctx**: r4 "more plans, unlocked later (+ DEV)" · Q12 🦠: "timeline: 3 awards o 1-3-5 plans o streak 20 · like a bonus easter egg = random reward · + 1 holiday/xmas present"
+- **dc**: `Plan.lock` = any 1 of {plans · orden · streak (best ever) · feast gift · lucky 1-in-5 per Amen day aftr N days} · locked = 🔒 mystery card at th end (no title, only HOW) · open ➡ 🎁 dialog i th reward queue · DEV switch = all, no fanfare
+  - 6 plans: 💰 reich (1 plan) · 🎓 grundkurs (3 badges) · 🏛️ faschismus (3 plans, bridges only — Vol. 1 never names it) · 🛵 gig (🎲 lucky aftr 10 days) · 🌍 erde (streak 20) · 🎁 weihnachten (Christmas gift, 3 days)
+- **y**: Hooked variable reward + progress gates (ch. 4) · best streak ➡ a broken chain nvr re-locks (D-014 kind) · feast/lucky persisted ➡ nvr taken back
+- **alt**: all open (❌ no discovery) · fixed path (❌ less surprise) · paid unlock (❌ nvr)
+- **ck**: `logic/PlanUnlock.kt` · `PlanUnlockTest` · `data/plans_extra.json` `lock`
+### D-042 @1118 · plan versioning: pin th cut u started on · ✔️ (🦠 qa_1117 "do th plan versioning")
+- **ctx**: DayLog stores plan days by index ➡ any re-cut (R1 🟡 wertform) would shift evy1 mid-plan
+- **dc**: `data/plan_versions.json` = evy cut ever shipped (frozen days incl. Andacht) · build.py bumps `ver` automatically when a plan's verse ids change · plans.json ships `old` cuts · `Prefs.planVer` set at start (null = v1) · old cut ➡ idx-keyed translations skipped (EN fallback)
+  - 1st use: wertform v2 = cut at Marx' sub-section heads (8 days, none starts mid-argument) · jahr txt "~10 min" ➡ "~5 min" (txt only, no re-cut)
+- **y**: automatic = can't forget a bump · ppl mid-plan nvr see a dif day
+- **alt**: migrate DayLogs by verse id (❌ fragile) · freeze plans forever (❌ no fixes)
+- **ck**: `bin/build.py versions()` · `test_bin.PlanVersions` (incl. archive ⬄ plans.json) · `PlanUnlockTest.daysFor`
 ### D-041 @1116 · no Werkbank tab · Circles stays · Hooked entry stays i th top bar · ✔️ (🦠 qa_1116 Q8 revised)
 - **ctx**: qa_1116 D5 proposed a "Werkbank" bottom tab (Hooked notes + tools) · Q8 1st answer = b (replace Circle) ➡ revised same day
 - **dc**: 5 tabs stay (Today · Plans · Read · Circle · My Capital) · 🪝 Hooked entry stays at th top as now
