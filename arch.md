@@ -18,6 +18,51 @@ _SDD: code says **wh** · th file says **y** · drift = a bug · fmt ➡ `pr/vib
 - 🔥 hot files (1 owner at a ti — fan-out lanes nvr split these): `assets/content/i18n_*.json` + `data/i18n/*.jsonl` (translate pass = fan-in only) · `android/app/build.gradle.kts` (version) · `ui/Changelog.kt` · `res/values*/strings.xml` · `TodayScreen.kt` · `MineScreen.kt` · `Share.kt`
 
 ## 🧾 decisions (newest on top)
+_🎨 D-045..055 @1119 = design addendum (qa_1117 D6-D11 + r4) · all 💬 · 🤖 pick marked · spec + mockups + lanes C1-C7 ➡ [design_system.md](design_system.md) § 14 (§ 14.0 = same list as a table)_
+### D-055 @1119 · close btn (D9 · Q7): variants sheet ➡ 🦠 picks · 💬
+- **options**: V1 now (★ i tinted circle) · V2 bare ★ · V3 mono ✕ · **V4 ★ w ✕ cut-out** (🤖 eye-guess) · V5 inverted red disc · V6 outline ★ · V7 wax seal · V8 V1 + spin on press
+- **y**: 🦠 r1 "many versions, diff ctx" ➡ render, don't argue · V4 = brand + new usrs read "close" · V3 ❌ loses ★ = close (§ 1)
+- **ck**: `close_sheet.png` (8 × 3 ctx + dark) · lane C6, no gate
+### D-054 @1119 · note = margin-comment card (D7 · Q4) · 💬
+- **options**: a) yellow sticky + 📌 · **b) comment card: paperHi + blue ruler + tail 2 th verse + initial disc + name/time + ✎** (🤖) · c) keep ruler, new bg only
+- **y**: a ❌ yellow = Hooked's voice (§ 7) · b = wh "oth apps" do (r2) + 1 component 4 notes AND comments · c = too close 2 "a blue quote" 🦠 disliked
+- **ck**: shots `note_card` `note_edit` `comments` (C5) · ❌ ★ i editor · tap away = save, menu stays
+### D-053 @1119 · holy-book devices (D11) · 💬
+- **options**: a) ⚡ set (section initials · red ¶ · incipit · headpiece · running head · catchword · colophon) · **b) ⚡ + 🟡 (illuminated initial · tailpiece + chapter seal · ribbon bookmark · gilt edge)** (🤖) · c) + 🧪 paper grain · margin glosses
+- **y**: b = most "worthy old book" per effort, all drawn (no raster) · c = perf + clashes w notes · ❌ margin ¶ numbers (r3 rm'd th ¶ ref line)
+- **ck**: shots `chapter` `chapter_scroll` `chapter_end_seal` `bookmark_ribbon` + rtl + zh (C4)
+### D-052 @1119 · feast calendar: + 18 feasts (R4 gaps) · 💬
+- **options**: **a) all 18** (labour history + 3 fun days, § 14.2.3) (🤖) · b) history only · c) 🦠 picks on th sheet
+- **y**: 5.5 ➡ 14.9 = 4 months w nothing · a ➡ longest gap ~4 w · fun days = variable reward (🦠 r3) · quiet († days) = no confetti
+- **ck**: `Feast.on()` tst per date · `feast_sheet.png` (C3)
+### D-051 @1119 · holiday Marx head (D8 · Q6) · 💬
+- **options**: **a) 1 base head + overlay layers** (🤖) · b) full redraw per feast · c) emoji next 2 th head (now)
+- **y**: a = 1 style, cheap per feast, no drift · b only 4 🎄 Santa-Marx · 🎃 pumpkin-Marx · 🎂 · c ❌ "half-baked" (🦠 r3)
+- **ck**: `ui/ds/MarxHead.kt` = only place th picks a head · top bar + share card + widget call it
+### D-050 @1119 · rank-up = Beförderung, fullscreen RPG · 💬
+- **options**: **a) badge flies in · Marx seals "GENEHMIGT" · rays · 1 perk line · share** (🤖) · b) bigger dialog · + cosmetic perks per rank · + rank 3 = new D-043 unlock source
+- **y**: 🦠 r4 "promotion · hero upgrade · MMORPG lvl-up" · ~evy 10 reading days = rare enough 4 big (D-034) · perks cosmetic = honest (D-004)
+- **ck**: shot `moment_rank_3` · rays stop at 2300 · reduced motion = end frame (C2)
+### D-049 @1119 · celebrations = 1 ladder, 1 big screen per tap · 💬 (✔️ as written / change)
+- **dc**: T0 press · T1 ✓ · T2 ☭ + Stempeluhr · T2b chapter seal · T3 milestone · T4 Beförderung · T5 reward dialogs · queue order = that · ≥ 2 due ➡ "Moment … ▸" · > 2 dialogs ➡ "+N" chip
+- **y**: r4 "Amen ➡ award ➡ ☭ i series" · D-034 size ∝ rarity · no dialog walls
+- **ck**: FxQueueTest: 1 big screen per tap (C2)
+### D-048 @1119 · Day complete = Stempeluhr (D10 · Q11) · 💬
+- **options**: **a) stamp thump + star count** · **b) 1 punchy line fr a pool** · **c) teasing Q 4 tomorrow (new `qd`/`qe`)** (🤖 a+b+c) · d) Marx head reacts (🧪 aftr C3)
+- **y**: 🦠 r4 "bland · txt stuffed · Moses? · not teasing" ➡ image + motion + 1 line + 1 Q · drop "Losung kommt um" (⚙️ has it)
+- **ck**: shots `moment_shift` `moment_shift_full` (C2) · all plans hv `qd`+`qe` (C7)
+### D-047 @1119 · star tier aftr a break = "Abschreibung" · 💬
+- **options**: a) back 2 0 · b) best ever · **c) 1 tier down per missed day** (🤖)
+- **y**: a = anxiety (D-004) · b = no stakes · c = fixed capital depreciates, doesn't vanish
+- **ck**: StreakGameTest: tier falls 1/day (C1)
+### D-046 @1119 · milestones + ✊ Streiktag (Q2 · Q3) · 💬
+- **options**: steps 7 · 14 · 30 · 50 · 100 · 200 · 365 · +100 · 1 freeze per step, max 2 · name a) ❄️ Freeze · **b) ✊ Streiktag** (🤖) · c) 🛟 · Sabbat: **keep** (🤖) o fold in
+- **y**: Duolingo set (R3) + 200 (gap 100 ➡ 365) · earned only, no shop (D-014) · Sabbat = weekly grace, Streiktag = earned buffer, used aftr Sabbat
+- **ck**: StreakGameTest: earn · cap 2 · use order (C1)
+### D-045 @1119 · 1 score on th hero (Q1) · 💬 · ⚠️ amends D-036 A
+- **options**: a) drop gift stamps · b) caption each counter (tried @1116 ❌ still confusing r3) · **c) hero = streak only (star + week + nxt-milestone bar) · stamps + rank ➡ Stempeluhr pane + My Capital** (🤖)
+- **y**: 2 worlds, 2 places: streak = hero · career (total days ➡ ranks) = stamp card · hero size + look = A (only th stamp row leaves)
+- **ck**: shot `hero_tiers` · stamp card i `mine` (C2)
 ### D-044 @1119 · 📖 double-tap: left half = back · right half = fwd · amends D-022 · ✔️ (🦠 scrap @1119)
 - **ctx**: 🦠 "read book > add hint double tap = next/prev page" · D-022 double-tap = alw fwd
 - **dc**: side by x o th double-tap (paper) o th last finger-down on th book (passage, VerseView hs no position) · hint = folio line + 📖 chip pill

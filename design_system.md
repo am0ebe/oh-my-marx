@@ -1,5 +1,5 @@
 # design system — omm ☭ 🎨
-_spec @1113 · docs only, ❌ code yet · SSOT 4 look + feel: rules ➡ tokens ➡ components ➡ per-screen deltas ➡ build lanes_
+_spec @1113 · docs only, ❌ code yet · SSOT 4 look + feel: rules ➡ tokens ➡ components ➡ per-screen deltas ➡ build lanes · § 14 addendum @1119 (celebrations · holidays · holy book · note · close, D-045..055)_
 _y lives i [arch.md](arch.md) D-029..036 (💬 = open, 🤖 pick marked) · base = app @ `eb033ae` (`ui/Theme.kt` + 20 `ui/*.kt` + headless shots) · [qa_1112.md](qa_1112.md) § 🎨 qa-D1..D10 + r4 sweep #7_
 _contrast = WCAG 2.x, computed (text ≥ 4.5 · large txt / icon / border ≥ 3) · sizes = dp / sp_
 
@@ -15,6 +15,7 @@ _contrast = WCAG 2.x, computed (text ≥ 4.5 · large txt / icon / border ≥ 3)
 | D-035 | sounds (qa-R1) | a) none · b) 3 tiny (page · stamp · badge) + ⚙️ switch, dflt off | ✔️ **b** 🦠 @1114 (L6) |
 | D-036 | Today above th fold (qa-D1) | a) compact hero + stamp tag · b) keep hero, shrink card · c) hero collapses on scroll | 💬 **a** · mockups ➡ `d036_all.png` |
 - 👀 mockups 4 th 2 unsure picks (`DsChoicesTest`, test-only): `android/app/build/shots/d031_all.png` · `d036_all.png`
+- 🆕 **D-045..055** (celebrations · holidays · holy book · note · close) ➡ own table i § 14.0 (bottom)
 
 ## 1 · 🔑 concept — a book th acts like an app
 - **3 materials**: 📄 Paper = surfaces · ✒️ Ink = text · 📘 Cloth = MEW blue (app's voice, 2nd actions)
@@ -360,3 +361,312 @@ _rules 4 evy lane: look only, ❌ behaviour change (except where a delta says so
 ## 13 · 🚫 not i th spec
 - new feats · new screens · IA changes (5 tabs stay) · copy rewrite beyond btn labels · Lesekreis unlock (qa-D10 rest) · Tamagotchi / avatar
 - `pr/des/` reference shots (todo "design pass") = dir not found ➡ not used as a base
+
+---
+
+## 14 · 🎉 addendum @1119 — celebrations · holidays · holy book · note · close
+_src: [qa_1117.md](qa_1117.md) 🎨 D6-D11 + r4 raw · 💬 Q1-Q4 · Q6 · Q7 · Q11 (all still blank ➡ folded into Ds below) · base = app @ `9751195` (L6-L8 + D-042/043 built) · docs only, ❌ code_
+_🔑 1 idea: **th app is a print shop + a time clock** — u clock out (stamp), get promoted (seal), th calendar prints special editions (holidays), th book looks hand-set (holy book). Evy new piece uses th § 1-8 tokens, nothing new except named fx + assets_
+
+### 14.0 · 💬 open choices (addendum) — "picks ok" = enough
+_ordered by wh they unlock · D-042/043 (plan versioning · unlocks) + D-044 (dbl-tap) taken on main ➡ these start at D-045_
+| D | Q | options | 🤖 pick | unlocks |
+|---|---|---------|---------|---------|
+| D-045 | **1 score** on th hero (Q1: "star 3 · 5 ☭ · 1 ✓ = confusing") | a) drop th 2 gift stamps · b) caption each counter (tried @1116, still confusing) · c) **hero = streak world only** (star + week + nxt-milestone bar) · stamps = career world (Day-done pane + My Capital) | **c** · ⚠️ amends D-036 A: hero size + look stay, only th stamp row leaves | C1 · C2 |
+| D-046 | **milestones + freeze** (Q2 · Q3) | steps: 7 · 14 · 30 · 50 · 100 · 200 · 365 · then evy +100 · earn 1 freeze each, max 2 held · name: a) ❄️ Freeze · b) ✊ **Streiktag** · c) 🛟 Rettungsring · 🕊️ Sabbat: keep (weekly, auto) o fold in | **steps as listed + b ✊ Streiktag + keep Sabbat** (Sabbat = weekly grace · Streiktag = earned buffer, used only wh Sabbat's spent) | C1 · C2 |
+| D-047 | **star tier aftr a break** | a) back 2 0 (Duolingo, loss aversion) · b) best ever, nvr lost · c) **"Abschreibung"** — 1 tier down per missed day (fixed capital depreciates, doesn't vanish) | **c** (kind but still stakes · D-004) | C1 · C2 |
+| D-048 | **Day complete pane** (D10 · Q11) | a) stamp thumps onto th card + star counts N-1 ➡ N · b) 1 punchy line fr a pool (no quote nobody gets) · c) tomorrow = a teasing Q, drop "Verse arrives 07:30" · d) Marx head reacts | **a + b + c now · d = 🧪** aftr C3's head asset | C2 · C7 |
+| D-049 | **1 celebration system** (§ 14.1 ladder + queue) | ✔️ as written · change X | ✔️ **as written** | C2 |
+| D-050 | **rank-up = Beförderung** | a) **fullscreen RPG promotion** (badge flies in · Marx seals it "GENEHMIGT" · rays · perk line · share) · b) bigger dialog only · + perks: cosmetic table § 14.1.4 ✔️ / ❌ · rank as a D-043 unlock source y/n | **a + perks ✔️ + rank 3 opens 1 locked plan** | C2 |
+| D-051 | **holiday Marx head** (D8 · Q6) | a) **1 base head + accessory overlays** (hat · beard tint · prop) · b) full redraw per feast · c) emoji next 2 th head (now = "half-baked") | **a**, b only 4 3 tentpoles (🎄 · 🎃 · 🎂) | C3 |
+| D-052 | **feast calendar** (R4 gaps) | a) **all 18 new** (§ 14.2.3) · b) labour history only, no fun days · c) 🦠 picks fr th sheet | **a** (gaps ≤ ~4 w) · c stays possible on th sheet | C3 |
+| D-053 | **holy-book devices** (D11) | a) ⚡ set only · b) **⚡ + 🟡** · c) all incl 🧪 (grain · margin glosses) | **b** · ❌ margin ¶ numbers (r3: "metadata, usr no need") | C4 |
+| D-054 | **note look** (D7 · Q4) | a) yellow sticky + 📌 (⚠️ = Hooked's yellow ➡ voice clash) · b) **margin-comment card** (tail · initial disc · name + time · ✎) · c) keep ruler, only new bg | **b** | C5 ➡ C4 |
+| D-055 | **close btn** (D9 · Q7) | V1-V8 sheet (§ 14.5) ➡ 🦠 picks by eye | 🤖 renders th sheet now (C6, no gate) · eye-guess **V4** (★ w ✕ cut-out = new usrs read "close") | C6 |
+
+### 14.1 · 🏆 celebrations = 1 system
+_🦠 r3 + r4: "anti-climax" · "bland, txt stuffed, no icon/anim" · "Moses?" · "morgen kommt = not teasing" · rank-up "shd feel like hero upgrade / MMORPG lvl-up"_
+#### 14.1.1 the ladder — size ∝ rarity (D-034 · D-039 stay)
+| tier | wh | how often | fx | surface | ms |
+|------|----|-----------|----|---------|----|
+| T0 | any Primary tap | evy tap | press edge sinks + 📳 Confirm | — | 100 |
+| T1 | quote-of-th-day Amen | daily | ✓ CheckPop (D-039) | — | 1200 |
+| T2 | plan day done | daily | ☭ swoosh ➡ **Stempeluhr** pane (§ 14.1.2) | dialog | 1200 + pane |
+| T2b | chapter fully read | ~weekly | red wax seal ☭ presses onto th chapter's tailpiece (§ 14.3) | inline i th book | 600 |
+| T3 | streak milestone (D-046) | 7 · 14 · 30 … | **Meilenstein** screen (§ 14.1.3) | fullscreen | 2300 |
+| T4 | stamp card full = rank up | ~evy 10 reading days | **Beförderung** screen (§ 14.1.4) | fullscreen | 2300 |
+| T5 | badge · plan unlock (D-043) · Hooked unlock · plan done · book done | rare | reward dialog (§ 7, as now) | dialog | — |
+#### rules (= D-049)
+- 🔑 **1 big screen per tap** · order: fx ➡ T2 pane ➡ T3 ➡ T4 ➡ T5 dialogs (`RewardSlot` queue, as L7)
+- ≥ 2 due ➡ th pane's Primary changes 2 **"Moment … ▸"** w a gold glint = "there's more" (open loop, honest) · T3 + T4 same day ➡ T4 screen shows th milestone as a 2nd line, not a 2nd screen
+- > 2 T5 dialogs i 1 go ➡ 1st shows, rest = "+ 2 more" chip ➡ My Capital (no dialog wall)
+- quote Amen (T1) day hits a milestone ➡ ✓ pop ➡ T3 directly (no pane — pane = plan days only)
+- reduced motion ➡ evy screen jumps 2 its end frame · 📳 + txt stay · fx overlays pass touches aftr 400 (§ 8)
+- 🪝 evy new trick = 1 HookNote (Hooked on): Stempeluhr = "endowed progress" · milestone = "goal gradient" · Streiktag = "loss aversion, cushioned" · Beförderung = "variable reward o th self" · "Moment ▸" = "Zeigarnik / open loop"
+
+#### 14.1.2 Stempeluhr — Day complete, redesigned (D-048 · D10)
+_now: title + "N days i a row. Accumulate, accumulate! That is Moses and th prophets! (Capital 22,56)" + "Tomorrow: «…»" + "Verse arrives at 07:30" = 3 txt lines, 0 image, 0 motion_
+```
+╭────────────────────────────────────╮
+│                                  ★ │  ★ = close (§ 5)
+│    STEMPELKARTE 2                  │  book-meta, inkMuted
+│  ┌──────────────────────────────┐  │
+│  │ ☭  ☭  ☭  ☭  ☭  ☭  ◉  ○  ○  ○ │  │  ◉ = today: red ring ➡ ☭ THUMP
+│  └──────────────────────────────┘  │     (spring 1.6 ➡ 1, -8° ➡ -3°, 4 ink specks)
+│               ╱★╲                  │
+│              ╱ 12 ╲                │  star 64, counts 11 ➡ 12 (digit roll 260)
+│               ╲  ╱                 │  + 1 gold glow pulse
+│          12 Tage am Stück          │  title-m
+│                                    │
+│   „Tagessoll erfüllt —             │  body-l, app voice (sans), ink
+│        ohne Aufseher."             │  1 line fr th pool ⬇
+│  ────────────────────────────────  │  line
+│   Morgen: Warum heckt Geld Junge?  │  body-m italic inkMuted · Q fr C7
+│                                    │
+│  ╭────────────────────────────╮    │
+│  │        Feierabend          │    │  Primary-L + press edge
+│  ╰────────────────────────────╯    │  ≥ 2 moments due ➡ "Moment … ▸" + glint
+╰────────────────────────────────────╯
+```
+- 🎬 timeline (starts aftr th ☭ swoosh lands): 0 pane in (slow 400) ➡ 400 stamp thump (📳 heavy click + 🔊 stamp thud, D-035) ➡ 700 count + glow ➡ 1000 line + teaser fade in · btn live fr 400
+- card full (10/10) ➡ card flips (rotationY, base 260) ➡ back side = "Karte voll" + Primary "Beförderung ▸" ➡ T4
+- 🗣️ **line pool** (~12, rotate by day = variable reward · DE/EN pairs, tr() inline · nvr a Kapital quote here — quotes live i th book):
+  - "Schicht erledigt. Der Mehrwert gehört heute dir." / "Shift done. Today th surplus value is yours."
+  - "Tagessoll erfüllt — ohne Aufseher." / "Quota met — no overseer."
+  - "Lesekapital +1. Ausbeutungsfrei." / "Reading capital +1. Exploitation-free."
+  - "Stempel drauf. Die Uhr gehört heute dir." / "Stamped. Today th clock is yours."
+  - "Nicht mal Engels war so pünktlich." / "Not even Engels was this punctual."
+  - "Ein Tag, den dir keiner abkaufen kann." / "A day nobody can buy off you."
+  - ⚠️ hero alr says "Schicht erledigt" wh done ➡ pool line 1 only on days ≠ hero copy, o hero ➡ "Feierabend ✓"
+- **teaser** = a Q th opens a loop, not a cut quote: new per-day field `qd` / `qe` i `plans.json` (C7) · fallback til then: 1st sentence o tomorrow's Andacht ending i "?" · else no teaser (nvr a cut verse)
+- 🚫 gone: "Moses und die Propheten" · "Losung kommt um 07:30" (lives i ⚙️) · Hooked NEXT note stays (Hooked on only)
+
+#### 14.1.3 Meilenstein — streak milestones (D-046 · D-047 · D6 · R3)
+- **star tiers** = th hero star grows ornaments (same `ic_star` asset + layers, nvr a Path() copy):
+
+| tier | streak | star gets | colour |
+|------|--------|-----------|--------|
+| 0 | 0-6 | plain (now) | red + gold rim |
+| 1 | 7+ | soft glow behind | gold 30 % radial |
+| 2 | 14+ | thin ring | gold 2dp |
+| 3 | 30+ | laurel (2 branches, bottom) | goldDeep on light · gold on gradient |
+| 4 | 50+ | 5 tiny stars on th ring | gold |
+| 5 | 100+ | halo w rays (= Saint Marx's halo) | gold |
+| 6 | 200+ | ribbon under it, "200" | red + gold txt |
+| 7 | 365+ | full Orden: laurel + halo + ribbon w year | gold |
+- 📉 break (D-047 c "Abschreibung"): shown tier = max(tier(streak), lastTier − missedDays) ➡ falls 1 tier / day, nvr a cliff · copy (1×, Callout blue): "Dein Lesekapital schreibt sich ab — langsam. Ein Tag reicht, um es zu stoppen."
+- **hero** (D-045 c): star + week row + **nxt-milestone bar** (4dp gold on white 20 %, label-m "noch 3 bis 14") · stamp row + rank line leave th hero ➡ pane + My Capital
+- **screen** (fullscreen, ink 85 % scrim over th hero gradient):
+```
+╭────────────────────────────────────╮
+│                                    │
+│            ✦  ╱★╲  ✦               │  star 160 · new ornament grows in
+│           ❦  ╱ 14 ╲  ❦             │  (laurel unfolds, spring 600)
+│               ╲  ╱                 │
+│                                    │
+│     14 Tage ununterbrochen         │  display, white
+│     Rekord!  (if = best)           │  label-m gold
+│                                    │
+│  ■■■■■■■■■■■■■■  ← recap chain      │  N cells fill start ➡ end 800 ms
+│  (🕊 + ✊ days = their own icon)    │  > 30 ➡ last 14 + "… +N"
+│                                    │
+│  ┌──────────────────────────────┐  │
+│  │ ✊  +1 Streiktag erkämpft     │  │  token slides up · slots ✊ ✊ / ○
+│  │     rettet 1 verpassten Tag  │  │  body-m
+│  └──────────────────────────────┘  │
+│  ( Weiter )            Teilen      │  Primary-L · Text
+╰────────────────────────────────────╯
+```
+- 🎬 0 star ➡ 200 recap fills (📳 light tick evy 2nd cell) ➡ 1000 ornament grows ➡ 1600 headline ➡ 1900 Streiktag token · 2300 still
+- ✊ **Streiktag** (D-046 b): auto-used aftr 🕊️ Sabbat's spent · week row shows it as a ✊ dot (red ring, white fist) · copy on use: "Streiktag eingelöst — die Kette hält." · max 2 held, shown as 2 tiny slots next 2 th star · 🚫 shop · 🚫 paid repair · 🚫 "streak at risk" red push (D-004)
+- share card = same 1080×1200 as th quote card: star w tier + "14 Tage Kapital am Stück" + app name
+
+#### 14.1.4 Beförderung — rank-up = lvl-up (D-050 · r4)
+_now: same "Day complete" dialog w "Neuer Rang:" + 22sp red txt + confetti = "bland"_
+```
+╭────────────────────────────────────╮
+│   ╲  │  ╱      gold rays, 12        │  rotate 6°/s, fade out at 2300
+│ ──  ┌───┐  ──                       │  (nvr loop 4ever, § 8)
+│ [📗]➜│ 📈 │                         │  old badge shrinks + slides start
+│  ──  └───┘  ──                      │  new badge flies in fr top, 1.15 overshoot
+│   ╱ ┏━━━━━━━━━━┓ ╲                  │
+│     ┃GENEHMIGT ✓┃ ← red rubber      │  Marx head peeks up fr th bottom edge,
+│     ┗━━━━━━━━━━┛    stamp -12°      │  slams th seal: 📳 heavy + 🔊 thud + 4dp shake
+│                                    │
+│    RANG 3 / 7                      │  book-meta gold
+│    Erweiterte Reproduktion         │  title-l serif white
+│    Neu: ein Leseplan ist frei 🔓   │  body-m · th perk (1 line)
+│    28 Lesetage · Karte 3 voll      │  label-m white 70 %
+│  ( Weiter )            Teilen      │
+╰────────────────────────────────────╯
+```
+- 🎬 0 rays + old badge ➡ 400 swap fly ➡ 1100 Marx peeks ➡ 1400 SEAL ➡ 1700 confetti (existing `Confetti`) + title + perk · 2300 still
+- **rank badges** = 7 vector emblems (not emoji): 📗 shovel + coin heap · 🔁 2-arrow circle · 📈 spiral up · 🏭 workbench + hammer · ⚙️ gear + chimney · 🧔 Marx bust i laurel · ☭ ☭ i full wreath
+- **perks** (cosmetic, honest · 💬 D-050):
+
+| rank | perk |
+|------|------|
+| 1 Ursprüngliche Akkumulation | hero frame gets a thin gold border |
+| 2 Einfache Reproduktion | 2nd stamp card design (blue cloth) |
+| 3 Erweiterte Reproduktion | 1 locked plan opens (new D-043 source `rank`) |
+| 4 Manufaktur | rank title shows next 2 ur name i Circles |
+| 5 Große Industrie | star gets a gear rim |
+| 6 Klassiker-Status | ur name lands i th book's colophon (§ 14.3) |
+| 7 Expropriation … | red star ➡ gold star 4ever + th ☭ swoosh turns gold |
+
+### 14.2 · 🎄 holidays = special editions (D-051 · D-052 · D8 · R4)
+_now: `Feast.kt` 12 feasts = gradient + emoji next 2 th greeting + verse · Marx head (top bar `ic_marx_fg` · share card `ic_launcher_fg`) nvr changes ➡ "half-baked"_
+#### 14.2.1 4 slots per feast — evy feast fills ≥ 2
+| slot | wh | rule |
+|------|----|------|
+| 🧔 **head** | top bar · share card · widget head | 1 base head + overlay layers (D-051 a) · same line weight + palette as `ic_launcher_fg` |
+| ⭐ **emblem** | hero star slot (92) | stays ★ unless th feast owns a symbol (♀ · 🎄 · 🎃) · number alw inside |
+| 🖼️ **frame** | hero border + corners | 1 ornament band (garland · bunting · cobweb · fuse) · ≤ 12dp, outside th txt |
+| 🎨 **gradient + greet + verse** | hero | exists, keep |
+- feast days may swap paint + emblem, nvr layout (§ 2) · star tiers (§ 14.1.3) still show: feast emblem gets th same ornaments
+#### 14.2.2 th 12 existing — upgrade
+| feast | head | emblem | frame / extra |
+|-------|------|--------|---------------|
+| 🎆 Neujahr 1.1. | party hat, beard full o confetti | ★ as a firework burst | **"Merry crisis & happy new fear"** = greet · 💥 aftermath o 31.12.'s fuse |
+| 🥂 Silvester 31.12. | holds a dynamite stick, fuse lit | ★ w a burning fuse that shortens by hour | fuse runs along th hero top ➡ boom = Neujahr (2-day story) |
+| 💘 Valentin 14.2. | heart-shaped glasses + cupid arrow thru a price tag | ★ w a heart cut-out | rose garland |
+| 💐 Frauentag 8.3. | Clara Zetkin guest head (she founded th day) o Marx + purple ribbon | **big ♀, number inside th circle** (🦠 r4) | purple + violet band |
+| 🕯️ Todestag 14.3. | greyscale head + candle | ★ outline only | quiet: no confetti that day |
+| 🐣 Ostern | Marx hatching fr a cracked egg | ★ egg-shaped | "th dead seize th living" stays |
+| ✊ 1. Mai | red carnation i th buttonhole + raised fist | ★ w ✊ | red bunting |
+| 🎂 Geburtstag 5.5. | party hat + cake "1818" | ★ w 1 candle | confetti on open (1×) |
+| 📕 Kapital 14.9. | reading glasses + Bd. 1 under th arm | ★ on a book spine | gilt edge on th hero |
+| 🎃 Halloween 31.10. | **pumpkin w Marx beard + halo** (🦠 r3) · o vampire cape (ch. 10 "vampire-like") | jack-o'-lantern ★ (carved, glowing) | cobweb corners |
+| 🛍️ Black Friday | buried under shopping bags, tag "−100 % Mehrwert" | ★ w crossed-out SALE tag | black, receipt-paper strip |
+| 🎄 Weihnachten 24-26.12. | **Santa-Marx** (beard alr fits) · sack "Produktionsmittel" | ★ on top o a tiny tree | snow on th hero top · greet + "Ho ho ho — die Produktionsmittel für alle!" |
+#### 14.2.3 18 new — fills R4 gaps (D-052)
+```
+       Jan  Feb  Mar  Apr  May  Jun  Jul  Aug  Sep  Oct  Nov  Dec
+now    ●    ●    ●●   ●    ●●   ·    ·    ·    ●    ●    ●    ●●
+new    ○    ○    ○    ○    ○    ○○○○ ○○   ○○   ○○   ○    ○    ○
+was: 5.5 ➡ 14.9 = 4 months empty · now: longest gap ~4 w (5.5 ➡ 1.6 · 15.1 ➡ 14.2)
+🦠 wants ~2 w ➡ th sheet shows th holes, fill w fun days by hand
+```
+| date | feast | head | why it fits |
+|------|-------|------|-------------|
+| 15.1. | Rosa + Karl (Luxemburg, Liebknecht † 1919) | red carnation | biggest left date i DE (LL-Demo) |
+| 21.2. | Manifest 1848 | holds th pamphlet | th press, th first print |
+| 18.3. | Pariser Kommune 1871 | Phrygian cap | Marx' "Bürgerkrieg i Frankreich" |
+| 28.4. | Workers' Memorial | hard hat · quiet | ch. 13-15 accidents · no confetti |
+| 8.5. | Tag der Befreiung 1945 | quiet · red carnation | anti-fascism (⬄ R5 fascism plan) |
+| 1.6. | Kindertag | — (emblem only: ★ w a kite) | ch. 10 + 13 child labour |
+| 4.6. | Weberaufstand 1844 | weaver's cap | Marx wrote on it |
+| 21.6. | längster Tag (fun, unofficial) | sunglasses · sweating | ch. 8 "th capitalist loves it" |
+| 28.6. | Stonewall / CSD | rainbow beard | solidarity, summer |
+| 5.7. | Matchgirls' strike 1888 | holds a match | th first big women-led strike |
+| 14.7. | Bastille 1789 | tricolour cockade | th bourgeoisie's own revolution |
+| 5.8. | Engels † 1895 | **Engels guest head** | th co-author |
+| 16.8. | Peterloo 1819 | quiet | cavalry vs. workers |
+| 1.9. | Antikriegstag | dove on th shoulder | DGB day |
+| 28.9. | 1. Internationale 1864 | globe | Marx wrote its address |
+| 17.10. | Tag gegen Armut (UN) | empty pockets turned out | ch. 23 pauperism |
+| 28.11. | Engels' birthday | Marx + Engels double head | bromance |
+| 2.12. | Jenny Marx † 1881 | **Jenny guest head** | th one who kept it all running |
+- unofficial / fun days = th "random ones" 🦠 asked 4 (variable reward) · quiet days (†) = no confetti, grey paint, 1 line
+- 🖨️ **feast sheet** (test-only, like `DsChoicesTest`): all heads + emblems side by side ➡ `android/app/build/shots/feast_sheet.png` = th design sesh board 🦠 asked 4 (r3)
+#### 14.2.4 ♀ emblem (Frauentag · 🦠 r4)
+```
+ ╭───────────────────────────────────────────╮
+ │ 12 Tage Lesekapital akkumuliert    ╭────╮ │   ♀ ring: 6dp white stroke
+ │ Weiter geht's!                     │ 12 │ │   + violet glow, number = display
+ │ 💐 Frauentag — Kap. 13 kannte …    ╰─┬──╯ │   inside th circle (not below)
+ │                                    ──┼──  │   cross = same stroke
+ │  ✓  ✓  ✓  ◉  ·  ·  ·                      │
+ ╰───────────────────────────────────────────╯
+```
+
+### 14.3 · 📜 holy book (D-053 · D11)
+_alr: drop cap 📖 + 📜 (L6) · red rubric heads · folio "— 50 —" · page break hairline · ❦ betw sections (§ 7) · spine shadow_
+| # | device | wh | where | cost |
+|---|--------|----|-------|------|
+| 1 | **illuminated initial** | chapter's 1st letter: 4 lines, red letter on a goldTint square, ink hairline frame, tiny vine | 📖 📜 | 🟡 (draw, no asset) |
+| 2 | **section initial** | evy section's 1st letter: 2-line red drop cap, no box | 📖 📜 | ⚡ (DropCapText alr) |
+| 3 | **red pilcrow ¶** | small red ¶ starts each paragraph instead o an indent | 📜 | ⚡ |
+| 4 | **incipit** | above th chapter title, book-meta red: "HIER BEGINNT DAS ERSTE KAPITEL" · number i Roman (Kapitel I) | 📖 📜 | ⚡ |
+| 5 | **headpiece** | printer's band ❦ ✥ ❦ ✥ ❦ over th chapter title | 📖 📜 | ⚡ |
+| 6 | **tailpiece + seal** | ☙ vignette at chapter end · chapter fully read ➡ red wax ☭ seal presses onto it (T2b) | 📖 📜 | 🟡 |
+| 7 | **running head** | small caps: verso "DAS KAPITAL" · recto chapter title (alternates by page) | 📖 | ⚡ |
+| 8 | **catchword** (Kustode) | 1st word o th nxt page, bottom end ➡ old-book device + a free page-turn teaser | 📖 | ⚡ |
+| 9 | **ribbon bookmark** | 🔖 page = red silk ribbon hangs fr th top edge, swallowtail end (replaces th icon on th page) | 📖 | 🟡 |
+| 10 | **gilt edge** | 2dp gold gradient on th page's outer edge | 📖 | 🟡 |
+| 11 | **explicit + colophon** | book end: "HIER ENDET DER ERSTE BAND" + colophon (typeface · "gesetzt auf der Pseudopod" · rank-6 names, § 14.1.4) | 📖 📜 | ⚡ |
+| 12 | paper grain | 2-3 % noise on `page` | 📖 | 🧪 perf |
+| 13 | margin glosses | notes as tiny ✍ marks i th margin, tap = open | 📖 | 🧪 (⬄ D-054) |
+- ❌ margin ¶ numbers: r3 took th ¶ ref line out ("metadata, usr no need") ➡ don't bring it back via th margin
+```
+┌──────────────────────────────────────┐▒  ← gilt edge (10)
+│ DAS KAPITAL                          │▒  running head (7), book-meta
+│                                    ┃ │▒  ribbon (9) if bookmarked
+│           ❦ ✥ ❦ ✥ ❦                ┃ │▒  headpiece (5)
+│   HIER BEGINNT DAS ERSTE KAPITEL   ╿ │▒  incipit (4), red
+│          Kapitel I · Die Ware        │▒  book-title
+│ ╔═════╗                              │▒
+│ ║  D  ║er Reichtum der Gesellschaf-  │▒  illuminated initial (1)
+│ ║     ║ten, in welchen kapitalis-    │▒
+│ ╚═════╝tische Produktionsweise herr- │▒
+│ scht, erscheint als eine »ungeheure  │▒
+│ Warensammlung« …                     │▒
+│ ¶ Die Ware ist zunächst ein äußerer  │▒  pilcrow (3) — 📜 only
+│ Gegenstand, ein Ding, das durch …    │▒
+│                              Eigen-  │▒  catchword (8)
+│               — 49 —                 │▒  folio (alr)
+└──────────────────────────────────────┘▒
+```
+- 13 langs: Roman numerals + incipit = DE/EN/… via tr() · ar · ur = mirrored (ribbon + gilt edge on th oth side) · zh · hi · bn = no drop cap (script has no caps) ➡ initial box w 1st glyph, 2 lines
+
+### 14.4 · ✍️ note = comment card (D-054 · D7 · r2)
+_r2: "change bg + icon + small ruler so we see it's a note · look how other apps do comments" · "drop th star there" · tap away = save only, verse menu stays_
+```
+  Die Ware ist zunächst ein äußerer Gegenstand, ein
+  Ding, das durch seine Eigenschaften …                 ← Marx, bare
+     ▲
+  ╭──┴──────────────────────────────────────────╮
+  ┃ (S)  Du · Notiz · 19. Nov              ✎    │   initial disc 24 blue · label-s
+  ┃      Ware = alles, was verkauft wird?        │   body-m ink
+  ┃      ↳ auch im Lesesaal                      │   label-s blue (if posted)
+  ╰──────────────────────────────────────────────╯
+  ┃ = 3dp blue ruler (start)  ·  card = paperHi + 1dp blue 30 % + r12 · tail 8dp → th verse
+```
+- = th "me" voice (§ 7) i comment shape: blue ruler stays, **bg leaves blueTint** (was "a blue quote") ➡ paperHi card + hairline + tail · ✎ = edit · ❌ ★ i th editor
+- editor: same card, field inside, 1 ghost line "Notiz …" · tap outside = save (o drop if unchanged) · verse menu stays open (r2) · Chip Choice "also post 2 reading room" stays
+- comments sheet: oth ppl = same card shape i paperDeep, no ruler · mine = this card ➡ note ⬄ comment = 1 component (`NoteCard`)
+
+### 14.5 · ★ close btn — variants sheet (D-055 · D9 · r1)
+_now (V1): ★ red, 64 % o a 36 circle (red 10 % + 30 % hairline), optically lifted · 48 target · 🦠 r1 "gv many versions, see it i diff ctx"_
+| V | look | 👍 | 👎 |
+|---|------|----|----|
+| V1 | now | brand, calm | new usrs don't read ★ = close |
+| V2 | bare ★ 28, no circle | lightest | weak target cue |
+| V3 | mono ✕ i circle | evyone gets it | loses th brand mark (§ 1) |
+| V4 | ★ w a small ✕ knocked out o its centre | brand + "close" | ✕ tiny at 36 |
+| V5 | red disc, white ★ (inverted) | strong, seal-like | loud next 2 Primary (§ 1 "1 loud thing") |
+| V6 | outline ★, gold rim only | bookish, quiet | 3:1 on paperHi? (ck) |
+| V7 | red wax-seal blob w embossed ★ | ties 2 stamps + seals | busy at 36 |
+| V8 | V1 + ★ spins 72° on press (spring) | playful, 0 cost at rest | motion only, same static look |
+- sheet = 8 variants × 3 ctx (MarxDialog on paperHi · sheet · hero gradient) + 1 dark row ➡ `close_sheet.png` · 🦠 picks ➡ `CloseStar` dflt changes, 1 line
+
+### 14.6 · 🏗️ lanes 4 Opus — disjoint files (§ 12 rules apply: look only unless th lane says · tr() · b4 + aft shots · tsts green · guard ratchet down · ❌ bump / deploy)
+_lane ids = **C1-C7** (§ 12 uses L0-L6, qa uses L1-L8 ➡ no clash)_
+| lane | gate | files (only these) | does | done wh |
+|------|------|--------------------|------|---------|
+| **C1 🧮 streak logic** | D-045 · 045 · 046 | `logic/Daily.kt` · `data/Prefs.kt` (strikes held, last tier) · new `test/…/StreakGameTest.kt` | milestones · tiers · Abschreibung · Streiktag earn + auto-use aftr Sabbat · API: `milestoneHit(days)` · `starTier(days, now)` · `strikes` | tsts: earn at 7/14 · max 2 · used only aftr Sabbat · tier falls 1/day · old streaks unchanged |
+| **C2 🏆 moments** | C1 merged · D-048 · 048 · 049 | new `ui/Moments.kt` (Stempeluhr · Meilenstein · Beförderung) · `ui/Fx.kt` (stamp thump · rays · count roll · seal) · `ui/TodayScreen.kt` 🔥 (pane wiring · hero: stamp row out, milestone bar in) · `ui/MineScreen.kt` 🔥 (stamp card + rank line in) · `ui/Hooks.kt` (5 notes) · new `ui/ds/Emblem.kt` (StreakStar + tiers) · new `res/drawable/rank_*.xml` ×7 · new `test/…/MomentsShotsTest.kt` | § 14.1 all · queue order + "Moment ▸" · reduced motion end frames | shots `moment_shift` · `moment_shift_full` · `moment_milestone_14` · `moment_rank_3` · `hero_tiers` (0-7) · FxQueueTest: 1 big screen per tap |
+| **C3 🎄 feasts** | D-051 · 051 | `logic/Feast.kt` (+ 18 feasts, head + emblem + frame ids) · new `ui/ds/MarxHead.kt` · new `res/drawable/head_*.xml` + `frame_*.xml` · `MainActivity.kt` · `ui/Share.kt` · `notify/Widget.kt` (1 call each ➡ MarxHead) · new `test/…/FeastSheetTest.kt` | § 14.2 · base head + overlays | `feast_sheet.png` (30 feasts × head + emblem + frame) · Feast.on() tst evy date i th table · longest gap ≤ 4 w tst |
+| **C3b ♀ emblem** | C2 + C3 merged | `ui/ds/Emblem.kt` | feast emblems (♀ · 🎄 · 🎃 · ★ variants) | `hero_feasts` shot |
+| **C4 📜 holy book** | D-053 | `ui/VerseView.kt` · `ui/ReadScreen.kt` · `ui/Feed.kt` · new `ui/ds/Ornaments.kt` · new `res/drawable/orn_*.xml` | § 14.3 ⚡ + 🟡 · tail: NoteBubble ➡ NoteCard swap (aftr C5) | shots `chapter` · `chapter_scroll` · `chapter_end_seal` · `bookmark_ribbon` · rtl + zh shot |
+| **C5 ✍️ note card** | D-054 | `ui/ds/Bubbles.kt` (NoteCard) · `ui/Comments.kt` · new `test/…/NoteCardShotTest.kt` | § 14.4 · comments sheet uses it | shots `note_card` · `note_edit` · `comments` · note tsts green |
+| **C6 ★ close sheet** | none — start now | `ui/ds/Buttons.kt` (`CloseStar(variant)`, dflt = V1) · new `test/…/CloseSheetTest.kt` | § 14.5 V1-V8 | `close_sheet.png` ➡ 🦠 picks |
+| **C7 ❓ teasers** | D-048 c | `assets/content/plans.json` (`qd` / `qe` per day) · `bin/` plan build step | 1 teasing Q per plan day (LLM draft ➡ 🦠 skims) · no cut change ➡ no ver bump (D-042) | all 10 plans hv `qd`+`qe` · test_bin green |
+- order: **C6 now** · C1 ∥ C3 ∥ C4 ∥ C5 ∥ C7 ➡ C2 (needs C1) ➡ C3b (needs C2 + C3) · C4's NoteCard swap = last commit, aftr C5
+- 🔥 `Changelog.kt` · `strings.xml` · `build.gradle.kts` · `i18n_*` = fan-in only (as § 12)
+- fan-in: `bin/translate.py --only ui` (pool lines · feast greets · incipits) ➡ shots montage ➡ D status ➡ DEV deploy on 🦠's word ➡ fon QA
+
+### 14.7 · 🚫 not i th addendum
+- streak shop · gems · paid repair · friend streaks · "at risk" red push · leaderboards
+- new tabs / screens beyond th 3 moments · Lesekreis unlock · Tamagotchi / avatar (§ 13 stays)
+- holiday art = vector, flat, same 2-3 colours per head · 🚫 photos · 🚫 AI raster (APK size + drift)
