@@ -318,8 +318,10 @@ class AppVm(app: Application) : AndroidViewModel(app) {
         content.plans.filter { isOpen(it, stats, s.plansOpen, IS_DEV && s.devUnlock) }.map { it.id }.toSet()
     }.flowOn(Dispatchers.Default).stateIn(viewModelScope, SharingStarted.Eagerly, emptySet())
     /** 🎁 locked plans th just opened, not announced yet (DEV switch = no fanfare, it opens all) */
+    //   🐛 @1120 startup crash (DEV 1119.1944): fired b4 th lazy content load ➡ content.plans lateinit ➡ guard like plansOpen
+    //   (plansOpen re-emits once _loaded flips ➡ this re-runs) · tst: UpgradeStartTest
     val newPlans: StateFlow<List<Plan>> = combine(plansOpen, marx.prefs.orden, settings) { open, o, s ->
-        if (IS_DEV && s.devUnlock) emptyList()
+        if (!content.loaded || (IS_DEV && s.devUnlock)) emptyList()
         else content.plans.filter { it.lock != null && it.id in open && "plan:${it.id}" !in o.shown.orEmpty() }
     }.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
     fun plansSeen(ids: List<String>) = viewModelScope.launch { marx.prefs.ordenShown(ids.map { "plan:$it" }.toSet()) }
