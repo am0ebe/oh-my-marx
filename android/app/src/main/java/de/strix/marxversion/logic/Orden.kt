@@ -58,7 +58,7 @@ enum class Orden(
     HOOKED("🪝", T("Hinter den Kulissen", "Behind the scenes"), T("Hooked-Modus freigeschaltet: 7 Lesetage oder dein erster fertiger Leseplan.",
         "Hooked mode unlocked: 7 reading days or your first finished reading plan."),
         OrdenGroup.READ, earned = { hookedUnlocked(it) }),
-    MARKS("🖍️", T("Mein Kapital wächst", "My capital grows"), T("10 Markierungen, Notizen oder Lesezeichen.", "10 highlights, notes or bookmarks."),
+    MARKS("🖍️", T("Mein Kapital wächst", "My capital grows"), T("10 Markierungen, Notizen oder Lesezeichen.", "10 highlights, notes or bookmarx."),
         OrdenGroup.BOOK, earned = { it.marks >= 10 }),
     BOOK("📕", T("Hat's wirklich gelesen", "Actually read it"), T("Das ganze Kapital, Band 1. Jeder Absatz.", "All of Capital, vol. 1. Every paragraph."),
         OrdenGroup.BOOK, earned = { it.bookDone }),

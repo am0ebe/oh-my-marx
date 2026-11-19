@@ -66,7 +66,7 @@ fun MineScreen(vm: AppVm, openChapter: (String, String) -> Unit) {
         item {
             Text(tr("Mein Kapital", "My Capital"), fontSize = 22.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(top = 12.dp))
             // sweep r4: highlighter is gone fr th verse menu ➡ count only wh u can still make (old highlights still tint their verse)
-            Text(tr("%d Notizen · %d Lesezeichen", "%d notes · %d bookmarks")
+            Text(tr("%d Notizen · %d Lesezeichen", "%d notes · %d bookmarx")   // 🔖 EN = "Bookmarx" evywhere (🦠 qa_1117 r4 pun · a11y descs stay "Bookmark")
                 .f(marks.count { it.note != null }, marks.count { it.bookmark }), fontSize = 13.sp)
             Text(tr("Deine vergegenständlichte Lesearbeit. Unveräußerlich — Export kommt noch.",
                 "Your objectified reading labour. Inalienable — export coming."), fontSize = 12.sp, color = MaterialTheme.colorScheme.secondary)
@@ -81,7 +81,7 @@ fun MineScreen(vm: AppVm, openChapter: (String, String) -> Unit) {
         if (marks.any { it.bookmark }) item {
             Row(Modifier.padding(top = 8.dp), verticalAlignment = Alignment.CenterVertically) {
                 BookmarkMark(20.dp)
-                Text(tr("Lesezeichen", "Bookmarks"), fontSize = 16.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(start = 6.dp))
+                Text(tr("Lesezeichen", "Bookmarx"), fontSize = 16.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(start = 6.dp))
             }
         }
         items(marks, key = { it.verseId }) { m ->

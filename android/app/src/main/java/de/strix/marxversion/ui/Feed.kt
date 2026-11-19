@@ -3,6 +3,11 @@ package de.strix.marxversion.ui
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.ui.Alignment
+import de.strix.marxversion.ui.ds.Ds
+import de.strix.marxversion.ui.ds.OmmType
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -73,8 +78,12 @@ fun ReadOnFeed(vm: AppVm, start: Int, scroll: ScrollState, speaker: Speaker, onP
                 Text(chapterTitle(it), fontSize = 20.sp, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Serif,
                     textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp))
             }
+            // 📄 qa_1117 r4: new MEW page ➡ thin rule + folio "— S. 50 —" (like th book) · not at th chapter head (title says it)
+            if (v.kap == prev?.kap && v.page != null && v.page != prev.page) PageBreak(v.page)
             if (v.secTitle.isNotBlank() && v.sec != prev?.sec) SectionTitle(secTitle(v))
-            VerseView(vm, v, speaker, showRef = false)   // qa_1116 r2.1: full txt, no expand btn · qa_1117: no ref line
+            // 🔴 chapter's 1st passage = big red drop cap, same as 📖 (qa_1117 r4)
+            val first = vm.content.chapter(v.kap).firstOrNull()?.id == v.id
+            VerseView(vm, v, speaker, showRef = false, dropCap = first)   // qa_1116 r2.1: full txt, no expand btn · qa_1117: no ref line
             Gap(6)
             if ((k + 1) % FEED_BREAK == 0) BreakCard(k + 1)
         }
@@ -85,6 +94,17 @@ fun ReadOnFeed(vm: AppVm, start: Int, scroll: ScrollState, speaker: Speaker, onP
         } ?: Text(tr("🏁 Das war Band 1. Ganz. Respekt.", "🏁 That was volume 1. All of it. Respect."),
             fontWeight = FontWeight.Bold, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp))
         Gap(40)
+    }
+}
+
+/** 📄 page turn i th 📜 scroll: hairline + serif folio, muted (decor only, like th 📖 page's "— 49 —") */
+@Composable
+private fun PageBreak(page: Int) {
+    Row(Modifier.fillMaxWidth().padding(vertical = 10.dp), verticalAlignment = Alignment.CenterVertically) {
+        HorizontalDivider(Modifier.weight(1f), color = Ds.line)
+        Text(tr("— S. %d —", "— p. %d —").f(page), style = OmmType.bookMeta.copy(fontFamily = FontFamily.Serif), color = Ds.inkMuted,
+            modifier = Modifier.padding(horizontal = 10.dp))
+        HorizontalDivider(Modifier.weight(1f), color = Ds.line)
     }
 }
 
