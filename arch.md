@@ -18,6 +18,12 @@ _SDD: code says **wh** · th file says **y** · drift = a bug · fmt ➡ `pr/vib
 - 🔥 hot files (1 owner at a ti — fan-out lanes nvr split these): `assets/content/i18n_*.json` + `data/i18n/*.jsonl` (translate pass = fan-in only) · `android/app/build.gradle.kts` (version) · `ui/Changelog.kt` · `res/values*/strings.xml` · `TodayScreen.kt` · `MineScreen.kt` · `Share.kt`
 
 ## 🧾 decisions (newest on top)
+### D-044 @1119 · 📖 double-tap: left half = back · right half = fwd · amends D-022 · ✔️ (🦠 scrap @1119)
+- **ctx**: 🦠 "read book > add hint double tap = next/prev page" · D-022 double-tap = alw fwd
+- **dc**: side by x o th double-tap (paper) o th last finger-down on th book (passage, VerseView hs no position) · hint = folio line + 📖 chip pill
+- **y**: matches th 1-tap edge zones (left back · right fwd) ➡ 1 mental model · no always-on peek (D-022 pill rm'd @1116 = distracting)
+- **alt**: double-tap alw fwd + left-quarter tap 4 back (❌ 🦠 asked 4 prev too) · hint pill on evy chapter open (❌ distracting)
+- **ck**: 👀 qa_1117 L9
 ### D-043 @1118 · new reading plans unlock progressively (bonus levels, not a paywall) · ✔️ (🦠 qa_1117 Q10 yes · Q12)
 - **ctx**: r4 "more plans, unlocked later (+ DEV)" · Q12 🦠: "timeline: 3 awards o 1-3-5 plans o streak 20 · like a bonus easter egg = random reward · + 1 holiday/xmas present"
 - **dc**: `Plan.lock` = any 1 of {plans · orden · streak (best ever) · feast gift · lucky 1-in-5 per Amen day aftr N days} · locked = 🔒 mystery card at th end (no title, only HOW) · open ➡ 🎁 dialog i th reward queue · DEV switch = all, no fanfare

@@ -75,7 +75,7 @@ private val PHASES = listOf(
         T("Bibel-App: Markieren, Notizen, Lesezeichen ➡ die App wird zur eselsohrigen Privatbibel. Wechseln? Undenkbar.",
             "Bible App: highlights, notes, bookmarks ➡ the app becomes your dog-eared personal Bible. Switch? Unthinkable."),
         T("Hier: 🖍️ Markierungen, ✍️ Notizen, 🔖 Lesezeichen ➡ „Mein Kapital“ · ⏰ du wählst die Uhrzeit der Losung (= du lädst den Trigger selbst) · „Morgen: …“-Teaser nach jedem Lesetag.",
-            "Here: 🖍️ highlights, ✍️ notes, 🔖 bookmarks ➡ “My Capital” · ⏰ you pick the verse time (= you load the trigger yourself) · “Tomorrow: …” teaser after every reading day."),
+            "Here: 🖍️ highlights, ✍️ notes, 🔖 bookmarx ➡ “My Capital” · ⏰ you pick the verse time (= you load the trigger yourself) · “Tomorrow: …” teaser after every reading day."),
         "mine", Color(0xFFE1BEE7),
     ),
 )

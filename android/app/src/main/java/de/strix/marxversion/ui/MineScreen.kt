@@ -76,7 +76,7 @@ fun MineScreen(vm: AppVm, openChapter: (String, String) -> Unit) {
             OrdenSection(if (IS_DEV && s.devUnlock) de.strix.marxversion.logic.Orden.entries.toSet() else orden, s.testMode)
             Gap(10)
             if (marks.isEmpty()) Text("\n" + tr("Noch nichts akkumuliert. Tipp auf einen Absatz ➡ Lesezeichen oder Notiz — ursprüngliche Akkumulation beginnt klein.",
-                "Nothing accumulated yet. Tap a passage ➡ Bookmark or Note — primitive accumulation starts small."))
+                "Nothing accumulated yet. Tap a passage ➡ Bookmarx or Note — primitive accumulation starts small."))
         }
         if (marks.any { it.bookmark }) item {
             Row(Modifier.padding(top = 8.dp), verticalAlignment = Alignment.CenterVertically) {

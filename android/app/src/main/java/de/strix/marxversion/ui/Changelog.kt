@@ -58,7 +58,7 @@ val RELEASES = listOf(
         T("🆕 Neue Version? Du erfährst es sofort · ⚙️ „Automatisch aktualisieren“ = ohne Nachfrage (APK von der Webseite)", "🆕 New version? You hear at once · ⚙️ “Update automatically” = no asking (APK from the website)"),
         T("✅ Amen fühlt sich besser an: kurzer Haken + Vibration, die große Feier nur zu besonderen Momenten", "✅ Amen feels better: a quick tick + buzz, the big celebration only for special moments"),
         T("⚙️ Über: nur noch die neueste Version, schlichter Abspann, Symbolreihe mittig", "⚙️ About: newest version only, simpler credits, centred icon row"),
-        T("🔖 Lesezeichen mit eigener Überschrift", "🔖 Bookmarks with their own heading"),
+        T("🔖 Lesezeichen mit eigener Überschrift", "🔖 Bookmarx with their own heading"),
         T("🆕 Updates melden sich selbst: Benachrichtigung bei neuer Version, antippen = laden + installieren", "🆕 Updates announce themselves: a notification when a new version is out, tap = download + install"),
         T("📖 Umblättern: wischen, doppelt tippen oder das Eselsohr unten rechts", "📖 Turning pages: swipe, double-tap or the dog-ear bottom right"),
         T("✍️ Notizen sehen aus wie Kommentare: eigene Farbe, Randlinie, antippen = fertig", "✍️ Notes look like comments: own colour, side line, tap = done"),
