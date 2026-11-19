@@ -164,6 +164,7 @@ internal fun chromeFor(route: String?): Chrome = when {
 /** reward keys i th celebration queue (ui/Fx.kt) */
 private const val R_UNLOCK = "unlock"
 private const val R_ORDEN = "orden"
+private const val R_PLAN = "planUnlock"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -310,6 +311,16 @@ private fun App(vm: AppVm) {
         val list = remember { newOrden.filter { it != Orden.HOOKED && it !in shownOrden } }
         if (list.isEmpty()) LaunchedEffect(Unit) { done() }
         else NewOrdenDialog(list) { shownOrden += list; vm.ordenSeen(list); done() }
+    }
+    // 🎁 a locked reading plan just opened (milestone · feast gift · lucky draw · D-043) ➡ own moment, queued like a badge
+    val newPlans by vm.newPlans.collectAsStateWithLifecycle()
+    val shownPlans = remember { mutableSetOf<String>() }
+    LaunchedEffect(newPlans) { if (newPlans.any { it.id !in shownPlans }) fx.reward(R_PLAN) }
+    RewardSlot(R_PLAN) { done ->
+        val list = remember { newPlans.filter { it.id !in shownPlans } }
+        val close = { shownPlans += list.map { it.id }; vm.plansSeen(list.map { it.id }); done() }
+        if (list.isEmpty()) LaunchedEffect(Unit) { done() }
+        else de.strix.marxversion.ui.PlanUnlockedDialog(list, onOpen = { close(); nav.go("plans") }, onDismiss = close)
     }
     CelebrationHost(fx)
 

@@ -167,17 +167,18 @@ const val SNIPPET = 320
 fun readMinutes(t: String) = maxOf(1, if (t.count { it == ' ' } < t.length / 20) t.length / 400 else (t.count { it == ' ' } + 1) / 200)
 
 @Composable
-fun bridge(planId: String, idx: Int, d: PlanDay): String = when (LocalLang.current) {
+fun bridge(planId: String, idx: Int, d: PlanDay, pinned: Boolean = false): String = when (LocalLang.current) {
     Lang.DE -> d.bridgeDe
     Lang.EN -> d.bridgeEn
-    else -> LocalTr.current?.x?.get("$planId:$idx") ?: d.bridgeEn   // translate.py kind x · missing ➡ EN
+    else -> (if (pinned) null else LocalTr.current?.x?.get("$planId:$idx")) ?: d.bridgeEn   // translate.py kind x · missing ➡ EN
 }
 
+/** pinned = an OLD plan cut (Plan.old) ➡ translations r keyed by th CURRENT cut's day idx ➡ skip them, EN fallback */
 @Composable
-fun andacht(planId: String, idx: Int, d: PlanDay): String = when (LocalLang.current) {
+fun andacht(planId: String, idx: Int, d: PlanDay, pinned: Boolean = false): String = when (LocalLang.current) {
     Lang.DE -> d.andachtDe
     Lang.EN -> d.andachtEn
-    else -> LocalTr.current?.a?.get("$planId:$idx") ?: d.andachtEn
+    else -> (if (pinned) null else LocalTr.current?.a?.get("$planId:$idx")) ?: d.andachtEn
 }
 
 @Composable
@@ -438,7 +439,7 @@ fun VerseView(
                     speaker.say(txt, textLang, Persona.of(settings.persona))
                 }
                 Action(if (mark?.bookmark == true) R.drawable.ic_bookmark else R.drawable.ic_bookmark_border,
-                    tr("Lesezeichen", "Bookmark"), if (mark?.bookmark == true) Ds.goldDeep else Ds.blue) { vm.bookmark(v.id) }
+                    tr("Lesezeichen", "Bookmarx"), if (mark?.bookmark == true) Ds.goldDeep else Ds.blue) { vm.bookmark(v.id) }
                 Action(R.drawable.ic_note, tr("Notiz", "Note"), if (mark?.note != null) Ds.goldDeep else Ds.blue) { editNote = !editNote }
                 Action(R.drawable.ic_copy, if (copied) tr("Kopiert ✓", "Copied ✓") else tr("Kopieren", "Copy")) {
                     copyText(ctx, "${lang.quote(txt)}\n— Karl Marx, $r")

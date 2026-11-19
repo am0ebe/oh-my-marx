@@ -29,6 +29,8 @@ data class Settings(
     val popupSeen: String? = null,      // date th Losung popup was last shown ("2026-10-31")
     val activePlan: String? = null,
     val planStart: String? = null,      // "2026-10-28"
+    val planVer: Int? = null,           // 🔢 cut o th active plan at start (Plan.ver · D-042) · null = started b4 versioning = v1
+    val plansOpen: Set<String> = emptySet(),   // 🔒 plans opened by a one-off event (🎁 feast gift · lucky draw) ➡ stay open
     val readScale: Float = 1f,          // 🤏 pinch i th reader ➡ font size × this
     val readScroll: Boolean = false,    // 📜 reader mode: false = 📖 book pages · true = endless scroll (qa_1116 Q4/Q7, remembers last)
     val community: Boolean = true,      // 👥 Mitlesen: anonymous daily-token counts + comments · always on since QA r5 (D-020, no ⚙️ toggle)
@@ -50,6 +52,8 @@ class Prefs(private val context: Context) {
         val popupSeen = stringPreferencesKey("popup_seen")
         val activePlan = stringPreferencesKey("active_plan")
         val planStart = stringPreferencesKey("plan_start")
+        val planVer = intPreferencesKey("plan_ver")
+        val plansOpen = stringSetPreferencesKey("plans_open")
         val readScale = floatPreferencesKey("read_scale")
         val readScroll = booleanPreferencesKey("read_scroll")
         val community = booleanPreferencesKey("community")
@@ -117,6 +121,8 @@ class Prefs(private val context: Context) {
             popupSeen = p[K.popupSeen],
             activePlan = p[K.activePlan],
             planStart = p[K.planStart],
+            planVer = p[K.planVer],
+            plansOpen = p[K.plansOpen] ?: emptySet(),
             readScale = p[K.readScale] ?: 1f,
             readScroll = p[K.readScroll] ?: false,
             community = true,   // QA r5 (D-020): Mitlesen always on, toggle gone ➡ an old stored "off" no longer counts
@@ -136,9 +142,11 @@ class Prefs(private val context: Context) {
     suspend fun setNotif(on: Boolean, hour: Int, minute: Int) = context.store.edit {
         it[K.notifOn] = on; it[K.notifHour] = hour; it[K.notifMinute] = minute
     }
-    suspend fun startPlan(id: String, date: String) = context.store.edit {
-        it[K.activePlan] = id; it[K.planStart] = date
+    suspend fun startPlan(id: String, date: String, ver: Int) = context.store.edit {
+        it[K.activePlan] = id; it[K.planStart] = date; it[K.planVer] = ver
     }
+    /** 🔒 ➡ 🔓 for good (feast gift · lucky draw) */
+    suspend fun openPlans(ids: Collection<String>) = context.store.edit { it[K.plansOpen] = (it[K.plansOpen] ?: emptySet()) + ids }
 
     // 🎖️ Orden (logic/Orden.kt): th few things th DB doesn't alr know + which medals were alr announced
     private object O {

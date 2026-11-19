@@ -205,9 +205,26 @@ def extra_plans(ids):
         bad = [i for d in e["days"] for i in d["v"] if i not in ids]
         if bad:
             raise SystemExit(f"plans_extra {e['id']}: unknown verse ids {bad}")
-        out.append({k: e[k] for k in ("id", "emoji", "tde", "ten", "dde", "den")}
+        out.append({k: e[k] for k in ("id", "emoji", "tde", "ten", "dde", "den")} | ({"lock": e["lock"]} if e.get("lock") else {})
                    | {"days": [d["v"] for d in e["days"]], "x": [{k: d[k] for k in ("xd", "xe") if d.get(k)} for d in e["days"]]})
     return out
+
+def versions(P, f=None):
+    """🔢 plan versioning (D-042): th app logs plan days by INDEX ➡ re-cutting a plan would shift evy1 mid-plan.
+    data/plan_versions.json = evy cut ever shipped (full days, frozen) · a plan whose verse ids changed ➡ new ver, auto ·
+    plan gets ver (current) + old {ver: days} ➡ app pins th cut u started on (Prefs.planVer) · commit th json w th change"""
+    f = f or DATA / "plan_versions.json"
+    arch = json.loads(f.read_text(encoding="utf-8")) if f.exists() else {}
+    for p in P:
+        ids = [d["v"] for d in p["days"]]
+        h = arch.setdefault(p["id"], [])
+        if not h or [d["v"] for d in h[-1]["days"]] != ids:
+            if h: print(f"🔢 {p['id']}: cut changed ➡ v{len(h) + 1} (running plans stay on v{len(h)})")
+            h.append({"ver": len(h) + 1, "days": p["days"]})
+        p["ver"] = len(h)
+        if len(h) > 1: p["old"] = {str(e["ver"]): e["days"] for e in h[:-1]}
+    f.write_text(json.dumps(arch, ensure_ascii=False, indent=1), encoding="utf-8")
+    return P
 
 def main():
     V = jl("verses.jsonl")
@@ -244,6 +261,7 @@ def main():
                      | (p["x"][i] if p.get("x") else {})
                      for i, ids in enumerate(p["days"]) if ids]
         p.pop("x", None)
+    versions(P)
     (DATA / "plans.json").write_text(json.dumps(P, ensure_ascii=False, indent=1), encoding="utf-8")
 
     first_page = {}

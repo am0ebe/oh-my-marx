@@ -59,6 +59,25 @@ data class Plan(
     @SerialName("dde") val descDe: String,
     @SerialName("den") val descEn: String,
     val days: List<PlanDay>,
+    // 🔢 plan versioning (qa_1117 r4 · D-042): days r addressed by index (DayLog.planDay) ➡ a re-cut plan would shift ppl
+    //   mid-plan · ver = current cut · old = earlier cuts (bin/build.py ⬄ data/plan_versions.json, auto-bumped on any change)
+    val ver: Int = 1,
+    val old: Map<String, List<PlanDay>> = emptyMap(),
+    // 🔒 progressive unlock (qa_1117 Q12): null = open · see logic/PlanUnlock.kt
+    val lock: PlanLock? = null,
+) {
+    /** th cut u started on (Prefs.planVer) · null = started b4 versioning existed = v1 · unknown ➡ current */
+    fun daysFor(v: Int?): List<PlanDay> = (v ?: 1).let { if (it == ver) days else old[it.toString()] ?: days }
+}
+
+/** 🔒 wh opens a plan (any 1 o them) · feast = gift on that feast (stays open aftr) · lucky = 🎁 random draw on an Amen day */
+@Serializable
+data class PlanLock(
+    val plans: Int = 0,          // ≥ N plans finished
+    val orden: Int = 0,          // ≥ N badges
+    val streak: Int = 0,         // streak ≥ N
+    val feast: String? = null,   // logic/Feast name, eg WEIHNACHTEN
+    val lucky: Int = 0,          // aftr ≥ N reading days: 1-in-5 chance per Amen day
 )
 
 /** th whole book i 1 o th LLM langs (bin/translate_full.py --export ➡ full_xx.json, ~2-3 MB each)

@@ -37,6 +37,12 @@ import de.strix.marxversion.logic.Orden
 import de.strix.marxversion.logic.Stats
 import de.strix.marxversion.logic.bestStreak
 import de.strix.marxversion.logic.streakInfo
+import de.strix.marxversion.logic.UnlockStats
+import de.strix.marxversion.logic.isOpen
+import de.strix.marxversion.logic.eventOpens
+import de.strix.marxversion.logic.plansDone
+import de.strix.marxversion.logic.readingDays
+import de.strix.marxversion.data.Plan
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
@@ -236,7 +242,8 @@ class AppVm(app: Application) : AndroidViewModel(app) {
             content.load()
             content.tr(marx.prefs.settings.first().lang)   // ⚡ L6: saved lang's table b4 `loaded` ➡ 1st frame nvr parses on main
             _loaded.value = true; refreshWidgets(app)
-            content.warm()                                 // footnotes, aftr th 1st screen is up
+            planEvents(amenDay = false)                    // 🎁 feast gift plan (eg Christmas) on any app open
+            content.warm()                                // footnotes, aftr th 1st screen is up
         }
         // 🔁 pipeline renamed verse ids (FÜFNZEHNTES fix @1113) ➡ marks + read log follow, once (data/IdMoves.kt)
         viewModelScope.launch(Dispatchers.IO) { de.strix.marxversion.data.IdMoves.migrate(app, marx.db, marx.prefs) }
@@ -278,6 +285,7 @@ class AppVm(app: Application) : AndroidViewModel(app) {
         marx.db.logs().day(DayLog(today(), planId, planDay))
         read(verseIds)
         widgets()
+        planEvents(amenDay = true)   // 🎲 lucky plan draw
     }
 
     // ── 🎖️ Orden (logic/Orden.kt): recomputed whenever reading/marks/circles/counters change ──
@@ -286,7 +294,7 @@ class AppVm(app: Application) : AndroidViewModel(app) {
         val dates = d.map { java.time.LocalDate.parse(it.date) }.toSet()
         val (st, rest) = streakInfo(d)
         val chapters = content.chapters.map { it.kap }.filter { kap -> content.chapter(kap).let { v -> v.isNotEmpty() && v.all { it.id in read } } }.toSet()
-        val plansDone = content.plans.count { p -> d.filter { it.planId == p.id }.map { it.planDay }.distinct().size >= p.days.size }
+        val plansDone = plansDone(content.plans, planDays(d))
         Orden.earned(Stats(
             dates = dates, streak = st, best = maxOf(st, bestStreak(dates)),
             chaptersDone = chapters, bookDone = content.verses.all { it.id in read }, plansDone = plansDone,
@@ -299,6 +307,29 @@ class AppVm(app: Application) : AndroidViewModel(app) {
     val newOrden: StateFlow<List<Orden>> = combine(orden, marx.prefs.orden) { e, o -> e.filter { it.name !in o.shown.orEmpty() } }
         .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
     fun ordenSeen(o: List<Orden>) = viewModelScope.launch { marx.prefs.ordenShown(o.map { it.name }.toSet()) }
+
+    // ── 🔒 plan unlocks (logic/PlanUnlock.kt · D-043) ──
+    private fun planDays(d: List<DayLog>) = d.groupBy { it.planId }.mapValues { (_, l) -> l.map { it.planDay }.distinct().size }
+    /** ids o all plans u can open now */
+    val plansOpen: StateFlow<Set<String>> = combine(combine(days, _loaded) { d, _ -> d }, orden, settings) { d, o, s ->
+        if (!content.loaded) return@combine emptySet()
+        val dates = d.map { java.time.LocalDate.parse(it.date) }.toSet()
+        val stats = UnlockStats(plansDone(content.plans, planDays(d)), o.size, maxOf(streakInfo(d).first, bestStreak(dates)))
+        content.plans.filter { isOpen(it, stats, s.plansOpen, IS_DEV && s.devUnlock) }.map { it.id }.toSet()
+    }.flowOn(Dispatchers.Default).stateIn(viewModelScope, SharingStarted.Eagerly, emptySet())
+    /** 🎁 locked plans th just opened, not announced yet (DEV switch = no fanfare, it opens all) */
+    val newPlans: StateFlow<List<Plan>> = combine(plansOpen, marx.prefs.orden, settings) { open, o, s ->
+        if (IS_DEV && s.devUnlock) emptyList()
+        else content.plans.filter { it.lock != null && it.id in open && "plan:${it.id}" !in o.shown.orEmpty() }
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+    fun plansSeen(ids: List<String>) = viewModelScope.launch { marx.prefs.ordenShown(ids.map { "plan:$it" }.toSet()) }
+    /** 🎁 feast gift (any app open) · 🎲 lucky draw (Amen days only) ➡ persisted */
+    fun planEvents(amenDay: Boolean) = viewModelScope.launch {
+        if (!content.loaded) return@launch
+        val s = marx.prefs.settings.first()
+        val ids = eventOpens(content.plans, java.time.LocalDate.now(), readingDays(days.value) + if (amenDay) 1 else 0, s.plansOpen, amenDay)
+        if (ids.isNotEmpty()) marx.prefs.openPlans(ids)
+    }
     fun flag(f: String) = viewModelScope.launch { marx.prefs.flag(f) }
     private suspend fun nightCheck() { if (java.time.LocalTime.now().hour < 4) marx.prefs.flag("night") }
 
@@ -309,11 +340,12 @@ class AppVm(app: Application) : AndroidViewModel(app) {
         read(listOf(verseId))
         popupDone()
         widgets()
+        planEvents(amenDay = true)   // 🎲 lucky plan draw
         if (on) { Community.amen(marx.prefs.commToken(today())); refreshCrowd() }  // 👥 "Heute N × Amen"
         amenToKreise()  // 👥 Kreise see it (explicit membership = consent, independent o Mitlesen)
     }
 
-    fun startPlan(id: String) = viewModelScope.launch { marx.prefs.startPlan(id, today()) }
+    fun startPlan(id: String) = viewModelScope.launch { marx.prefs.startPlan(id, today(), content.plan(id)?.ver ?: 1) }   // 🔢 pin th cut (D-042)
     fun setLang(l: Lang) = viewModelScope.launch { loadFull(l); marx.prefs.setLang(l); widgets() }
     fun setTestMode(on: Boolean) = viewModelScope.launch { marx.prefs.setTestMode(on) }
     fun setDevUnlock(on: Boolean) = viewModelScope.launch { marx.prefs.setDevUnlock(on) }

@@ -262,7 +262,10 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
         } else {
             val done = days.filter { it.planId == plan.id }
             val planToday = done.firstOrNull { it.date == today() }
-            val idxOrNull = planIndex(done, plan.days.size)
+            // 🔢 D-042: th cut u started on (a re-cut plan nvr shifts ur days) · pinned = old cut ➡ idx-keyed translations skipped
+            val planDays = plan.daysFor(s.planVer)
+            val pinned = planDays !== plan.days
+            val idxOrNull = planIndex(done, planDays.size)
             val accent = PlanAccent
             if (idxOrNull == null) {
                 // 🏁 finished: nvr show th last page again
@@ -276,7 +279,7 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
                 }
             } else {
             val idx = idxOrNull
-            val day = plan.days[idx]
+            val day = planDays[idx]
             Card(Modifier.fillMaxWidth(), colors = CardDefaults.cardColors(containerColor = Color.White),
                 elevation = CardDefaults.cardElevation(2.dp)) {
               Column(Modifier.padding(16.dp)) {
@@ -287,12 +290,12 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
                     }
                     Column(Modifier.padding(start = 12.dp).weight(1f)) {
                         Text(planTitle(plan), fontWeight = FontWeight.Bold, fontSize = 18.sp, fontFamily = FontFamily.Serif, color = accent)
-                        Text(tr("Tag %d von %d", "Day %d of %d").f(idx + 1, plan.days.size), fontSize = 12.sp, color = Color(0xFF6B6275))
+                        Text(tr("Tag %d von %d", "Day %d of %d").f(idx + 1, planDays.size), fontSize = 12.sp, color = Color(0xFF6B6275))
                         Text(tr("noch %d Lesetage bis „%s“", "%d more reading days to “%s”").f(stampCard(readingDays(days)).left, tr(rank(cardsDone(readingDays(days))))),
                             fontSize = 12.sp, color = Color(0xFF6B6275))
                     }
                 }
-                LinearProgressIndicator(progress = { (idx + if (planToday != null) 1 else 0).toFloat() / plan.days.size },
+                LinearProgressIndicator(progress = { (idx + if (planToday != null) 1 else 0).toFloat() / planDays.size },
                     color = accent, trackColor = accent.copy(alpha = 0.15f),
                     modifier = Modifier.fillMaxWidth().padding(top = 10.dp).height(4.dp).clip(RoundedCornerShape(50)))
                 Gap(8)
@@ -308,7 +311,7 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
                     }
                 }
             }
-            val ad = andacht(plan.id, idx, day)
+            val ad = andacht(plan.id, idx, day, pinned)
             if (ad.isNotBlank()) {
                 Gap(8)
                 Column(Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).background(accent.copy(alpha = 0.07f)).padding(12.dp)) {
@@ -320,7 +323,7 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
             // qa_1116 r2.1: full txt, no "weiterlesen · ~1 min" expand (big round #3 snippet off · VerseView `preview` stays 4 later)
             day.verseIds.mapNotNull { vm.content.verse(it) }.forEach { VerseView(vm, it, speaker); Gap(4) }
             // 💡 curated plans (🤖 Ludditen): NEW bridge txt Marx ➡ today, under th original passage (#6)
-            val br = bridge(plan.id, idx, day)
+            val br = bridge(plan.id, idx, day, pinned)
             if (br.isNotBlank()) {
                 Gap(4)
                 Column(Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).background(Blue.copy(alpha = 0.07f)).padding(12.dp)) {
@@ -332,7 +335,7 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
             }
             Gap()
             // Hooked ch5: investment loads th nxt trigger ➡ tease tomorrow's reading
-            nextTeaser = plan.days.getOrNull(idx + 1)?.verseIds?.firstNotNullOfOrNull { vm.content.verse(it) }
+            nextTeaser = planDays.getOrNull(idx + 1)?.verseIds?.firstNotNullOfOrNull { vm.content.verse(it) }
                 ?.let { teaser(verseQuote(it), lang) }
             if (planToday == null) {
                 Button(onClick = {
@@ -340,7 +343,9 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
                     if (!doneToday && cardJustFilled(total + 1)) rankUp = cardsDone(total + 1) - 1
                     // 🐛 @1116: ☭ got lost i 4708ab7 (✓ pop only) ➡ back (D-039): finishing th plan day = th rare one (full card = confetti)
                     fx?.play(if (rankUp != null) Fx.Confetti else Fx.Swoosh)
-                    vm.dayDone(plan.id, idx, day.verseIds); celebrate = true
+                    // qa_1117 r4 🐛: dialog opened i th same tap ➡ its window sat ON th ☭ · now queued: ☭ ➡ Day complete ➡ new badge
+                    if (fx == null) celebrate = true else fx.reward("dayDone")
+                    vm.dayDone(plan.id, idx, day.verseIds)   // AFTER th reward ➡ a new badge queues behind th pane
                 },
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                     modifier = Modifier.fillMaxWidth()) { Text(tr("Tag geschafft! ✔️", "Day complete! ✔️"), fontSize = 18.sp) }
@@ -383,9 +388,10 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
         Gap(40)
         // (📜 endless feed = th reader's 📜 mode now, qa_1116 Q4/Q7 · Home ends at Marxoskop)
 
-        if (celebrate) {
+        // 🎉 Day complete: queued slot (plan btn, aftr th ☭) · `celebrate` = direct (🧪 test chip, no queue)
+        val dayDoneDialog: @Composable (() -> Unit) -> Unit = { close ->
             if (rankUp != null) Confetti {}  // 🎉 full card = paper rain, 1st = behind th dialog
-            MarxDialog({ celebrate = false; rankUp = null },
+            MarxDialog({ close(); rankUp = null },
                 title = if (rankUp != null) tr("🏅 Stempelkarte voll!", "🏅 Stamp card full!") else tr("Tag geschafft!", "Day complete!"),
             ) {
                     Column {
@@ -406,6 +412,8 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
                     }
             }
         }
+        RewardSlot("dayDone") { done -> dayDoneDialog(done) }
+        if (celebrate) dayDoneDialog { celebrate = false }
     }
     }  // inner padded Column
     }  // PullToRefreshBox

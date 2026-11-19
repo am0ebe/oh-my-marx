@@ -30,6 +30,21 @@ class FxQueueTest {
         assertFalse(q.busy)
     }
 
+    /** qa_1117 r4 🐛: plan "Day complete" opened its dialog ON th ☭ ➡ now: ☭ ➡ Day complete pane ➡ new badge, in series */
+    @Test fun planDayDone_swooshThenPaneThenBadge() {
+        val q = CelebrationQueue()
+        val swoosh = q.play(Fx.Swoosh)
+        assertTrue(q.reward("dayDone"))                   // TodayScreen: before vm.dayDone
+        assertTrue(q.reward("orden"))                     // badge earned by th same day
+        assertSame(swoosh, q.current)
+        q.done(swoosh)
+        val pane = q.current
+        assertTrue(pane is Celebration.Reward && pane.key == "dayDone")
+        q.done(pane!!)
+        val badge = q.current
+        assertTrue(badge is Celebration.Reward && badge.key == "orden")
+    }
+
     @Test fun rareAmen_isBig_dailyIsCheck() {
         assertEquals(Fx.Big, amenFx(rare = true))
         assertEquals(Fx.Check, amenFx(rare = false))

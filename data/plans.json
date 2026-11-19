@@ -247,7 +247,8 @@
     "ad": "Heute lädt uns Marx ein, die Ware als heiliges Ding zu betrachten — nicht weil sie göttlich ist, sondern weil sie aus Erde und Arbeit geboren wurde, wie jedes gute Produkt. Dein Smartphone? Nur ein Haufen Rohstoffe, die jemand in der Nacht vor dem Bildschirm formte. Deine Streaming-Abonnement-Flatrate? Ein Gebrauchswert, der sich in den Wolken versteckt. Und der Gig-Arbeiter, der dir die Pizza bringt? Sein Körper ist die letzte Produktionsstätte, die kein App-Update retten kann. Was ist in deinem Warenkorb, das nicht von dir stammt?",
     "ae": "Today Marx invites us to contemplate the commodity — not as sacred, but as born of earth and labor, like any good product. Your smartphone? Just a pile of raw materials shaped by someone’s midnight grind. Your streaming subscription? A use-value hiding in the cloud. And the gig worker delivering your pizza? Their body is the last factory that no app update can fix. What in your shopping cart was never yours?"
    }
-  ]
+  ],
+  "ver": 1
  },
  {
   "id": "ludditen",
@@ -308,7 +309,8 @@
     "xd": "338 Baumwollfabriken verschwinden, die Produktion wächst trotzdem — in den Händen von weniger Kapitalisten. Marx' Zahlen von 1868 sind das Muster, das wir heute bei Rechenzentren und Basismodellen sehen: riesige Maschinen, wenige Besitzer. Die Frage nach den Produktionsmitteln war nie altmodisch. Sie läuft jetzt nur auf GPUs.",
     "xe": "338 cotton mills disappear, output grows anyway — in the hands of fewer capitalists. Marx's 1868 figures are the pattern we see today with data centres and foundation models: giant machines, few owners. The question of the means of production was never old-fashioned. It just runs on GPUs now."
    }
-  ]
+  ],
+  "ver": 1
  },
  {
   "id": "erschoepft",
@@ -367,7 +369,8 @@
     "ad": "With Marx, we’re not just reading about work — we’re seeing how endless repetition dulls the mind, even as we’re told to ‘optimize’ ourselves. Today, the assembly line is a delivery app, the repetitive task a TikTok scroll, the ‘efficiency’ a boss in the cloud. Heute lädt uns Marx ein, uns mal zu fragen: Wenn dein Handy ein Jahr lang kein Upgrade braucht, aber dein Gehirn schon, wer hat eigentlich den Job gemacht? Was verbraucht mehr von dir: dein Tag oder dein Algorithmus?",
     "ae": "With Marx, we’re not just reading about work — we’re seeing how endless repetition dulls the mind, even as we’re told to ‘optimize’ ourselves. Today, the assembly line is a delivery app, the repetitive task a TikTok scroll, the ‘efficiency’ a boss in the cloud. Today, Marx invites us to ask: if your phone hasn’t needed an update in a year, but your brain has, who’s really doing the work? What consumes more of you: your day or your algorithm?"
    }
-  ]
+  ],
+  "ver": 1
  },
  {
   "id": "montag",
@@ -475,7 +478,8 @@
     "ad": "Heute lädt uns Marx ein, die Schule als Fabrik der Kindheit zu betrachten — wo Kinder nicht lernen, sondern als Zahl in einer Statistik schuften. Heute heißt das: Der Job, der keinen Sinn hat, der Lohn, der nicht reicht, die App, die dir das Gefühl gibt, produktiv zu sein, während du nur scrollst. Dein Handy ist der neue Klassenraum, dein Feed die Lehrerin, und du bist die stille, abgebrannte Masse im Hintergrund. Was würde dein Arbeitsplatz über dich erzählen, wenn er reden könnte?",
     "ae": "Today Marx invites us to see school as a factory of childhood — where children don’t learn, but work as numbers in a statistic. Today that means: the job with no meaning, the wage that doesn’t cover rent, the app that makes you feel productive while you just scroll. Your phone is the new classroom, your feed the teacher, and you’re the quiet, burned-out mass in the background. What would your workplace say about you if it could speak?"
    }
-  ]
+  ],
+  "ver": 1
  },
  {
   "id": "vampir",
@@ -534,7 +538,8 @@
     "ad": "Heute lädt uns Marx ein, einen Blick auf die Geschichte der Zwangsarbeit zu werfen — nicht als fernes Grauen, sondern als Vorgeschichte unseres heutigen Jobs, der sich in jeder Überstunde, jeder App, jeder Klick- und Scrollminute fortsetzt. Wo heute die Angst vor der Entlassung ist, war gestern die Angst vor der Peitsche. Dein Smartphone schreit nach mehr, dein Abo nach längerem Streaming — und du? Du bist nur noch ein kleiner, stetig arbeitender Teil des Systems. Was würde dein Arbeitsvertrag sagen, wenn er sprechen könnte?",
     "ae": "Today Marx invites us to glance at the history of forced labor — not as distant horror, but as the backstory of our modern job, echoing in every overtime hour, every app, every click and scroll. Where today fear of dismissal reigns, yesterday it was fear of the whip. Your smartphone demands more, your subscription craves longer streaming — and you? You're just another small, steadily working part of the machine. What would your employment contract say if it could speak?"
    }
-  ]
+  ],
+  "ver": 1
  },
  {
   "id": "bibel",
@@ -614,7 +619,8 @@
     "ad": "Heute lädt uns Marx ein, einen Blick auf die Winterpause zwischen den Arbeitswellen zu werfen. Während heute die Gig-Arbeiter:innen zwischen Deliveroo, Fiverr und Chatbots hin und her springen, ist die Pause kein Urlaub – sondern der Preis für das ständige Warten auf die nächste Aufgabe. Selbst das Smartphone, das uns ständig verbindet, bleibt still, wenn der Akku leer ist. Und dann fragen wir uns: Wer hat eigentlich das Recht, uns auszuschalten? Was macht dein Arbeitsrhythmus mit deinem Körper, wenn du nicht gerade arbeitest?",
     "ae": "Today Marx invites us to glance at the winter pause between work waves. While today's gig workers shuttle between Deliveroo, Fiverr, and chatbots, the break isn't a holiday — it's the price of constant waiting for the next task. Even the smartphone, which keeps us constantly connected, goes silent when the battery dies. Then we wonder: Who really holds the right to turn us off? What does your work rhythm do to your body when you're not working?"
    }
-  ]
+  ],
+  "ver": 1
  },
  {
   "id": "burns",
@@ -694,7 +700,8 @@
     "ad": "Heute zeigt Marx, wie der sogenannte friedliche Handel oft nur eine Maske für Ausbeutung ist — mit Bestechung, Gewalt und Entvölkerung im Hintergrund. Wo heute die Lieferapp klingelt, da wird der Mensch zum Zugewinn, der Job zum Vertrag, der Handy-Akku zum Ausgebrannten. Der sanfte Handel ist heute ein Algorithmus, der dich nachts wach hält, während dein Gehalt im Dunkeln bleibt. Kennst du das? Dein Abo zahlt sich nicht aus, aber dein Leben schon. Was würdest du kaufen, wenn du nicht mehr verkauft würdest?",
     "ae": "Today Marx reveals how so-called peaceful trade is often just a mask for exploitation — with bribery, violence, and depopulation in the background. Where today the delivery app rings, the person becomes a profit margin, the job a contract, the phone battery a burnt-out resource. The gentle commerce of today is an algorithm keeping you up at night while your salary stays in the dark. You know that feeling? Your subscription pays for nothing, but your life still costs you. What would you buy if you weren’t being sold?"
    }
-  ]
+  ],
+  "ver": 1
  },
  {
   "id": "fetisch",
@@ -770,7 +777,8 @@
     "ad": "With Marx, today’s reflection is on how value in our lives isn’t in what things do for us — but in what they do to each other in the market. Your phone isn’t just a device; it’s a value machine, charging you for every app, every update, every minute of gig-work. Even your sleep is a latent commodity. If your smartwatch could talk, it’d whisper: 'I’m not for you — I’m for the algorithm.' What would your inbox say if it could speak?",
     "ae": "With Marx, today’s reflection is on how value in our lives isn’t in what things do for us — but in what they do to each other in the market. Your phone isn’t just a device; it’s a value machine, charging you for every app, every update, every minute of gig-work. Even your sleep is a latent commodity. If your smartwatch could talk, it’d whisper: 'I’m not for you — I’m for the algorithm.' What would your inbox say if it could speak?"
    }
-  ]
+  ],
+  "ver": 1
  },
  {
   "id": "wertform",
@@ -906,7 +914,8 @@
     "ad": "Heute lädt uns Marx ein, die Geldform als eine historische Konstruktion zu betrachten, kein natürliches Wesen, sondern ein soziales Produkt – wie der Smartphone-Preis, der sich im Hintergrund der App-Updates versteckt. Dein Gehalt ist nur ein Relativwert, dein Overtime-Tag ein Äquivalent, das niemanden mehr wert ist. Und die Abo-App, die dir dein Leben abnimmt? Das ist nur Gold in neuer Kleidung. Warum zahlt du eigentlich immer noch für das, was du schon besitzt?\n\nWas wäre, wenn das Geld plötzlich aufhörte, sich zu verstecken?",
     "ae": "Today Marx invites us to see money not as a natural thing, but as a social construct – like the smartphone price quietly hiding in app updates. Your salary is just a relative value, your overtime a value that no longer counts. And the subscription app stealing your time? That’s just gold in new clothes. Why are you still paying for what you already own?\n\nWhat if money suddenly stopped hiding?"
    }
-  ]
+  ],
+  "ver": 1
  },
  {
   "id": "jahr",
@@ -4032,6 +4041,7 @@
      "3,100"
     ]
    }
-  ]
+  ],
+  "ver": 1
  }
 ]

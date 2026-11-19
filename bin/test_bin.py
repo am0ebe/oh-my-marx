@@ -153,6 +153,42 @@ class Meter(unittest.TestCase):
 align, build = load("align"), load("build")
 
 
+class PlanVersions(unittest.TestCase):
+    """🔢 D-042: build.py versions() ➡ any cut change = new ver · old cuts ride along frozen · same cut = no bump"""
+    def setUp(self):
+        self.d = tempfile.TemporaryDirectory(); self.f = pathlib.Path(self.d.name) / "pv.json"
+        self.b = load("build")
+
+    def tearDown(self): self.d.cleanup()
+
+    def plan(self, *days): return [{"id": "p", "days": [{"v": list(d)} for d in days]}]
+
+    def test_first_build_is_v1_no_old(self):
+        P = self.b.versions(self.plan(["1,1"], ["1,2"]), self.f)
+        self.assertEqual(1, P[0]["ver"]); self.assertNotIn("old", P[0])
+
+    def test_same_cut_no_bump(self):
+        self.b.versions(self.plan(["1,1"], ["1,2"]), self.f)
+        with contextlib.redirect_stdout(io.StringIO()):
+            P = self.b.versions(self.plan(["1,1"], ["1,2"]), self.f)
+        self.assertEqual(1, P[0]["ver"])
+
+    def test_recut_bumps_and_keeps_old_frozen(self):
+        self.b.versions(self.plan(["1,1"], ["1,2"]), self.f)
+        with contextlib.redirect_stdout(io.StringIO()) as out:
+            P = self.b.versions(self.plan(["1,1", "1,2"], ["1,3"]), self.f)
+        self.assertEqual(2, P[0]["ver"])
+        self.assertEqual([["1,1"], ["1,2"]], [d["v"] for d in P[0]["old"]["1"]])
+        self.assertIn("v2", out.getvalue())
+
+    def test_real_archive_matches_plans(self):
+        """committed archive = th shipped plans.json (forgot 2 commit plan_versions.json ➡ fails)"""
+        arch = json.loads((BIN.parent / "data/plan_versions.json").read_text(encoding="utf-8"))
+        for p in json.loads((BIN.parent / "data/plans.json").read_text(encoding="utf-8")):
+            self.assertEqual(p.get("ver"), len(arch[p["id"]]), p["id"])
+            self.assertEqual([d["v"] for d in p["days"]], [d["v"] for d in arch[p["id"]][-1]["days"]], p["id"])
+
+
 class AlignEn(unittest.TestCase):
     """big round #1/#4: EN reader gaps · DE section titles · ch.1 TOC as body txt"""
     def test_split_en_spreads_sentences_by_de_length(self):
