@@ -189,6 +189,42 @@ class PlanVersions(unittest.TestCase):
             self.assertEqual([d["v"] for d in p["days"]], [d["v"] for d in arch[p["id"]][-1]["days"]], p["id"])
 
 
+class PlanContent(unittest.TestCase):
+    """📚 D-056 (R5 re-eval @1119): bibel · 30tage · montag fixes stay fixed · Andachten found by verse ids · hand ones win"""
+    @classmethod
+    def setUpClass(cls):
+        root = BIN.parent
+        cls.P = {p["id"]: p for p in json.loads((root / "data/plans.json").read_text(encoding="utf-8"))}
+        cls.V = {v["id"]: v for v in json.loads((root / "android/app/src/main/assets/content/verses.json").read_text(encoding="utf-8"))}
+
+    def test_every_plan_day_hs_andacht_or_bridge(self):
+        for p in self.P.values():
+            if p["id"] == "jahr": continue   # pure reading, by design (andacht.py SKIP)
+            bare = [i for i, d in enumerate(p["days"]) if not d.get("ad") and not d.get("xd")]
+            self.assertFalse(bare, f"{p['id']}: days w/o Andacht + w/o bridge {bare}")
+
+    def test_bibel_evy_day_hs_a_bible_ref(self):
+        """v1 = 7/10 days w no Bible at all (score.py 'bib' flag)"""
+        bib = re.compile(r"Moses|prophet|Bible|Lamb of God|Christian|Revelation|Gospel|Paradise|Eden|Jehovah|original sin|Holy Ghost")
+        for i, d in enumerate(self.P["bibel"]["days"]):
+            self.assertRegex(" ".join(self.V[v]["en"] for v in d["v"]), bib, f"bibel day {i + 1}")
+
+    def test_30tage_follows_marx_ladder(self):
+        kaps = [self.V[d["v"][0]]["kap"] for d in self.P["30tage"]["days"]]
+        self.assertLess(kaps.index("12"), kaps.index("13"))   # coop ➡ manufacture ➡ machines
+        self.assertLess(kaps.index("22"), kaps.index("23"))   # surplus value ➡ capital, then its general law
+
+    def test_montag_stays_on_th_working_day(self):
+        self.assertFalse([d["v"] for d in self.P["montag"]["days"] if self.V[d["v"][0]]["kap"] in ("1", "2", "3")])
+
+    def test_hand_andachten_beat_llm_cache(self):
+        hand = [json.loads(l) for l in (BIN.parent / "data/andachten_hand.jsonl").read_text(encoding="utf-8").splitlines() if l.strip()]
+        for a in hand:
+            d = next((d for d in self.P[a["plan"]]["days"] if d["v"] == a["v"]), None)
+            self.assertIsNotNone(d, f"hand Andacht for {a['plan']} {a['v']} matches no day (re-cut?)")
+            self.assertEqual(a["de"], d.get("ad"), f"{a['plan']} {a['v']}: LLM Andacht won over th hand one")
+
+
 class AlignEn(unittest.TestCase):
     """big round #1/#4: EN reader gaps · DE section titles · ch.1 TOC as body txt"""
     def test_split_en_spreads_sentences_by_de_length(self):

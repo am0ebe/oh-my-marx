@@ -123,8 +123,11 @@ def plans(V):
     # 1 ── Kapital i 30 Tagen: front-loaded (Arbeitstag ➡ Akkumulation ➡ Fetisch …), Wertform last
     spec = [("8", ["8.1"]), ("8", ["8.2"]), ("8", ["8.3", "8.4"]), ("8", ["8.5", "8.6", "8.7"]),
             ("24", ["24.1", "24.2"]), ("24", ["24.3", "24.4", "24.5"]), ("24", ["24.6", "24.7"]), ("1", ["1.4"]),
+            # v2 @1119 (R5 re-eval, D-056): 10 ➡ 11 ➡ 12 ➡ 13 = Marx's own ladder (rel. surplus value ➡ cooperation ➡
+            # manufacture ➡ machines) · 22 (surplus value ➡ capital) b4 23 (its general law) · v1 had 13 b4 10-12 + 23 b4 22
+            ("10", []), ("11", []), ("12", []),
             ("13", ["13.1", "13.2", "13.3"]), ("13", ["13.4", "13.5"]), ("13", ["13.6", "13.7", "13.8", "13.9", "13.10"]),
-            ("10", []), ("11", []), ("12", []), ("23", ["23.1", "23.2", "23.3"]), ("23", ["23.4", "23.5"]), ("22", []), ("25", []),
+            ("22", []), ("23", ["23.1", "23.2", "23.3"]), ("23", ["23.4", "23.5"]), ("25", []),
             ("4", ["4.1", "4.2"]), ("4", ["4.3"]), ("5", []), ("6", []), ("7", []), ("9", []), ("14", []),
             ("17", []), ("18", []), ("19", []), ("21", []), ("1", ["1.1", "1.2", "1.3"])]
     used = set()
@@ -154,17 +157,23 @@ def plans(V):
     themed("montag", "☕", "Montagmorgen-Marx", "Monday-Morning Marx",
            "14 Tage über Arbeitszeit, Lohn und wer eigentlich wem wie viele Minuten klaut. Ideal um 8:55.",
            "14 days on working hours, wages and who steals how many minutes from whom. Best at 8:55 am.",
-           lambda v: any(t in v.get("t", []) for t in ("arbeitszeit", "lohn", "ausbeutung")), 14)
+           # v2 @1119 (D-056): not ch. 1-3 (v1 day 1 = 1,27 coat + linen: tagged "arbeit", nothing about Monday)
+           lambda v: v["kap"] not in ("1", "2", "3") and any(t in v.get("t", []) for t in ("arbeitszeit", "lohn", "ausbeutung")), 14)
     themed("vampir", "🧛", "Vampir-Plan", "The Vampire Plan",
            "7 Tage Gothic-Ökonomie: Werwolfsheißhunger, Blutgesetze und Kapital, das lebendige Arbeit einsaugt. Für Halloween.",
            "7 days of gothic economics: werewolf hunger, bloody laws and capital sucking living labour. For Halloween.",
            lambda v: re.search(r"[Vv]amp[yi]r|Werwolf|[Bb]lut|saug|Menschenfleisch|Leiche|Gespenst|Teufel", v["de"]), 7,
            boost=lambda v: 20 * bool(re.search(r"[Vv]amp[yi]r|Werwolf|Menschenfleisch", v["de"]))
            + 8 * bool(re.search(r"saug|[Bb]lut", v["de"])))
-    themed("bibel", "✝️", "Bibelstellen im Kapital", "Bible Verses in Capital",
-           "Marx zitiert Moses, die Offenbarung und den heiligen Geist. 10 Tage Theologie mit Mehrwert.",
-           "Marx quotes Moses, Revelation and the Holy Ghost. 10 days of theology with surplus value.",
-           lambda v: v.get("bib") or re.search(r"Moses|Propheten|Bibel|Gott|heilig|Sünde|Offenbarung|Evangel|Christ|Apostel|Mammon|Kirche|Pfaff", v["de"]), 10)
+    # v2 @1119 (D-056): hand-picked · v1 = score.py 'bib' flag ➡ 7/10 days had no Bible i them at all
+    # book order = a mini tour: value (Lamb o God) ➡ money (Revelation) ➡ capital (Eden) ➡ accumulation (Moses) ➡ origin (Adam)
+    bib = ["1,54", "1,139", "2,7", "3,28 3,29", "3,76 3,79", "4,78", "12,40", "22,56", "24,2", "24,93"]
+    if bad := [i for d in bib for i in d.split() if i not in {v["id"] for v in T}]:
+        raise SystemExit(f"bibel: unknown verse ids {bad}")
+    P.append(dict(id="bibel", emoji="✝️", tde="Bibelstellen im Kapital", ten="Bible Verses in Capital",
+                  dde="Marx zitiert Moses, die Offenbarung und den heiligen Geist. 10 Tage Theologie mit Mehrwert.",
+                  den="Marx quotes Moses, Revelation and the Holy Ghost. 10 days of theology with surplus value.",
+                  days=[d.split() for d in bib]))
     themed("burns", "🔥", "Marx teilt aus", "Marx Roasts",
            "10 Tage Polemik: Ökonomen, Fabrikanten und Pfaffen kriegen ihr Fett weg. Marx in Bestform.",
            "10 days of polemics: economists, factory lords and parsons get roasted. Marx at his sharpest.",
@@ -263,10 +272,12 @@ def main():
     X = extra_plans({o["id"] for o in out if o["kind"] == "text"})
     P[1:1] = [p for p in X if not p.get("lock")]   # curated (🤖 Ludditen) right aft th flagship
     P += [p for p in X if p.get("lock")]            # 🔒 D-043: locked = at th end (mystery cards below th open ones)
-    andachten = {(a["plan"], a["day"]): a for a in jl("andachten.jsonl")}
+    # Andacht = by th day's verse ids, not its index (D-056: a re-ordered cut keeps its Andachten)
+    # + andachten_hand.jsonl = hand-written (re-cut bibel/montag days) · wins over andacht.py's LLM cache (--redo can't eat it)
+    andachten = {(a["plan"], tuple(a["v"])): a for a in jl("andachten.jsonl") + jl("andachten_hand.jsonl")}
     for p in P:
-        p["days"] = [{"v": ids} | ({"ad": andachten[(p["id"], i)]["de"], "ae": andachten[(p["id"], i)]["en"]}
-                                   if (p["id"], i) in andachten and andachten[(p["id"], i)]["v"] == ids else {})
+        p["days"] = [{"v": ids} | ({"ad": andachten[(p["id"], tuple(ids))]["de"], "ae": andachten[(p["id"], tuple(ids))]["en"]}
+                                   if (p["id"], tuple(ids)) in andachten else {})
                      | (p["x"][i] if p.get("x") else {})
                      for i, ids in enumerate(p["days"]) if ids]
         p.pop("x", None)

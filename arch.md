@@ -18,6 +18,12 @@ _SDD: code says **wh** · th file says **y** · drift = a bug · fmt ➡ `pr/vib
 - 🔥 hot files (1 owner at a ti — fan-out lanes nvr split these): `assets/content/i18n_*.json` + `data/i18n/*.jsonl` (translate pass = fan-in only) · `android/app/build.gradle.kts` (version) · `ui/Changelog.kt` · `res/values*/strings.xml` · `TodayScreen.kt` · `MineScreen.kt` · `Share.kt`
 
 ## 🧾 decisions (newest on top)
+### D-056 @1119 · plan re-eval: bibel hand-picked · 30tage + montag re-ordered · Andachten found by verse ids · ✔️ (🦠 qa_1117 r1 via M8 #155 salvage)
+- **ctx**: 🦠 r1 "do th plans build on each other?" · re-eval: bibel = score.py `bib` flag ➡ 7/10 days hd no Bible at all · 30tage hd 13 b4 10-12 + 23 b4 22 (Marx's ladder backwards) · montag day 1 = 1,27 (coat + linen, not Monday)
+- **dc**: bibel v2 = 10 hand-picked refs (Lamb o God ➡ Revelation ➡ Bible-4-linen ➡ Paradise ➡ Eden ➡ Jehovah ➡ Moses ➡ original sin ➡ Holy Ghost) · 30tage v2 + montag v2 (no ch. 1-3) · all via D-042 · Andacht lookup = (plan, verse ids), not day idx · `data/andachten_hand.jsonl` beats andacht.py's LLM cache
+- **y**: a generated pick is fine 4 "juicy verse/day" plans, wrong 4 a plan w a promise (Bible) · re-ordered days keep their Andachten · hand Andachten survive `andacht.py --redo`
+- **alt**: tune th `bib` regex (❌ "Gott"/"heilig" hits evywhere) · LLM Andachten 4 new bibel days (❌ quality, todo "Heute lädt uns Marx ein")
+- **ck**: `test_bin.py PlanContent` 5 · translate `--only a` re-run (Andacht translations r keyed plan:idx)
 _🎨 D-045..055 @1119 = design addendum (qa_1117 D6-D11 + r4) · all 💬 · 🤖 pick marked · spec + mockups + lanes C1-C7 ➡ [design_system.md](design_system.md) § 14 (§ 14.0 = same list as a table)_
 ### D-055 @1119 · close btn (D9 · Q7): variants sheet ➡ 🦠 picks · 💬
 - **options**: V1 now (★ i tinted circle) · V2 bare ★ · V3 mono ✕ · **V4 ★ w ✕ cut-out** (🤖 eye-guess) · V5 inverted red disc · V6 outline ★ · V7 wax seal · V8 V1 + spin on press
