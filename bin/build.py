@@ -203,7 +203,8 @@ def plans(V):
     return P
 
 def extra_plans(ids):
-    """data/plans_extra.json = hand-curated plans (🤖 Ludditen & KI): verses by id (Kapital txt untouched) + per day a NEW
+    """data/plans_extra.json = hand-curated plans (🤖 Ludditen & KI · 6 🔒 @1118): verses by id (Kapital txt untouched) ·
+    optional "lock" {plans · orden · streak · feast · lucky} = progressive unlock (D-043, app: logic/PlanUnlock.kt) · per day a NEW
     bridge txt xd/xe ('💡 Und heute?') · missing id ➡ fail loud (a split.py change must not silently empty a day)"""
     p = DATA / "plans_extra.json"
     out = []
