@@ -38,15 +38,21 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
   - Look at: Today Werkbank chips (Time clock · Milestone · Promotion) · My Capital level card · reader mode toggle + Continue.
   - Includes accepting or changing D-048 to D-054 and D-059 to D-062 (all marked Proposed in [adr.md](adr.md)).
   - [ ] 🦠 good / note
-- **Review:** Built after DEV 1730, not on the phone yet (next deploy): rank perks D-063 · feast emblems ([hero_feasts.png](img/qa_1120/hero_feasts.png)) · decay note shows only the day after a missed day.
+- **Review:** Built after DEV 1730, not on the phone yet (needs a deploy, which only you can order):
+  - Rank perks for all 7 levels (D-063) · feast emblems ([hero_feasts.png](img/qa_1120/hero_feasts.png)) · 11 more drawn feast heads ([feast_sheet.png](img/feast_sheet.png)).
+  - Illuminated chapter initial, section initials, red ¶ in scroll mode ([chapter.png](img/qa_1120/chapter.png)).
+  - Arabic, Urdu, Hindi, Bengali: no drop cap (D-064) · section headings now translated in all 11 languages · 12 broken %s/%d translations fixed ([chapter_ar.png](img/qa_1120/chapter_ar.png)).
+  - The decay note shows only on the day after a missed day.
   - [ ] 🦠 good / note
 
 ## 📆
 
 ## 🔵
-- 🤖🎨 **C-lane gaps** (rank perks, ♀ emblem and the one-time decay note are done @1120, D-063):
-  - 🧔 Draw the 12 heads that are still an emoji token (fist · dynamite · book · pamphlet · match · cockade · weaver cap · globe · pockets · bags · egg · guest heads Clara / Engels / Jenny), then the share card and widget through `MarxHead`.
-  - 🖼️ Feast frames (design § 14.2.1) · 📜 illuminated and section initials · rtl / zh holy-book shots · 🔊 stamp thud sound (D-035) · gold ☭ swoosh at level 7.
+- 🤖🎨 **C-lane gaps** (done @1120: rank perks, feast emblems, 11 heads, initials, ¶, rtl / zh shots, gold swoosh):
+  - 🧔 Guest heads (Clara Zetkin · Engels · Jenny Marx) need real portrait art, so they stay a token for now.
+  - 🧔 Share card and widget should draw the feast head through `MarxHead` (they still use the plain head).
+  - 🖼️ Feast frames (design § 14.2.1) · 🔊 stamp thud sound (D-035).
+- 🤖🏗️ Literata subset still needs fonttools installed (blocked in auto mode) ➡ see the line below.
 - ‼️ ⭐🧪 **QA @1116** ➡ [qa_1116.md](qa_1116.md) — 14 ⚡ i 6 lanes (L3 share 1st) · 3 🎨 (➡ Fable spec aftr) · 2 🔍 · 💬 Qs ✔️ answered @1116 ➡ lanes built (D-039 · D-040) · Q8 revised = no Werkbank (D-041) · left: D3 joker · fon items
 - ‼️ ⭐🧪 **QA sprint 0.9.x** — r1-r3 ✔️ · left ➡ [qa_1112.md](qa_1112.md) (🎨 10 design · 🔍 5 research · 💬 Qs) · ❓ streak widget "shd show 2 at start" = ? unanswered
   - later (needs design): 📖 real book look · ⏰ daily verse off-switch · name entry · 🔮 Marxoskop tiles · 🔓 Lesekreis unlock · 🏷️ quotes off-topic ➡ [notes.md § 🗃️](notes.md)

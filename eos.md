@@ -1,6 +1,11 @@
 # eos omm — resume log · newest on TOP
 _1 block per /eos · written by /eos § 3 · todo keeps 1 line: `▶ resume ➡ eos.md`_
 
+## 261120 ~21:00 · #200 + #201 + #206 (M8, autonomous)
+- **State:** DEV `0.13.0-dev.1120.1730` is live (#200 fixes + #201 decisions). Everything after it (D-063 perks, initials, heads, translations) is pushed but not deployed: #206 forbids deploys.
+- **Next:** 🦠 answers the two Decide items in todo 👀 (hold gesture, unified reading modes) and reviews qa_1120 § r2. Then deploy and build the gesture fix.
+- **Watch out:** `translate.py` now re-asks any translation whose %s/%d got lost, and `check_langs` refuses to ship one. Robolectric screenshot numbers collide across tests, so check the file name you open. sed + cp file writes are blocked, use Edit.
+
 ## 261120 15:45 · #185 (M8): 🐛 tap fix · C1-C5 + C7 · ⏱️ D-059 · DEV 1542
 - **at** · DEV = `0.13.0-dev.1120.1542` (= `b7659ec`+) · stable = v0.12.0 · unit + lint + test_bin 42 + check_langs green · pushed
   - D-045/046/047 ✔️ (🦠) · D-048..054 + D-059 built on 🤖 pick = still 💬 til fon eval
