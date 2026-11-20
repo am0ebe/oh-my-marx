@@ -31,6 +31,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.height
+import androidx.compose.ui.draw.alpha
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.onFocusChanged
@@ -82,19 +84,24 @@ fun MineScreen(vm: AppVm, openChapter: (String, String) -> Unit) {
             val doneToday = logDays.any { it.date == de.strix.marxversion.logic.today() }
             Column(Modifier.fillMaxWidth().padding(top = 12.dp).clip(de.strix.marxversion.ui.ds.Shapes.l)
                 .background(de.strix.marxversion.ui.ds.Ds.paperHi).padding(12.dp)) {
+                // D-061 (qa_1120 "rank ≠ another stamp card"): LEVEL N + badge + name + 1 thin bar 2 th nxt level (stamps live i th Stempeluhr)
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    if (ranks > 0) androidx.compose.foundation.Image(androidx.compose.ui.res.painterResource(rankArt(ranks - 1)), null,
-                        Modifier.size(40.dp).padding(end = 8.dp))
+                    androidx.compose.foundation.Image(androidx.compose.ui.res.painterResource(rankArt((ranks - 1).coerceAtLeast(0))), null,
+                        Modifier.size(56.dp).padding(end = 12.dp).then(if (ranks == 0) Modifier.alpha(.3f) else Modifier))
                     Column(Modifier.weight(1f)) {
-                        Text(tr("STEMPELKARTE %d", "STAMP CARD %d").f(card.no), style = de.strix.marxversion.ui.ds.OmmType.bookMeta,
-                            color = de.strix.marxversion.ui.ds.Ds.inkMuted)
-                        Text(if (ranks > 0) tr("Rang: %s", "Rank: %s").f(tr(rank(ranks - 1))) else tr("Noch kein Rang", "No rank yet"),
+                        Text(tr("LEVEL %d", "LEVEL %d").f(ranks), style = de.strix.marxversion.ui.ds.OmmType.bookMeta,
+                            color = de.strix.marxversion.ui.ds.Ds.goldDeep)
+                        Text(if (ranks > 0) tr(rank(ranks - 1)).substringAfter(' ') else tr("Noch kein Rang", "No rank yet"),
                             style = MaterialTheme.typography.titleSmall)
                     }
                 }
-                de.strix.marxversion.ui.ds.StampRow(card, doneToday, Modifier.padding(vertical = 8.dp), ring = de.strix.marxversion.ui.ds.Ds.outline)
-                Text(tr("noch %d Lesetage bis „%s“", "%d more reading days to “%s”").f(card.left, tr(rank(ranks))),
-                    style = MaterialTheme.typography.bodySmall, color = de.strix.marxversion.ui.ds.Ds.inkMuted)
+                if (ranks < RANKS.size) {
+                    androidx.compose.material3.LinearProgressIndicator(progress = { (de.strix.marxversion.logic.CARD - card.left).toFloat() / de.strix.marxversion.logic.CARD },
+                        color = de.strix.marxversion.ui.ds.Ds.gold, trackColor = de.strix.marxversion.ui.ds.Ds.paperDeep, gapSize = 0.dp, drawStopIndicator = {},
+                        modifier = Modifier.fillMaxWidth().padding(top = 10.dp, bottom = 4.dp).height(6.dp))
+                    Text(tr("noch %d Lesetage bis Level %d · %s", "%d more reading days to level %d · %s").f(card.left, ranks + 1, tr(rank(ranks)).substringAfter(' ')),
+                        style = MaterialTheme.typography.bodySmall, color = de.strix.marxversion.ui.ds.Ds.inkMuted)
+                }
                 HookNote(Hook.STAMPS, s.testMode)
             }
             val orden by vm.orden.collectAsStateWithLifecycle()

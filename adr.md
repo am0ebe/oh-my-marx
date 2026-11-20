@@ -18,6 +18,20 @@ _SDD: code says **wh** · th file says **y** · drift = a bug · fmt ➡ `pr/vib
 - 🔥 hot files (1 owner at a ti — fan-out lanes nvr split these): `assets/content/i18n_*.json` + `data/i18n/*.jsonl` (translate pass = fan-in only) · `android/app/build.gradle.kts` (version) · `ui/Changelog.kt` · `res/values*/strings.xml` · `TodayScreen.kt` · `MineScreen.kt` · `Share.kt`
 
 ## 🧾 decisions (newest on top)
+### D-062 @1120 · Reading time counts only while you touch the reader; a long sitting counts in full · Proposed (🤖 built rec, amends D-059)
+- **Y:** 🦠: "a long session should count, but only if really reading; no input = nothing happening" ➡ input is the honest signal, a per-page cap is not.
+- **Options:** a) **15 s ticks while th reader is open + touched ≤ 90 s ago, no cap · + 🌙 Überstunden badge = 1 sitting ≥ 60 active min** (🤖 rec) · b) keep D-059 (≥ 10 s, ≤ 5 min per page) · c) a only, no sitting badge
+- **Cost:** a slow reader who doesn't touch the screen for > 90 s on 1 page loses that time.
+- **Prev:** D-059 (page cap rule).
+- **Ck:** `OrdenTest.readingTimeMedals` (`activeSecs`) · ChapterScreen tick loop (`repeatOnLifecycle(RESUMED)`) · `Orden.LONGSHIFT`
+### D-061 @1120 · My Capital shows a level with its badge, not a second stamp card · Proposed (🤖 built rec)
+- **Y:** 🦠: "rank isn't another stamp card, too much ➡ a rank with a nice symbol, maybe a level" · stamps already live in the Stempeluhr pane.
+- **Options:** a) **badge 56 + "LEVEL N" + rank name + 1 thin gold bar + "N days to level N+1"** (🤖 rec) · b) badge + name only · c) keep the stamp row
+- **Ck:** `MineScreen` stamp-card block · 🦠 eye on the fon
+### D-060 @1120 · Promotion pops a gold "LEVEL N ▲" with an XP bar; the red GENEHMIGT stamp is gone · Proposed (🤖 built rec, amends D-050)
+- **Y:** 🦠: "GENEHMIGT feels bureaucratic ➡ more level-up, gamify" · a level number + filling bar is the game language people know.
+- **Options:** a) **gold LEVEL N ▲ pill (overshoot pop) + XP bar old ➡ new, "RANK N/7" line dropped** (🤖 rec) · b) keep the stamp, say "BEFÖRDERT!" · c) arcade "RANK UP!" banner across the screen
+- **Ck:** `MomentsShotsTest.rank3` (LEVEL 3, no GENEHMIGT) · shot `moment_rank_3`
 ### D-059 @1120 · ⏱️ "long i th app" award = time IN TH BOOK, not app-open time · 🤖 built as rec (🦠 @1120 via M8 #185 asked) · 💬 eval on fon
 - **ctx**: 🦠 "award 4 staying i th app a long time" · D-014 earned-only · D-004 no anxiety · Hooked ch6 (facilitator, not dealer)
 - **options**: a) 1 long session (≥ N min at once) · **b) total active reading time i th 📖 book, 2 tiers** (🤖) · c) daily minutes streak · d) skip

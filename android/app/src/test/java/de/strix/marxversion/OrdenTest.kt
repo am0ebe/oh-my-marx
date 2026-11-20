@@ -44,10 +44,13 @@ class OrdenTest {
 
     /** ⏱️ D-059: time i th book = active reading only (idle screen ≠ reading) */
     @Test fun readingTimeMedals() {
-        val pageSecs = { ms: Long -> de.strix.marxversion.logic.pageSecs(ms) }
-        assertEquals("glance < 10 s = 0", 0L, pageSecs(9_000))
-        assertEquals(42L, pageSecs(42_000))
-        assertEquals("idle page capped at 5 min", 300L, pageSecs(3_600_000))
+        // D-062: a tick counts only if u touched th reader ≤ 90 s ago · long sitting = no cap, idle = 0
+        val tick = { ms: Long -> de.strix.marxversion.logic.activeSecs(ms) }
+        assertEquals("just swiped", 15L, tick(2_000))
+        assertEquals("90 s still reading", 15L, tick(90_000))
+        assertEquals("phone lying there", 0L, tick(91_000))
+        assertTrue(Orden.LONGSHIFT in Orden.earned(Stats(flags = setOf("longshift"))))
+        assertFalse(Orden.LONGSHIFT in Orden.earned(Stats(readMinutes = 9999)))
         assertFalse(Orden.NORMALTAG in Orden.earned(Stats(readMinutes = 479)))
         assertTrue(Orden.NORMALTAG in Orden.earned(Stats(readMinutes = 480)))
         assertTrue(Orden.ARBEITSWOCHE in Orden.earned(Stats(readMinutes = 2400)))

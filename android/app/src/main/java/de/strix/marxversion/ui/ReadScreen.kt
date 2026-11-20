@@ -78,6 +78,7 @@ import de.strix.marxversion.data.Verse
 import de.strix.marxversion.data.f
 import de.strix.marxversion.logic.chapterDone
 import de.strix.marxversion.ui.ds.CountChip
+import androidx.lifecycle.repeatOnLifecycle
 import de.strix.marxversion.ui.ds.GiltEdge
 import de.strix.marxversion.ui.ds.Headpiece
 import de.strix.marxversion.ui.ds.Ribbon
@@ -238,19 +239,21 @@ fun ChapterScreen(vm: AppVm, kap: String, focus: String?, @Suppress("UNUSED_PARA
     val density = LocalDensity.current
     LaunchedEffect(index) { vm.read(pages[index].verses.map { it.id }); vm.pageSeen(pages[index].page) }  // page seen = read (+ 👥 count)
     LaunchedEffect(index, s.readScroll) { if (!s.readScroll) vm.setReadPos(pages[index].verses.first().id) }   // 📍 📖 position
-    // ⏱️ D-059 reading time: each page's shown time on leave (turn · back · app away) ➡ ≥ 10 s counts, ≤ 5 min per page
+    // ⏱️ D-062 reading time: 15 s ticks while th app is resumed AND u touched th reader ≤ 90 s ago (no input = nothing counts)
+    //   1 sitting ≥ 60 active min ➡ "longshift" (Überstunden badge) · session = this screen visit
+    var lastInput by remember { androidx.compose.runtime.mutableLongStateOf(System.currentTimeMillis()) }
+    LaunchedEffect(index) { lastInput = System.currentTimeMillis() }   // a turn = input too
     val lifecycle = androidx.lifecycle.compose.LocalLifecycleOwner.current.lifecycle
-    androidx.compose.runtime.DisposableEffect(index, lifecycle) {
-        var since = System.currentTimeMillis()
-        val obs = androidx.lifecycle.LifecycleEventObserver { _, e ->
-            when (e) {
-                androidx.lifecycle.Lifecycle.Event.ON_PAUSE -> { vm.pageTime(System.currentTimeMillis() - since); since = Long.MAX_VALUE }
-                androidx.lifecycle.Lifecycle.Event.ON_RESUME -> since = System.currentTimeMillis()
-                else -> {}
+    LaunchedEffect(lifecycle) {
+        var session = 0L
+        lifecycle.repeatOnLifecycle(androidx.lifecycle.Lifecycle.State.RESUMED) {
+            while (true) {
+                kotlinx.coroutines.delay(de.strix.marxversion.logic.TICK_S * 1000)
+                val s = de.strix.marxversion.logic.activeSecs(System.currentTimeMillis() - lastInput)
+                vm.addReadSecs(s); session += s
+                if (session >= de.strix.marxversion.logic.LONG_SHIFT_S) vm.flag("longshift")
             }
         }
-        lifecycle.addObserver(obs)
-        onDispose { lifecycle.removeObserver(obs); if (since != Long.MAX_VALUE) vm.pageTime(System.currentTimeMillis() - since) }
     }
     // 💬 comments: load th chapter's room when entering a chapter · sheet = th page whose 💬 was tapped
     LaunchedEffect(pages[index].kap, s.community) { vm.loadComments(pages[index].kap) }
@@ -293,7 +296,9 @@ fun ChapterScreen(vm: AppVm, kap: String, focus: String?, @Suppress("UNUSED_PARA
     CompositionLocalProvider(LocalReadScale provides scale, LocalBook provides if (scrollMode) null else book) {
      Box(Modifier.fillMaxSize()) {
       // ⌨️ imePadding: th page shrinks above th keyboard ➡ a note at th page bottom stays visible (qa_1116 r2.5)
-      Column(Modifier.fillMaxSize().background(Ds.page).imePadding()) {
+      Column(Modifier.fillMaxSize().background(Ds.page).imePadding()
+          // ⏱️ D-062: any touch on th reader = "still reading" (Initial pass, consumes nothing)
+          .pointerInput(Unit) { awaitPointerEventScope { while (true) { awaitPointerEvent(PointerEventPass.Initial); lastInput = System.currentTimeMillis() } } }) {
         SlimHead(vm, pages[index], scrollMode, { vm.setReadScroll(!scrollMode); hintKey++ }) { talk = pages[index] }
         if (scrollMode) {
             // 📜 = whole book, lazy, both ways (qa_1120 🐛 stuck + no way back) · top passage ➡ index = th 📖 page u land on

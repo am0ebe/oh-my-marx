@@ -90,7 +90,7 @@ class MomentsShotsTest {
     @Test fun rank3() {
         rule.setContent { MarxTheme(Lang.EN, null) { PromotionScreen(2, 28, milestone = 30, hooked = false) {} } }
         dialogShot("moment_rank_3")
-        assertTrue(has("RANK 3 / 7")); assertTrue(has("Expanded reproduction")); assertTrue(has("30 days in a row"))
+        assertTrue(has("LEVEL 3")); assertTrue(!has("GENEHMIGT") && !has("APPROVED")); assertTrue(has("Expanded reproduction")); assertTrue(has("30 days in a row"))
         assertTrue("no promise o an unbuilt perk", !has("unlocked"))
     }
 

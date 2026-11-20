@@ -24,8 +24,12 @@ data class Stats(
     val readMinutes: Long = 0,                     // ⏱️ D-059: active reading time i th book (not app-open time)
 )
 
-/** ⏱️ D-059: 1 page counts its time only if read ≥ 10 s, capped at 5 min (idle screen ≠ reading) */
-fun pageSecs(shownMs: Long): Long = (shownMs / 1000).let { if (it < 10) 0 else minOf(it, 300) }
+/** ⏱️ D-062 (amends D-059): reading time = 15 s ticks while th reader is open AND u touched it ≤ 90 s ago · no input ➡ nothing counts */
+const val TICK_S = 15L
+const val IDLE_MS = 90_000L
+fun activeSecs(sinceInputMs: Long): Long = if (sinceInputMs in 0..IDLE_MS) TICK_S else 0
+/** 1 session ≥ 60 active min ➡ "longshift" flag (Überstunden badge) */
+const val LONG_SHIFT_S = 60 * 60L
 
 enum class OrdenGroup(val label: Pair<String, String>) {
     READ(T("Lesen", "Reading")), BOOK(T("Das Buch", "The book")), SOCIAL(T("Gemeinsam", "Together")), SECRET(T("Geheim", "Secret")),
@@ -97,6 +101,10 @@ enum class Orden(
     ARBEITSWOCHE("🏭", T("Arbeitswoche", "Working week"), T("40 Stunden im Buch gelesen. Mehr als eine Woche Mehrarbeit — für dich selbst.",
         "Read 40 hours in the book. More than a week of surplus labour — for yourself."),
         OrdenGroup.READ, earned = { it.readMinutes >= 40 * 60 }),
+    // ⏱️ D-062: 🦠 "a long sesh shd count — but only while reading" ➡ 1 sitting w ≥ 60 active min (input ≤ 90 s apart)
+    LONGSHIFT("🌙", T("Überstunden", "Overtime"), T("Eine Stunde am Stück wirklich gelesen — ohne dass jemand die Stechuhr bedient hat.",
+        "Really read for an hour in one sitting — and nobody was punching the clock for you."),
+        OrdenGroup.READ, earned = { "longshift" in it.flags }),
     KRISE("📉", T("Krisenfest", "Crisis-proof"), T("Das Handy 15× geschüttelt — du hast eine ganze Krise ausgelöst.", "Shook the phone 15× — you caused a whole crisis."),
         OrdenGroup.SECRET, hidden = true, earned = { s -> s.flags.count { it.startsWith("krise") } >= KRISE_SHAKES });
 

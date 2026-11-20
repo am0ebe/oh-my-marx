@@ -36,6 +36,8 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.foundation.layout.width
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -270,7 +272,7 @@ fun MilestoneScreen(n: Int, tier: Int, best: Boolean, chain: List<Cell>, strikeE
 
 // ── T4 · Beförderung ────────────────────────────────────────────────────────────────────────────────────────
 
-/** 🎖️ rank-up = lvl-up (D-050 a): rays · old badge out, new flies in · GENEHMIGT seal slams · perk line · confetti */
+/** 🎖️ rank-up = lvl-up (D-050 a · D-060): rays · old badge out, new flies in · LEVEL N ▲ pops + XP bar fills · confetti */
 @Composable
 fun PromotionScreen(rankIdx: Int, totalDays: Int, milestone: Int?, hooked: Boolean, onClose: () -> Unit) {
     val still = rememberStill()
@@ -306,15 +308,18 @@ fun PromotionScreen(rankIdx: Int, totalDays: Int, milestone: Int?, hooked: Boole
                         .offset { IntOffset((-110 * fly.value).toInt(), 0) }.alpha(1 - fly.value))
                     Image(painterResource(rankArt(rankIdx)), tr(rank(rankIdx)), Modifier.size(120.dp)
                         .offset { IntOffset(0, ((1 - fly.value) * -400).toInt()) }.scale(.6f + .4f * fly.value))
-                    // GENEHMIGT: red rubber stamp, -12°
-                    Text(tr("GENEHMIGT ✓", "APPROVED ✓"), color = Ds.red, fontWeight = FontWeight.Black, style = MaterialTheme.typography.titleLarge,
-                        modifier = Modifier.align(Alignment.BottomCenter).alpha(seal.value).scale(2f - seal.value).rotate(-12f)
-                            .border(3.dp, Ds.red, Shapes.tick).background(Ds.white.copy(alpha = .9f), Shapes.tick)
-                            .padding(horizontal = 10.dp, vertical = 2.dp))
+                    // D-060 (qa_1120 "GENEHMIGT = bureaucratic ➡ lvl-up"): gold LEVEL UP pill pops (overshoot), no rubber stamp
+                    Text(tr("LEVEL %d ▲", "LEVEL %d ▲").f(rankIdx + 1), color = Ds.ink, fontWeight = FontWeight.Black, style = MaterialTheme.typography.titleLarge,
+                        modifier = Modifier.align(Alignment.BottomCenter).alpha(seal.value).scale(.4f + .6f * seal.value)
+                            .background(Brush.verticalGradient(listOf(androidx.compose.ui.graphics.lerp(Ds.gold, Ds.white, .45f), Ds.gold)), Shapes.pill)
+                            .border(2.dp, Ds.white, Shapes.pill).padding(horizontal = 16.dp, vertical = 4.dp))
+                }
+                // XP bar: old lvl ➡ new lvl fills (D-060 · same seal anim)
+                Box(Modifier.padding(top = 14.dp).width(200.dp).height(8.dp).clip(Shapes.pill).background(Ds.white.copy(alpha = .15f))) {
+                    Box(Modifier.fillMaxWidth(((rankIdx + seal.value) / RANKS.size).coerceIn(0f, 1f)).height(8.dp).clip(Shapes.pill).background(Ds.gold))
                 }
                 Column(Modifier.alpha(txt.value), horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(tr("RANG %d / %d", "RANK %d / %d").f(rankIdx + 1, RANKS.size), style = OmmType.bookMeta, color = Ds.gold,
-                        modifier = Modifier.padding(top = 18.dp))
+                    // (RANG N / 7 line rm'd: th LEVEL pill says it, D-060)
                     Text(tr(rank(rankIdx)).substringAfter(' '), style = MaterialTheme.typography.titleLarge, fontFamily = FontFamily.Serif,
                         color = Ds.white, textAlign = TextAlign.Center)
                     // perk line only once th perk is real (D-004 honest) · PERKS_LIVE grows as each perk ships (🔵 todo)

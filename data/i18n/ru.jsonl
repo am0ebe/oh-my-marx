@@ -2432,3 +2432,11 @@
 {"kind": "ui", "k": "Your reading capital is depreciating — slowly. One day is enough to stop it.", "src": "Dein Lesekapital schreibt sich ab — langsam. Ein Tag reicht, um es zu stoppen.\u0000Your reading capital is depreciating — slowly. One day is enough to stop it.", "t": "Ваше читательское капиталовложение сокращается — медленно. Один день — и всё остановится."}
 {"kind": "ui", "k": "You", "src": "Du\u0000You", "t": "Ты"}
 {"kind": "ui", "k": "Passage menu", "src": "Absatz-Menü\u0000Passage menu", "t": "Меню абзаца"}
+{"kind": "ui", "k": "📖 Continue · %s · MEW %s", "src": "📖 Weiterlesen · %s · MEW %s\u0000📖 Continue · %s · MEW %s", "t": "📖 Продолжить · %s · МЭВ %s"}
+{"kind": "ui", "k": "⏱️ Time clock", "src": "⏱️ Stempeluhr\u0000⏱️ Time clock", "t": "⏱️ Таймер"}
+{"kind": "ui", "k": "🏅 Milestone", "src": "🏅 Meilenstein\u0000🏅 Milestone", "t": "🏅 Метка"}
+{"kind": "ui", "k": "🎖️ Promotion", "src": "🎖️ Beförderung\u0000🎖️ Promotion", "t": "🎖️ Повышение"}
+{"kind": "ui", "k": "Really read for an hour in one sitting — and nobody was punching the clock for you.", "src": "Eine Stunde am Stück wirklich gelesen — ohne dass jemand die Stechuhr bedient hat.\u0000Really read for an hour in one sitting — and nobody was punching the clock for you.", "t": "Прочитал час подряд — никто не стучал по часам."}
+{"kind": "ui", "k": "LEVEL %d", "src": "LEVEL %d\u0000LEVEL %d", "t": "УРОВЕНЬ %d"}
+{"kind": "ui", "k": "%d more reading days to level %d · %s", "src": "noch %d Lesetage bis Level %d · %s\u0000%d more reading days to level %d · %s", "t": "%d дней чтения до уровня %d · %s"}
+{"kind": "ui", "k": "LEVEL %d ▲", "src": "LEVEL %d ▲\u0000LEVEL %d ▲", "t": "УРОВЕНЬ %d ▲"}
