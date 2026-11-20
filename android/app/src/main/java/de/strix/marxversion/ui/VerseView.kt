@@ -80,7 +80,7 @@ import de.strix.marxversion.ui.ds.ActStyle
 import de.strix.marxversion.ui.ds.ActionItem
 import de.strix.marxversion.ui.ds.ChoiceChip
 import de.strix.marxversion.ui.ds.Ds
-import de.strix.marxversion.ui.ds.MeBubble
+import de.strix.marxversion.ui.ds.NoteCard
 import de.strix.marxversion.ui.ds.MoreChip
 import de.strix.marxversion.ui.ds.OmmType
 import de.strix.marxversion.ui.ds.Space
@@ -243,13 +243,13 @@ fun Modifier.tapOutsideNote(focus: FocusManager, slop: Float): Modifier = pointe
  * MeBubble = 3dp blue ruler · blueTint · r12 end corners · ✍ icon 16 · body-m blue · indent 12 under its verse
  */
 @Composable
-private fun NoteBubble(modifier: Modifier = Modifier, content: @Composable () -> Unit) {
-    MeBubble(modifier.fillMaxWidth().padding(start = Space.m, top = Space.s)) {
-        Row {
-            Icon(painterResource(R.drawable.ic_note), null, Modifier.padding(top = Space.xxs, end = Space.s).size(16.dp), tint = Ds.blue)
-            Box(Modifier.weight(1f)) { content() }
-        }
-    }
+private fun NoteBubble(modifier: Modifier = Modifier, at: Long? = null, onEdit: (() -> Unit)? = null, content: @Composable () -> Unit) {
+    // C5 · D-054 b: margin note = comment card (paperHi + hairline + blue ruler + tail up 2 th verse + initial disc) · was MeBubble
+    val lang = LocalLang.current
+    val day = at?.let { java.time.Instant.ofEpochMilli(it).atZone(java.time.ZoneId.systemDefault()).toLocalDate()
+        .format(java.time.format.DateTimeFormatter.ofPattern("d. MMM", lang.locale)) }
+    NoteCard(tr("Du", "You"), listOfNotNull(tr("Notiz", "Note"), day).joinToString(" · "),
+        modifier.fillMaxWidth().padding(start = Space.m, top = Space.xxs), tail = true, onEdit = onEdit) { content() }
 }
 
 /**
@@ -446,7 +446,8 @@ fun VerseView(
                     Modifier.padding(start = Space.m, top = Space.xs).onGloballyPositioned { NoteFocus.keep = it.boundsInRoot() })
             }
         } else mark?.note?.let {
-            NoteBubble(if (showActions) Modifier.clickable { editNote = true } else Modifier) { Text(it) }
+            NoteBubble(if (showActions) Modifier.clickable { editNote = true } else Modifier, at = mark?.updatedAt,
+                onEdit = if (showActions) ({ editNote = true }) else null) { Text(it) }
         }
 
         // verse menu = ActionItem Bare ×4 on a paperHi strip r12 under th verse (§ 10 · D-018: 🔊 · 🔖 · ✍️ · 📋)

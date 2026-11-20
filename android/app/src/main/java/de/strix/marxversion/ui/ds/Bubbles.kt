@@ -1,6 +1,12 @@
 package de.strix.marxversion.ui.ds
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.Alignment
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -57,6 +63,48 @@ fun OtherBubble(name: String, time: String?, modifier: Modifier = Modifier, cont
             time?.let { Text("  $it", color = Ds.inkMuted, style = MaterialTheme.typography.labelSmall) }
         }
         CompositionLocalProvider(LocalContentColor provides Ds.ink, LocalTextStyle provides MaterialTheme.typography.bodyMedium) { content() }
+    }
+}
+
+/**
+ * ✍️ NoteCard (C5 · D-054 b · design § 14.4): margin note AND comment = 1 component
+ * mine = paperHi card + 1dp blue 30 % hairline + 3dp blue ruler (start) · others = paperDeep, no ruler, no hairline
+ * head: initial disc 24 (blue mine · inkMuted others) + "name · kind · time" label-s · ✎ = edit (mine, optional)
+ * `tail` = 8dp notch at th top-start pointing up at th verse (margin notes only)
+ */
+@Composable
+fun NoteCard(
+    name: String, meta: String?, modifier: Modifier = Modifier, mine: Boolean = true, tail: Boolean = false,
+    posted: String? = null, onEdit: (() -> Unit)? = null, content: @Composable ColumnScope.() -> Unit,
+) {
+    val bg = if (mine) Ds.paperHi else Ds.paperDeep
+    val edge = Ds.blue.copy(alpha = .3f)
+    Column(modifier) {
+        if (tail) androidx.compose.foundation.Canvas(Modifier.padding(start = Space.xl).width(16.dp).height(8.dp)) {
+            val p = androidx.compose.ui.graphics.Path().apply { moveTo(0f, size.height); lineTo(size.width / 2, 0f); lineTo(size.width, size.height); close() }
+            drawPath(p, bg)
+            if (mine) drawPath(p, edge, style = androidx.compose.ui.graphics.drawscope.Stroke(1.dp.toPx()))
+            drawLine(bg, androidx.compose.ui.geometry.Offset(1f, size.height), androidx.compose.ui.geometry.Offset(size.width - 1f, size.height), 2.dp.toPx())
+        }
+        Row(Modifier.fillMaxWidth().height(IntrinsicSize.Min).clip(RoundedCornerShape(Radius.m)).background(bg)
+            .then(if (mine) Modifier.border(1.dp, edge, RoundedCornerShape(Radius.m)) else Modifier)) {
+            if (mine) Box(Modifier.width(3.dp).fillMaxHeight().background(Ds.blue))
+            Row(Modifier.padding(horizontal = Space.m, vertical = Space.s)) {
+                Box(Modifier.size(24.dp).clip(CircleShape).background(if (mine) Ds.blue else Ds.inkMuted), contentAlignment = Alignment.Center) {
+                    Text(name.trim().take(1).uppercase().ifEmpty { "?" }, color = Ds.white, style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold))
+                }
+                Column(Modifier.weight(1f).padding(start = Space.s)) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(name + (meta?.let { " · $it" } ?: ""), color = Ds.inkMuted, style = MaterialTheme.typography.labelSmall,
+                            modifier = Modifier.weight(1f))
+                        onEdit?.let { Text("✎", color = Ds.blue, style = MaterialTheme.typography.labelLarge,
+                            modifier = Modifier.clickable(onClick = it).padding(start = Space.s)) }
+                    }
+                    CompositionLocalProvider(LocalContentColor provides Ds.ink, LocalTextStyle provides MaterialTheme.typography.bodyMedium) { content() }
+                    posted?.let { Text("↳ $it", color = Ds.blue, style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(top = Space.xxs)) }
+                }
+            }
+        }
     }
 }
 

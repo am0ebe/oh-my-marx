@@ -46,7 +46,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import de.strix.marxversion.data.Matrix
 import de.strix.marxversion.data.f
 import de.strix.marxversion.ui.ds.Ds
-import de.strix.marxversion.ui.ds.MeBubble
+import de.strix.marxversion.ui.ds.NoteCard
 import de.strix.marxversion.ui.ds.OtherBubble
 import de.strix.marxversion.ui.ds.Primary
 import de.strix.marxversion.ui.ds.Space
@@ -129,10 +129,8 @@ fun CommentsPanel(
                 val hold = Modifier.combinedClickable(onClick = {}, onLongClick = { if (mine) onDelete(c.id) })
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = if (mine) Arrangement.End else Arrangement.Start) {
                     if (mine) Spacer(Modifier.width(Space.xxxl))
-                    if (mine) MeBubble(Modifier.weight(1f, fill = false).then(hold)) {
-                        Text(time, style = typo.labelSmall, color = Ds.inkMuted)
-                        Text(c.text)
-                    } else OtherBubble(c.name, time, Modifier.weight(1f, fill = false).then(hold)) { Text(c.text) }
+                    // C5 · D-054 b: mine = th same NoteCard as margin notes (blue ruler) · others = same shape i paperDeep
+                    NoteCard(c.name, time, Modifier.weight(1f, fill = false).then(hold), mine = mine) { Text(c.text) }
                     if (!mine) Spacer(Modifier.width(Space.xxxl))
                 }
             }
