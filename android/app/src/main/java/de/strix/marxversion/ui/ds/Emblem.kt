@@ -40,7 +40,13 @@ import kotlin.math.sin
  * `grow` 0..1 = th newest ornament growing in (Meilenstein screen) · 1 = still
  */
 @Composable
-fun StreakStar(n: Int, tier: Int, modifier: Modifier = Modifier, size: Dp = 92.dp, grow: Float = 1f, onGradient: Boolean = true, level: Int = 0) {
+fun StreakStar(n: Int, tier: Int, modifier: Modifier = Modifier, size: Dp = 92.dp, grow: Float = 1f, onGradient: Boolean = true, level: Int = 0,
+               feast: de.strix.marxversion.logic.Feast? = null) {
+    // 🎄 C3b feast emblems (design § 14.2.1 + 14.2.4): only feasts th own a symbol swap th star · number alw inside · tiers still show
+    when (feast) {
+        de.strix.marxversion.logic.Feast.FRAUENTAG -> return VenusEmblem(n, modifier, size)
+        else -> {}
+    }
     val gold = Ds.gold
     val laurel = if (onGradient) Ds.gold else Ds.goldDeep
     Box(modifier.size(size).semantics { contentDescription = "streak $n · tier $tier" }, contentAlignment = Alignment.Center) {
@@ -68,7 +74,14 @@ fun StreakStar(n: Int, tier: Int, modifier: Modifier = Modifier, size: Dp = 92.d
                 drawRect(gold, Offset(center.x - r * .05f, center.y - r), Size(r * .1f, r * .14f)) } }
             drawCircle(gold, r * .87f, center, style = Stroke(r * .06f))
         }
-        if (level >= 7) androidx.compose.foundation.Image(androidx.compose.ui.res.painterResource(de.strix.marxversion.R.drawable.ic_star), null,
+        // 🎄 Weihnachten: th star sits on top o a small tree · 🎃 Halloween: jack-o'-lantern orange
+        if (feast == de.strix.marxversion.logic.Feast.WEIHNACHTEN) Canvas(Modifier.fillMaxSize()) {
+            val w = this.size.width; val h = this.size.height
+            drawPath(Path().apply { moveTo(w * .5f, h * .45f); lineTo(w * .2f, h * 1f); lineTo(w * .8f, h * 1f); close() }, Color(0xFF2E7D32))
+        }
+        if (feast == de.strix.marxversion.logic.Feast.HALLOWEEN) androidx.compose.foundation.Image(androidx.compose.ui.res.painterResource(de.strix.marxversion.R.drawable.ic_star), null,
+            Modifier.fillMaxSize().padding(size * .1f), colorFilter = androidx.compose.ui.graphics.ColorFilter.tint(Color(0xFFE65100), androidx.compose.ui.graphics.BlendMode.SrcIn))
+        else if (level >= 7) androidx.compose.foundation.Image(androidx.compose.ui.res.painterResource(de.strix.marxversion.R.drawable.ic_star), null,
             Modifier.fillMaxSize().padding(size * .1f), colorFilter = androidx.compose.ui.graphics.ColorFilter.tint(gold, androidx.compose.ui.graphics.BlendMode.SrcIn))
         else StarImage(Modifier.fillMaxSize().padding(size * .1f))
         val k = size.value / 92f
@@ -117,6 +130,22 @@ private fun DrawScope.laurel(c: Offset, r: Float, col: Color, a: Float) {
         }
     }
 }
+
+/** ♀ Frauentag (🦠 r4): 6dp white ring + violet glow, number INSIDE th circle, cross below · same stroke */
+@Composable
+private fun VenusEmblem(n: Int, modifier: Modifier, size: Dp) =
+    Box(modifier.size(size).semantics { contentDescription = "streak $n · ♀" }, contentAlignment = Alignment.Center) {
+        Canvas(Modifier.fillMaxSize()) {
+            val s = this.size.minDimension; val stroke = 6.dp.toPx()
+            val c = Offset(center.x, s * .38f); val r = s * .3f
+            drawCircle(Brush.radialGradient(listOf(Color(0xFF8E24AA).copy(alpha = .5f), Color.Transparent), c, r * 1.5f), r * 1.5f, c)
+            drawCircle(Color.White, r, c, style = Stroke(stroke))
+            drawLine(Color.White, Offset(c.x, c.y + r), Offset(c.x, s * .98f), stroke)
+            drawLine(Color.White, Offset(c.x - r * .5f, s * .84f), Offset(c.x + r * .5f, s * .84f), stroke)
+        }
+        Text("$n", color = Color.White, fontSize = ((if (n < 100) 26 else 20) * size.value / 92f).sp, fontWeight = FontWeight.Bold,
+            modifier = Modifier.align(Alignment.TopCenter).padding(top = size * .26f))
+    }
 
 /** ✊ Streiktag slots next 2 th star: held = red ring + white fist · free = hollow ring (max 2, D-046) */
 @Composable

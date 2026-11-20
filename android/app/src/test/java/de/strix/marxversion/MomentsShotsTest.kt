@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onAllNodesWithText
+import androidx.compose.ui.test.onAllNodesWithContentDescription
 import androidx.compose.ui.unit.dp
 import de.strix.marxversion.data.Lang
 import de.strix.marxversion.logic.Cell
@@ -92,6 +93,28 @@ class MomentsShotsTest {
         dialogShot("moment_rank_3")
         assertTrue(has("LEVEL 3")); assertTrue(!has("GENEHMIGT") && !has("APPROVED")); assertTrue(has("Expanded reproduction")); assertTrue(has("30 days in a row"))
         assertTrue("rank-3 perk line (built @1120 #206)", has("Marx Basics"))
+    }
+
+    /** 🎄 C3b: ♀ Frauentag · 🎄 Xmas tree · 🎃 Halloween + level perks (5 gear · 7 gold) ➡ hero_feasts.png */
+    @Test fun heroFeasts() {
+        rule.setContent { MarxTheme(Lang.EN, null) {
+            Row(Modifier.fillMaxSize().background(Brush.verticalGradient(listOf(Color(0xFF4A148C), Color(0xFF1B5E20)))).padding(12.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                val s = 70.dp
+                StreakStar(12, 2, size = s, feast = de.strix.marxversion.logic.Feast.FRAUENTAG)
+                StreakStar(12, 2, size = s, feast = de.strix.marxversion.logic.Feast.WEIHNACHTEN)
+                StreakStar(12, 2, size = s, feast = de.strix.marxversion.logic.Feast.HALLOWEEN)
+                StreakStar(40, 3, size = s, level = 5)
+                StreakStar(40, 3, size = s, level = 7)
+            }
+        } }
+        rule.mainClock.advanceTimeBy(500); rule.waitForIdle()
+        assertTrue(rule.onAllNodesWithContentDescription("streak 12 · ♀").fetchSemanticsNodes().isNotEmpty())
+        assumeTrue(shots)
+        val v = rule.activity.window.decorView
+        val b = Bitmap.createBitmap(v.width, v.height / 4, Bitmap.Config.ARGB_8888)
+        rule.runOnUiThread { v.draw(android.graphics.Canvas(b)) }
+        dir.mkdirs(); File(dir, "hero_feasts.png").outputStream().use { b.compress(Bitmap.CompressFormat.PNG, 100, it) }
     }
 
     @Test fun heroTiers() {

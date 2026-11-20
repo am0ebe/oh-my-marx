@@ -471,7 +471,7 @@ private fun Hero(days: List<DayLog>, feast: Feast?, dt: DayTime, hooked: Boolean
                     fontSize = 13.sp, lineHeight = 17.sp)
             }
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                de.strix.marxversion.ui.ds.StreakStar(st, g.tier, level = level)
+                de.strix.marxversion.ui.ds.StreakStar(st, g.tier, level = level, feast = feast)
                 if (g.strikes > 0 || st >= 7) de.strix.marxversion.ui.ds.StrikeSlots(g.strikes, Modifier.padding(top = 2.dp))
             }
         }
