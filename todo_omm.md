@@ -25,14 +25,28 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
     - 0.9.0 ➡ 0.10.0 APK users: banner ➡ page ➡ install by hand 1× (then 1-tap / silent fr there)
 
 ## 👀
-- 🧪 **#185 build (@1120 via M8)**: 🐛 tap = turn · C1-C5 + C7 · ⏱️ D-059 ➡ [qa_1120.md](qa_1120.md)
-    - [x] 🤖 unit + lint + test_bin + check_langs green · DEV deployed
-    - [ ] 🦠 fon pass over qa_1120 (taste: moments · hero · feast heads · holy book · note card) + 💬 D-048..054 / D-059 ✔️ o change
+### 🏔️ v1
+- **Decide:** What should holding a passage do — turn the page, or open its menu?
+  - Recommendation: **hold = menu, in both reading modes** (with a buzz). Tap = turn stays in 📖. Double-tap = menu stays as a second way in.
+  - Why now: your r1 note says hold is often read as a tap, and [adr.md](adr.md) D-057 still says hold = turn. The gesture fix waits on this.
+  - Evidence: [qa_1120.md § tap fix](qa_1120.md) note · D-057
+- **Decide:** Should 📖 pages and 📜 scroll share every gesture and the same top bar, so the only difference is pages vs. endless?
+  - Recommendation: **yes** — one gesture set (above) and one head bar in both. Today 📜 still opens the menu on a single tap.
+  - Why now: same fix as the item above; one build covers both.
+  - Evidence: your r1 note in [qa_1120.md](qa_1120.md) line 8
+- **Review:** 10 checks in [qa_1120.md § r2](qa_1120.md), about 10 minutes on DEV `0.13.0-dev.1120.1730`.
+  - Look at: Today Werkbank chips (Time clock · Milestone · Promotion) · My Capital level card · reader mode toggle + Continue.
+  - Includes accepting or changing D-048 to D-054 and D-059 to D-062 (all marked Proposed in [adr.md](adr.md)).
+  - [ ] 🦠 good / note
+- **Review:** Built after DEV 1730, not on the phone yet (next deploy): rank perks D-063 · feast emblems ([hero_feasts.png](img/qa_1120/hero_feasts.png)) · decay note shows only the day after a missed day.
+  - [ ] 🦠 good / note
 
 ## 📆
 
 ## 🔵
-- 🤖🎨 **C-lane gaps @1120** (left fr #185, all aftr 🦠's qa_1120 eval): 🎖️ rank perks real (gold hero border · blue card · rank i Circles · gear rim · colophon names · gold star) ➡ then `PERKS_LIVE` · 🧔 draw th 12 emoji-token heads (fist · dynamite · book · pamphlet · match · cockade · weaver cap · globe · pockets · bags · egg · guest heads Clara/Engels/Jenny) + Share card + widget via MarxHead · 🖼️ feast frames (§ 14.2.1) + ♀ emblem (C3b) · 📜 illuminated + section initials · 📜 pilcrow i scroll · rtl/zh holy-book shots · 🔊 stamp thud sound (D-035) · ⏱️ dc: Abschreibung Callout 1× only (now: shown while depreciating)
+- 🤖🎨 **C-lane gaps** (rank perks, ♀ emblem and the one-time decay note are done @1120, D-063):
+  - 🧔 Draw the 12 heads that are still an emoji token (fist · dynamite · book · pamphlet · match · cockade · weaver cap · globe · pockets · bags · egg · guest heads Clara / Engels / Jenny), then the share card and widget through `MarxHead`.
+  - 🖼️ Feast frames (design § 14.2.1) · 📜 illuminated and section initials · rtl / zh holy-book shots · 🔊 stamp thud sound (D-035) · gold ☭ swoosh at level 7.
 - ‼️ ⭐🧪 **QA @1116** ➡ [qa_1116.md](qa_1116.md) — 14 ⚡ i 6 lanes (L3 share 1st) · 3 🎨 (➡ Fable spec aftr) · 2 🔍 · 💬 Qs ✔️ answered @1116 ➡ lanes built (D-039 · D-040) · Q8 revised = no Werkbank (D-041) · left: D3 joker · fon items
 - ‼️ ⭐🧪 **QA sprint 0.9.x** — r1-r3 ✔️ · left ➡ [qa_1112.md](qa_1112.md) (🎨 10 design · 🔍 5 research · 💬 Qs) · ❓ streak widget "shd show 2 at start" = ? unanswered
   - later (needs design): 📖 real book look · ⏰ daily verse off-switch · name entry · 🔮 Marxoskop tiles · 🔓 Lesekreis unlock · 🏷️ quotes off-topic ➡ [notes.md § 🗃️](notes.md)
