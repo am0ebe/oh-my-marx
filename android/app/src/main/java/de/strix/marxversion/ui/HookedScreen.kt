@@ -22,6 +22,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import de.strix.marxversion.data.T
+import de.strix.marxversion.ui.ds.Ds
 
 /**
  * 🪝 Hooked erklärt — th app as a textbook 4 Nir Eyal's "Hooked" (src: go/re/boox/hooked/hooked.md).
@@ -113,7 +114,7 @@ fun HookedScreen(go: (String) -> Unit) {
         // th loop
         Text(tr("⚡ Trigger ➡ 👆 Aktion ➡ 🎁 Belohnung ➡ 💼 Investment ➡ ⚡ …", "⚡ Trigger ➡ 👆 Action ➡ 🎁 Reward ➡ 💼 Investment ➡ ⚡ …"),
             fontWeight = FontWeight.Bold, textAlign = TextAlign.Center, color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).background(Color(0xFFFFF1B8)).padding(12.dp))
+            modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).background(Ds.hook).padding(12.dp))
         Text(tr("Genug Runden ➡ der externe Trigger wird überflüssig, du kommst von selbst. Das ist das Ziel. Von Eyal. Nicht unbedingt von dir.",
             "Enough laps ➡ the external trigger becomes unnecessary, you come back on your own. That's the goal. Eyal's goal. Not necessarily yours."),
             fontSize = 12.sp, color = MaterialTheme.colorScheme.secondary, modifier = Modifier.padding(top = 4.dp))
@@ -143,7 +144,7 @@ fun HookedScreen(go: (String) -> Unit) {
         Gap()
         Text(tr("💡 Im Hooked-Modus klebt an jedem Trick ein gelber 🪝-Zettel. Antippen ➡ du landest hier.",
             "💡 In Hooked mode every trick wears a yellow 🪝 note. Tap it ➡ you land here."),
-            fontSize = 13.sp, modifier = Modifier.clip(RoundedCornerShape(8.dp)).background(Color(0xFFFFF1B8)).padding(10.dp))
+            fontSize = 13.sp, modifier = Modifier.clip(RoundedCornerShape(8.dp)).background(Ds.hook).padding(10.dp))
         Gap(40)
     }
 }

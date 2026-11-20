@@ -2,7 +2,8 @@
 # ratchet: a nr may only go DOWN · evy lane lowers its share · goal = 0 evywhere (fan-in)
 # L0 @1114 start: 48 · 174 · 33 · 19 · 5 · 12 · 9 · 3 (exempt: Share.kt · Fx.kt · notify/ · Feast.kt)
 # @1114 aft L2 + L3 + L5 fan-in · left = L1 Today · L4 Mine/⚙️/Hooked
-Color(0x = 24
+# @1121 #248: 6 exact-hex swaps ➡ Ds.hook · Ds.onHook · PlanAccents[1] (Today · Hooks · Hooked) = 0 visual change
+Color(0x = 18
 .sp = 80
 RoundedCornerShape( = 17
 Button( = 6

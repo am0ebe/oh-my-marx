@@ -98,6 +98,8 @@ import de.strix.marxversion.logic.marxoskop
 import de.strix.marxversion.logic.readingDays
 import de.strix.marxversion.logic.stampCard
 import de.strix.marxversion.logic.streak
+import de.strix.marxversion.ui.ds.Ds
+import de.strix.marxversion.ui.ds.PlanAccents
 import de.strix.marxversion.logic.streakInfo
 import de.strix.marxversion.logic.streakGame
 import de.strix.marxversion.logic.today
@@ -132,7 +134,7 @@ private fun feastNow(vm: AppVm): Feast? = vm.feastPreview.collectAsStateWithLife
 
 private const val DEFAULT_PLAN = "30tage"
 private const val LUDDITES = "ludditen"   // data/plans_extra.json
-private val PlanAccent = Color(0xFF6A3093)  // plan card accent (aubergine = Plans-tab 2nd colour)
+private val PlanAccent = PlanAccents[1]  // plan card accent (aubergine = Plans-tab 2nd colour)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -240,7 +242,7 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
         // 🐛 qa_1120: DEV "unlock all" didn't reach th moments ➡ th workbench shows w Testmodus OR DEV unlock
         if (s.testMode || (IS_DEV && s.devUnlock)) {
             val soon = tr("🔔 kommt in ein paar Sekunden", "🔔 arriving in a few seconds")
-            Card(colors = CardDefaults.cardColors(containerColor = Color(0xFFFFF1B8)), modifier = Modifier.padding(bottom = 12.dp)) {
+            Card(colors = CardDefaults.cardColors(containerColor = Ds.hook), modifier = Modifier.padding(bottom = 12.dp)) {
                 Column(Modifier.padding(10.dp)) {
                     Text(tr("🪝 Hooked-Modus — Werkbank", "🪝 Hooked mode — workbench"), fontWeight = FontWeight.Bold, fontSize = 13.sp)
                     FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {

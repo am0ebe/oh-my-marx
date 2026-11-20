@@ -10,10 +10,10 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import de.strix.marxversion.data.T
+import de.strix.marxversion.ui.ds.Ds
 
 /**
  * 🧪 Testmodus = th app confesses its own Hooked tricks (Hooked ch6: be a facilitator, not a dealer).
@@ -117,8 +117,8 @@ val LocalOpenHooked = staticCompositionLocalOf<() -> Unit> { {} }
 fun HookNote(hook: Hook, on: Boolean, modifier: Modifier = Modifier) {
     if (!on) return
     val open = LocalOpenHooked.current
-    Surface(color = Color(0xFFFFF1B8), shape = RoundedCornerShape(8.dp),
+    Surface(color = Ds.hook, shape = RoundedCornerShape(8.dp),
         modifier = modifier.fillMaxWidth().padding(vertical = 4.dp).clip(RoundedCornerShape(8.dp)).clickable { open() }) {
-        Text(tr(hook.txt) + "  ➡", fontSize = 12.sp, lineHeight = 15.sp, color = Color(0xFF3A2E00), modifier = Modifier.padding(8.dp))
+        Text(tr(hook.txt) + "  ➡", fontSize = 12.sp, lineHeight = 15.sp, color = Ds.onHook, modifier = Modifier.padding(8.dp))
     }
 }
