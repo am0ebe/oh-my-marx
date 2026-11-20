@@ -143,22 +143,42 @@ fun cardBitmap(ctx: Context, quote: String, ref: String, lang: Lang, feast: Feas
         typeface = Typeface.create(Typeface.SERIF, Typeface.BOLD_ITALIC)
         setShadowLayer(8f, 0f, 3f, 0x99000000.toInt())
     }
-    // 🌈 title arch: top o a circle (r 600) peaking at y 95 = just above th halo, ends ~70 px lower · shrink til it fits 56°
+    // 🌈 title arch: top o a circle (r 600) peaking at y 95 = just above th halo · #246: a feast greeting (≤ 100 chars) overflowed
+    //   th fixed 56° ➡ Skia piled th spill-over glyphs at both path ends (looked like symbols cutting th line) ➡ now: arch = only
+    //   th greeting's headline · shrink 48 ➡ 30 at 56°, then curve wider (≤ 100°, ends wrap down beside th egg), then ➡ 24, last ➡ "…"
+    //   · th rest o th greeting = small lines under th egg (share = exactly wh's seen, punchline included)
+    var tailBottom = 0f
     title?.let { t ->
-        val r = 600f; val peak = 95f; val sweep = 56f
-        val arc = android.graphics.Path().apply { addArc(android.graphics.RectF(w / 2f - r, peak, w / 2f + r, peak + 2 * r), 270f - sweep / 2, sweep) }
+        val (head, tail) = archSplit(t)
+        val r = 600f; val peak = 95f; val perDeg = (Math.PI * r / 180).toFloat()
         val p = Paint(Paint.ANTI_ALIAS_FLAG).apply {
             color = 0xFFFFE9A8.toInt(); typeface = Typeface.create(Typeface.SERIF, Typeface.BOLD); letterSpacing = 0.14f
             setShadowLayer(10f, 0f, 3f, 0xAA000000.toInt())
         }
-        val label = t.uppercase()
-        val len = (Math.PI * r * sweep / 180).toFloat()
+        var label = head.uppercase()
         var ts = 48f
-        do { p.textSize = ts; ts -= 2f } while (p.measureText(label) > len && ts > 24f)
-        c.drawTextOnPath(label, arc, (len - p.measureText(label)) / 2f, 0f, p)
+        p.textSize = ts
+        while (p.measureText(label) > 56f * perDeg && ts > 30f) { ts -= 2f; p.textSize = ts }
+        while (p.measureText(label) > ARCH_MAX_SWEEP * perDeg && ts > 24f) { ts -= 2f; p.textSize = ts }
+        while (p.measureText(label) > ARCH_MAX_SWEEP * perDeg && label.length > 2) label = label.dropLast(2).trimEnd() + "…"
+        val sweep = (p.measureText(label) / perDeg + 4f).coerceIn(56f, ARCH_MAX_SWEEP + 4f)
+        val len = sweep * perDeg
+        val arc = android.graphics.Path().apply { addArc(android.graphics.RectF(w / 2f - r, peak, w / 2f + r, peak + 2 * r), 270f - sweep / 2, sweep) }
+        c.drawTextOnPath(label, arc, ((len - p.measureText(label)) / 2f).coerceAtLeast(0f), 0f, p)
+        tail?.let { s ->
+            val tq = TextPaint(Paint.ANTI_ALIAS_FLAG).apply {
+                color = 0xFFFFE9A8.toInt(); textSize = 34f; typeface = Typeface.create(Typeface.SERIF, Typeface.ITALIC)
+                setShadowLayer(8f, 0f, 3f, 0xAA000000.toInt())
+            }
+            val tl = StaticLayout.Builder.obtain(s, 0, s.length, tq, w - 200).setAlignment(Layout.Alignment.ALIGN_CENTER)
+                .setLineSpacing(0f, 1.1f).setMaxLines(3).setEllipsize(android.text.TextUtils.TruncateAt.END).build()
+            val top = saintTop + 290f
+            c.withTranslation(100f, top) { tl.draw(this) }
+            tailBottom = top + tl.height + 30f
+        }
     }
-    // quote room: under th saint ➡ above th ref line
-    val minTop = saintTop + 290f
+    // quote room: under th saint (+ th greeting's tail) ➡ above th ref line
+    val minTop = maxOf(saintTop + 290f, tailBottom)
     val refY = h - 80f
     val room = refY - 70f - minTop
     val mid = (minTop + refY - 50f) / 2f
@@ -185,6 +205,27 @@ fun cardBitmap(ctx: Context, quote: String, ref: String, lang: Lang, feast: Feas
     val by = "— Karl Marx, $ref"
     c.drawText(by, w / 2f - small.measureText(by) / 2f, refY, small)
     return bmp
+}
+
+/** 🌈 widest arch (°) · ends wrap down beside th egg/saint, still inside th card */
+private const val ARCH_MAX_SWEEP = 100f
+
+/**
+ * 🌈 #246: arch title ➡ (headline, rest) · cut at th 1st " — " · ": " · "! " · "? " · ". " (not "14. März") · CJK ！：。—— · Hindi ।
+ *   dash + colon + full stop dropped fr th headline, ! ? kept · no cut ➡ (whole, null) · "Quote o th day" stays 1 piece
+ */
+fun archSplit(t: String): Pair<String, String?> {
+    val cuts = listOf(" — " to "", " – " to "", "——" to "", "—" to "", ": " to "", "：" to "", "! " to "!", "！" to "！",
+        "? " to "?", "؟ " to "؟", "。" to "", "। " to "", ". " to "")
+    val hit = cuts.mapNotNull { (sep, keep) ->
+        var i = t.indexOf(sep)
+        while (sep == ". " && i > 0 && t[i - 1].isDigit()) i = t.indexOf(sep, i + 1)  // "14. März" · "1. Mai" ≠ sentence end
+        if (i <= 0) null else Triple(i, sep, keep)
+    }.minByOrNull { it.first } ?: return t to null
+    val (i, sep, keep) = hit
+    val head = t.substring(0, i).trim() + keep
+    val tail = t.substring(i + sep.length).trim()
+    return head to tail.ifEmpty { null }
 }
 
 /** 🃏 card size · QA r4 @1113: less high (was 1080×1350 w ~320 px empty under th ref) · evy card view uses CARD_RATIO */

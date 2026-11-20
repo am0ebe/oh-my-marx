@@ -30,6 +30,9 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
   - Look at: launcher icon stays plain · in-app egg · drop cap without box (D-067) · 📜 no ¶ + pinch.
   - [x] 🤖 EggResTest 2/2 · unit 138 + lint + test_bin + check_langs green · DEV deployed
   - [ ] 🦠 good / note
+- **#246 arch title cut off (D-068):** feast arch = headline only, rest = small lines under th egg · DEV `0.13.0-dev.1120.2256`
+  - [x] 🤖 `EggArchShotTest` (30 eggs × 13 langs fit) · full unit suite green · shots `egg_arch_{en,de,ru,ar}.png` · DEV deployed
+  - [ ] 🦠 shots `android/app/build/shots/egg_arch_de.png` (+ ru · ar): headline + tail split reads ok?
 
 ## 📆
 

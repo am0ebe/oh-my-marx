@@ -20,6 +20,12 @@ _SDD: code says **wh** · th file says **y** · drift = a bug · fmt ➡ `pr/vib
 ## 🧾 decisions (newest on top)
 _Template v2.1 since 20 Nov (converted via `pr/vibe++/adr_convert.md`). Field names: Y = why · Ctx = what forced it · Scope = what it covers · Ck = how to check._
 
+### D-068 @1120 · 🌈 On a feast day the card's arch holds only the greeting's headline; the rest sits in small lines under the egg · Proposed (🦠 via M8 #246)
+- **Y:** You saw the arched title cut off left and right. The full greeting (up to ~100 chars) overflowed the fixed 56° arc, and the spill-over glyphs piled up at both ends like symbols.
+- **Scope:** headline = text before the 1st ` — ` · `:` · `!` · `?` · `.` (a date dot like "14. März" does not count) · the arc widens 56° ➡ 100° (ends wrap down beside the egg) and the text shrinks 48 ➡ 24 px · last resort "…" · "Quote of the day" is unchanged · the shared card = the same picture.
+- **Alt:** shorter greetings in the data (rejected: 13 langs × 30 feasts to rewrite, and the punchline would go) · arch text only, rest dropped (rejected: loses the joke).
+- **Ck:** `Share.archSplit` + `cardBitmap` · `EggArchShotTest` (`everyHeadFits` = all 30 × 13 langs fit · shots `egg_arch_<lang>.png` with `-Pshots`)
+
 ### D-067 @1120 · 🔴 A drop cap is placed by baselines: ink top = line 1's cap height, foot = line N's baseline · Accepted (🦠 via M8 #229)
 - **Y:** You saw the red letter too small and sitting low. It was centred in a 3-line box, and Literata's tall ascender (1.18 em) pushed the ink down.
 - **Scope:** classic rule for both sizes: top flush with line 1's capitals, foot on the last line's baseline (2-line section initial · 3-line chapter initial) · Literata capHeight .70 em is a constant (`CAP_H`, from the font's OS/2 table).
