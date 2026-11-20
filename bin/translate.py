@@ -154,10 +154,24 @@ def load_cache(lang):
             c[(x["kind"], x["k"])] = x | {"t": t}
     return c
 
+# th model sometimes says its last question twice ("…? …?" o "…?\n\n…?") ➡ keep 1 (#246: 30tage d2 · wertform d4)
+DUP_TAIL = re.compile(r"(?s)(\S.{15,}?[?.!؟।۔？。！])(\s*\1)+\s*$")
+
+def hand_fix(lang, t, fixes=None):
+    """data/i18n/hand_fix.json (lang + '*') substring fixes + dup-tail cut · junk a guard (check_langs) flagged"""
+    if fixes is None:
+        f = CACHE / "hand_fix.json"
+        fixes = json.loads(f.read_text(encoding="utf-8")) if f.exists() else {}
+    for old, new in fixes.get("*", []) + fixes.get(lang, []):
+        t = t.replace(old, new)
+    return DUP_TAIL.sub(r"\1", t.rstrip()) if DUP_TAIL.search(t.rstrip()) else t
+
 def export(lang, cache):
     out = {"q": {}, "a": {}, "x": {}, "plan": {}, "chap": {}, "sec": {}, "ui": {}}
+    f = CACHE / "hand_fix.json"
+    fixes = json.loads(f.read_text(encoding="utf-8")) if f.exists() else {}
     for (kind, k), x in cache.items():
-        out[kind][k] = x["t"]
+        out[kind][k] = hand_fix(lang, x["t"], fixes)
     plans = {}
     for k, t in out["plan"].items():
         pid, part = k.rsplit(":", 1)

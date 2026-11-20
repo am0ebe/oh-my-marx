@@ -53,6 +53,22 @@ class ShipGuard(unittest.TestCase):
         d, root = fake_tree(["en", "bn"], {"full_bn.json": {"v": {"1": "x"}}})
         self.assertEqual(len(check_langs.problems(root)), 1); d.cleanup()
 
+    def test_half_latin_word_is_refused(self):
+        # #246: "تrier" i th AR Marx birthday card · zh "的App" = normal (no spaces i zh)
+        d, root = fake_tree(["en", "ar", "zh"], {"i18n_ar.json": {"ui": {"a": "ماركس (*1818 في تrier)! Claude Code، MEW"}},
+                                                 "full_ar.json": {"v": {"1": "x"}},
+                                                 "i18n_zh.json": {"ui": {"a": "的App"}}, "full_zh.json": {"v": {"1": "x"}}})
+        p = check_langs.problems(root)
+        self.assertEqual(len(p), 1); self.assertIn("ar: 1 half-Latin", p[0]); self.assertIn("تrier", p[0]); d.cleanup()
+
+    def test_hand_fix_and_dup_tail(self):
+        tr = load("translate")
+        fx = {"*": [["Atschaft: ", ""]], "ar": [["تrier", "ترير"]]}
+        self.assertEqual(tr.hand_fix("ar", "في تrier", fx), "في ترير")
+        self.assertEqual(tr.hand_fix("it", "Atschaft: Marx ci mostra.", fx), "Marx ci mostra.")
+        self.assertEqual(tr.hand_fix("en", "Body. What now, really?\n\nWhat now, really?", fx), "Body. What now, really?")
+        self.assertEqual(tr.hand_fix("en", "Short? Short?", fx), "Short? Short?")   # < 16 chars = maybe on purpose
+
     def test_cli_exit_code(self):
         d, root = fake_tree(["en", "de", "ur"], {})
         r = subprocess.run([sys.executable, str(BIN / "check_langs.py"), str(root)], capture_output=True, text=True)

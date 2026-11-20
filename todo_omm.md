@@ -42,9 +42,7 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
   - 📱 Widget: show the day's egg (still the ☭ / emoji text head).
   - 🧔 ✂️ Guest heads (Clara Zetkin · Engels · Jenny Marx) = moot since eggs (D-066) · `Head` enum + `Feast.head` now unused by the UI ➡ rm?
   - 🖼️ Feast frames (design § 14.2.1) · 🔊 stamp thud sound (D-035).
-- 🤖🩹 AR feast greetings: Latin junk i i18n_ar.json ("تrier" · "aruss") ➡ re-run translate.py on those keys (seen i egg_arch_ar.png #246)
 - 🎨 💬 Fable design pass over the 30 eggs (`bin/eggs.py`) — only if 🦠 wants more polish aftr the gallery
-- 🤖🏗️ ✂️ Literata subset still needs fonttools installed ➡ done in 627731e (5 static styles, `bin/font_subset.sh`)? = stale
 - ‼️ ⭐🧪 **QA @1116** ➡ [qa_1116.md](qa_1116.md) — 14 ⚡ i 6 lanes (L3 share 1st) · 3 🎨 (➡ Fable spec aftr) · 2 🔍 · 💬 Qs ✔️ answered @1116 ➡ lanes built (D-039 · D-040) · Q8 revised = no Werkbank (D-041) · left: D3 joker · fon items
 - ‼️ ⭐🧪 **QA sprint 0.9.x** — r1-r3 ✔️ · left ➡ [qa_1112.md](qa_1112.md) (🎨 10 design · 🔍 5 research · 💬 Qs) · ❓ streak widget "shd show 2 at start" = ? unanswered
   - later (needs design): 📖 real book look · ⏰ daily verse off-switch · name entry · 🔮 Marxoskop tiles · 🔓 Lesekreis unlock · 🏷️ quotes off-topic ➡ [notes.md § 🗃️](notes.md)
@@ -82,11 +80,11 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
 - 🔍 tags over-applied ("kapitalist" 83 %) ➡ relative re-tag
   - ✔️ 🔍 @1116: root = score.py `maxItems: 4` ➡ LLM pads evy quote 2 4 tags ➡ chip "chef" 1233/1511 ≈ random (miete only 94)
   - 🤖 nxt (aftr QA round): retag "0-2 tags, only if ABOUT it" + weight 1-3 · chip = weight ≥ 2 · guard ≥ ~30 quotes/chip
-- 🤖🏗️ ✂️ (done 627731e? −748 KB) subset Literata (D-058): 2 variable TTFs = +1.86 MB ➡ static Latin + Cyrillic (fonttools instancer + pyftsubset) ≈ −1.3 MB · ⚠️ `uvx fonttools` blocked by auto mode @1120 ➡ 🦠 ok / install fonttools 1st
 - 🤖 aft QA: rm page fotos (boox proc step 8)
 - 🦠🧪 fon update banner on Today · DEV 0.11.0-dev + stable 0.11.0 (fr M8 board #125)
 
 ## ✔️
+- ✔️ @1121 #248: 🧹 translation junk ar 30 · ur 23 · ru 9 · bn 5 fixed (`data/i18n/hand_fix.json`, D-069) · check_langs refuses half-Latin words · 3 DE/EN Andachten cleaned at src (30tage d2 + d24 · wertform d4) · ✔️ Literata subset = done i 627731e (2 stale lines closed)
 - ✔️ @1120 #241: qa_1121 r1 1-3 ticked ➡ D-066 Accepted in-app · launcher egg dropped ("too silly") · drop cap w/o box + no ¶ (D-067 amended)
 - ✔️ @1120 #229: qa_1120 r2 passed (🦠 "omm looks good") ➡ D-048..054 + D-059..062 Accepted · 🥚 30 eggs (D-066) · 🔴 drop cap by baselines (D-067) · 🐛 📜 pinch back · DEV 1911
 - ✔️ @1120 (M8: 🔵 wo 🦠 answer): 🐛 DEV 1944 startup crash (`newPlans` b4 content load · UpgradeStartTest) · ★ C6 close sheet ([img/close_sheet.png](img/close_sheet.png) ➡ ❓ D-055 i qa_1119) · 🔤 13,319 ⬄ 13,320 DE/EN fixed (split.py: long Part head = meta ➡ jahr auto v2, day 161 only) · 🏗️ plan versioning = D-042 ✔️ @1119 (line moved here)

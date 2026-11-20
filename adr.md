@@ -20,6 +20,12 @@ _SDD: code says **wh** · th file says **y** · drift = a bug · fmt ➡ `pr/vib
 ## 🧾 decisions (newest on top)
 _Template v2.1 since 20 Nov (converted via `pr/vibe++/adr_convert.md`). Field names: Y = why · Ctx = what forced it · Scope = what it covers · Ck = how to check._
 
+### D-069 @1121 · 🧹 Translation junk is fixed by hand in a small fix table, applied when the translations are exported · Accepted (🤖, routine · M8 #248)
+- **Y:** The local model sometimes gives up mid-word ("تrier", "колophonе", "keranے") or says its last question twice. Re-running it needs the GPU and may produce new junk, so a hand fix is faster and stays put.
+- **Scope:** `data/i18n/hand_fix.json` = per-lang substring fixes (lang `*` = all) · `translate.py export()` applies them + cuts a repeated last sentence · the cache stays raw (a re-translation without the junk = the fix no-ops) · `check_langs` refuses a Latin letter glued to Arabic/Cyrillic/Devanagari/Bengali letters (zh skipped: no spaces) · source junk (DE/EN Andachten) is fixed at the source.
+- **Alt:** re-ask the LLM (rejected: GPU, and no guarantee) · edit the cache lines (rejected: lost on the next re-run, no record of what was fixed).
+- **Ck:** `test_bin` `test_half_latin_word_is_refused` + `test_hand_fix_and_dup_tail` · `bin/check_langs.py` green.
+
 ### D-068 @1120 · 🌈 On a feast day the card's arch holds only the greeting's headline; the rest sits in small lines under the egg · Proposed (🦠 via M8 #246)
 - **Y:** You saw the arched title cut off left and right. The full greeting (up to ~100 chars) overflowed the fixed 56° arc, and the spill-over glyphs piled up at both ends like symbols.
 - **Scope:** headline = text before the 1st ` — ` · `:` · `!` · `?` · `.` (a date dot like "14. März" does not count) · the arc widens 56° ➡ 100° (ends wrap down beside the egg) and the text shrinks 48 ➡ 24 px · last resort "…" · "Quote of the day" is unchanged · the shared card = the same picture.

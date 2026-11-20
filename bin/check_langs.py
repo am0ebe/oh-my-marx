@@ -47,6 +47,25 @@ def ui_keys(root):
 
 PH = re.compile(r"%(?:\d+\$)?[-0]?\d*[sdf]")
 
+# LLM junk (#246): a Latin letter glued 2 a native letter i 1 word ("تrier" · "лophon" · "keranے") = th model
+#   gave up mid-word ➡ fix = data/i18n/hand_fix.json (+ translate.py --export-only) · zh hs no spaces ➡ "的App" = fine, skipped
+SCRIPT = {"ar": "ء-يٱ-ۓ", "ur": "ء-يٱ-ۓ", "ru": "Ѐ-ӿ",
+          "hi": "ऀ-ॣ०-ॿ", "bn": "ঀ-৿"}
+
+
+def fused(lang, ui):
+    """[(where, word)] w a Latin letter glued 2 th lang's own script · only langs i SCRIPT"""
+    r = SCRIPT.get(lang)
+    if not r:
+        return []
+    pat = re.compile(rf"\S*(?:[{r}][ً-ْ]*[A-Za-z]|[A-Za-z][{r}])\S*")
+    out = []
+    for kind, d in ui.items():
+        for k, t in (d.items() if isinstance(d, dict) else []):
+            for s in (t if isinstance(t, list) else [t]):
+                out += [(f"{kind}:{k[:20]}", m.group()) for m in pat.finditer(s if isinstance(s, str) else "")]
+    return out
+
 
 def placeholders(s):
     """format args i a string, sorted (order may change i translation, th set may not)"""
@@ -103,6 +122,10 @@ def problems(root):
                 if miss:
                     out.append(f"{lang}: {len(miss)} {name} untranslated (e.g. {', '.join(miss[:3])}) "
                                f"➡ bin/translate.py --only {kind}")
+            junk = fused(lang, ui)
+            if junk:
+                out.append(f"{lang}: {len(junk)} half-Latin words (e.g. {', '.join(f'{w} ({at})' for at, w in junk[:3])}) "
+                           "➡ data/i18n/hand_fix.json + bin/translate.py --export-only")
         if not (isinstance(full, dict) and full.get("v")):
             out.append(f"{lang}: full_{lang}.json missing/empty (no book text)")
     return out
