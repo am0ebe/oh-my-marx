@@ -78,6 +78,11 @@ import de.strix.marxversion.data.Verse
 import de.strix.marxversion.data.f
 import de.strix.marxversion.logic.chapterDone
 import de.strix.marxversion.ui.ds.CountChip
+import de.strix.marxversion.ui.ds.GiltEdge
+import de.strix.marxversion.ui.ds.Headpiece
+import de.strix.marxversion.ui.ds.Ribbon
+import de.strix.marxversion.ui.ds.Tailpiece
+import de.strix.marxversion.ui.ds.roman
 import de.strix.marxversion.ui.ds.Ds
 import de.strix.marxversion.ui.ds.OmmType
 import de.strix.marxversion.ui.ds.Space
@@ -329,7 +334,7 @@ fun ChapterScreen(vm: AppVm, kap: String, focus: String?, @Suppress("UNUSED_PARA
             // under: th page revealed (fwd: nxt page · back: current) · shadow fades as th turning page leaves
             val under = if (t < 0) index + 1 else index
             val over = if (t < 0) index else if (t > 0) index - 1 else -1
-            key(under) { Page(vm, pages[under], speaker, under, pages.size, Modifier.fillMaxSize(), flashId) }
+            key(under) { Page(vm, pages[under], speaker, under, pages.size, Modifier.fillMaxSize(), flashId, pages.getOrNull(under + 1)) }
             // fwd: covered at th start (dark) ➡ revealed (light) · back: gets covered (light ➡ dark)
             if (t != 0f) Box(Modifier.fillMaxSize().background(Color.Black.copy(alpha = 0.35f * if (t < 0) 1f + t else t)))
             if (over >= 0) key(over) {
@@ -339,7 +344,7 @@ fun ChapterScreen(vm: AppVm, kap: String, focus: String?, @Suppress("UNUSED_PARA
                     transformOrigin = TransformOrigin(0f, 0.5f)
                     rotationY = angle
                     cameraDistance = cam
-                }, null)
+                }, null, pages.getOrNull(over + 1))
             }
             // 📐 dog-ear = "this is a page, it turns" · bottom-right = fwd · tap = turn
             //   left (back) one rm'd qa_1117 r3 · going back = tap th left quarter o swipe ➡ still works
@@ -444,10 +449,16 @@ private fun DogEar(modifier: Modifier, onClick: () -> Unit, left: Boolean = fals
 
 /** 1 sheet o old paper: running head (chapter · MEW page) · paragraphs · folio at th bottom */
 @Composable
-private fun Page(vm: AppVm, p: BookPage, speaker: Speaker, i: Int, n: Int, modifier: Modifier, flashId: String?) {
+private fun Page(vm: AppVm, p: BookPage, speaker: Speaker, i: Int, n: Int, modifier: Modifier, flashId: String?, next: BookPage? = null) {
     val chapter = vm.content.chapters.firstOrNull { it.kap == p.kap }
     val reads by vm.pageReads.collectAsStateWithLifecycle()
     val firstOfChapter = p.verses.first().let { f -> vm.content.chapter(p.kap).firstOrNull()?.id == f.id }
+    // 📜 C4 holy book (D-053 b): chapter ends on this page ➡ tailpiece (+ ☭ seal if read) · 🔖 on th page ➡ ribbon
+    val lastOfChapter = next == null || next.kap != p.kap
+    val marks by vm.marks.collectAsStateWithLifecycle()
+    val readIds by vm.readIds.collectAsStateWithLifecycle()
+    val bookmarked = remember(marks, p) { p.verses.any { v -> marks.any { it.verseId == v.id && it.bookmark } } }
+    val sealed = lastOfChapter && remember(readIds, p.kap) { vm.content.chapter(p.kap).let { vs -> vs.isNotEmpty() && vs.count { it.id in readIds } >= vs.size * 0.9 } }
     Box(modifier.background(Ds.page).background(
         // spine shadow left + page-edge darkening right = it looks bound
         Brush.horizontalGradient(0f to Color.Black.copy(alpha = .2f), 0.06f to Color.Transparent, 0.94f to Color.Transparent,
@@ -455,15 +466,24 @@ private fun Page(vm: AppVm, p: BookPage, speaker: Speaker, i: Int, n: Int, modif
         Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState())
             .padding(start = Space.readerStart, end = Space.readerEnd, top = Space.m, bottom = Space.l)) {
             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                Text((chapter?.let { chapterTitle(it) } ?: p.kap).uppercase(), style = OmmType.bookMeta, color = Ds.inkMuted,
-                    maxLines = 1, modifier = Modifier.weight(1f))
+                // (7) running head: verso (even) = DAS KAPITAL · recto (odd) = chapter title
+                Text(if (i % 2 == 0) tr("DAS KAPITAL", "CAPITAL") else (chapter?.let { chapterTitle(it) } ?: p.kap).uppercase(),
+                    style = OmmType.bookMeta, color = Ds.inkMuted, maxLines = 1, modifier = Modifier.weight(1f))
                 // 👥 Mitlesen: how often this page was read (social proof, opt-in) · muted, red = act only
                 p.page?.let { pg -> reads[pg]?.let { Text("👥 %d×  ·  ".f(it), style = OmmType.bookMeta, color = Ds.inkMuted) } }
                 p.page?.let { Text(tr("MEW S. %d", "MEW p. %d").f(it), style = OmmType.bookMeta, color = Ds.inkMuted) }
             }
             HorizontalDivider(color = Ds.line, modifier = Modifier.padding(vertical = Space.s))
-            if (firstOfChapter) Text(chapter?.let { chapterTitle(it) } ?: p.kap, style = OmmType.bookTitle, color = Ds.ink,
-                textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth().padding(vertical = Space.l))
+            if (firstOfChapter) {
+                // (5) headpiece + (4) incipit (Roman numeral · prefaces = "das Vorwort")
+                Headpiece(Modifier.padding(top = Space.m))
+                val no = p.kap.toIntOrNull()
+                Text(if (no != null) tr("HIER BEGINNT DAS KAPITEL %s", "HERE BEGINS CHAPTER %s").f(roman(no))
+                    else tr("HIER BEGINNT DAS VORWORT", "HERE BEGINS THE PREFACE"),
+                    style = OmmType.bookMeta, color = Ds.red, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth().padding(top = Space.s))
+                Text(chapter?.let { chapterTitle(it) } ?: p.kap, style = OmmType.bookTitle, color = Ds.ink,
+                    textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth().padding(top = Space.xs, bottom = Space.l))
+            }
             p.verses.forEachIndexed { k, v ->
                 val prev = p.verses.getOrNull(k - 1)
                 if (v.secTitle.isNotBlank() && v.sec != prev?.sec) {
@@ -475,6 +495,21 @@ private fun Page(vm: AppVm, p: BookPage, speaker: Speaker, i: Int, n: Int, modif
             }
             // QA r4: no share pills (r3) + no "Mitreden" btn down here = pure Marx page · writing = tap a passage ➡ ✍️ Notiz
             //   (👥 chip there posts it 2 th Lesesaal) · reading oth's = 💬 N i th slim head (D-031 b)
+            // (6) tailpiece at chapter end · ☭ seal = chapter read (≥ 90 %, T2b)
+            if (lastOfChapter && next != null) Tailpiece(sealed)
+            // (11) explicit + colophon at th book's end
+            if (next == null) {
+                Tailpiece(sealed)
+                Text(tr("HIER ENDET DER ERSTE BAND", "HERE ENDS THE FIRST VOLUME"), style = OmmType.bookMeta, color = Ds.red,
+                    textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
+                Text(tr("Gesetzt in Literata · gedruckt auf der Pseudopod", "Set in Literata · printed aboard the Pseudopod"),
+                    style = OmmType.bookMeta, color = Ds.inkMuted, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth().padding(top = Space.xs))
+            }
+            // (8) catchword (Kustode): nxt page's 1st word, bottom end = free page-turn teaser (same chapter only)
+            if (next != null && !lastOfChapter) next.verses.firstOrNull()?.let { verseText(it).trim().split(Regex("\\s+")).firstOrNull() }?.let {
+                Text(it.trimEnd(',', '.', ';', ':'), style = OmmType.bookBody.copy(fontSize = OmmType.bookMeta.fontSize), color = Ds.inkMuted,
+                    textAlign = TextAlign.End, modifier = Modifier.fillMaxWidth().padding(top = Space.s))
+            }
             Gap(20)
             Text("— ${p.page ?: (i + 1)} —", style = OmmType.bookMeta.copy(fontFamily = FontFamily.Serif), color = Ds.inkMuted,
                 textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
@@ -485,6 +520,9 @@ private fun Page(vm: AppVm, p: BookPage, speaker: Speaker, i: Int, n: Int, modif
                 style = OmmType.bookMeta, color = Ds.inkMuted.copy(alpha = .7f), textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth().padding(top = Space.s))
         }
+        // (10) gilt edge on th outer edge · (9) 🔖 page = red silk ribbon fr th top (rtl: Alignment mirrors both)
+        GiltEdge(Modifier.align(Alignment.CenterEnd))
+        if (bookmarked) Ribbon(Modifier.align(Alignment.TopEnd).padding(end = Space.xl))
     }
 }
 
