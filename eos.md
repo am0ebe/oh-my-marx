@@ -1,6 +1,12 @@
 # eos omm — resume log · newest on TOP
 _1 block per /eos · written by /eos § 3 · todo keeps 1 line: `▶ resume ➡ eos.md`_
 
+## 261120 15:45 · #185 (M8): 🐛 tap fix · C1-C5 + C7 · ⏱️ D-059 · DEV 1542
+- **at** · DEV = `0.13.0-dev.1120.1542` (= `b7659ec`+) · stable = v0.12.0 · unit + lint + test_bin 42 + check_langs green · pushed
+  - D-045/046/047 ✔️ (🦠) · D-048..054 + D-059 built on 🤖 pick = still 💬 til fon eval
+- **▶ NEXT** · 🦠 fon pass [qa_1120.md](qa_1120.md) ➡ fix ➡ C-lane gaps (todo 🔵 top line)
+- **⚠️** · tap 🐛 nvr reproduced i Robolectric ➡ fix = no click on ¶ (BookTaps) · confirm on fon · sed→cp file writes = blocked (use Edit) · translate --only ui ~18 min w ~100 strings
+
 ## 261120 10:20 · eval DEV 0009 ✔️ · crash fix · C6 · D-057 tap = turn · D-058 Literata justified
 - **at** · DEV = `0.13.0-dev.1120.1009` (= `e813452`) · stable = v0.12.0 · unit + lint + test_bin 40 + check_langs green · pushed
   - 🦠 ok'd 0009 (L9 · plans v2 · L6-L8) · D-055 ✔️ V2 · D-057 swaps D-044 · D-058 Literata + justify + hyphens
