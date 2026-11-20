@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 108 108" width="216" height="216"><path d="M0.00,0.00 h108.00 v108.00 h-108.00 Z" fill="#4E342E"/>
+<path d="M82.00,30.00 L172.00,30.00 L165.15,64.44 Z" fill="#FF7043" fill-opacity="0.3"/>
+<path d="M82.00,30.00 L145.64,93.64 L116.44,113.15 Z" fill="#FF7043" fill-opacity="0.3"/>
+<path d="M82.00,30.00 L82.00,120.00 L47.56,113.15 Z" fill="#FF7043" fill-opacity="0.3"/>
+<path d="M82.00,30.00 L18.36,93.64 L-1.15,64.44 Z" fill="#FF7043" fill-opacity="0.3"/>
+<path d="M82.00,30.00 L-8.00,30.00 L-1.15,-4.44 Z" fill="#FF7043" fill-opacity="0.3"/>
+<path d="M82.00,30.00 L18.36,-33.64 L47.56,-53.15 Z" fill="#FF7043" fill-opacity="0.3"/>
+<path d="M82.00,30.00 L82.00,-60.00 L116.44,-53.15 Z" fill="#FF7043" fill-opacity="0.3"/>
+<path d="M82.00,30.00 L145.64,-33.64 L165.15,-4.44 Z" fill="#FF7043" fill-opacity="0.3"/>
+<g transform="translate(0 0) translate(54 56) rotate(0) scale(0.8) translate(-54 -56)"><g>
+<path d="M62,90 L80,40" fill="none" stroke="#D7B98E" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M77.00,38.40 a3.60,4.40 0 1,0 7.20,0 a3.60,4.40 0 1,0 -7.20,0 Z" fill="#B3261E" stroke="#2B2118" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M82,12 C92,22 92,32 82,36 C74,36 70,28 74,20 C76,26 79,26 80,22 C79,18 80,15 82,12 Z" fill="#E65100" stroke="#2B2118" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M81,22 C86,28 85,33 81,34 C78,33 77,29 79,26 Z" fill="#FFC107"/>
+<g transform="translate(0 0) translate(45 77) rotate(-8) scale(1.0) translate(-45 -77)"><g>
+<path d="M22.00,62.00 h46.00 v30.00 h-46.00 Z" fill="#FBC02D" stroke="#2B2118" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M22.00,62.00 h46.00 v8.00 h-46.00 Z" fill="#B3261E" stroke="#2B2118" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M22.00,84.00 h46.00 v8.00 h-46.00 Z" fill="#B3261E" stroke="#2B2118" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/>
+</g></g>
+<g transform="translate(0 0) translate(45 77) rotate(0) scale(0.7) translate(-45 -77)"><g>
+<path d="M40.90,70.00 h8.20 a3.4,3.4 0 0,1 3.4,3.4 v7.20 a3.4,3.4 0 0,1 -3.4,3.4 h-8.20 a3.4,3.4 0 0,1 -3.4,-3.4 v-7.20 a3.4,3.4 0 0,1 3.4,-3.4 Z" fill="#B3261E" stroke="#2B2118" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M41.3,70 L41.3,75.5 M45,70 L45,75.5 M48.7,70 L48.7,75.5" fill="none" stroke="#2B2118" stroke-width="1.0" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M38.50,75.50 h5.30 a2.1,2.1 0 0,1 2.1,2.1 v0.20 a2.1,2.1 0 0,1 -2.1,2.1 h-5.30 a2.1,2.1 0 0,1 -2.1,-2.1 v-0.20 a2.1,2.1 0 0,1 2.1,-2.1 Z" fill="#B3261E" stroke="#2B2118" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/>
+</g></g>
+</g></g></svg>

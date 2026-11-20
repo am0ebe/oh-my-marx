@@ -98,13 +98,17 @@ import androidx.compose.ui.layout.boundsInWindow
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.rememberTextMeasurer
-import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.unit.Constraints
 import de.strix.marxversion.data.Chapter
 import de.strix.marxversion.data.Lang
 import de.strix.marxversion.data.Plan
 import de.strix.marxversion.data.PlanDay
 import de.strix.marxversion.data.Verse
+import androidx.compose.foundation.layout.offset
+import kotlin.math.roundToInt
+
+/** Literata capHeight / em (OS/2 table: 700 / 1000) · drop caps line up by it */
+private const val CAP_H = .70f
 
 // ── content in th current language: DE/EN fr th book, oth langs fr th i18n table, EN as fallback ──
 
@@ -273,13 +277,22 @@ private fun DropCapText(t: AnnotatedString, style: TextStyle, lines: Int = 3) {
     val cap = t.text[first].toString()
     val rest = t.subSequence(first + 1, t.length)
     val illum = lines >= 3
-    val capStyle = style.copy(color = Ds.red, fontWeight = FontWeight.Bold, fontSize = style.lineHeight * (lines - (if (illum) .55f else .25f)),
-        lineHeight = style.lineHeight * lines,
-        lineHeightStyle = LineHeightStyle(LineHeightStyle.Alignment.Center, LineHeightStyle.Trim.Both))
     val measurer = rememberTextMeasurer()
     val density = LocalDensity.current
+    // D-067 · 🦠 @1120 "bigger + higher": placed by baselines now (was: centred i a 3-line box ➡ Literata's tall ascender 1.18 em pushed th
+    //   ink down) · classic rule: cap ink top = line 1's cap height · cap baseline = line N's baseline · Literata capHeight = .70 em
+    //   illuminated (gold box = N lines) = ink 74 % o th box, centred i it
+    val lhPx = with(density) { style.lineHeight.toPx() }
+    val base1 = remember(style) { measurer.measure("X", style).firstBaseline }
+    val capFs: Float; val capBase: Float
+    if (illum) { val ink = .74f * lines * lhPx; capFs = ink / CAP_H; capBase = (lines * lhPx + ink) / 2 }
+    else { val ink = (lines - 1) * lhPx + CAP_H * with(density) { style.fontSize.toPx() }; capFs = ink / CAP_H; capBase = base1 + (lines - 1) * lhPx }
+    val capStyle = style.copy(color = Ds.red, fontWeight = FontWeight.Bold, fontSize = with(density) { capFs.toSp() },
+        lineHeight = androidx.compose.ui.unit.TextUnit.Unspecified, lineHeightStyle = null)
     BoxWithConstraints(Modifier.fillMaxWidth()) {
-        val capW = remember(cap, capStyle) { measurer.measure(cap, capStyle).size.width } + with(density) { Space.s.roundToPx() }
+        val capLayout = remember(cap, capStyle) { measurer.measure(cap, capStyle) }
+        val capDy = (capBase - capLayout.firstBaseline).roundToInt()
+        val capW = capLayout.size.width + with(density) { (if (illum) Space.m else Space.s).roundToPx() }
         val narrow = (constraints.maxWidth - capW).coerceAtLeast(1)
         val split = remember(rest, style, narrow) {
             val l = measurer.measure(rest, style, constraints = Constraints(maxWidth = narrow))
@@ -295,7 +308,8 @@ private fun DropCapText(t: AnnotatedString, style: TextStyle, lines: Int = 3) {
                     modifier = Modifier.width(with(density) { capW.toDp() })
                     .height(with(density) { (style.lineHeight * lines).toDp() })
                     .then(if (illum) Modifier.padding(end = Space.s).background(Ds.goldTint).border(1.dp, Ds.ink.copy(alpha = .5f)) else Modifier)
-                    .wrapContentHeight(Alignment.Top, unbounded = true))
+                    .wrapContentHeight(Alignment.Top, unbounded = true)
+                    .offset { androidx.compose.ui.unit.IntOffset(0, capDy) })
                 // D-058 justify: th WHOLE ¶ clipped 2 3 lines (not `head`) ➡ line 3 isn't a last line ➡ stays justified +
                 //   keeps its hyphen ("im-" | "mense" below) · same style + width as th measure ➡ same breaks
                 Text(rest, style = style, maxLines = lines, overflow = androidx.compose.ui.text.style.TextOverflow.Clip,

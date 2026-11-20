@@ -1,6 +1,7 @@
 package de.strix.marxversion
 
 import android.app.Application
+import kotlinx.coroutines.launch
 import de.strix.marxversion.data.ContentRepo
 import de.strix.marxversion.data.MarxDb
 import de.strix.marxversion.data.Prefs
@@ -22,5 +23,18 @@ open class MarxApp : Application() {  // open: test/ShotsTest's ShotsApp inits W
         ensureChannel(this)
         de.strix.marxversion.notify.scheduleKreis(this)  // 🔔 Lesekreis msgs + evening nudge (no-op wo circles)
         de.strix.marxversion.notify.scheduleUpdate(this) // 🆕 ~daily "new version" check (no-op 4 store/Obtainium installs)
+        // 🥚 D-066: launcher icon = today's egg · flips at 00:01 (worker) + whenever th last screen leaves (nvr while on screen)
+        de.strix.marxversion.data.EggIcon.schedule(this)
+        registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
+            override fun onActivityStopped(a: android.app.Activity) {
+                if (!a.isChangingConfigurations) scope.launch { de.strix.marxversion.data.EggIcon.sync(this@MarxApp) }
+            }
+            override fun onActivityCreated(a: android.app.Activity, b: android.os.Bundle?) {}
+            override fun onActivityStarted(a: android.app.Activity) {}
+            override fun onActivityResumed(a: android.app.Activity) {}
+            override fun onActivityPaused(a: android.app.Activity) {}
+            override fun onActivitySaveInstanceState(a: android.app.Activity, b: android.os.Bundle) {}
+            override fun onActivityDestroyed(a: android.app.Activity) {}
+        })
     }
 }

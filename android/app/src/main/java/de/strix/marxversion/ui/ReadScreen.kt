@@ -294,6 +294,23 @@ fun ChapterScreen(vm: AppVm, kap: String, focus: String?, @Suppress("UNUSED_PARA
 
     // 📜 scroll mode = no pages ➡ no turn ➡ a passage tap = its menu again (like Today)
     // D-065: 📖 + 📜 share th passage gestures ➡ BookTaps i both (passages never clickable i th reader)
+    // 🤏 pinch = font size, 📖 + 📜 (🐛 @1120: lost i 📜 when ScrollBook replaced th batch feed, #200)
+    //   Initial pass ➡ runs before th page / list scrolls · 2 fingers consumed ➡ no scroll while pinching
+    val pinch = Modifier.pointerInput(Unit) {
+        awaitEachGesture {
+            awaitFirstDown(requireUnconsumed = false)
+            var pinched = false
+            do {
+                val ev = awaitPointerEvent(PointerEventPass.Initial)
+                if (ev.changes.count { it.pressed } >= 2) {
+                    val z = ev.calculateZoom()
+                    if (z != 1f) { scale = (scale * z).coerceIn(0.7f, 2f); pinched = true }
+                    ev.changes.forEach { it.consume() }
+                }
+            } while (ev.changes.any { it.pressed })
+            if (pinched) vm.setReadScale(scale)
+        }
+    }
     CompositionLocalProvider(LocalReadScale provides scale, LocalBook provides book) {
      Box(Modifier.fillMaxSize()) {
       // ⌨️ imePadding: th page shrinks above th keyboard ➡ a note at th page bottom stays visible (qa_1116 r2.5)
@@ -306,6 +323,7 @@ fun ChapterScreen(vm: AppVm, kap: String, focus: String?, @Suppress("UNUSED_PARA
             var listAt by remember { mutableStateOf(Offset.Zero) }
             ScrollBook(vm, scrollFrom, speaker, Modifier.weight(1f).fillMaxWidth()
                 .onGloballyPositioned { listAt = it.positionInWindow() }
+                .then(pinch)
                 // D-065: same as 📖 — hold o double-tap a passage = menu · tap = nothing (no page 2 turn i a scroll)
                 .pointerInput(Unit) {
                     val menu = { o: Offset -> if (book.menuAt(o + listAt)) haptic.performHapticFeedback(HapticFeedbackType.LongPress) }
@@ -316,21 +334,7 @@ fun ChapterScreen(vm: AppVm, kap: String, focus: String?, @Suppress("UNUSED_PARA
             }
         } else Box(
             Modifier.weight(1f).fillMaxWidth().background(DESK)  // th desk under th book
-                .pointerInput(Unit) {  // 🤏 pinch (Initial pass: before th page scrolls)
-                    awaitEachGesture {
-                        awaitFirstDown(requireUnconsumed = false)
-                        var pinched = false
-                        do {
-                            val ev = awaitPointerEvent(PointerEventPass.Initial)
-                            if (ev.changes.count { it.pressed } >= 2) {
-                                val z = ev.calculateZoom()
-                                if (z != 1f) { scale = (scale * z).coerceIn(0.7f, 2f); pinched = true }
-                                ev.changes.forEach { it.consume() }
-                            }
-                        } while (ev.changes.any { it.pressed })
-                        if (pinched) vm.setReadScale(scale)
-                    }
-                }
+                .then(pinch)
                 .pointerInput(pages.size) {  // 👉 drag = turn
                     val w = size.width.toFloat()
                     detectHorizontalDragGestures(

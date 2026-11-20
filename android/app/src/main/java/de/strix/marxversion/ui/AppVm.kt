@@ -370,6 +370,11 @@ class AppVm(app: Application) : AndroidViewModel(app) {
     fun testNotifNow() = WorkManager.getInstance(getApplication()).enqueue(OneTimeWorkRequestBuilder<LosungWorker>().build())
     fun testUndoDay() = viewModelScope.launch { marx.db.logs().undoDay(today()); widgets() }
     /** cycle: real ➡ each feast ➡ real */
-    fun testNextFeast() { feastPreview.value = Feast.entries.getOrNull((feastPreview.value?.ordinal ?: -1) + 1) }
+    fun testNextFeast() {
+        feastPreview.value = Feast.entries.getOrNull((feastPreview.value?.ordinal ?: -1) + 1)
+        de.strix.marxversion.data.EggIcon.preview = feastPreview.value   // 🥚 launcher follows once u leave th app (D-066)
+    }
+    /** applies when u leave th app (MarxApp lifecycle sync) — switching under th usr's finger can close th task (D-066) */
+    fun setEggIcon(on: Boolean) = viewModelScope.launch { marx.prefs.setEggIcon(on) }
     fun testNextTime() { timePreview.value = DayTime.entries.getOrNull((timePreview.value?.ordinal ?: -1) + 1) }
 }

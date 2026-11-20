@@ -74,6 +74,6 @@ echo "✔️ $ver ➡ $WEB/dev/ · fon: Obtainium ➡ pull 2 refresh"
 
 if [ "$adb" = 1 ]; then
     "$ADB" install -r "$out/$apk" >/dev/null
-    [ "$launch" = 1 ] && "$ADB" shell am start -n "$PKG/de.strix.marxversion.MainActivity" >/dev/null
+    [ "$launch" = 1 ] && "$ADB" shell am start -n "$PKG/de.strix.marxversion.HomeActivity" >/dev/null
     echo "✔️ + installed over adb$([ "$launch" = 1 ] && echo ' + launched')"
 fi

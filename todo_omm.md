@@ -26,19 +26,21 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
 
 ## 👀
 ### 🏔️ v1
-- **Review:** 8 checks in [qa_1120.md § r2](qa_1120.md), about 10 minutes on DEV `0.13.0-dev.1120.1813`.
-  - Look at: reader gestures (hold = menu, D-065) · holy book · note card · Werkbank chips · My Capital · feasts.
-  - Each tick also accepts the decisions on its line: D-048 to D-054 and D-060 to D-064 (all Proposed in [adr.md](adr.md)).
-  - [ ] 🦠 good / note
+- **Review:** 🥚 eggs on DEV `0.13.0-dev.1120.1911` ➡ [qa_1121.md](qa_1121.md), 5 checks, about 6 minutes (+ 1 min gallery, no fon).
+  - Look at: the 30 eggs ([img/eggs/gallery.png](img/eggs/gallery.png)) · in-app egg (head · hero · quote card) · launcher icon switch · drop cap (D-067) · 📜 pinch.
+  - Ticks accept D-066 (eggs, Proposed in [adr.md](adr.md)).
+  - [x] 🤖 EggIconTest 5/5 · unit 141 + lint + test_bin 43 + check_langs green · DEV deployed
+  - [ ] 🦠 good / note (❓ in qa_1121: does your launcher keep the home-screen icon?)
 
 ## 📆
 
 ## 🔵
-- 🤖🎨 **C-lane gaps** (done @1120: rank perks, feast emblems, 11 heads, initials, ¶, rtl / zh shots, gold swoosh):
-  - 🧔 Guest heads (Clara Zetkin · Engels · Jenny Marx) need real portrait art, so they stay a token for now.
-  - 🧔 Share card and widget should draw the feast head through `MarxHead` (they still use the plain head).
+- 🤖🎨 **C-lane gaps** (done @1120: rank perks, feast emblems, 11 heads, initials, ¶, rtl / zh shots, gold swoosh · @1120 #229: 🥚 eggs replace heads in top bar, hero, quote card + launcher, D-066):
+  - 📱 Widget: show the day's egg (still the ☭ / emoji text head).
+  - 🧔 ✂️ Guest heads (Clara Zetkin · Engels · Jenny Marx) = moot since eggs (D-066) · `Head` enum + `Feast.head` now unused by the UI ➡ rm?
   - 🖼️ Feast frames (design § 14.2.1) · 🔊 stamp thud sound (D-035).
-- 🤖🏗️ Literata subset still needs fonttools installed (blocked in auto mode) ➡ see the line below.
+- 🎨 💬 Fable design pass over the 30 eggs (`bin/eggs.py`) — only if 🦠 wants more polish aftr the gallery
+- 🤖🏗️ ✂️ Literata subset still needs fonttools installed ➡ done in 627731e (5 static styles, `bin/font_subset.sh`)? = stale
 - ‼️ ⭐🧪 **QA @1116** ➡ [qa_1116.md](qa_1116.md) — 14 ⚡ i 6 lanes (L3 share 1st) · 3 🎨 (➡ Fable spec aftr) · 2 🔍 · 💬 Qs ✔️ answered @1116 ➡ lanes built (D-039 · D-040) · Q8 revised = no Werkbank (D-041) · left: D3 joker · fon items
 - ‼️ ⭐🧪 **QA sprint 0.9.x** — r1-r3 ✔️ · left ➡ [qa_1112.md](qa_1112.md) (🎨 10 design · 🔍 5 research · 💬 Qs) · ❓ streak widget "shd show 2 at start" = ? unanswered
   - later (needs design): 📖 real book look · ⏰ daily verse off-switch · name entry · 🔮 Marxoskop tiles · 🔓 Lesekreis unlock · 🏷️ quotes off-topic ➡ [notes.md § 🗃️](notes.md)
@@ -76,11 +78,12 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
 - 🔍 tags over-applied ("kapitalist" 83 %) ➡ relative re-tag
   - ✔️ 🔍 @1116: root = score.py `maxItems: 4` ➡ LLM pads evy quote 2 4 tags ➡ chip "chef" 1233/1511 ≈ random (miete only 94)
   - 🤖 nxt (aftr QA round): retag "0-2 tags, only if ABOUT it" + weight 1-3 · chip = weight ≥ 2 · guard ≥ ~30 quotes/chip
-- 🤖🏗️ subset Literata (D-058): 2 variable TTFs = +1.86 MB ➡ static Latin + Cyrillic (fonttools instancer + pyftsubset) ≈ −1.3 MB · ⚠️ `uvx fonttools` blocked by auto mode @1120 ➡ 🦠 ok / install fonttools 1st
+- 🤖🏗️ ✂️ (done 627731e? −748 KB) subset Literata (D-058): 2 variable TTFs = +1.86 MB ➡ static Latin + Cyrillic (fonttools instancer + pyftsubset) ≈ −1.3 MB · ⚠️ `uvx fonttools` blocked by auto mode @1120 ➡ 🦠 ok / install fonttools 1st
 - 🤖 aft QA: rm page fotos (boox proc step 8)
 - 🦠🧪 fon update banner on Today · DEV 0.11.0-dev + stable 0.11.0 (fr M8 board #125)
 
 ## ✔️
+- ✔️ @1120 #229: qa_1120 r2 passed (🦠 "omm looks good") ➡ D-048..054 + D-059..062 Accepted · 🥚 30 eggs (D-066) · 🔴 drop cap by baselines (D-067) · 🐛 📜 pinch back · DEV 1911
 - ✔️ @1120 (M8: 🔵 wo 🦠 answer): 🐛 DEV 1944 startup crash (`newPlans` b4 content load · UpgradeStartTest) · ★ C6 close sheet ([img/close_sheet.png](img/close_sheet.png) ➡ ❓ D-055 i qa_1119) · 🔤 13,319 ⬄ 13,320 DE/EN fixed (split.py: long Part head = meta ➡ jahr auto v2, day 161 only) · 🏗️ plan versioning = D-042 ✔️ @1119 (line moved here)
 - ✔️ @1117 bl_triage (🦠 via M8 #139): ❌ in-app analytics (dupe ops 📊) · ❌ persona voices pointer (lives i pr/audio) · ✂️ rule ➡ file header · Matrix public room = yes · `/omm` + Spruchkarte As inline
 - ✔️ @1116b-1117: 🔵 sweep (lint warn 35 ➡ 25 · glue tsts · Ludditen bridges ×11 · README · tags 🔍) · qa_1116 Q1-Q9 lanes (☭ back · 📖⬄📜 · DEV unlock · Forgejo icon · stamps total) · D-039/040/041 · DEV 2227 · EN gaps 7 ➡ 0 · fx queue · MatrixTest 13 · R1 plan table · 0.11.0 notes draft

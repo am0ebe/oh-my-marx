@@ -140,6 +140,19 @@ class ShotsTest {
 
     /** day done ➡ Home ends at Marxoskop · 📜 endless feed = th reader's 📜 mode now (qa_1116 Q4/Q7) ➡ chapter_scroll */
     //   named z… = runs LAST: Room's marx.db survives between tests i 1 JVM ➡ a done day would leak into `screens`
+    /** 🥚 D-066: Today on a feast ➡ top-bar head + hero + quote card = th egg (♀ · 🎃) · egg_today_*.png */
+    @Test fun zEgg() {
+        rule.waitUntil(30_000) { rule.onAllNodesWithText("Today").fetchSemanticsNodes().isNotEmpty() }
+        val vm = androidx.lifecycle.ViewModelProvider(rule.activity)[de.strix.marxversion.ui.AppVm::class.java]
+        listOf(de.strix.marxversion.logic.Feast.FRAUENTAG, de.strix.marxversion.logic.Feast.HALLOWEEN,
+            de.strix.marxversion.logic.Feast.TODESTAG).forEach { f ->
+            rule.runOnUiThread { vm.feastPreview.value = f }
+            rule.mainClock.advanceTimeBy(2500)
+            shot("egg_today_${f.name.lowercase()}")
+        }
+        rule.runOnUiThread { vm.feastPreview.value = null }
+    }
+
     @Test fun zFeed() {
         rule.waitUntil(30_000) { rule.onAllNodesWithText("Today").fetchSemanticsNodes().isNotEmpty() }
         scroll(); scroll()

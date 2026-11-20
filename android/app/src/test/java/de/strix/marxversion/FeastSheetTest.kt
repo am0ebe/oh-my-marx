@@ -69,6 +69,21 @@ class FeastSheetTest {
             Feast.PETERLOO, Feast.JENNY), Feast.entries.filter { it.quiet }.toSet())
     }
 
+    /** 🥚 D-066: quote-o-th-day card on a feast = th egg instead o th saint (♀ · 🎃 · 💀) ➡ egg_cards.png */
+    @Test fun eggCards() {
+        assumeTrue(System.getProperty("shots") == "1")
+        val ctx = rule.activity
+        val cards = listOf(Feast.FRAUENTAG, Feast.HALLOWEEN, Feast.TODESTAG).map { f ->
+            de.strix.marxversion.ui.cardBitmap(ctx, "The wealth of those societies in which the capitalist mode of production prevails…",
+                "Capital 1,1", Lang.EN, f, title = f.greet.second.substringBefore(" —").take(30))
+        }
+        val out = Bitmap.createBitmap(cards.sumOf { it.width } / 2, cards[0].height / 2, Bitmap.Config.ARGB_8888)
+        val c = android.graphics.Canvas(out)
+        cards.forEachIndexed { i, b -> c.drawBitmap(Bitmap.createScaledBitmap(b, b.width / 2, b.height / 2, true), (i * b.width / 2).toFloat(), 0f, null) }
+        val dir = File(System.getProperty("shotsDir") ?: "build/shots").apply { mkdirs() }
+        File(dir, "egg_cards.png").outputStream().use { out.compress(Bitmap.CompressFormat.PNG, 100, it) }
+    }
+
     @Test fun sheet() {
         assumeTrue(System.getProperty("shots") == "1")
         rule.setContent { MarxTheme(Lang.EN, null) {

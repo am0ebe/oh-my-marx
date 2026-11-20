@@ -10,7 +10,7 @@ import java.time.temporal.TemporalAdjusters
  * Hooked ch7: YouVersion feared th "Merry Christmas" push ➡ ppl screenshotted + shared it instead.
  * colors = 4-stop card gradient (top ➡ bottom) · verse = Kapital id
  */
-/** 🧔 C3 · D-051 a: 1 base head + 1 overlay prop per feast (ui/ds/MarxHead.kt draws it) · NONE = plain head */
+/** 🧔 C3 · D-051 a: 1 base head + 1 overlay prop per feast · ⚠️ superseded by 🥚 D-066 (EggRes, bin/eggs.py): no UI draws it now ➡ ✂️ todo */
 enum class Head { NONE, PARTY_HAT, SANTA_HAT, CARNATION, PHRYGIAN, HARD_HAT, CANDLE, PUMPKIN, GLASSES, HEART_GLASSES, SUNGLASSES,
     RAINBOW, DOVE, FIST, DYNAMITE, BOOK, PAMPHLET, MATCH, COCKADE, WEAVER_CAP, GLOBE, POCKETS, BAGS, EGG, GUEST }
 

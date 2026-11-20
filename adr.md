@@ -20,6 +20,24 @@ _SDD: code says **wh** · th file says **y** · drift = a bug · fmt ➡ `pr/vib
 ## 🧾 decisions (newest on top)
 _Template v2.1 since 20 Nov (converted via `pr/vibe++/adr_convert.md`). Field names: Y = why · Ctx = what forced it · Scope = what it covers · Ck = how to check._
 
+### D-067 @1120 · 🔴 A drop cap is placed by baselines: ink top = line 1's cap height, foot = line N's baseline · Accepted (🦠 via M8 #229)
+- **Y:** You saw the red letter too small and sitting low. It was centred in a 3-line box, and Literata's tall ascender (1.18 em) pushed the ink down.
+- **Scope:** 2-line section initial = classic rule (top flush with line 1's capitals, foot on line 2's baseline) · 3-line illuminated initial = ink 74 % of its gold box, centred · Literata capHeight .70 em is a constant (`CAP_H`, from the font's OS/2 table).
+- **Prev:** D-053 b (initials) · D-064 (no cap in ar/ur/hi/bn) unchanged.
+- **Ck:** `VerseView.DropCapText` · shot `chapter` (ShotsTest, `-Pshots`)
+
+### D-066 @1120 · 🥚 On a feast day Marx turns into the day's egg: launcher icon, top bar, Today hero and the quote card · Proposed (🦠 judges the gallery + qa_1121)
+- **Y:** You said colours plus a line are not an Easter egg; "the icon should change". A visible costume change is the surprise people screenshot (Hooked ch7, YouVersion's Christmas push).
+- **Ctx:** D-051's small props on the photo head were hard to see at 44 dp.
+- **Scope:**
+  - 30 cartoon eggs, one per feast, all drawn in `bin/eggs.py` (one source ➡ Android vectors + SVG previews + `img/eggs/gallery.png` + manifest aliases + `EggRes.kt`). Playful days get a comic Marx (Todestag = X eyes + tongue out, Halloween = pumpkin with his beard, Christmas = Santa, Manifest = the spectre as a bearded ghost …). The 6 death days of others stay quiet: a symbol, no joke (carnation, candle, rose, hard hat + ribbon, flag over a broken chain, Peterloo banner). Women's Day = ♀ with a red fist.
+  - In the app: top-bar head (`MarxHead` ➡ `EggBadge`) · Today hero (`EggPop`: pops in, wiggles, tap = wiggle) · quote card / share PNG (egg replaces the saint + emoji).
+  - Launcher: 30 `activity-alias` entries (disabled) + `.MainActivity` as the default alias; the real activity is now `HomeActivity`. `data/EggIcon.kt` enables exactly one: at 00:01 (WorkManager) and whenever the app leaves the screen. ⚙️ "Holiday icon" switches it off. The 🎉 Holiday test chip drives it too.
+- **Limits (Android):** no runtime icon API, so every icon ships in the APK (30 vectors ≈ 100 KB) · launchers redraw after 1-10 s · some launchers are reported to drop the home-screen icon when its alias is disabled, while Launcher3-based ones (Pixel, Lineage) re-point it to the app's enabled entry; unverified here, qa_1121 checks your phone · switching while the app is on screen can close its task, so we never do that · no `<monochrome>` layer: with themed icons on, the egg shows in full colour, which makes it stand out.
+- **Alt:** a) keep props on the photo (D-051, too small) · b) redraw the photo per feast (raster, 30 × ~80 KB, no comic range) · c) Fable design pass on top of this set (💬 open).
+- **Prev:** D-051 (superseded) · D-052 (the 30 days) unchanged.
+- **Ck:** `EggIconTest` (aliases in the manifest, exactly one launcher entry, off switch, test chip) · `FeastSheetTest.sheet` + `eggCards` · `ShotsTest.zEgg` · [img/eggs/gallery.png](img/eggs/gallery.png) · qa_1121 on the phone.
+
 ### D-065 @1120 · ✋ Holding a passage opens its menu, and pages and scroll share every gesture · Accepted (🦠 @1120 via M8 #218)
 - **Y:** You found that hold was often read as a tap, and wanted both reading modes to behave the same. Turning is the only thing a tap does; the menu is hold (or double-tap) everywhere.
 - **Scope:** 📖 tap = turn (left back, right forward) · hold or double-tap a passage = its menu with a buzz · 📜 the same, except a tap does nothing · no passage is clickable in the reader in either mode, so no ripple. The top bar was already the same in both modes.
@@ -37,7 +55,7 @@ _Template v2.1 since 20 Nov (converted via `pr/vibe++/adr_convert.md`). Field na
 - **Scope:** Each level gives: 1 gold rim on the hero · 2 stamp card turns blue cloth · 3 opens the "Marx Basics" plan (new lock source `rank`, D-043) · 4 your rank title next to "you" in Circles (your screen only, nothing is sent) · 5 gear rim around the star · 6 your name in the book's colophon · 7 the star turns gold. Level 7 also turns the ☭ swoosh gold (`CelebrationQueue.gold`, added later on 20 Nov). Built during M8 #206 (autonomous).
 - **Ck:** `PlanUnlockTest.rankPerk_opensAtLevel3` · `MomentsShotsTest.rank3` · `Moments.kt PERKS_LIVE`
 
-### D-062 @1120 · ⏱️ Reading time counts only while you touch the reader; a long sitting counts in full · Proposed
+### D-062 @1120 · ⏱️ Reading time counts only while you touch the reader; a long sitting counts in full · Accepted (🦠 qa_1120 r2 via M8 #229)
 - **Y:** You said "a long session should count, but only if really reading; no input = nothing happening". Input is the honest signal, a per-page cap is not.
 - **Options:**
   - **a) 15 s ticks while the reader is open and was touched ≤ 90 s ago, no cap, plus 🌙 Überstunden badge = 1 sitting with ≥ 60 active minutes** (rec, built by crew)
@@ -47,7 +65,7 @@ _Template v2.1 since 20 Nov (converted via `pr/vibe++/adr_convert.md`). Field na
 - **Prev:** D-059 (page cap rule).
 - **Ck:** `OrdenTest.readingTimeMedals` (`activeSecs`) · ChapterScreen tick loop (`repeatOnLifecycle(RESUMED)`) · `Orden.LONGSHIFT`
 
-### D-061 @1120 · My Capital shows a level with its badge, not a second stamp card · Proposed
+### D-061 @1120 · My Capital shows a level with its badge, not a second stamp card · Accepted (🦠 qa_1120 r2 via M8 #229)
 - **Y:** You said "rank isn't another stamp card, too much: a rank with a nice symbol, maybe a level". Stamps already live in the Stempeluhr pane.
 - **Options:**
   - **a) badge 56 + "LEVEL N" + rank name + 1 thin gold bar + "N days to level N+1"** (rec, built by crew)
@@ -55,7 +73,7 @@ _Template v2.1 since 20 Nov (converted via `pr/vibe++/adr_convert.md`). Field na
   - c) keep the stamp row
 - **Ck:** `MineScreen` stamp-card block · your eye on the phone
 
-### D-060 @1120 · Promotion pops a gold "LEVEL N ▲" with an XP bar; the red GENEHMIGT stamp is gone · Proposed
+### D-060 @1120 · Promotion pops a gold "LEVEL N ▲" with an XP bar; the red GENEHMIGT stamp is gone · Accepted (🦠 qa_1120 r2 via M8 #229)
 - **Y:** You said "GENEHMIGT feels bureaucratic, make it more level-up, gamify". A level number and a filling bar are the game language people know.
 - **Options:**
   - **a) gold LEVEL N ▲ pill (overshoot pop) + XP bar from old to new level, "RANK N/7" line dropped** (rec, built by crew)
@@ -64,7 +82,7 @@ _Template v2.1 since 20 Nov (converted via `pr/vibe++/adr_convert.md`). Field na
 - **Prev:** D-050 (the GENEHMIGT seal).
 - **Ck:** `MomentsShotsTest.rank3` (LEVEL 3, no GENEHMIGT) · shot `moment_rank_3`
 
-### D-059 @1120 · ⏱️ The "long in the app" award measures time in the book, not time the app is open · Proposed, time rule superseded by D-062
+### D-059 @1120 · ⏱️ The "long in the app" award measures time in the book, not time the app is open · Accepted (🦠 qa_1120 r2 via M8 #229), time rule superseded by D-062
 - **Y:** The chapter 8 frame (the 8-hour day had to be fought for) is a wink and honest. Counting total time, not one sitting, avoids binge pressure; counting book time, not app time, can't be farmed by leaving the app open.
 - **Ctx:** You asked for an award "for staying in the app a long time" (via M8 #185). D-014 earned-only · D-004 no anxiety · Hooked ch. 6 (facilitator, not dealer).
 - **Options:**
@@ -110,7 +128,7 @@ _Template v2.1 since 20 Nov (converted via `pr/vibe++/adr_convert.md`). Field na
 - **Ck:** `close_sheet.png` (8 variants × 3 contexts + dark) · lane C6, no gate
 - **Note:** D-045 to D-055 (@1119) are the design addendum (qa_1117 D6-D11 + r4), all decided by you with the crew's pick marked. Spec, mockups and lanes C1-C7: [design_system.md](design_system.md) § 14 (§ 14.0 = the same list as a table).
 
-### D-054 @1119 · ✍️ A note is a margin-comment card, one component for notes and comments · Proposed
+### D-054 @1119 · ✍️ A note is a margin-comment card, one component for notes and comments · Accepted (🦠 qa_1120 r2 via M8 #229)
 - **Y:** Comment cards are what other apps do (your r2 note), and one card can serve both notes and comments.
 - **Ctx:** qa D7 · Q4.
 - **Options:**
@@ -119,7 +137,7 @@ _Template v2.1 since 20 Nov (converted via `pr/vibe++/adr_convert.md`). Field na
   - c) keep the ruler, new background only: too close to "a blue quote", which you disliked
 - **Ck:** shots `note_card` `note_edit` `comments` (C5) · no ★ in the editor · tap away = save, menu stays
 
-### D-053 @1119 · 📜 The book gets the old-book devices that are worth their effort · Proposed
+### D-053 @1119 · 📜 The book gets the old-book devices that are worth their effort · Accepted (🦠 qa_1120 r2 via M8 #229)
 - **Y:** Option b gives the most "worthy old book" per effort, and everything is drawn (no raster images).
 - **Ctx:** qa D11.
 - **Options:**
@@ -129,7 +147,7 @@ _Template v2.1 since 20 Nov (converted via `pr/vibe++/adr_convert.md`). Field na
 - **Scope:** No margin ¶ numbers (r3 removed the ¶ reference line). The catchword was removed after your r1 note ("why? confusing").
 - **Ck:** shots `chapter` `chapter_scroll` `chapter_end_seal` `bookmark_ribbon` + rtl + zh (C4)
 
-### D-052 @1119 · 🎉 The feast calendar gets 18 more days, so no gap is longer than about a month · Proposed
+### D-052 @1119 · 🎉 The feast calendar gets 18 more days, so no gap is longer than about a month · Accepted (🦠 qa_1120 r2 via M8 #229)
 - **Y:** 5 May to 14 September had 4 months with nothing. With all 18 the longest gap is about 4 weeks. Fun days are a variable reward (your r3 note); quiet († days) get no confetti.
 - **Ctx:** R4 gaps.
 - **Options:**
@@ -138,7 +156,7 @@ _Template v2.1 since 20 Nov (converted via `pr/vibe++/adr_convert.md`). Field na
   - c) you pick on the sheet
 - **Ck:** `Feast.on()` test per date · `feast_sheet.png` (C3)
 
-### D-051 @1119 · 🧔 The holiday Marx is one base head plus overlay props · Proposed
+### D-051 @1119 · 🧔 The holiday Marx is one base head plus overlay props · Superseded by D-066 (props too small 4 a "wow", 🦠 @1120)
 - **Y:** One style, cheap per feast, no drift. Option c was "half-baked" (your r3 note).
 - **Ctx:** qa D8 · Q6.
 - **Options:**
@@ -147,7 +165,7 @@ _Template v2.1 since 20 Nov (converted via `pr/vibe++/adr_convert.md`). Field na
   - c) emoji next to the head (the old way)
 - **Ck:** `ui/ds/MarxHead.kt` = the only place that picks a head · top bar + share card + widget call it
 
-### D-050 @1119 · 🎖️ A rank-up is a fullscreen "Beförderung", like a game level-up · Proposed, seal part superseded by D-060
+### D-050 @1119 · 🎖️ A rank-up is a fullscreen "Beförderung", like a game level-up · Accepted (🦠 qa_1120 r2 via M8 #229), seal part superseded by D-060
 - **Y:** You asked for "promotion · hero upgrade · MMORPG level-up" (r4). It happens about every 10 reading days, rare enough for a big moment (D-034). Perks are cosmetic, which keeps it honest (D-004).
 - **Options:**
   - **a) badge flies in · Marx seals "GENEHMIGT" · rays · 1 perk line · share** (rec, built by crew in C2; the seal was replaced by D-060)
@@ -155,12 +173,12 @@ _Template v2.1 since 20 Nov (converted via `pr/vibe++/adr_convert.md`). Field na
   - plus: cosmetic perks per rank · rank 3 as a new D-043 unlock source (both built, D-063)
 - **Ck:** shot `moment_rank_3` · rays stop at 2300 ms · reduced motion = end frame (C2)
 
-### D-049 @1119 · Celebrations form one ladder and show one big screen per tap · Proposed
+### D-049 @1119 · Celebrations form one ladder and show one big screen per tap · Accepted (🦠 qa_1120 r2 via M8 #229)
 - **Y:** Your r4 note: "Amen, then award, then ☭, in series". Size follows rarity (D-034), and there are no walls of dialogs.
 - **Scope:** T0 press · T1 ✓ · T2 ☭ + Stempeluhr · T2b chapter seal · T3 milestone · T4 Beförderung · T5 reward dialogs · the queue follows that order · 2 or more due = "Moment … ▸" · more than 2 dialogs = "+N" chip. Built as written; you accept or change it.
 - **Ck:** `FxQueueTest`: 1 big screen per tap (C2)
 
-### D-048 @1119 · ⏱️ "Day complete" is the Stempeluhr: a stamp, one line and a teasing question · Proposed
+### D-048 @1119 · ⏱️ "Day complete" is the Stempeluhr: a stamp, one line and a teasing question · Accepted (🦠 qa_1120 r2 via M8 #229)
 - **Y:** Your r4 note: "bland · text-stuffed · Moses? · not teasing". So: image + motion + 1 line + 1 question, and "Losung kommt um" goes (Settings already has it).
 - **Ctx:** qa D10 · Q11.
 - **Options:**

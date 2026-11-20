@@ -42,6 +42,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.FileProvider
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.createBitmap
+import androidx.core.graphics.withClip
 import androidx.core.graphics.withTranslation
 import de.strix.marxversion.data.Lang
 import de.strix.marxversion.data.T
@@ -118,16 +119,22 @@ fun cardBitmap(ctx: Context, quote: String, ref: String, lang: Lang, feast: Feas
         }
         val t = kriseWord(lang)
         c.drawText(t, w / 2f - head.measureText(t) / 2f, 190f, head)
+    } else if (feast != null) {
+        // 🥚 D-066: feast ➡ th day's egg as a round badge (♀ on Frauentag, pumpkin on Halloween …) · was: saint + emoji
+        //   108 canvas cropped 2 its inner 72 (= launcher look) ➡ drawable bounds 1.5× th 240-px circle, clipped
+        val cx = w / 2; val cy = saintTop + 150; val r = 120
+        c.withClip(android.graphics.Path().apply { addCircle(cx.toFloat(), cy.toFloat(), r.toFloat(), android.graphics.Path.Direction.CW) }) {
+            listOf(de.strix.marxversion.ui.ds.EggRes.bg(feast), de.strix.marxversion.ui.ds.EggRes.fg(feast)).forEach { id ->
+                ContextCompat.getDrawable(ctx, id)?.apply { setBounds(cx - r * 3 / 2, cy - r * 3 / 2, cx + r * 3 / 2, cy + r * 3 / 2); draw(this@withClip) }
+            }
+        }
+        c.drawCircle(cx.toFloat(), cy.toFloat(), r.toFloat(), Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            style = Paint.Style.STROKE; strokeWidth = 6f; color = 0xE6FFFFFF.toInt() })
     } else {
         // 😇 Saint Marx (vector: halo + hair + beard)
         ContextCompat.getDrawable(ctx, R.drawable.ic_launcher_fg)?.apply {
             setBounds(w / 2 - 140, saintTop, w / 2 + 140, saintTop + 280)
             draw(c)
-        }
-        feast?.let { f ->
-            Paint(Paint.ANTI_ALIAS_FLAG).apply { textSize = 100f }.let { p ->  // colour emoji render fine i drawText
-                c.drawText(f.emoji, w / 2f + 150f, saintTop + 190f, p)
-            }
         }
     }
 

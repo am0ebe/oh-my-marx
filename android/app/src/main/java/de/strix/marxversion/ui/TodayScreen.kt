@@ -458,6 +458,8 @@ private fun Hero(days: List<DayLog>, feast: Feast?, dt: DayTime, hooked: Boolean
             .padding(16.dp),
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
+            // 🥚 D-066: feast ➡ th day's egg pops in left o th title (same art as th launcher icon)
+            if (feast != null) de.strix.marxversion.ui.ds.EggPop(feast, Modifier.padding(end = 12.dp))
             Column(Modifier.weight(1f)) {
                 Text(if (st == 1) tr("1 Tag Lesekapital akkumuliert", "1 day of reading capital accumulated")   // qa_1117: was "1 days"
                     else if (st > 0) tr("%d Tage Lesekapital akkumuliert", "%d days of reading capital accumulated").f(st)
