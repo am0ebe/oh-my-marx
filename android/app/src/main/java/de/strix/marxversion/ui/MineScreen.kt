@@ -29,6 +29,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.foundation.background
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.foundation.text.KeyboardActions
@@ -71,6 +74,29 @@ fun MineScreen(vm: AppVm, openChapter: (String, String) -> Unit) {
             Text(tr("Deine vergegenständlichte Lesearbeit. Unveräußerlich — Export kommt noch.",
                 "Your objectified reading labour. Inalienable — export coming."), fontSize = 12.sp, color = MaterialTheme.colorScheme.secondary)
             HookNote(Hook.INVESTMENT, s.testMode)
+            // 🎟️ C2 · D-045 c: career world = stamp card + rank (left th hero) · counts ALL reading days, nvr resets
+            val logDays by vm.days.collectAsStateWithLifecycle()
+            val total = de.strix.marxversion.logic.readingDays(logDays)
+            val card = de.strix.marxversion.logic.stampCard(total)
+            val ranks = de.strix.marxversion.logic.cardsDone(total)
+            val doneToday = logDays.any { it.date == de.strix.marxversion.logic.today() }
+            Column(Modifier.fillMaxWidth().padding(top = 12.dp).clip(de.strix.marxversion.ui.ds.Shapes.l)
+                .background(de.strix.marxversion.ui.ds.Ds.paperHi).padding(12.dp)) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    if (ranks > 0) androidx.compose.foundation.Image(androidx.compose.ui.res.painterResource(rankArt(ranks - 1)), null,
+                        Modifier.size(40.dp).padding(end = 8.dp))
+                    Column(Modifier.weight(1f)) {
+                        Text(tr("STEMPELKARTE %d", "STAMP CARD %d").f(card.no), style = de.strix.marxversion.ui.ds.OmmType.bookMeta,
+                            color = de.strix.marxversion.ui.ds.Ds.inkMuted)
+                        Text(if (ranks > 0) tr("Rang: %s", "Rank: %s").f(tr(rank(ranks - 1))) else tr("Noch kein Rang", "No rank yet"),
+                            style = MaterialTheme.typography.titleSmall)
+                    }
+                }
+                de.strix.marxversion.ui.ds.StampRow(card, doneToday, Modifier.padding(vertical = 8.dp), ring = de.strix.marxversion.ui.ds.Ds.outline)
+                Text(tr("noch %d Lesetage bis „%s“", "%d more reading days to “%s”").f(card.left, tr(rank(ranks))),
+                    style = MaterialTheme.typography.bodySmall, color = de.strix.marxversion.ui.ds.Ds.inkMuted)
+                HookNote(Hook.STAMPS, s.testMode)
+            }
             val orden by vm.orden.collectAsStateWithLifecycle()
             // 🔓 DEV unlock = medals preview: all shown as earned (display only, nothing stored)
             OrdenSection(if (IS_DEV && s.devUnlock) de.strix.marxversion.logic.Orden.entries.toSet() else orden, s.testMode)

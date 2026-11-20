@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 🏭 rank 4 Manufaktur: workbench + hammer (C2 · design § 14.1.4) -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="96dp" android:height="96dp"
+    android:viewportWidth="48" android:viewportHeight="48">
+    <path android:fillColor="#F6E7B8" android:strokeColor="#C9A227" android:strokeWidth="2" android:pathData="M24,2a22,22 0 1,1 0,44a22,22 0 1,1 0,-44z"/>
+    <path android:fillColor="#2B2118" android:pathData="M9,28h30v3.5h-30z M12,31.5h3v8h-3z M33,31.5h3v8h-3z"/>
+    <path android:fillColor="#8A6D12" android:pathData="M22.6,13.4l2.4,-1.4l7.2,12.6l-2.4,1.4z"/>
+    <path android:fillColor="#B3261E" android:pathData="M15,14.5l8.6,-5l2.5,4.3l-8.6,5z"/>
+</vector>

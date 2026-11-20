@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 🧔 rank 6 Klassiker-Status: bust i a laurel (C2 · design § 14.1.4) -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="96dp" android:height="96dp"
+    android:viewportWidth="48" android:viewportHeight="48">
+    <path android:fillColor="#F6E7B8" android:strokeColor="#C9A227" android:strokeWidth="2" android:pathData="M24,2a22,22 0 1,1 0,44a22,22 0 1,1 0,-44z"/>
+    <path android:fillColor="#2B2118" android:pathData="M24,11a6,6.5 0 1,1 -0.1,0z M14.5,35c0,-6 4.5,-9 9.5,-9s9.5,3 9.5,9z"/>
+    <path android:fillColor="#E8E1D6" android:pathData="M18.8,20c0.5,4.5 2.5,7.5 5.2,7.5s4.7,-3 5.2,-7.5c-1.5,1.5 -3.2,2 -5.2,2s-3.7,-0.5 -5.2,-2z"/>
+    <path android:strokeColor="#C9A227" android:strokeWidth="2.4" android:strokeLineCap="round" android:pathData="M11,16c-3,8 -1,16 6,21 M37,16c3,8 1,16 -6,21"/>
+    <path android:fillColor="#C9A227" android:pathData="M9.5,20.5l3,-1.5l0.5,3z M9.5,26.5l3,-1l0.2,3z M11.5,32l3,-0.5l-0.3,3z M38.5,20.5l-3,-1.5l-0.5,3z M38.5,26.5l-3,-1l-0.2,3z M36.5,32l-3,-0.5l0.3,3z"/>
+</vector>

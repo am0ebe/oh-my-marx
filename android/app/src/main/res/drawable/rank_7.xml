@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ☭ rank 7 Expropriation der Expropriateure: star i a full wreath (C2 · design § 14.1.4) -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="96dp" android:height="96dp"
+    android:viewportWidth="48" android:viewportHeight="48">
+    <path android:fillColor="#B3261E" android:strokeColor="#C9A227" android:strokeWidth="2" android:pathData="M24,2a22,22 0 1,1 0,44a22,22 0 1,1 0,-44z"/>
+    <path android:strokeColor="#C9A227" android:strokeWidth="2" android:pathData="M24,8a16,16 0 1,1 -0.1,0z"/>
+    <path android:fillColor="#C9A227" android:pathData="M24,12l3.2,8.4h8.8l-7.1,5.4l2.7,8.6l-7.6,-5.2l-7.6,5.2l2.7,-8.6l-7.1,-5.4h8.8z"/>
+</vector>

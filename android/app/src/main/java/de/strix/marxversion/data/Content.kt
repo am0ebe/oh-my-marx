@@ -48,6 +48,8 @@ data class PlanDay(
     @SerialName("ae") val andachtEn: String = "",
     @SerialName("xd") val bridgeDe: String = "",   // 💡 "Und heute?" = NEW txt linking th passage 2 today (data/plans_extra.json, eg Marx ⬄ KI)
     @SerialName("xe") val bridgeEn: String = "",
+    @SerialName("qd") val teaseDe: String = "",    // ❓ C7 · D-048 c: 1 teasing Q 4 TOMORROW's Stempeluhr ("Morgen: …?") · opens a loop, nvr a cut quote
+    @SerialName("qe") val teaseEn: String = "",
 )
 
 @Serializable

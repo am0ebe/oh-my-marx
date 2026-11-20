@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 🔁 rank 2 Einfache Reproduktion: 2 arrows chasing round a circle (C2 · design § 14.1.4) -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="96dp" android:height="96dp"
+    android:viewportWidth="48" android:viewportHeight="48">
+    <path android:fillColor="#F6E7B8" android:strokeColor="#C9A227" android:strokeWidth="2" android:pathData="M24,2a22,22 0 1,1 0,44a22,22 0 1,1 0,-44z"/>
+    <path android:strokeColor="#B3261E" android:strokeWidth="3.2" android:strokeLineCap="round" android:pathData="M13,22a11,11 0 0,1 19,-6.5"/>
+    <path android:fillColor="#B3261E" android:pathData="M35.5,12.5l-1,8.5l-7.5,-4z"/>
+    <path android:strokeColor="#2B2118" android:strokeWidth="3.2" android:strokeLineCap="round" android:pathData="M35,26a11,11 0 0,1 -19,6.5"/>
+    <path android:fillColor="#2B2118" android:pathData="M12.5,35.5l1,-8.5l7.5,4z"/>
+</vector>

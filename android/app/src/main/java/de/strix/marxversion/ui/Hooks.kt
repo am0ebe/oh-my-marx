@@ -84,6 +84,26 @@ enum class Hook(val txt: Pair<String, String>) {
         "🪝 Fähigkeit vor Motivation (Hooked Kap. 3, B = MAT) — ein einziger Vers zählt schon als Lesetag. Je kleiner die Handlung, desto öfter passiert sie.",
         "🪝 Ability before motivation (Hooked ch. 3, B = MAT) — a single verse already counts as a reading day. The smaller the action, the more often it happens.",
     )),
+    SHIFT_CLOCK(T(
+        "🪝 Endowed Progress (Hooked Kap. 3) — der Stempel knallt sichtbar auf die Karte. Fortschritt, den du siehst, willst du fertig machen.",
+        "🪝 Endowed progress (Hooked ch. 3) — the stamp visibly thumps onto the card. Progress you can see is progress you want to finish.",
+    )),
+    MILESTONE(T(
+        "🪝 Zielgradient (Hooked Kap. 4) — je näher der nächste Meilenstein, desto schneller läufst du. Der Balken im Held ist dafür da.",
+        "🪝 Goal gradient (Hooked ch. 4) — the closer the next milestone, the faster you run. That's what the bar in the hero is for.",
+    )),
+    STRIKE(T(
+        "🪝 Verlustaversion, abgefedert — ein Streiktag rettet einen verpassten Tag. Du hast ihn verdient, nicht gekauft. Kein Shop, keine Gems.",
+        "🪝 Loss aversion, cushioned — a strike day saves one missed day. You earned it, you didn't buy it. No shop, no gems.",
+    )),
+    PROMOTION(T(
+        "🪝 Variable Belohnung des Selbst (Hooked Kap. 4) — Beförderung mit Siegel und Strahlen. Kostet uns nichts, fühlt sich nach Karriere an. Fetischcharakter des Rangs.",
+        "🪝 Variable reward of the self (Hooked ch. 4) — promotion with seal and rays. Costs us nothing, feels like a career. The fetish character of rank.",
+    )),
+    OPEN_LOOP(T(
+        "🪝 Zeigarnik-Effekt — „Moment …“ lässt eine Schleife offen. Unerledigtes bleibt im Kopf, also tippst du weiter.",
+        "🪝 Zeigarnik effect — “Wait …” leaves a loop open. Unfinished things stay on your mind, so you keep tapping.",
+    )),
     WIDGET(T(
         "🪝 Eigener externer Trigger (Hooked Kap. 2) — das Widget sitzt auf dem Homescreen, den du 80× am Tag siehst. Kein Push nötig: der Vers wartet einfach.",
         "🪝 Owned external trigger (Hooked ch. 2) — the widget sits on the home screen you look at 80× a day. No push needed: the verse just waits.",

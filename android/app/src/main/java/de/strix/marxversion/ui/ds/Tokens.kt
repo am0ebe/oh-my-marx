@@ -77,6 +77,16 @@ object Radius {
     val xs = 6.dp; val m = 12.dp; val l = 16.dp; val xl = 24.dp
 }
 
+/** shapes fr Radius (C2: moments + My Capital stamp card use these, not raw RoundedCornerShape) · tick = 3dp chain cell / ribbon */
+object Shapes {
+    val tick = androidx.compose.foundation.shape.RoundedCornerShape(3.dp)
+    val xs = androidx.compose.foundation.shape.RoundedCornerShape(Radius.xs)
+    val m = androidx.compose.foundation.shape.RoundedCornerShape(Radius.m)
+    val l = androidx.compose.foundation.shape.RoundedCornerShape(Radius.l)
+    val xl = androidx.compose.foundation.shape.RoundedCornerShape(Radius.xl)
+    val pill = androidx.compose.foundation.shape.RoundedCornerShape(50)
+}
+
 /** 🎬 ms · easing: move FastOutSlowIn · enter decelerate · exit accelerate · physical = spring 0.6-0.8 */
 object Motion {
     const val instant = 100; const val fast = 180; const val base = 260; const val slow = 400

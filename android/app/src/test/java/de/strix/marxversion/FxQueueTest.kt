@@ -45,6 +45,22 @@ class FxQueueTest {
         assertTrue(badge is Celebration.Reward && badge.key == "orden")
     }
 
+    /** C2 · D-049: 1 big screen per tap · ☭ ➡ Stempeluhr ➡ T3 ➡ T4 ➡ badge, each only aftr th one b4 is done */
+    @Test fun oneBigScreenPerTap_ladderOrder() {
+        val q = CelebrationQueue()
+        val swoosh = q.play(Fx.Swoosh)
+        q.reward("dayDone"); q.reward("milestone"); q.reward("orden")
+        assertSame(swoosh, q.current)
+        q.done(swoosh)
+        listOf("dayDone", "milestone", "orden").forEach { k ->
+            val c = q.current
+            assertTrue("$k showing alone", c is Celebration.Reward && c.key == k)
+            if (k == "dayDone") assertTrue("pane sees more due ➡ 'Wait … ▸'", q.queued.isNotEmpty())
+            q.done(c!!)
+        }
+        assertNull(q.current)
+    }
+
     @Test fun rareAmen_isBig_dailyIsCheck() {
         assertEquals(Fx.Big, amenFx(rare = true))
         assertEquals(Fx.Check, amenFx(rare = false))

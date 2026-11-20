@@ -99,6 +99,7 @@ import de.strix.marxversion.logic.readingDays
 import de.strix.marxversion.logic.stampCard
 import de.strix.marxversion.logic.streak
 import de.strix.marxversion.logic.streakInfo
+import de.strix.marxversion.logic.streakGame
 import de.strix.marxversion.logic.today
 import java.time.LocalDate
 import java.time.LocalTime
@@ -110,17 +111,16 @@ private val NERVT_LABEL = mapOf(
     "krise" to T("Krise", "Crisis"),
 )
 
-/** 🎟️ ranks: 1 per full Stempelkarte — th path through Kapital's own history o capitalism */
-private val RANKS = listOf(
-    T("📗 Ursprüngliche Akkumulation", "📗 Primitive accumulation"),
-    T("🔁 Einfache Reproduktion", "🔁 Simple reproduction"),
-    T("📈 Erweiterte Reproduktion", "📈 Expanded reproduction"),
-    T("🏭 Manufaktur", "🏭 Manufacture"),
-    T("⚙️ Große Industrie", "⚙️ Large-scale industry"),
-    T("🧔 Klassiker-Status", "🧔 Classic status"),
-    T("☭ Expropriation der Expropriateure", "☭ Expropriating the expropriators"),
-)
-private fun rank(i: Int) = RANKS[i.coerceIn(0, RANKS.lastIndex)]
+// 🎟️ RANKS + rank() ➡ ui/Moments.kt (C2: Beförderung + My Capital use them too)
+
+/** ❓ C7 teaser 4 tomorrow (D-048 c): plan day's `qd`/`qe` · fallback = 1st sentence o its Andacht ending i "?" · else null (nvr a cut verse) */
+private fun teaseOf(d: de.strix.marxversion.data.PlanDay?, lang: Lang): String? {
+    d ?: return null
+    val q = if (lang == Lang.DE) d.teaseDe else d.teaseEn.ifBlank { d.teaseDe }
+    if (q.isNotBlank()) return q
+    val a = if (lang == Lang.DE) d.andachtDe else d.andachtEn
+    return Regex("[^.!?]*\\?").find(a)?.value?.trim()?.takeIf { it.length in 8..140 }
+}
 
 /** first n words + "…" (zh: no spaces ➡ chars) */
 private fun teaser(s: String, lang: Lang, words: Int = 8) =
@@ -150,6 +150,7 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
     val vod = remember(today(), reroll, feast) { vm.verseOfDay(reroll, feast) }
     var celebrate by remember { mutableStateOf(false) }
     var rankUp by remember { mutableStateOf<Int?>(null) }
+    var moment by remember { mutableStateOf<Int?>(null) }   // T3 milestone due (streak count) · null = none
     val persona = Persona.of(s.persona)
     val doneToday = days.any { it.date == today() }
     // 🃏 cards: 🔮 pull down = oracle card · 📳 shake = crisis card (+ red flash) — both land i front i th carousel
@@ -174,10 +175,17 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
     val fills = !doneToday && cardJustFilled(total + 1)
     val amenMsg = if (fills) tr("🏅 Stempelkarte voll! Neuer Rang: %s", "🏅 Stamp card full! New rank: %s").f(tr(rank(cardsDone(total + 1) - 1)))
         else tr("☭ Lesetag gezählt — 🔥 %d", "☭ Reading day counted — 🔥 %d").f(streak(days) + 1)
+    // 🏆 C2: wh today's reading day would bring (computed b4 th log lands) ➡ T3 milestone · T4 Beförderung
+    val gameAfter = remember(days) { streakGame(days + DayLog(today(), "losung", 0)) }
     val amen: (Verse) -> Unit = { v ->
         Toast.makeText(ctx, amenMsg, Toast.LENGTH_LONG).show()
         buzz(ctx, longArrayOf(0, 40, 60, 90))
-        fx?.play(if (fills) Fx.Confetti else Fx.Check)   // D-039: quote-of-th-day = small ✓ pop only · ☭ swoosh = plan day done
+        fx?.play(Fx.Check)   // D-039: quote-of-th-day = small ✓ pop only · ☭ swoosh = plan day done
+        // D-049: Amen day hits a milestone ➡ ✓ ➡ T3 directly (no pane) · full card ➡ T4 (milestone = its 2nd line)
+        if (!doneToday && fx != null) {
+            if (fills) { rankUp = cardsDone(total + 1) - 1; moment = gameAfter.milestoneToday; fx.reward("rank") }
+            else gameAfter.milestoneToday?.let { moment = it; fx.reward("milestone") }
+        }
         vm.amen(v.id)   // AFTER play ➡ a new badge dialog queues behind th fx
     }
     // 🏠 Home tab tap ➡ scroll 2 top (th carousel jumps 2 card 1 itself)
@@ -240,7 +248,9 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
                             label = { Text(tr("🔔 Benachrichtigung", "🔔 Notification")) })
                         AssistChip(onClick = { vm.forcePopup.value = true }, label = { Text(tr("🌅 Losung-Popup", "🌅 Verse popup")) })
                         AssistChip(onClick = { celebrate = true }, label = { Text(tr("🎉 Feier-Popup", "🎉 Celebration")) })
-                        AssistChip(onClick = { rankUp = 0; celebrate = true }, label = { Text(tr("🏅 Rang-Aufstieg", "🏅 Rank up")) })
+                        // 🧪 C2: T3 ➡ T4 i a row (Meilenstein screen, then Beförderung)
+                        AssistChip(onClick = { moment = 14; rankUp = 2; fx?.reward("milestone"); fx?.reward("rank") },
+                            label = { Text(tr("🏅 Meilenstein + Rang", "🏅 Milestone + rank")) })
                         AssistChip(onClick = { vm.testNextFeast() },
                             label = { Text(tr("🎉 Feiertag: %s", "🎉 Holiday: %s").f(feast?.emoji ?: "—")) })
                         AssistChip(onClick = { vm.testNextTime() }, label = { Text(tr("🌅 Tageszeit", "🌅 Time of day")) })
@@ -335,16 +345,20 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
             }
             Gap()
             // Hooked ch5: investment loads th nxt trigger ➡ tease tomorrow's reading
-            nextTeaser = planDays.getOrNull(idx + 1)?.verseIds?.firstNotNullOfOrNull { vm.content.verse(it) }
-                ?.let { teaser(verseQuote(it), lang) }
+            // C2 Stempeluhr: tomorrow = a teasing Q (C7), not a cut quote
+            nextTeaser = teaseOf(planDays.getOrNull(idx + 1), lang)
             if (planToday == null) {
                 Button(onClick = {
                     val total = readingDays(days)
                     if (!doneToday && cardJustFilled(total + 1)) rankUp = cardsDone(total + 1) - 1
-                    // 🐛 @1116: ☭ got lost i 4708ab7 (✓ pop only) ➡ back (D-039): finishing th plan day = th rare one (full card = confetti)
-                    fx?.play(if (rankUp != null) Fx.Confetti else Fx.Swoosh)
-                    // qa_1117 r4 🐛: dialog opened i th same tap ➡ its window sat ON th ☭ · now queued: ☭ ➡ Day complete ➡ new badge
-                    if (fx == null) celebrate = true else fx.reward("dayDone")
+                    moment = if (!doneToday) gameAfter.milestoneToday else null
+                    // 🐛 @1116: ☭ got lost i 4708ab7 (✓ pop only) ➡ back (D-039) · C2: confetti moved 2 th Beförderung screen
+                    fx?.play(Fx.Swoosh)
+                    // D-049 queue: ☭ ➡ Stempeluhr ➡ T3 Meilenstein ➡ T4 Beförderung ➡ badges · T3 + T4 same day ➡ T4 only (2nd line)
+                    if (fx == null) celebrate = true else {
+                        fx.reward("dayDone")
+                        if (rankUp != null) fx.reward("rank") else if (moment != null) fx.reward("milestone")
+                    }
                     vm.dayDone(plan.id, idx, day.verseIds)   // AFTER th reward ➡ a new badge queues behind th pane
                 },
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
@@ -389,31 +403,26 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
         // (📜 endless feed = th reader's 📜 mode now, qa_1116 Q4/Q7 · Home ends at Marxoskop)
 
         // 🎉 Day complete: queued slot (plan btn, aftr th ☭) · `celebrate` = direct (🧪 test chip, no queue)
+        // ⏱️ C2 Stempeluhr (D-048) · shown aftr th log landed ➡ `days` = incl today
         val dayDoneDialog: @Composable (() -> Unit) -> Unit = { close ->
-            if (rankUp != null) Confetti {}  // 🎉 full card = paper rain, 1st = behind th dialog
-            MarxDialog({ close(); rankUp = null },
-                title = if (rankUp != null) tr("🏅 Stempelkarte voll!", "🏅 Stamp card full!") else tr("Tag geschafft!", "Day complete!"),
-            ) {
-                    Column {
-                        rankUp?.let {
-                            Text(tr("Neuer Rang:", "New rank:"))
-                            Text(tr(rank(it)), fontSize = 22.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
-                            Gap(10)
-                        }
-                        Text(tr("%d Tage in Folge. Akkumuliert, akkumuliert! Das ist Moses und die Propheten! (Kapital 22,56)",
-                            "%d days in a row. Accumulate, accumulate! That is Moses and the prophets! (Capital 22,56)").f(streak(days)))
-                        nextTeaser?.let {
-                            Gap(10)
-                            Text(tr("Morgen: %s", "Tomorrow: %s").f(quoted(it)), fontWeight = FontWeight.Bold)
-                            if (s.notifOn) Text(tr("Losung kommt um %02d:%02d.", "Verse arrives at %02d:%02d.").f(s.notifHour, s.notifMinute), fontSize = 13.sp)
-                        }
-                        if (rankUp != null) HookNote(Hook.STAMPS, s.testMode)
-                        HookNote(Hook.NEXT, s.testMode)
-                    }
-            }
+            val g = remember(days) { streakGame(days) }
+            val tot = readingDays(days)
+            StempeluhrPane(stampCard(tot), cardsDone(tot) + 1 - (if (stampCard(tot).filled == 0) 1 else 0), g.streak, g.tier,
+                tr(shiftLine()), nextTeaser, more = fx?.queued?.isNotEmpty() == true, hooked = s.testMode, onClose = close)
         }
         RewardSlot("dayDone") { done -> dayDoneDialog(done) }
         if (celebrate) dayDoneDialog { celebrate = false }
+        // 🏅 T3 Meilenstein (D-046) · ✊ token if earned today
+        RewardSlot("milestone") { done ->
+            val g = remember(days) { streakGame(days) }
+            val n = moment ?: g.streak
+            MilestoneScreen(n, maxOf(g.tier, de.strix.marxversion.logic.tierOf(n)), best = n >= g.best, chain = chain(days),
+                strikeEarned = g.strikeEarnedToday, hooked = s.testMode) { moment = null; done() }
+        }
+        // 🎖️ T4 Beförderung (D-050) · same-day milestone = 2nd line
+        RewardSlot("rank") { done ->
+            PromotionScreen(rankUp ?: 0, readingDays(days), moment, s.testMode) { rankUp = null; moment = null; done() }
+        }
     }
     }  // inner padded Column
     }  // PullToRefreshBox
@@ -429,10 +438,9 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
 @Composable
 private fun Hero(days: List<DayLog>, feast: Feast?, dt: DayTime, hooked: Boolean) {
     val white = Color.White
-    val (st, rest) = streakInfo(days)
-    val total = readingDays(days)
-    val card = stampCard(total)
-    val ranks = cardsDone(total)
+    // C2 · D-045 c: hero = streak world only (★ tier + ✊ + week + nxt-milestone bar) · stamps + rank ➡ Stempeluhr + My Capital
+    val g = remember(days) { streakGame(days) }
+    val st = g.streak; val rest = g.rest
     val today = LocalDate.now()
     val read = days.map { it.date }.toSet()
     val doneToday = today.toString() in read
@@ -456,7 +464,10 @@ private fun Hero(days: List<DayLog>, feast: Feast?, dt: DayTime, hooked: Boolean
                 Text(feast?.let { it.emoji + "  " + tr(it.greet) } ?: tr(dt.greetOn(today)), color = white.copy(alpha = 0.9f),
                     fontSize = 13.sp, lineHeight = 17.sp)
             }
-            StreakStar(st)
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                de.strix.marxversion.ui.ds.StreakStar(st, g.tier)
+                if (g.strikes > 0 || st >= 7) de.strix.marxversion.ui.ds.StrikeSlots(g.strikes, Modifier.padding(top = 2.dp))
+            }
         }
         Gap(12)
         // this week, Mo ➡ Su (Insight Timer: ✓ · ! · letters)
@@ -468,6 +479,7 @@ private fun Hero(days: List<DayLog>, feast: Feast?, dt: DayTime, hooked: Boolean
                 val (bg, fg, txt) = when {
                     isRead -> Triple(white, Color(0xFF1D1230), "✓")
                     d in rest -> Triple(white.copy(alpha = 0.85f), Color(0xFF1D1230), "🕊")
+                    d in g.struck -> Triple(de.strix.marxversion.ui.ds.Ds.red, white, "✊")   // ✊ Streiktag: red, white fist
                     d == today -> Triple(white.copy(alpha = 0.3f), white, d.dayOfWeek.getDisplayName(TextStyle.NARROW, lang.locale))   // open today = letter, no "!"
                     else -> Triple(white.copy(alpha = if (d.isAfter(today)) 0.16f else 0.08f), white.copy(alpha = 0.7f),
                         d.dayOfWeek.getDisplayName(TextStyle.NARROW, lang.locale))
@@ -481,31 +493,25 @@ private fun Hero(days: List<DayLog>, feast: Feast?, dt: DayTime, hooked: Boolean
         if (rest.isNotEmpty()) Text(tr("🕊️ Sabbat-Joker eingelöst — 1 Ruhetag pro Woche bricht die Kette nicht.",
             "🕊️ Sabbath joker used — 1 rest day per week doesn't break the chain."), color = white.copy(alpha = 0.85f), fontSize = 11.sp,
             modifier = Modifier.padding(top = 4.dp))
-        Gap(14)
-        // 🎟️ Stempelkarte: ☭ earned · red ! = today's stamp, still open · ○ to go ➡ ui/ds/StampCard.kt (L0 @1114: L1 + L4 share it)
-        // Q2 c @1116: week ✓ = this week · stamps = ALL reading days (D-004) ➡ keep both, say so
-        Text(tr("Stempel gesamt (alle Lesetage)", "Stamps in total (all reading days)"), color = white.copy(alpha = 0.8f), style = MaterialTheme.typography.labelMedium,
-            modifier = Modifier.padding(bottom = 4.dp))
-        de.strix.marxversion.ui.ds.StampRow(card, doneToday)
-        // "N more days to <rank>" moved 2 th plan card (QA @1112)
-        if (ranks > 0) Text(tr("Rang: %s", "Rank: %s").f(tr(rank(ranks - 1))), color = white.copy(alpha = 0.8f), fontSize = 11.sp)
+        g.strikeUsedLast?.takeIf { it in g.struck && !it.isBefore(today.minusDays(6)) }?.let {
+            Text(tr("✊ Streiktag eingelöst — die Kette hält.", "✊ Strike day used — the chain holds."),
+                color = white.copy(alpha = 0.85f), style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(top = 2.dp))
+        }
+        // 📉 D-047 Abschreibung: tier above th streak's own = capital writing itself off
+        if (g.depreciating) Text(tr("Dein Lesekapital schreibt sich ab — langsam. Ein Tag reicht, um es zu stoppen.",
+            "Your reading capital is depreciating — slowly. One day is enough to stop it."),
+            color = white.copy(alpha = 0.9f), style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(top = 2.dp))
+        Gap(12)
+        // 🎯 nxt milestone bar (D-045 c · goal gradient) · stamp row + rank ➡ Stempeluhr pane + My Capital
+        MilestoneBar(st, g.next, Modifier.fillMaxWidth())
     }
     HookNote(Hook.STREAK, hooked)
-    HookNote(Hook.STAMPS, hooked)
+    HookNote(Hook.MILESTONE, hooked)
     HookNote(Hook.SABBATH, hooked)
     HookNote(if (feast != null) Hook.FEAST else Hook.DAYTIME, hooked)
 }
 
-/** streak nr on a red star w gold rim (Insight Timer puts it i a singing bowl · we hv th Soviet star) */
-@Composable
-private fun StreakStar(n: Int, size: androidx.compose.ui.unit.Dp = 92.dp) {
-    Box(Modifier.size(size), contentAlignment = Alignment.Center) {
-        de.strix.marxversion.ui.ds.StarImage(Modifier.fillMaxSize())   // th 1 star asset (qa_1116 L3 #7) · was a Path() copy
-        val k = size.value / 92f   // number scales w th star (92 = th big hero)
-        Text("$n", color = Color.White, fontSize = ((if (n < 100) 26 else 20) * k).sp, fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(top = (6 * k).dp))
-    }
-}
+// ★ StreakStar (tier ornaments + ✊ slots) ➡ ui/ds/Emblem.kt (C2)
 
 // 🌅 CardDialog + LosungPopup (fullscreen daily card · verse-share preview) rm'd @1113 (QA r4): cards live on Home since @1106,
 //    verse share gone fr th reader ➡ both were dead · git: d0ea734
