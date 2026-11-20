@@ -293,7 +293,8 @@ fun ChapterScreen(vm: AppVm, kap: String, focus: String?, @Suppress("UNUSED_PARA
     }
 
     // 📜 scroll mode = no pages ➡ no turn ➡ a passage tap = its menu again (like Today)
-    CompositionLocalProvider(LocalReadScale provides scale, LocalBook provides if (scrollMode) null else book) {
+    // D-065: 📖 + 📜 share th passage gestures ➡ BookTaps i both (passages never clickable i th reader)
+    CompositionLocalProvider(LocalReadScale provides scale, LocalBook provides book) {
      Box(Modifier.fillMaxSize()) {
       // ⌨️ imePadding: th page shrinks above th keyboard ➡ a note at th page bottom stays visible (qa_1116 r2.5)
       Column(Modifier.fillMaxSize().background(Ds.page).imePadding()
@@ -302,7 +303,14 @@ fun ChapterScreen(vm: AppVm, kap: String, focus: String?, @Suppress("UNUSED_PARA
         SlimHead(vm, pages[index], scrollMode, { vm.setReadScroll(!scrollMode); hintKey++ }) { talk = pages[index] }
         if (scrollMode) {
             // 📜 = whole book, lazy, both ways (qa_1120 🐛 stuck + no way back) · top passage ➡ index = th 📖 page u land on
-            ScrollBook(vm, scrollFrom, speaker, Modifier.weight(1f).fillMaxWidth()) { id ->
+            var listAt by remember { mutableStateOf(Offset.Zero) }
+            ScrollBook(vm, scrollFrom, speaker, Modifier.weight(1f).fillMaxWidth()
+                .onGloballyPositioned { listAt = it.positionInWindow() }
+                // D-065: same as 📖 — hold o double-tap a passage = menu · tap = nothing (no page 2 turn i a scroll)
+                .pointerInput(Unit) {
+                    val menu = { o: Offset -> if (book.menuAt(o + listAt)) haptic.performHapticFeedback(HapticFeedbackType.LongPress) }
+                    detectTapGestures(onLongPress = menu, onDoubleTap = menu)
+                }) { id ->
                 pageOf[id]?.let { if (it != index) index = it }
                 vm.setReadPos(id)
             }
@@ -350,10 +358,10 @@ fun ChapterScreen(vm: AppVm, kap: String, focus: String?, @Suppress("UNUSED_PARA
                 //   (was D-044: double-tap = turn · tap = menu · edge quarters = turn)
                 .onGloballyPositioned { bookAt = it.positionInWindow() }
                 .pointerInput(index, pages.size) {
+                    // D-065 (🦠 @1120 via M8 #218): tap = turn · hold OR double-tap a passage = its menu (+ buzz) · same i 📜
                     val at = { o: Offset -> if (o.x < size.width / 2) back() else fwd() }
-                    detectTapGestures(onTap = at, onLongPress = at, onDoubleTap = { o ->
-                        if (book.menuAt(o + bookAt)) haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                    })
+                    val menu = { o: Offset -> if (book.menuAt(o + bookAt)) haptic.performHapticFeedback(HapticFeedbackType.LongPress) }
+                    detectTapGestures(onTap = at, onLongPress = menu, onDoubleTap = menu)
                 },
         ) {
             val t = turn.value
@@ -394,9 +402,9 @@ private fun ModeHint(scrollMode: Boolean, modifier: Modifier) {
         .padding(horizontal = Space.m, vertical = Space.s), verticalAlignment = Alignment.CenterVertically) {
         if (scrollMode) Text("⬇", color = Ds.page, style = OmmType.bookMeta,
             modifier = Modifier.graphicsLayer { translationY = bob.value * 6 * density }.padding(end = Space.s))
-        Text(if (scrollMode) tr("Endlos: einfach nach unten scrollen", "Endless: just keep scrolling down")
-            else tr("Buch: tippen = umblättern (links zurück, rechts weiter) · doppelt tippen = Absatz-Menü",
-                "Book: tap to turn (left = back, right = next) · double-tap = passage menu"),
+        Text(if (scrollMode) tr("Endlos: scrollen · Absatz halten = Menü", "Endless: scroll · hold a passage = menu")
+            else tr("Buch: tippen = umblättern (links zurück, rechts weiter) · Absatz halten = Menü",
+                "Book: tap to turn (left = back, right = next) · hold a passage = menu"),
             color = Ds.page, style = OmmType.bookMeta)
     }
 }
@@ -544,9 +552,9 @@ private fun Page(vm: AppVm, p: BookPage, speaker: Speaker, i: Int, n: Int, modif
             Text("— ${p.page ?: (i + 1)} —", style = OmmType.bookMeta.copy(fontFamily = FontFamily.Serif), color = Ds.inkMuted,
                 textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
             // 👆 wh u can press (qa_1117 r3, like Today's "⬅ swipe · ⬇ pull · 📳 shake" line) · tiny + muted, under th folio
-            //   D-057: tap/hold = turn by side · double-tap a passage = menu
-            Text(tr("👆 tippen: links = zurück · rechts = weiter · 👆👆 Absatz doppelt tippen = Menü · ↔ wischen · 🤏 Schriftgröße",
-                "👆 tap: left = back · right = next · 👆👆 double-tap a passage = menu · ↔ swipe · 🤏 pinch = text size"),
+            //   D-065: tap = turn by side · hold (o double-tap) a passage = menu
+            Text(tr("👆 tippen: links = zurück · rechts = weiter · ✋ Absatz halten = Menü · ↔ wischen · 🤏 Schriftgröße",
+                "👆 tap: left = back · right = next · ✋ hold a passage = menu · ↔ swipe · 🤏 pinch = text size"),
                 style = OmmType.bookMeta, color = Ds.inkMuted.copy(alpha = .7f), textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth().padding(top = Space.s))
         }

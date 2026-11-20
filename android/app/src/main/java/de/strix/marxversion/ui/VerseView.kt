@@ -376,7 +376,9 @@ fun VerseView(
     val book = LocalBook.current
     if (book != null && showActions) {
         val req = book.menu
-        LaunchedEffect(req) { if (req?.first == v.id) open = !open }
+        // only requests made AFTER this passage appeared (a re-composed ¶ — page back, 📖 ⬄ 📜 — must not replay th old one)
+        val before = remember { req }
+        LaunchedEffect(req) { if (req != before && req?.first == v.id) open = !open }
         DisposableEffect(book, v.id) { onDispose { book.boxes.remove(v.id) } }
     }
     val menuLabel = tr("Absatz-Menü", "Passage menu")

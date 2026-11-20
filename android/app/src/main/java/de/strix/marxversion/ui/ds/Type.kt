@@ -6,7 +6,6 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontVariation
 import androidx.compose.ui.text.style.Hyphens
 import androidx.compose.ui.text.style.LineBreak
 import androidx.compose.ui.text.style.TextAlign
@@ -21,15 +20,12 @@ import de.strix.marxversion.R
  */
 private val base = Typography()
 
-/** 📖 Literata: opsz 12 = text cut (17sp body) · bold/heads use th same file at wght 700 */
-@OptIn(androidx.compose.ui.text.ExperimentalTextApi::class)
-private fun lit(res: Int, w: FontWeight, style: FontStyle, opsz: Float = 12f) = Font(res, w, style,
-    variationSettings = FontVariation.Settings(FontVariation.weight(w.weight), FontVariation.Setting("opsz", opsz)))
-
+/** 📖 Literata: roman cut at opsz 12 (17sp text) · italic at opsz 18 (quotes) · was 2 variable files + FontVariation til #218 */
+// @1120 #218: 5 static instances, Latin + Greek + Cyrillic only (bin/font_subset.sh · same weights + opsz as th variable setup) · −748 KB
 val BookSerif = FontFamily(
-    lit(R.font.literata, FontWeight.Normal, FontStyle.Normal), lit(R.font.literata, FontWeight.Medium, FontStyle.Normal),
-    lit(R.font.literata, FontWeight.Bold, FontStyle.Normal),
-    lit(R.font.literata_italic, FontWeight.Normal, FontStyle.Italic, 18f), lit(R.font.literata_italic, FontWeight.Bold, FontStyle.Italic, 18f),
+    Font(R.font.literata_regular, FontWeight.Normal, FontStyle.Normal), Font(R.font.literata_medium, FontWeight.Medium, FontStyle.Normal),
+    Font(R.font.literata_bold, FontWeight.Bold, FontStyle.Normal),
+    Font(R.font.literata_italic, FontWeight.Normal, FontStyle.Italic), Font(R.font.literata_bold_italic, FontWeight.Bold, FontStyle.Italic),
 )
 private fun TextStyle.set(size: Int, line: Int, w: FontWeight) = copy(fontSize = size.sp, lineHeight = line.sp, fontWeight = w)
 

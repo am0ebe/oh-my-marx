@@ -81,8 +81,21 @@ class ReaderGestureTest {
         // 👆 right half ➡ nxt page (page 1 leaves th composition)
         passage().performTouchInput { click(centerRight - Offset(24f, 0f)) }; settle()
         assertFalse("tap right = next page", has(first))
-        // 👆 hold on th left half ➡ back 2 page 1
-        rule.onRoot().performTouchInput { longClick(Offset(60f, centerY)) }; settle()
-        assertTrue("hold left = back", has(first))
+        // 👆 tap left ➡ back 2 page 1
+        rule.onRoot().performTouchInput { click(Offset(60f, centerY)) }; settle()
+        assertTrue("tap left = back", has(first))
+    }
+
+    /** D-065 (🦠 @1120 via M8 #218): hold a passage = its menu, i 📖 AND 📜 · hold nvr turns */
+    @Test fun holdOpensMenuInBothModes() {
+        tap("Read", true); tap("p. 49"); settle()
+        passage().performTouchInput { longClick(center) }; settle()
+        assertTrue("📖 hold = menu", has("Note", true))
+        assertTrue("📖 hold doesn't turn", has(first))
+        passage().performTouchInput { longClick(center) }; settle()   // hold again = menu closes
+        tap("Scroll"); settle()
+        passage().performTouchInput { longClick(center) }; settle()
+        assertTrue("📜 hold = menu", has("Note", true))
+        tap("Pages"); settle()
     }
 }

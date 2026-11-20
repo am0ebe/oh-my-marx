@@ -18,6 +18,11 @@ _SDD: code says **wh** · th file says **y** · drift = a bug · fmt ➡ `pr/vib
 - 🔥 hot files (1 owner at a ti — fan-out lanes nvr split these): `assets/content/i18n_*.json` + `data/i18n/*.jsonl` (translate pass = fan-in only) · `android/app/build.gradle.kts` (version) · `ui/Changelog.kt` · `res/values*/strings.xml` · `TodayScreen.kt` · `MineScreen.kt` · `Share.kt`
 
 ## 🧾 decisions (newest on top)
+### D-065 @1120 · Holding a passage opens its menu, and pages and scroll share every gesture · Accepted (🦠 @1120 via M8 #218)
+- **Y:** 🦠 found that hold was often read as a tap, and wanted both reading modes to behave the same. Turning is the only thing a tap does; the menu is hold (or double-tap) everywhere.
+- **What is true now:** 📖 tap = turn (left back, right forward) · hold or double-tap a passage = its menu with a buzz · 📜 the same, except a tap does nothing · no passage is clickable in the reader in either mode, so no ripple. The top bar was already the same in both modes.
+- **Prev:** D-057 (hold = turn). D-057 stays for tap = turn.
+- **Ck:** `ReaderGestureTest.holdOpensMenuInBothModes` · `tapTurnsDoubleTapOpensMenu`
 ### D-064 @1120 · Arabic, Urdu, Hindi and Bengali get no drop cap; Chinese keeps its initial box · Accepted (🤖 @1120, M8 #206)
 - **Y:** The Arabic shot showed a cut-off, unjoined first letter: these scripts join or stack letters, so pulling one out breaks the word. Chinese characters stand alone, so the box works there.
 - **Scope:** Chapter and section initials only. Headpiece, incipit, seal and ribbon stay in every language.
@@ -55,9 +60,9 @@ _🛠️ @1120 (M8 #185): D-048 · 049 · 050 · 051 · 052 · 053 · 054 = buil
 - **dc**: **Literata** (OFL 1.1, Google's e-book face, `res/font` variable wght + opsz, opsz 12 body · 18 italic) = `BookSerif` 4 all serif tokens · `bookBody` = `TextAlign.Justify` + `Hyphens.Auto` + `LineBreak.Paragraph` · `localeList` = shown lang (DE rules 4 DE txt) · drop cap: 3-line block = whole ¶ clipped (line 3 stays justified + hyphen) · licence ➡ `assets/licenses/Literata-OFL.txt`
 - **y**: Literata = built 4 long reading on screens (large x-height, sturdy at 17sp) · has Latin + Cyrillic (ru) + Greek · justify wo hyphens = rivers on a 360dp column · Paragraph breaker = fewer gaps
 - **alt**: EB Garamond (❌ small x-height, thin at 17sp on a fon · more "old" but less readable) · Source Serif 4 · system Noto Serif = old (D-033 a)
-- **cost**: +1.86 MB APK (2 variable TTFs, not subset) · 🔵 subset 2 Latin + Cyrillic static (fonttools) ≈ −1.3 MB · zh · ar · hi · bn · ur glyphs fall back 2 system per glyph
+- **cost**: +1.86 MB APK (2 variable TTFs, not subset) · ✔️ @1120 #218 (🦠 ok fonttools): 5 static instances, Latin + Greek + Cyrillic = 1.07 MB (−748 KB, not −1.3: 5 styles kept) · `bin/font_subset.sh` · zh · ar · hi · bn · ur glyphs fall back 2 system per glyph
 - **ck**: shot `chapter` (justified, "im-" | "mense" at th drop cap) · `OmmType.book*` = `BookSerif`
-### D-057 @1120 · 📖 gestures SWAPPED: tap o hold = turn (left half back · right fwd) · double-tap a passage = its menu · ✔️ (🦠 @1120 via M8) · supersedes D-044 (below)
+### D-057 @1120 · 📖 gestures SWAPPED: tap o hold = turn (left half back · right fwd) · double-tap a passage = its menu · ✔️ (🦠 @1120 via M8) · supersedes D-044 (below) · ⚠️ hold part amended by D-065 (hold = menu)
 - **ctx**: D-044 = double-tap turns (side by x) · tap = passage menu · 🦠 eval DEV 0009: swap
 - **dc**: i th 📖 book: tap o hold anywhere (passage o paper) = turn, side = finger x · double-tap a passage = menu (+ buzz) · edge-quarter rule gone (whole half counts) · 📜 scroll + Today: no turn ➡ tap = menu, hold = menu (as b4) · hints (folio line + 📖 chip pill) say th new model
 - **y**: turning = th 90 % action ➡ th cheapest gesture (1 tap, like e-readers) · menu = rare ➡ double-tap is fine
