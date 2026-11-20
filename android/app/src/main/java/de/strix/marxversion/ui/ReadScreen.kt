@@ -517,7 +517,8 @@ private fun Page(vm: AppVm, p: BookPage, speaker: Speaker, i: Int, n: Int, modif
                     if (prev != null) Ornament()
                     SectionTitle(secTitle(v))
                 }
-                VerseView(vm, v, speaker, flash = v.id == flashId, dropCap = firstOfChapter && k == 0, showRef = false)
+                VerseView(vm, v, speaker, flash = v.id == flashId, dropCap = firstOfChapter && k == 0, showRef = false,
+                    sectionCap = v.secTitle.isNotBlank() && v.sec != prev?.sec)
                 Gap(4)
             }
             // QA r4: no share pills (r3) + no "Mitreden" btn down here = pure Marx page · writing = tap a passage ➡ ✍️ Notiz

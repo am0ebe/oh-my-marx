@@ -66,6 +66,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.text.TextLinkStyles
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
@@ -258,12 +259,15 @@ private fun NoteBubble(modifier: Modifier = Modifier, at: Long? = null, onEdit: 
  * not a letter (quote mark, "[") ➡ plain txt
  */
 @Composable
-private fun DropCapText(t: AnnotatedString, style: TextStyle) {
+private fun DropCapText(t: AnnotatedString, style: TextStyle, lines: Int = 3) {
+    // C4 (D-053 b): 3 lines = chapter's illuminated initial (red on a gold square, ink hairline) · 2 lines = section initial, no box
     val first = t.text.indexOfFirst { !it.isWhitespace() }
     if (first < 0 || !t.text[first].isLetter() || t.length < first + 2) { Text(t, style = style); return }
     val cap = t.text[first].toString()
     val rest = t.subSequence(first + 1, t.length)
-    val capStyle = style.copy(color = Ds.red, fontWeight = FontWeight.Bold, fontSize = style.lineHeight * 2.75f, lineHeight = style.lineHeight * 3,
+    val illum = lines >= 3
+    val capStyle = style.copy(color = Ds.red, fontWeight = FontWeight.Bold, fontSize = style.lineHeight * (lines - (if (illum) .55f else .25f)),
+        lineHeight = style.lineHeight * lines,
         lineHeightStyle = LineHeightStyle(LineHeightStyle.Alignment.Center, LineHeightStyle.Trim.Both))
     val measurer = rememberTextMeasurer()
     val density = LocalDensity.current
@@ -272,7 +276,7 @@ private fun DropCapText(t: AnnotatedString, style: TextStyle) {
         val narrow = (constraints.maxWidth - capW).coerceAtLeast(1)
         val split = remember(rest, style, narrow) {
             val l = measurer.measure(rest, style, constraints = Constraints(maxWidth = narrow))
-            if (l.lineCount <= 3) rest.length else l.getLineEnd(2)
+            if (l.lineCount <= lines) rest.length else l.getLineEnd(lines - 1)
         }
         val head = rest.subSequence(0, split)
         val tailStart = (split until rest.length).firstOrNull { !rest.text[it].isWhitespace() } ?: rest.length
@@ -280,11 +284,14 @@ private fun DropCapText(t: AnnotatedString, style: TextStyle) {
             // TalkBack: 1 word, not "T · he wealth"
             Row(Modifier.clearAndSetSemantics { text = AnnotatedString(cap + head.text) }) {
                 // box = exactly 3 lines (glyph may overhang) ➡ line 4 follows at th normal leading, no gap
-                Text(cap, style = capStyle, modifier = Modifier.width(with(density) { capW.toDp() })
-                    .height(with(density) { (style.lineHeight * 3).toDp() }).wrapContentHeight(Alignment.Top, unbounded = true))
+                Text(cap, style = capStyle, textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                    modifier = Modifier.width(with(density) { capW.toDp() })
+                    .height(with(density) { (style.lineHeight * lines).toDp() })
+                    .then(if (illum) Modifier.padding(end = Space.s).background(Ds.goldTint).border(1.dp, Ds.ink.copy(alpha = .5f)) else Modifier)
+                    .wrapContentHeight(Alignment.Top, unbounded = true))
                 // D-058 justify: th WHOLE ¶ clipped 2 3 lines (not `head`) ➡ line 3 isn't a last line ➡ stays justified +
                 //   keeps its hyphen ("im-" | "mense" below) · same style + width as th measure ➡ same breaks
-                Text(rest, style = style, maxLines = 3, overflow = androidx.compose.ui.text.style.TextOverflow.Clip,
+                Text(rest, style = style, maxLines = lines, overflow = androidx.compose.ui.text.style.TextOverflow.Clip,
                     modifier = Modifier.weight(1f))
             }
             if (tailStart < rest.length) Text(rest.subSequence(tailStart, rest.length), style = style)
@@ -305,6 +312,9 @@ private fun DropCapText(t: AnnotatedString, style: TextStyle) {
 fun VerseView(
     vm: AppVm, v: Verse, speaker: Speaker? = null, showActions: Boolean = true, flash: Boolean = false, preview: Boolean = false,
     dropCap: Boolean = false, showRef: Boolean = true,
+    sectionCap: Boolean = false,   // C4: section's 1st passage = 2-line red initial
+    pilcrow: Boolean = false,      // C4: 📜 scroll = small red ¶ starts th paragraph
+
 ) {
     val mark by vm.mark(v.id).collectAsStateWithLifecycle(null)
     val settings by vm.settings.collectAsStateWithLifecycle()
@@ -383,7 +393,9 @@ fun VerseView(
                 Modifier.size(16.dp), tint = Ds.goldDeep)
         }
         if (fallbackNote.isNotBlank()) Text(fallbackNote, style = MaterialTheme.typography.bodyMedium, color = Ds.inkMuted)
+        val capped = (dropCap || sectionCap) && cut == null
         val annotated = buildAnnotatedString {
+            if (pilcrow && !capped) withStyle(SpanStyle(color = Ds.red, fontWeight = FontWeight.Bold)) { append("¶ ") }
             var last = 0
             Regex("\\[(\\d+[a-z]?)]").findAll(txt).forEach { m ->
                 append(txt.substring(last, m.range.first))
@@ -399,7 +411,7 @@ fun VerseView(
         //   + localeList = shown lang ➡ hyphens follow DE / EN / … rules, not th fon's (D-058)
         val body = OmmType.bookBody.let { it.copy(color = Ds.ink, fontSize = it.fontSize * scale, lineHeight = it.lineHeight * scale,
             localeList = androidx.compose.ui.text.intl.LocaleList(LocalLang.current.locale.toLanguageTag())) }
-        if (dropCap && cut == null) DropCapText(annotated, body) else Text(annotated, style = body)
+        if (capped) DropCapText(annotated, body, if (dropCap) 3 else 2) else Text(annotated, style = body)
         if (cut != null) MoreChip(tr("weiterlesen · noch ~%d Min.", "read more · ~%d min left").f(readMinutes(fullTxt.drop(cut.length))),
             { expanded = true }, Modifier.padding(top = Space.xs))
         // ✍️ margin note: shown inline as a NoteBubble · tap it (or Notiz) = edit right here, same bubble, no popup
