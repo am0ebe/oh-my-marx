@@ -1,6 +1,12 @@
 # eos omm — resume log · newest on TOP
 _1 block per /eos · written by /eos § 3 · todo keeps 1 line: `▶ resume ➡ eos.md`_
 
+## 261120 22:30 · #229 + #241 (M8): 🥚 eggs in-app · drop cap · pinch · /eos
+- **at** · DEV `0.13.0-dev.1120.2220` live = c52e1af · 30 eggs (`bin/eggs.py` ➡ vectors + EggRes) i top bar · hero (EggPop) · quote card · launcher icon = plain again (aliases built i 1911, dropped #241) · drop cap = bare red letter by baselines (D-067), no ¶ i 📜 · 📜 pinch back · unit 138 + lint + test_bin + check_langs green · pushed
+- **▶ NEXT** · 🦠 does [qa_1121.md § r2](qa_1121.md) (4 checks, ~3 min) ➡ fix wh he marks ❌
+- **👤 🦠** · r2 fon check · 💬 Fable polish pass over th eggs = only if he wants (🔵)
+- **⚠️** · `launcherReset` i notify/UpdateWorker.kt = DEV 1911 cleanup (MainActivity could be left disabled) ➡ ✂️ aftr nxt stable · `Head` enum + `Feast.head` = dead since eggs (✂️ 🔵) · shot tsts need `-Pshots` (else stale PNGs, mem)
+
 ## 261120 late · #218 deploy + D-065 · #208 adr v2.1 · /eos
 - **at** · DEV `0.13.0-dev.1120.1813` live = all work incl. #206 (perks · heads · initials · i18n fixes) + D-065 hold = menu + 5 static Literata styles · unit + lint + test_bin + check_langs green · pushed (a5cea67)
 - **▶ NEXT** · 🦠 does [qa_1120.md § r2](qa_1120.md) (8 checks, ~10 min) ➡ flip D-048..054 + D-060..064 to Accepted o fix wh he marks ❌

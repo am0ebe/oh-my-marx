@@ -108,7 +108,7 @@ Pipeline: `fetch.py` ➡ `split.py` ➡ `align.py` (DE⬄EN) ➡ `score.py` + `r
 `build.py` (app JSON) ➡ `andacht.py` (devotionals) + `tease.py` (one "tomorrow?" question per plan day) ➡ `translate.py` (quotes, devotionals, plan texts, UI: 11 languages) ➡
 `translate_full.py` + `--export` (the whole book + footnotes, ~6-9 h on a local GPU).
 `font_subset.sh` cuts the 5 Literata styles the app uses (Latin, Greek, Cyrillic) from the original variable fonts.
-`eggs.py` draws the 30 holiday icons ("eggs") once in Python and writes the Android vectors, launcher aliases and a preview gallery (`img/eggs/gallery.png`).
+`eggs.py` draws the 30 holiday icons ("eggs") once in Python and writes the Android vectors (shown in the app on each holiday) and a preview gallery (`img/eggs/gallery.png`).
 
 ### Versions and releases
 
