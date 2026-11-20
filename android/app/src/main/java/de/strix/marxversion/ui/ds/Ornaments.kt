@@ -47,8 +47,9 @@ fun Headpiece(modifier: Modifier = Modifier) = Text("❦  ✥  ❦  ✥  ❦", s
 /** (6) ☙ vignette at chapter end · `sealed` = chapter fully read ➡ red wax ☭ seal pressed onto it (T2b) */
 @Composable
 fun Tailpiece(sealed: Boolean, modifier: Modifier = Modifier) = Box(modifier.fillMaxWidth().padding(vertical = Space.l), contentAlignment = Alignment.Center) {
-    Text("☙  ❧", style = OmmType.bookHead, color = Ds.ink.copy(alpha = .35f), textAlign = TextAlign.Center)
-    if (sealed) Box(Modifier.size(34.dp).rotate(-8f).clip(CircleShape)
+    // qa_1120: 1 symbol only — read ➡ th ☭ seal · not yet ➡ ☙ ❧ (both stacked looked weird)
+    if (!sealed) Text("☙  ❧", style = OmmType.bookHead, color = Ds.ink.copy(alpha = .35f), textAlign = TextAlign.Center)
+    else Box(Modifier.size(34.dp).rotate(-8f).clip(CircleShape)
         .background(Brush.radialGradient(listOf(Ds.red, Ds.redDeep))).semantics { contentDescription = "sealed" },
         contentAlignment = Alignment.Center) {
         Text("☭", color = Ds.gold, style = OmmType.bookHead.copy(fontWeight = FontWeight.Bold))

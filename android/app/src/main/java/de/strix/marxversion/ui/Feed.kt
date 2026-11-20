@@ -8,6 +8,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.ui.Alignment
 import de.strix.marxversion.ui.ds.Ds
 import de.strix.marxversion.ui.ds.OmmType
+import de.strix.marxversion.ui.ds.Space
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -38,62 +39,43 @@ import de.strix.marxversion.logic.FEED_BATCH
 import de.strix.marxversion.logic.FEED_BREAK
 import de.strix.marxversion.logic.chapterPercent
 
+// (ReadOnFeed = batch feed rm'd @1120 #200 ➡ ScrollBook below · git: b7659ec)
+
 /**
- * 📜 Weiterlesen (big round #4 · D-024): aft today's snippet is done, Home turns into an endless feed o th book —
- * insta-style, no "weiter" tap: near th bottom ➡ th nxt [FEED_BATCH] passages load (am0 Q3 ✔️ auto-scroll)
- * 🪝 progress (chapter % bar) · movement (passages keep coming) · curiosity ("gleich: »…«" teaser o th nxt one)
- * honest: evy [FEED_BREAK] a ☕ card says th Soll is long done · scrolled-past passages count as read (Read % · badges),
- * not as plan days (D-011)
- * 📜 qa_1116 Q4/Q7 (🦠 @1116): moved fr th end o Home ➡ th reader's 📜 mode (ChapterScreen toggle) · Home ends at Marxoskop
- * start = 1st verse index · [onPast] = id o th last passage scrolled past (reader: 📖 resumes on its page)
+ * 📜 th reader's scroll mode (qa_1120 🐛 #200: batch feed got stuck at new sections + couldn't scroll back up)
+ * = 1 LazyColumn over th WHOLE book, 1 item per passage ➡ scrolls both ways, nothing 2 load · opens at `start`
+ * [onTop] = id o th top visible passage (➡ 📖 page index + saved reading position) · scrolled past = read
  */
 @Composable
-fun ReadOnFeed(vm: AppVm, start: Int, scroll: ScrollState, speaker: Speaker, onPast: (String) -> Unit = {}) {
+fun ScrollBook(vm: AppVm, start: Int, speaker: Speaker, modifier: Modifier = Modifier, onTop: (String) -> Unit) {
     val verses = vm.content.verses
-    if (start >= verses.size) return
-    var n by rememberSaveable(start) { mutableIntStateOf(FEED_BATCH) }
-    val left = verses.size - start
-    LaunchedEffect(start) {
-        // near th bottom (≤ ~1.5 screens o px left) ➡ load more · maxValue grows w th new items ➡ waits 4 th nxt approach
-        snapshotFlow { scroll.maxValue - scroll.value }.collect { rest -> if (rest < 1800 && n < left) n = minOf(n + FEED_BATCH, left) }
-    }
-    val items = verses.subList(start, start + n)
-    // everything but th newest batch was scrolled past ➡ read
-    LaunchedEffect(n) {
-        if (n > FEED_BATCH) items.take(n - FEED_BATCH).map { it.id }.let { vm.read(it); onPast(it.last()) }
-    }
-    val read by vm.readIds.collectAsStateWithLifecycle()
-    val cur = items.last()
-    val chapter = vm.content.chapters.firstOrNull { it.kap == cur.kap }
-    val pct = remember(cur.kap, read) { chapterPercent(vm.content.chapter(cur.kap), read) }
-
-    Column(Modifier.fillMaxWidth()) {
-        Text((chapter?.let { chapterTitle(it) } ?: cur.kap) + "  ·  " + tr("%d %% gelesen", "%d %% read").f(pct),
-            fontSize = 12.sp, fontWeight = FontWeight.Bold, color = Red, modifier = Modifier.padding(top = 6.dp))
-        LinearProgressIndicator(progress = { pct / 100f }, color = Red, trackColor = Red.copy(alpha = 0.15f),
-            modifier = Modifier.fillMaxWidth().padding(top = 4.dp, bottom = 8.dp).height(4.dp).clip(RoundedCornerShape(50)))
-        items.forEachIndexed { k, v ->
-            val prev = if (k == 0) verses.getOrNull(start - 1) else items[k - 1]
-            if (v.kap != prev?.kap) vm.content.chapters.firstOrNull { it.kap == v.kap }?.let {
-                Text(chapterTitle(it), fontSize = 20.sp, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Serif,
-                    textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp))
-            }
-            // 📄 qa_1117 r4: new MEW page ➡ thin rule + folio "— S. 50 —" (like th book) · not at th chapter head (title says it)
-            if (v.kap == prev?.kap && v.page != null && v.page != prev.page) PageBreak(v.page)
-            if (v.secTitle.isNotBlank() && v.sec != prev?.sec) SectionTitle(secTitle(v))
-            // 🔴 chapter's 1st passage = big red drop cap, same as 📖 (qa_1117 r4)
-            val first = vm.content.chapter(v.kap).firstOrNull()?.id == v.id
-            VerseView(vm, v, speaker, showRef = false, dropCap = first)   // qa_1116 r2.1: full txt, no expand btn · qa_1117: no ref line
-            Gap(6)
-            if ((k + 1) % FEED_BREAK == 0) BreakCard(k + 1)
+    val state = androidx.compose.foundation.lazy.rememberLazyListState(initialFirstVisibleItemIndex = start.coerceIn(0, (verses.size - 1).coerceAtLeast(0)))
+    LaunchedEffect(state) {
+        var prev = state.firstVisibleItemIndex
+        snapshotFlow { state.firstVisibleItemIndex }.collect { top ->
+            verses.getOrNull(top)?.let { onTop(it.id) }
+            if (top > prev) vm.read(verses.subList(prev, top).map { it.id })   // scrolled past = read
+            prev = top
         }
-        verses.getOrNull(start + n)?.let { next ->
-            // 🪝 curiosity: th nxt passage's opening, faded ➡ keep scrolling 2 get it
-            Text(tr("⬇ gleich: %s", "⬇ coming up: %s").f(quoted(opening(verseText(next)))), fontStyle = FontStyle.Italic,
-                fontSize = 13.sp, color = Color.Gray, modifier = Modifier.padding(vertical = 10.dp))
-        } ?: Text(tr("🏁 Das war Band 1. Ganz. Respekt.", "🏁 That was volume 1. All of it. Respect."),
-            fontWeight = FontWeight.Bold, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp))
-        Gap(40)
+    }
+    androidx.compose.foundation.lazy.LazyColumn(modifier, state = state,
+        contentPadding = androidx.compose.foundation.layout.PaddingValues(start = Space.readerStart, end = Space.readerEnd, top = Space.m, bottom = 40.dp)) {
+        items(verses.size, key = { verses[it].id }) { i ->
+            val v = verses[i]
+            val prev = verses.getOrNull(i - 1)
+            Column {
+                if (v.kap != prev?.kap) vm.content.chapters.firstOrNull { it.kap == v.kap }?.let {
+                    Text(chapterTitle(it), style = OmmType.bookTitle, color = Ds.ink,
+                        textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp))
+                }
+                if (v.kap == prev?.kap && v.page != null && v.page != prev.page) PageBreak(v.page)
+                if (v.secTitle.isNotBlank() && v.sec != prev?.sec) SectionTitle(secTitle(v))
+                VerseView(vm, v, speaker, showRef = false, dropCap = v.kap != prev?.kap)
+                Gap(6)
+                if (i == verses.lastIndex) Text(tr("🏁 Das war Band 1. Ganz. Respekt.", "🏁 That was volume 1. All of it. Respect."),
+                    textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp))
+            }
+        }
     }
 }
 
@@ -108,12 +90,3 @@ private fun PageBreak(page: Int) {
     }
 }
 
-/** ☕ honest Hooked: u could stop here, nothing is lost (D-014 tone: kind, no guilt) */
-@Composable
-private fun BreakCard(n: Int) {
-    Column(Modifier.fillMaxWidth().padding(vertical = 8.dp).clip(RoundedCornerShape(12.dp)).background(Gold.copy(alpha = 0.18f)).padding(12.dp)) {
-        Text(tr("☕ %d Absätze Mehrlesen", "☕ %d paragraphs of surplus reading").f(n), fontWeight = FontWeight.Bold)
-        Text(tr("Dein Tagessoll ist längst erfüllt. Pause ist auch Klassenkampf — der Feed läuft nicht weg.",
-            "Your daily quota is long met. A break is class struggle too — the feed isn't going anywhere."), fontSize = 13.sp)
-    }
-}

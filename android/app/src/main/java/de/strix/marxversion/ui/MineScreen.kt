@@ -119,7 +119,8 @@ fun MineScreen(vm: AppVm, openChapter: (String, String) -> Unit) {
                             modifier = Modifier.padding(start = if (m.bookmark) 4.dp else 0.dp))
                     }
                     Text(quoted(verseQuote(v).ifBlank { verseText(v).take(160) }), fontSize = 14.sp, modifier = Modifier.padding(top = 2.dp))
-                    m.note?.let { Text("✍️ $it", fontSize = 13.sp, color = MaterialTheme.colorScheme.primary) }
+                    // ✍️ qa_1120 "where's th note card?" ➡ same NoteCard as under th passage (C5 · D-054)
+                    m.note?.let { de.strix.marxversion.ui.ds.NoteCard(tr("Du", "You"), tr("Notiz", "Note"), Modifier.padding(top = 4.dp)) { Text(it) } }
                 }
                 HorizontalDivider()
             }

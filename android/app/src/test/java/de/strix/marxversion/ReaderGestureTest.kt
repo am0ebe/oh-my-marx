@@ -5,6 +5,7 @@ import androidx.compose.ui.test.click
 import androidx.compose.ui.test.doubleClick
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.longClick
+import androidx.compose.ui.test.swipe
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.onRoot
@@ -47,6 +48,28 @@ class ReaderGestureTest {
         passage().performTouchInput { click(centerRight - Offset(24f, 0f)) }; settle()
         assertFalse("1 tap opens no menu", has("Note", true))
         assertFalse("1 tap right = next page", has(first))
+    }
+
+    /** 🐛 qa_1120 #200: 📖 ⬄ 📜 stays on th same page · 📜 can scroll back up (was: batch feed, start = top) · Continue resumes */
+    @Test fun modeToggleKeepsPage_scrollGoesBack_continueResumes() {
+        tap("Read", true); tap("p. 49"); settle()
+        passage().performTouchInput { click(centerRight - Offset(24f, 0f)) }; settle()
+        assertFalse("on page 2", has(first))
+        tap("Scroll"); settle()
+        assertFalse("📜 opens at page 2, not th chapter top", has(first))
+        // 👆 slow drags (no fling) back up, 1 by 1, til page 1 shows (old feed: nothing above th start ➡ nvr)
+        val list = { rule.onAllNodes(androidx.compose.ui.test.hasScrollToIndexAction()).onFirst() }
+        val drag = { down: Boolean -> list().performTouchInput {
+            val a = Offset(centerX, top + 80f); val b = Offset(centerX, bottom - 80f)
+            if (down) swipe(a, b, 900) else swipe(b, a, 900) }; settle() }
+        var back = 0
+        while (!has(first) && back < 6) { drag(true); back++ }
+        assertTrue("📜 scrolls back up 2 page 1", has(first))
+        repeat(back + 2) { drag(false) }
+        tap("Pages"); settle()
+        assertFalse("📖 lands where 📜 was (not page 1)", has(first))
+        rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }; settle()
+        assertTrue("Continue btn on th Read list", has("Continue"))
     }
 
     @Test fun tapTurnsDoubleTapOpensMenu() {

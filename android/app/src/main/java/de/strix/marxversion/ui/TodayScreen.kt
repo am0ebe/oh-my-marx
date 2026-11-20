@@ -236,7 +236,8 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
         Gap(16)
     Column(Modifier.padding(horizontal = 16.dp)) {
         // ── 🪝 Hooked mode panel: explainer + test buttons ──
-        if (s.testMode) {
+        // 🐛 qa_1120: DEV "unlock all" didn't reach th moments ➡ th workbench shows w Testmodus OR DEV unlock
+        if (s.testMode || (IS_DEV && s.devUnlock)) {
             val soon = tr("🔔 kommt in ein paar Sekunden", "🔔 arriving in a few seconds")
             Card(colors = CardDefaults.cardColors(containerColor = Color(0xFFFFF1B8)), modifier = Modifier.padding(bottom = 12.dp)) {
                 Column(Modifier.padding(10.dp)) {
@@ -247,10 +248,12 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
                         AssistChip(onClick = { askNotif(); vm.testNotifNow(); Toast.makeText(ctx, soon, Toast.LENGTH_SHORT).show() },
                             label = { Text(tr("🔔 Benachrichtigung", "🔔 Notification")) })
                         AssistChip(onClick = { vm.forcePopup.value = true }, label = { Text(tr("🌅 Losung-Popup", "🌅 Verse popup")) })
-                        AssistChip(onClick = { celebrate = true }, label = { Text(tr("🎉 Feier-Popup", "🎉 Celebration")) })
-                        // 🧪 C2: T3 ➡ T4 i a row (Meilenstein screen, then Beförderung)
-                        AssistChip(onClick = { moment = 14; rankUp = 2; fx?.reward("milestone"); fx?.reward("rank") },
-                            label = { Text(tr("🏅 Meilenstein + Rang", "🏅 Milestone + rank")) })
+                        // 🧪 C2 moments, 1 chip each (qa_1120): ⏱️ Stempeluhr (+ "Moment ▸" ➡ T3) · 🏅 Meilenstein · 🎖️ Beförderung
+                        listOf<Pair<String, () -> Unit>>(
+                            tr("⏱️ Stempeluhr", "⏱️ Time clock") to { moment = 14; fx?.reward("dayDone") ?: run { celebrate = true }; fx?.reward("milestone") },
+                            tr("🏅 Meilenstein", "🏅 Milestone") to { moment = 14; fx?.reward("milestone") },
+                            tr("🎖️ Beförderung", "🎖️ Promotion") to { rankUp = 2; moment = null; fx?.reward("rank") },
+                        ).forEach { (label, go) -> AssistChip(onClick = go, label = { Text(label) }) }
                         AssistChip(onClick = { vm.testNextFeast() },
                             label = { Text(tr("🎉 Feiertag: %s", "🎉 Holiday: %s").f(feast?.emoji ?: "—")) })
                         AssistChip(onClick = { vm.testNextTime() }, label = { Text(tr("🌅 Tageszeit", "🌅 Time of day")) })
@@ -478,7 +481,7 @@ private fun Hero(days: List<DayLog>, feast: Feast?, dt: DayTime, hooked: Boolean
                 val isRead = d.toString() in read
                 val (bg, fg, txt) = when {
                     isRead -> Triple(white, Color(0xFF1D1230), "✓")
-                    d in rest -> Triple(white.copy(alpha = 0.85f), Color(0xFF1D1230), "🕊")
+                    d in rest -> Triple(de.strix.marxversion.ui.ds.Ds.blue, white, "🕊")   // qa_1120: white dove on blue (was on white = invisible)
                     d in g.struck -> Triple(de.strix.marxversion.ui.ds.Ds.red, white, "✊")   // ✊ Streiktag: red, white fist
                     d == today -> Triple(white.copy(alpha = 0.3f), white, d.dayOfWeek.getDisplayName(TextStyle.NARROW, lang.locale))   // open today = letter, no "!"
                     else -> Triple(white.copy(alpha = if (d.isAfter(today)) 0.16f else 0.08f), white.copy(alpha = 0.7f),

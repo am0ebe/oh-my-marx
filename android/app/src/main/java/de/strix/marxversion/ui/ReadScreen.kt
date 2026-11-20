@@ -103,7 +103,7 @@ private val ABSCHNITTE = listOf(
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ReadScreen(vm: AppVm, openChapter: (String) -> Unit) {
+fun ReadScreen(vm: AppVm, resume: (String, String) -> Unit = { _, _ -> }, openChapter: (String) -> Unit) {
     val readIds by vm.readIds.collectAsStateWithLifecycle()
     val s by vm.settings.collectAsStateWithLifecycle()
     val done = remember(readIds) { chapterDone(vm.content.verses, readIds) }
@@ -121,6 +121,13 @@ fun ReadScreen(vm: AppVm, openChapter: (String) -> Unit) {
                     LinearProgressIndicator(progress = { pct / 100f }, color = Ds.red, trackColor = Ds.paperDeep, strokeCap = StrokeCap.Round,
                         gapSize = 0.dp, drawStopIndicator = {}, modifier = Modifier.weight(1f).height(4.dp))
                     Text("%d %%".f(pct), style = typo.labelMedium, color = Ds.inkMuted, modifier = Modifier.padding(start = Space.m))
+                }
+                // 📍 qa_1120 "app shd remember where i was" ➡ 1 tap back 2 th last passage on screen (📖 o 📜)
+                s.readPos?.let { id -> vm.content.verse(id) }?.let { v ->
+                    val ch = vm.content.chapters.firstOrNull { it.kap == v.kap }
+                    de.strix.marxversion.ui.ds.Tonal(tr("📖 Weiterlesen · %s · MEW %s", "📖 Continue · %s · MEW %s")
+                        .f(ch?.let { chapterTitle(it) } ?: v.kap, v.page ?: "–"), { resume(v.kap, v.id) },
+                        Modifier.padding(bottom = Space.s))
                 }
                 HookNote(Hook.ENDOWED, s.testMode)
             }
@@ -215,6 +222,7 @@ private val FLAP_DARK = lerp(Ds.page, Ds.goldDeep, .16f)
 @Composable
 fun ChapterScreen(vm: AppVm, kap: String, focus: String?, @Suppress("UNUSED_PARAMETER") goChapter: (String) -> Unit = {}) {
     val pages = remember { bookPages(vm.content.verses) }
+    // 📍 qa_1120 resume = Read list "Continue" btn (passes focus = saved readPos) · a chapter row = its start (explicit)
     val start = remember(kap, focus) {
         pages.indexOfFirst { p -> p.verses.any { it.id == focus } }.takeIf { it >= 0 } ?: pages.indexOfFirst { it.kap == kap }.coerceAtLeast(0)
     }
@@ -229,6 +237,7 @@ fun ChapterScreen(vm: AppVm, kap: String, focus: String?, @Suppress("UNUSED_PARA
     val speaker = rememberSpeaker()
     val density = LocalDensity.current
     LaunchedEffect(index) { vm.read(pages[index].verses.map { it.id }); vm.pageSeen(pages[index].page) }  // page seen = read (+ 👥 count)
+    LaunchedEffect(index, s.readScroll) { if (!s.readScroll) vm.setReadPos(pages[index].verses.first().id) }   // 📍 📖 position
     // ⏱️ D-059 reading time: each page's shown time on leave (turn · back · app away) ➡ ≥ 10 s counts, ≤ 5 min per page
     val lifecycle = androidx.lifecycle.compose.LocalLifecycleOwner.current.lifecycle
     androidx.compose.runtime.DisposableEffect(index, lifecycle) {
@@ -268,6 +277,7 @@ fun ChapterScreen(vm: AppVm, kap: String, focus: String?, @Suppress("UNUSED_PARA
     // 📖 ⬄ 📜 (qa_1116 Q4/Q7, 🦠 @1116): 2 reading modes til 🦠 picks 1 design · toggle i th slim head · remembers last
     //   📜 starts at th current page's 1st passage (fixed when th mode flips) · scrolled past ➡ index follows ➡ 📖 resumes there
     val scrollMode = s.readScroll
+    val pageOf = remember(pages) { buildMap { pages.forEachIndexed { i, p -> p.verses.forEach { put(it.id, i) } } } }
     val scrollFrom = remember(scrollMode) {
         pages[index].verses.first().id.let { id -> vm.content.verses.indexOfFirst { it.id == id }.coerceAtLeast(0) }
     }
@@ -286,12 +296,10 @@ fun ChapterScreen(vm: AppVm, kap: String, focus: String?, @Suppress("UNUSED_PARA
       Column(Modifier.fillMaxSize().background(Ds.page).imePadding()) {
         SlimHead(vm, pages[index], scrollMode, { vm.setReadScroll(!scrollMode); hintKey++ }) { talk = pages[index] }
         if (scrollMode) {
-            val scroll = rememberScrollState()
-            Column(Modifier.weight(1f).fillMaxWidth().verticalScroll(scroll)
-                .padding(start = Space.readerStart, end = Space.readerEnd, top = Space.m)) {
-                ReadOnFeed(vm, scrollFrom, scroll, speaker) { id ->
-                    pages.indexOfFirst { p -> p.verses.any { it.id == id } }.takeIf { it >= 0 }?.let { index = it }
-                }
+            // 📜 = whole book, lazy, both ways (qa_1120 🐛 stuck + no way back) · top passage ➡ index = th 📖 page u land on
+            ScrollBook(vm, scrollFrom, speaker, Modifier.weight(1f).fillMaxWidth()) { id ->
+                pageOf[id]?.let { if (it != index) index = it }
+                vm.setReadPos(id)
             }
         } else Box(
             Modifier.weight(1f).fillMaxWidth().background(DESK)  // th desk under th book
@@ -519,11 +527,7 @@ private fun Page(vm: AppVm, p: BookPage, speaker: Speaker, i: Int, n: Int, modif
                 Text(tr("Gesetzt in Literata · gedruckt auf der Pseudopod", "Set in Literata · printed aboard the Pseudopod"),
                     style = OmmType.bookMeta, color = Ds.inkMuted, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth().padding(top = Space.xs))
             }
-            // (8) catchword (Kustode): nxt page's 1st word, bottom end = free page-turn teaser (same chapter only)
-            if (next != null && !lastOfChapter) next.verses.firstOrNull()?.let { verseText(it).trim().split(Regex("\\s+")).firstOrNull() }?.let {
-                Text(it.trimEnd(',', '.', ';', ':'), style = OmmType.bookBody.copy(fontSize = OmmType.bookMeta.fontSize), color = Ds.inkMuted,
-                    textAlign = TextAlign.End, modifier = Modifier.fillMaxWidth().padding(top = Space.s))
-            }
+            // (8) catchword rm'd (🦠 qa_1120 "Y? confusing" · looked like a stray artifact)
             Gap(20)
             Text("— ${p.page ?: (i + 1)} —", style = OmmType.bookMeta.copy(fontFamily = FontFamily.Serif), color = Ds.inkMuted,
                 textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())

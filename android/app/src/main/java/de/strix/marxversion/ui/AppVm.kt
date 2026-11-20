@@ -358,6 +358,7 @@ class AppVm(app: Application) : AndroidViewModel(app) {
     fun setPersona(p: Persona) = viewModelScope.launch { marx.prefs.setPersona(p.name) }
     fun setReadScale(s: Float) = viewModelScope.launch { marx.prefs.setReadScale(s.coerceIn(0.7f, 2f)) }
     fun setReadScroll(on: Boolean) = viewModelScope.launch { marx.prefs.setReadScroll(on) }
+    fun setReadPos(id: String) = viewModelScope.launch { marx.prefs.setReadPos(id) }
     fun popupDone() = viewModelScope.launch { forcePopup.value = false; marx.prefs.popupSeen(today()) }
     fun setNotif(on: Boolean, h: Int, m: Int) = viewModelScope.launch {
         marx.prefs.setNotif(on, h, m)

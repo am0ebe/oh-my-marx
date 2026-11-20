@@ -271,7 +271,7 @@ private fun App(vm: AppVm) {
             composable("today") { TodayScreen(vm, askNotif, openChapter) { nav.go("plans") } }
             composable("plans") { PlansScreen(vm) { nav.navigate("plan/$it") } }
             composable("plan/{id}") { e -> PlanDetail(vm, e.arguments?.getString("id")!!) { nav.go("today") } }
-            composable("read") { ReadScreen(vm) { nav.navigate("chapter/$it") } }
+            composable("read") { ReadScreen(vm, resume = { k, v -> openChapter(k, v) }) { nav.navigate("chapter/$it") } }
             composable("chapter/{kap}?v={v}") { e ->
                 // 👉 swipe 2 a neighbour chapter = replace this one (back still goes 2 th list, not thru evy chapter)
                 ChapterScreen(vm, e.arguments?.getString("kap")!!, e.arguments?.getString("v")) { k ->
