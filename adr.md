@@ -18,6 +18,11 @@ _SDD: code says **wh** · th file says **y** · drift = a bug · fmt ➡ `pr/vib
 - 🔥 hot files (1 owner at a ti — fan-out lanes nvr split these): `assets/content/i18n_*.json` + `data/i18n/*.jsonl` (translate pass = fan-in only) · `android/app/build.gradle.kts` (version) · `ui/Changelog.kt` · `res/values*/strings.xml` · `TodayScreen.kt` · `MineScreen.kt` · `Share.kt`
 
 ## 🧾 decisions (newest on top)
+### D-063 @1120 · All 7 rank perks now exist, so the promotion screen shows its perk line · Accepted (🤖 @1120, M8 #206 autonomous)
+- **Y:** The perks table in D-050 was a promise with no code behind it. Hiding the line was honest but empty; building the perks keeps the promise.
+- **What each level gives:** 1 gold rim on the hero · 2 stamp card turns blue cloth · 3 opens the "Marx Basics" plan (new lock source `rank`, D-043) · 4 your rank title next to "you" in Circles (your screen only, nothing is sent) · 5 gear rim around the star · 6 your name in the book's colophon · 7 the star turns gold.
+- **Scope:** Level 7 does not turn the ☭ swoosh gold yet (Fx.kt canvas).
+- **Ck:** `PlanUnlockTest.rankPerk_opensAtLevel3` · `MomentsShotsTest.rank3` · `Moments.kt PERKS_LIVE`
 ### D-062 @1120 · Reading time counts only while you touch the reader; a long sitting counts in full · Proposed (🤖 built rec, amends D-059)
 - **Y:** 🦠: "a long session should count, but only if really reading; no input = nothing happening" ➡ input is the honest signal, a per-page cap is not.
 - **Options:** a) **15 s ticks while th reader is open + touched ≤ 90 s ago, no cap · + 🌙 Überstunden badge = 1 sitting ≥ 60 active min** (🤖 rec) · b) keep D-059 (≥ 10 s, ≤ 5 min per page) · c) a only, no sitting badge

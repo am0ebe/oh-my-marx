@@ -91,16 +91,16 @@ fun rankArt(i: Int) = RANK_ART[i.coerceIn(0, RANK_ART.lastIndex)]
 /** perks (cosmetic, honest · D-050) · 1 line on th Beförderung screen */
 private val PERKS = listOf(
     T("Neu: dein Held bekommt einen Goldrand", "New: your hero gets a gold border"),
-    T("Neu: eine zweite Stempelkarte (blaues Leinen)", "New: a second stamp card (blue cloth)"),
-    T("Neu: ein Leseplan ist frei 🔓", "New: a reading plan is unlocked 🔓"),
-    T("Neu: dein Rang steht neben deinem Namen in Kreisen", "New: your rank shows next to your name in Circles"),
+    T("Neu: deine Stempelkarte wird blaues Leinen", "New: your stamp card turns blue cloth"),
+    T("Neu: der Leseplan „Marx-Grundkurs“ ist frei 🔓", "New: the “Marx Basics” reading plan is unlocked 🔓"),
+    T("Neu: in Kreisen steht dein Rang neben „du“", "New: in Circles your rank shows next to “you”"),
     T("Neu: dein Stern bekommt einen Zahnkranz", "New: your star gets a gear rim"),
     T("Neu: dein Name steht im Kolophon des Buchs", "New: your name is in the book's colophon"),
     T("Neu: der rote Stern wird für immer gold", "New: the red star turns gold for good"),
 )
 
-/** rank idx whose perk is built · none yet (C2 ships th screen, perks = 🔵 i todo) */
-private val PERKS_LIVE = emptySet<Int>()
+/** rank idx whose perk is built · @1120 #206: all 7 (rim · cloth · plan · Circles title · gear · colophon · gold ★) */
+private val PERKS_LIVE = (0..6).toSet()
 
 /** 🗣️ Stempeluhr line pool (~12, rotate by day = variable reward · nvr a Kapital quote here) */
 private val SHIFT_LINES = listOf(
@@ -144,7 +144,7 @@ private fun rememberStill(): Boolean { val ctx = LocalContext.current; return re
 @Composable
 fun StempeluhrPane(
     card: StampCard, cardNo: Int, streak: Int, tier: Int, line: String, teaser: String?, more: Boolean,
-    hooked: Boolean, onClose: () -> Unit,
+    hooked: Boolean, level: Int = 0, onClose: () -> Unit,
 ) {
     val still = rememberStill()
     val h = rememberHaptics()
@@ -173,8 +173,10 @@ fun StempeluhrPane(
                 modifier = Modifier.fillMaxWidth())
             // the card: today's slot = card.filled - 1 (just stamped) · full card (filled 0 aftr wrap) ➡ all 10
             val stamped = if (card.filled == 0) CARD else card.filled
-            Row(Modifier.fillMaxWidth().padding(vertical = 10.dp).clip(Shapes.m).background(Ds.paper)
-                .border(1.dp, Ds.line, Shapes.m).padding(8.dp), horizontalArrangement = Arrangement.SpaceBetween) {
+            // 🎖️ level-2 perk (D-050): th card turns blue cloth
+            val cloth = level >= 2
+            Row(Modifier.fillMaxWidth().padding(vertical = 10.dp).clip(Shapes.m).background(if (cloth) Ds.blueTint else Ds.paper)
+                .border(if (cloth) 2.dp else 1.dp, if (cloth) Ds.blue else Ds.line, Shapes.m).padding(8.dp), horizontalArrangement = Arrangement.SpaceBetween) {
                 repeat(CARD) { i ->
                     val today = i == stamped - 1
                     Box(Modifier.size(22.dp).then(if (today) Modifier.scale(thump.value).rotate(tilt.value) else Modifier)
@@ -186,7 +188,7 @@ fun StempeluhrPane(
             }
             Box(contentAlignment = Alignment.Center) {
                 Box(Modifier.size(84.dp).clip(CircleShape).background(Ds.gold.copy(alpha = .35f * glow.value)))
-                StreakStar(if (count.value < .5f) (streak - 1).coerceAtLeast(0) else streak, tier, size = 72.dp, onGradient = false)
+                StreakStar(if (count.value < .5f) (streak - 1).coerceAtLeast(0) else streak, tier, size = 72.dp, onGradient = false, level = level)
             }
             Text(if (streak == 1) tr("1 Tag am Stück", "1 day in a row") else tr("%d Tage am Stück", "%d days in a row").f(streak),
                 style = MaterialTheme.typography.titleMedium, color = Ds.ink, modifier = Modifier.padding(top = 6.dp))

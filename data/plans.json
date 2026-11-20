@@ -8006,7 +8006,8 @@
   "dde": "7 Tage, 7 Begriffe, einer baut auf dem anderen auf: Ware, Gebrauchswert, Wert, Kapital, Arbeitskraft, Mehrwert, Arbeitstag. Danach verstehst du jeden anderen Plan doppelt.",
   "den": "7 days, 7 concepts, each building on the last: commodity, use-value, value, capital, labour-power, surplus value, working day. Afterwards every other plan makes twice the sense.",
   "lock": {
-   "orden": 3
+   "orden": 3,
+   "rank": 3
   },
   "days": [
    {

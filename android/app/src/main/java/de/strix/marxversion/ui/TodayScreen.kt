@@ -411,7 +411,7 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
             val g = remember(days) { streakGame(days) }
             val tot = readingDays(days)
             StempeluhrPane(stampCard(tot), cardsDone(tot) + 1 - (if (stampCard(tot).filled == 0) 1 else 0), g.streak, g.tier,
-                tr(shiftLine()), nextTeaser, more = fx?.queued?.isNotEmpty() == true, hooked = s.testMode, onClose = close)
+                tr(shiftLine()), nextTeaser, more = fx?.queued?.isNotEmpty() == true, hooked = s.testMode, onClose = close, level = cardsDone(tot))
         }
         RewardSlot("dayDone") { done -> dayDoneDialog(done) }
         if (celebrate) dayDoneDialog { celebrate = false }
@@ -447,8 +447,11 @@ private fun Hero(days: List<DayLog>, feast: Feast?, dt: DayTime, hooked: Boolean
     val today = LocalDate.now()
     val read = days.map { it.date }.toSet()
     val doneToday = today.toString() in read
+    val level = cardsDone(read.size)   // 🎖️ perks (D-050): 1 gold rim · 5 gear rim · 7 gold star
+    val heroShape = RoundedCornerShape(18.dp)
     Column(
-        Modifier.fillMaxWidth().clip(RoundedCornerShape(18.dp))
+        Modifier.fillMaxWidth().clip(heroShape)
+            .then(if (level >= 1) Modifier.border(2.dp, de.strix.marxversion.ui.ds.Ds.gold, heroShape) else Modifier)
             .background(Brush.verticalGradient((feast?.colors ?: dt.colors).take(3).map { Color(it) }))
             .background(Color.Black.copy(alpha = 0.15f))  // scrim: white txt stays readable on light stops
             .padding(16.dp),
@@ -468,7 +471,7 @@ private fun Hero(days: List<DayLog>, feast: Feast?, dt: DayTime, hooked: Boolean
                     fontSize = 13.sp, lineHeight = 17.sp)
             }
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                de.strix.marxversion.ui.ds.StreakStar(st, g.tier)
+                de.strix.marxversion.ui.ds.StreakStar(st, g.tier, level = level)
                 if (g.strikes > 0 || st >= 7) de.strix.marxversion.ui.ds.StrikeSlots(g.strikes, Modifier.padding(top = 2.dp))
             }
         }
@@ -500,8 +503,10 @@ private fun Hero(days: List<DayLog>, feast: Feast?, dt: DayTime, hooked: Boolean
             Text(tr("✊ Streiktag eingelöst — die Kette hält.", "✊ Strike day used — the chain holds."),
                 color = white.copy(alpha = 0.85f), style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(top = 2.dp))
         }
-        // 📉 D-047 Abschreibung: tier above th streak's own = capital writing itself off
-        if (g.depreciating) Text(tr("Dein Lesekapital schreibt sich ab — langsam. Ein Tag reicht, um es zu stoppen.",
+        // 📉 D-047 Abschreibung: tier above th streak's own = capital writing itself off · copy 1× = only th day aftr a missed day
+        val y = today.minusDays(1)
+        val missedYesterday = y.toString() !in read && y !in rest && y !in g.struck
+        if (g.depreciating && missedYesterday) Text(tr("Dein Lesekapital schreibt sich ab — langsam. Ein Tag reicht, um es zu stoppen.",
             "Your reading capital is depreciating — slowly. One day is enough to stop it."),
             color = white.copy(alpha = 0.9f), style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(top = 2.dp))
         Gap(12)

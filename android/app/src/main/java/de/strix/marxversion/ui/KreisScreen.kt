@@ -204,6 +204,8 @@ fun KreisDetail(vm: AppVm, i: Int, back: () -> Unit) {
     val members by vm.kreisMembers.collectAsStateWithLifecycle()
     val tl by vm.kreisTimeline.collectAsStateWithLifecycle()
     val me by produceState<String?>(null) { value = vm.myUserId() }
+    val logDays by vm.days.collectAsStateWithLifecycle()
+    val myLevel = de.strix.marxversion.logic.cardsDone(de.strix.marxversion.logic.readingDays(logDays))
     val ctx = LocalContext.current
     val m = members[k.room].orEmpty()
     val ev = tl[k.room].orEmpty()
@@ -281,7 +283,9 @@ fun KreisDetail(vm: AppVm, i: Int, back: () -> Unit) {
                 .padding(start = if (mine) Space.xxl else 0.dp, end = if (mine) 0.dp else Space.xxl),
                 contentAlignment = if (mine) Alignment.CenterEnd else Alignment.CenterStart) {
                 if (mine) MeBubble {
-                    Text(tr("du", "you") + "  " + time, style = MaterialTheme.typography.labelSmall, color = Ds.inkMuted)
+                    // 🎖️ rank-4 perk (D-050): ur rank title next 2 "you" (local view only — not sent 2 th room)
+                    val title = if (myLevel >= 4) " · " + tr(rank(myLevel - 1)) else ""
+                    Text(tr("du", "you") + title + "  " + time, style = MaterialTheme.typography.labelSmall, color = Ds.inkMuted)
                     Text(c.text)
                 } else OtherBubble(c.name, time) { Text(c.text) }
             }

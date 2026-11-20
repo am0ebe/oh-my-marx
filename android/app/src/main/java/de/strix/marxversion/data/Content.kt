@@ -80,6 +80,7 @@ data class PlanLock(
     val streak: Int = 0,         // streak ≥ N
     val feast: String? = null,   // logic/Feast name, eg WEIHNACHTEN
     val lucky: Int = 0,          // aftr ≥ N reading days: 1-in-5 chance per Amen day
+    val rank: Int = 0,           // 🎖️ D-050 perk: rank (= level) ≥ N · rank 3 opens grundkurs
 )
 
 /** th whole book i 1 o th LLM langs (bin/translate_full.py --export ➡ full_xx.json, ~2-3 MB each)

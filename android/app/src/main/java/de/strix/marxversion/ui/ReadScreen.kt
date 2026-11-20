@@ -531,6 +531,12 @@ private fun Page(vm: AppVm, p: BookPage, speaker: Speaker, i: Int, n: Int, modif
                     textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
                 Text(tr("Gesetzt in Literata · gedruckt auf der Pseudopod", "Set in Literata · printed aboard the Pseudopod"),
                     style = OmmType.bookMeta, color = Ds.inkMuted, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth().padding(top = Space.xs))
+                // 🎖️ level-6 perk (D-050): ur name i th colophon
+                val logDays by vm.days.collectAsStateWithLifecycle()
+                val myName by vm.mxName.collectAsStateWithLifecycle()
+                if (de.strix.marxversion.logic.cardsDone(de.strix.marxversion.logic.readingDays(logDays)) >= 6)
+                    Text(tr("Gelesen von %s — Klassiker-Status", "Read by %s — classic status").f(myName ?: vm.suggestedName),
+                        style = OmmType.bookMeta, color = Ds.goldDeep, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth().padding(top = Space.xs))
             }
             // (8) catchword rm'd (🦠 qa_1120 "Y? confusing" · looked like a stray artifact)
             Gap(20)

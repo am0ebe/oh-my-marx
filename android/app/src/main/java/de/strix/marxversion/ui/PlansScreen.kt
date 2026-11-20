@@ -139,6 +139,7 @@ fun lockHint(l: de.strix.marxversion.data.PlanLock): String = listOfNotNull(
         else tr("wenn du %d Lesepläne beendest", "when you finish %d reading plans").f(l.plans)) else null,
     if (l.orden > 0) tr("bei %d Abzeichen", "at %d badges").f(l.orden) else null,
     if (l.streak > 0) tr("bei einer Serie von %d Tagen", "at a %d-day streak").f(l.streak) else null,
+    if (l.rank > 0) tr("ab Level %d", "at level %d").f(l.rank) else null,
     if (l.feast == "WEIHNACHTEN") tr("🎁 als Geschenk zu Weihnachten", "🎁 as a Christmas present") else null,
     if (l.lucky > 0) tr("🎲 irgendwann, als Überraschung an einem Lesetag", "🎲 some day, as a surprise on a reading day") else null,
 ).joinToString(tr(" — oder ", " — or "), prefix = tr("Öffnet sich ", "Opens ")) + "."

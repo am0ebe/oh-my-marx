@@ -12,7 +12,7 @@ import kotlin.random.Random
  *  - DEV switch = all open (qa_1116 Q6 a)
  * plan.lock == null = open from day 1 (all plans b4 @1118)
  */
-data class UnlockStats(val plansDone: Int = 0, val orden: Int = 0, val best: Int = 0)
+data class UnlockStats(val plansDone: Int = 0, val orden: Int = 0, val best: Int = 0, val rank: Int = 0)
 
 /** 1-in-N per Amen day, once ≥ lock.lucky reading days */
 const val LUCKY_ODDS = 5
@@ -20,7 +20,8 @@ const val LUCKY_ODDS = 5
 fun isOpen(p: Plan, s: UnlockStats, opened: Set<String>, dev: Boolean): Boolean {
     val l = p.lock ?: return true
     if (dev || p.id in opened) return true
-    return (l.plans > 0 && s.plansDone >= l.plans) || (l.orden > 0 && s.orden >= l.orden) || (l.streak > 0 && s.best >= l.streak)
+    return (l.plans > 0 && s.plansDone >= l.plans) || (l.orden > 0 && s.orden >= l.orden) || (l.streak > 0 && s.best >= l.streak) ||
+        (l.rank > 0 && s.rank >= l.rank)
 }
 
 /**

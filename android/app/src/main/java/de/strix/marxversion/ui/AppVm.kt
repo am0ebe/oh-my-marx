@@ -315,7 +315,8 @@ class AppVm(app: Application) : AndroidViewModel(app) {
     val plansOpen: StateFlow<Set<String>> = combine(combine(days, _loaded) { d, _ -> d }, orden, settings) { d, o, s ->
         if (!content.loaded) return@combine emptySet()
         val dates = d.map { java.time.LocalDate.parse(it.date) }.toSet()
-        val stats = UnlockStats(plansDone(content.plans, planDays(d)), o.size, maxOf(streakInfo(d).first, bestStreak(dates)))
+        val stats = UnlockStats(plansDone(content.plans, planDays(d)), o.size, maxOf(streakInfo(d).first, bestStreak(dates)),
+            rank = de.strix.marxversion.logic.cardsDone(dates.size))   // 🎖️ rank 3 perk (D-050)
         content.plans.filter { isOpen(it, stats, s.plansOpen, IS_DEV && s.devUnlock) }.map { it.id }.toSet()
     }.flowOn(Dispatchers.Default).stateIn(viewModelScope, SharingStarted.Eagerly, emptySet())
     /** 🎁 locked plans th just opened, not announced yet (DEV switch = no fanfare, it opens all) */

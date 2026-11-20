@@ -63,7 +63,7 @@
  },
  {
   "_why": "qa_1117 Q10 (🦠 @1118: educate + learn Marxist concepts) · 1 concept per day, each builds on th last",
-  "id": "grundkurs", "emoji": "🎓", "lock": {"orden": 3},
+  "id": "grundkurs", "emoji": "🎓", "lock": {"orden": 3, "rank": 3},
   "tde": "Marx-Grundkurs", "ten": "Marx Basics",
   "dde": "7 Tage, 7 Begriffe, einer baut auf dem anderen auf: Ware, Gebrauchswert, Wert, Kapital, Arbeitskraft, Mehrwert, Arbeitstag. Danach verstehst du jeden anderen Plan doppelt.",
   "den": "7 days, 7 concepts, each building on the last: commodity, use-value, value, capital, labour-power, surplus value, working day. Afterwards every other plan makes twice the sense.",

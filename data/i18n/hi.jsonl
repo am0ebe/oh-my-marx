@@ -2440,3 +2440,8 @@
 {"kind": "ui", "k": "LEVEL %d", "src": "LEVEL %d\u0000LEVEL %d", "t": "लेवल %d"}
 {"kind": "ui", "k": "%d more reading days to level %d · %s", "src": "noch %d Lesetage bis Level %d · %s\u0000%d more reading days to level %d · %s", "t": "लेवल %d तक %d और पढ़ने के दिन · %s"}
 {"kind": "ui", "k": "LEVEL %d ▲", "src": "LEVEL %d ▲\u0000LEVEL %d ▲", "t": "लेवल %d ▲"}
+{"kind": "ui", "k": "New: your stamp card turns blue cloth", "src": "Neu: deine Stempelkarte wird blaues Leinen\u0000New: your stamp card turns blue cloth", "t": "नया: तुम्हारी स्टाम्प कार्ड नीले कपड़े में बदल जाएगी"}
+{"kind": "ui", "k": "New: the “Marx Basics” reading plan is unlocked 🔓", "src": "Neu: der Leseplan „Marx-Grundkurs“ ist frei 🔓\u0000New: the “Marx Basics” reading plan is unlocked 🔓", "t": "नया: पाठ्यक्रम 'मार्क्स बेसिक्स' अब खुला है 🔓"}
+{"kind": "ui", "k": "New: in Circles your rank shows next to “you”", "src": "Neu: in Kreisen steht dein Rang neben „du“\u0000New: in Circles your rank shows next to “you”", "t": "नया: गोले में तुम्हारा रैंक 'तुम' के साथ दिखाई देगा"}
+{"kind": "ui", "k": "at level %d", "src": "ab Level %d\u0000at level %d", "t": "स्तर %d से"}
+{"kind": "ui", "k": "Read by %s — classic status", "src": "Gelesen von %s — Klassiker-Status\u0000Read by %s — classic status", "t": "%s द्वारा पढ़ा गया — क्लासिक स्टेटस"}

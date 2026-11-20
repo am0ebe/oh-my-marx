@@ -41,6 +41,14 @@ class PlanUnlockTest {
         assertTrue(isOpen(p, UnlockStats(), emptySet(), dev = true))             // DEV switch
     }
 
+    /** 🎖️ D-050 rank-3 perk: level ≥ 3 opens a plan locked w `rank: 3` (any 1 condition, as always) */
+    @Test fun rankPerk_opensAtLevel3() {
+        val p = plan("grundkurs", PlanLock(orden = 3, rank = 3))
+        assertFalse(isOpen(p, UnlockStats(rank = 2), emptySet(), false))
+        assertTrue(isOpen(p, UnlockStats(rank = 3), emptySet(), false))
+        assertTrue("badges still open it too", isOpen(p, UnlockStats(orden = 3), emptySet(), false))
+    }
+
     @Test fun christmasGift_opensOnlyOnChristmas() {
         val p = plan("x", PlanLock(feast = "WEIHNACHTEN"))
         assertEquals(listOf("x"), eventOpens(listOf(p), LocalDate.of(2026, 12, 24), 0, emptySet(), amenDay = false))

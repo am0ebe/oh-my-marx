@@ -40,7 +40,7 @@ import kotlin.math.sin
  * `grow` 0..1 = th newest ornament growing in (Meilenstein screen) · 1 = still
  */
 @Composable
-fun StreakStar(n: Int, tier: Int, modifier: Modifier = Modifier, size: Dp = 92.dp, grow: Float = 1f, onGradient: Boolean = true) {
+fun StreakStar(n: Int, tier: Int, modifier: Modifier = Modifier, size: Dp = 92.dp, grow: Float = 1f, onGradient: Boolean = true, level: Int = 0) {
     val gold = Ds.gold
     val laurel = if (onGradient) Ds.gold else Ds.goldDeep
     Box(modifier.size(size).semantics { contentDescription = "streak $n · tier $tier" }, contentAlignment = Alignment.Center) {
@@ -61,7 +61,16 @@ fun StreakStar(n: Int, tier: Int, modifier: Modifier = Modifier, size: Dp = 92.d
             // 3 · laurel: 2 branches round th bottom
             if (tier >= 3) laurel(c, r, laurel, a(3).coerceAtLeast(if (tier > 3) 1f else 0f))
         }
-        StarImage(Modifier.fillMaxSize().padding(size * .1f))
+        // 🎖️ perks (D-050): level 5 = gear rim behind th star · level 7 = th red star turns gold for good
+        if (level >= 5) Canvas(Modifier.fillMaxSize().padding(size * .06f)) {
+            val r = this.size.minDimension / 2
+            repeat(18) { i -> rotate(i * 20f, center) {
+                drawRect(gold, Offset(center.x - r * .05f, center.y - r), Size(r * .1f, r * .14f)) } }
+            drawCircle(gold, r * .87f, center, style = Stroke(r * .06f))
+        }
+        if (level >= 7) androidx.compose.foundation.Image(androidx.compose.ui.res.painterResource(de.strix.marxversion.R.drawable.ic_star), null,
+            Modifier.fillMaxSize().padding(size * .1f), colorFilter = androidx.compose.ui.graphics.ColorFilter.tint(gold, androidx.compose.ui.graphics.BlendMode.SrcIn))
+        else StarImage(Modifier.fillMaxSize().padding(size * .1f))
         val k = size.value / 92f
         Text("$n", color = Color.White, fontSize = ((if (n < 100) 26 else 20) * k).sp, fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(top = (6 * k).dp))
