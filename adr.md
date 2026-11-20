@@ -18,326 +18,503 @@ _SDD: code says **wh** · th file says **y** · drift = a bug · fmt ➡ `pr/vib
 - 🔥 hot files (1 owner at a ti — fan-out lanes nvr split these): `assets/content/i18n_*.json` + `data/i18n/*.jsonl` (translate pass = fan-in only) · `android/app/build.gradle.kts` (version) · `ui/Changelog.kt` · `res/values*/strings.xml` · `TodayScreen.kt` · `MineScreen.kt` · `Share.kt`
 
 ## 🧾 decisions (newest on top)
-### D-065 @1120 · Holding a passage opens its menu, and pages and scroll share every gesture · Accepted (🦠 @1120 via M8 #218)
-- **Y:** 🦠 found that hold was often read as a tap, and wanted both reading modes to behave the same. Turning is the only thing a tap does; the menu is hold (or double-tap) everywhere.
-- **What is true now:** 📖 tap = turn (left back, right forward) · hold or double-tap a passage = its menu with a buzz · 📜 the same, except a tap does nothing · no passage is clickable in the reader in either mode, so no ripple. The top bar was already the same in both modes.
+_Template v2.1 since 20 Nov (converted via `pr/vibe++/adr_convert.md`). Field names: Y = why · Ctx = what forced it · Scope = what it covers · Ck = how to check._
+
+### D-065 @1120 · ✋ Holding a passage opens its menu, and pages and scroll share every gesture · Accepted (🦠 @1120 via M8 #218)
+- **Y:** You found that hold was often read as a tap, and wanted both reading modes to behave the same. Turning is the only thing a tap does; the menu is hold (or double-tap) everywhere.
+- **Scope:** 📖 tap = turn (left back, right forward) · hold or double-tap a passage = its menu with a buzz · 📜 the same, except a tap does nothing · no passage is clickable in the reader in either mode, so no ripple. The top bar was already the same in both modes.
 - **Prev:** D-057 (hold = turn). D-057 stays for tap = turn.
 - **Ck:** `ReaderGestureTest.holdOpensMenuInBothModes` · `tapTurnsDoubleTapOpensMenu`
-### D-064 @1120 · Arabic, Urdu, Hindi and Bengali get no drop cap; Chinese keeps its initial box · Accepted (🤖 @1120, M8 #206)
-- **Y:** The Arabic shot showed a cut-off, unjoined first letter: these scripts join or stack letters, so pulling one out breaks the word. Chinese characters stand alone, so the box works there.
-- **Scope:** Chapter and section initials only. Headpiece, incipit, seal and ribbon stay in every language.
+
+### D-064 @1120 · Arabic, Urdu, Hindi and Bengali get no drop cap; Chinese keeps its initial box · Accepted (crew @1120)
+- **Y:** The Arabic screenshot showed a cut-off, unjoined first letter: these scripts join or stack letters, so pulling one out breaks the word. Chinese characters stand alone, so the box works there.
+- **Scope:** Chapter and section initials only. Headpiece, incipit, seal and ribbon stay in every language. Decided by crew during M8 #206.
 - **Prev:** design § 14.3 said "hi · bn = initial box with first glyph"; that breaks conjuncts the same way.
 - **Ck:** `ShotsTest.zLangs` (chapter_ar · chapter_zh) · `VerseView.kt DropCapText` `splitBreaks`
-### D-063 @1120 · All 7 rank perks now exist, so the promotion screen shows its perk line · Accepted (🤖 @1120, M8 #206 autonomous)
+
+### D-063 @1120 · 🎖️ All 7 rank perks exist, so the promotion screen shows its perk line · Accepted (crew @1120)
 - **Y:** The perks table in D-050 was a promise with no code behind it. Hiding the line was honest but empty; building the perks keeps the promise.
-- **What each level gives:** 1 gold rim on the hero · 2 stamp card turns blue cloth · 3 opens the "Marx Basics" plan (new lock source `rank`, D-043) · 4 your rank title next to "you" in Circles (your screen only, nothing is sent) · 5 gear rim around the star · 6 your name in the book's colophon · 7 the star turns gold.
-- **Scope:** Level 7 also turns the ☭ swoosh gold (`CelebrationQueue.gold`, added later on 20 Nov).
+- **Scope:** Each level gives: 1 gold rim on the hero · 2 stamp card turns blue cloth · 3 opens the "Marx Basics" plan (new lock source `rank`, D-043) · 4 your rank title next to "you" in Circles (your screen only, nothing is sent) · 5 gear rim around the star · 6 your name in the book's colophon · 7 the star turns gold. Level 7 also turns the ☭ swoosh gold (`CelebrationQueue.gold`, added later on 20 Nov). Built during M8 #206 (autonomous).
 - **Ck:** `PlanUnlockTest.rankPerk_opensAtLevel3` · `MomentsShotsTest.rank3` · `Moments.kt PERKS_LIVE`
-### D-062 @1120 · Reading time counts only while you touch the reader; a long sitting counts in full · Proposed (🤖 built rec, amends D-059)
-- **Y:** 🦠: "a long session should count, but only if really reading; no input = nothing happening" ➡ input is the honest signal, a per-page cap is not.
-- **Options:** a) **15 s ticks while th reader is open + touched ≤ 90 s ago, no cap · + 🌙 Überstunden badge = 1 sitting ≥ 60 active min** (🤖 rec) · b) keep D-059 (≥ 10 s, ≤ 5 min per page) · c) a only, no sitting badge
-- **Cost:** a slow reader who doesn't touch the screen for > 90 s on 1 page loses that time.
+
+### D-062 @1120 · ⏱️ Reading time counts only while you touch the reader; a long sitting counts in full · Proposed
+- **Y:** You said "a long session should count, but only if really reading; no input = nothing happening". Input is the honest signal, a per-page cap is not.
+- **Options:**
+  - **a) 15 s ticks while the reader is open and was touched ≤ 90 s ago, no cap, plus 🌙 Überstunden badge = 1 sitting with ≥ 60 active minutes** (rec, built by crew)
+  - b) keep D-059 (≥ 10 s, ≤ 5 min per page)
+  - c) a only, no sitting badge
+- **Cost:** A slow reader who doesn't touch the screen for more than 90 s on one page loses that time.
 - **Prev:** D-059 (page cap rule).
 - **Ck:** `OrdenTest.readingTimeMedals` (`activeSecs`) · ChapterScreen tick loop (`repeatOnLifecycle(RESUMED)`) · `Orden.LONGSHIFT`
-### D-061 @1120 · My Capital shows a level with its badge, not a second stamp card · Proposed (🤖 built rec)
-- **Y:** 🦠: "rank isn't another stamp card, too much ➡ a rank with a nice symbol, maybe a level" · stamps already live in the Stempeluhr pane.
-- **Options:** a) **badge 56 + "LEVEL N" + rank name + 1 thin gold bar + "N days to level N+1"** (🤖 rec) · b) badge + name only · c) keep the stamp row
-- **Ck:** `MineScreen` stamp-card block · 🦠 eye on the fon
-### D-060 @1120 · Promotion pops a gold "LEVEL N ▲" with an XP bar; the red GENEHMIGT stamp is gone · Proposed (🤖 built rec, amends D-050)
-- **Y:** 🦠: "GENEHMIGT feels bureaucratic ➡ more level-up, gamify" · a level number + filling bar is the game language people know.
-- **Options:** a) **gold LEVEL N ▲ pill (overshoot pop) + XP bar old ➡ new, "RANK N/7" line dropped** (🤖 rec) · b) keep the stamp, say "BEFÖRDERT!" · c) arcade "RANK UP!" banner across the screen
+
+### D-061 @1120 · My Capital shows a level with its badge, not a second stamp card · Proposed
+- **Y:** You said "rank isn't another stamp card, too much: a rank with a nice symbol, maybe a level". Stamps already live in the Stempeluhr pane.
+- **Options:**
+  - **a) badge 56 + "LEVEL N" + rank name + 1 thin gold bar + "N days to level N+1"** (rec, built by crew)
+  - b) badge and name only
+  - c) keep the stamp row
+- **Ck:** `MineScreen` stamp-card block · your eye on the phone
+
+### D-060 @1120 · Promotion pops a gold "LEVEL N ▲" with an XP bar; the red GENEHMIGT stamp is gone · Proposed
+- **Y:** You said "GENEHMIGT feels bureaucratic, make it more level-up, gamify". A level number and a filling bar are the game language people know.
+- **Options:**
+  - **a) gold LEVEL N ▲ pill (overshoot pop) + XP bar from old to new level, "RANK N/7" line dropped** (rec, built by crew)
+  - b) keep the stamp, say "BEFÖRDERT!"
+  - c) arcade "RANK UP!" banner across the screen
+- **Prev:** D-050 (the GENEHMIGT seal).
 - **Ck:** `MomentsShotsTest.rank3` (LEVEL 3, no GENEHMIGT) · shot `moment_rank_3`
-### D-059 @1120 · ⏱️ "long i th app" award = time IN TH BOOK, not app-open time · 🤖 built as rec (🦠 @1120 via M8 #185 asked) · 💬 eval on fon
-- **ctx**: 🦠 "award 4 staying i th app a long time" · D-014 earned-only · D-004 no anxiety · Hooked ch6 (facilitator, not dealer)
-- **options**: a) 1 long session (≥ N min at once) · **b) total active reading time i th 📖 book, 2 tiers** (🤖) · c) daily minutes streak · d) skip
-- **dc**: b · ⏱️ **Normalarbeitstag** = 8 h total · 🏭 **Arbeitswoche** = 40 h total · group READ · a page counts ≥ 10 s, cap 5 min (idle screen ≠ reading) · paused app = clock stops
-- **y**: Kap. 8 frame (8-hour day fought for) = wink + honest · total, not at-once ➡ no binge pressure · a + c reward compulsive use = th exact Hooked trap th app mocks · counting book time, not app time ➡ can't be farmed by leaving it open
-- **alt**: a ❌ binge · c ❌ 2nd streak = anxiety · d ❌ 🦠 asked 4 it
-- **ck**: `OrdenTest.readingTimeMedals` · `Prefs.readSecs` · ChapterScreen page timer (DisposableEffect + lifecycle)
-_🛠️ @1120 (M8 #185): D-048 · 049 · 050 · 051 · 052 · 053 · 054 = built on th 🤖 pick (C2-C5 + C7) ➡ still 💬 til 🦠 evals on th fon · gaps (🔵 todo): perk effects · 12 heads still emoji tokens · Share/Widget head · illuminated + section initials · 📜 pilcrow_
-### D-058 @1120 · 🖨️ book type: Literata bundled · block-justified · auto hyphens · ✔️ (🦠 @1120 via M8 · closes D-033 b 🧪)
-- **ctx**: 🦠 "block-justified like a printed book + a good book font, hyphenation DE/EN so justify doesn't gap" · D-033 b (🦠 @1114 "try b") = Literata ⬄ EB Garamond, never built
-- **dc**: **Literata** (OFL 1.1, Google's e-book face, `res/font` variable wght + opsz, opsz 12 body · 18 italic) = `BookSerif` 4 all serif tokens · `bookBody` = `TextAlign.Justify` + `Hyphens.Auto` + `LineBreak.Paragraph` · `localeList` = shown lang (DE rules 4 DE txt) · drop cap: 3-line block = whole ¶ clipped (line 3 stays justified + hyphen) · licence ➡ `assets/licenses/Literata-OFL.txt`
-- **y**: Literata = built 4 long reading on screens (large x-height, sturdy at 17sp) · has Latin + Cyrillic (ru) + Greek · justify wo hyphens = rivers on a 360dp column · Paragraph breaker = fewer gaps
-- **alt**: EB Garamond (❌ small x-height, thin at 17sp on a fon · more "old" but less readable) · Source Serif 4 · system Noto Serif = old (D-033 a)
-- **cost**: +1.86 MB APK (2 variable TTFs, not subset) · ✔️ @1120 #218 (🦠 ok fonttools): 5 static instances, Latin + Greek + Cyrillic = 1.07 MB (−748 KB, not −1.3: 5 styles kept) · `bin/font_subset.sh` · zh · ar · hi · bn · ur glyphs fall back 2 system per glyph
-- **ck**: shot `chapter` (justified, "im-" | "mense" at th drop cap) · `OmmType.book*` = `BookSerif`
-### D-057 @1120 · 📖 gestures SWAPPED: tap o hold = turn (left half back · right fwd) · double-tap a passage = its menu · ✔️ (🦠 @1120 via M8) · supersedes D-044 (below) · ⚠️ hold part amended by D-065 (hold = menu)
-- **ctx**: D-044 = double-tap turns (side by x) · tap = passage menu · 🦠 eval DEV 0009: swap
-- **dc**: i th 📖 book: tap o hold anywhere (passage o paper) = turn, side = finger x · double-tap a passage = menu (+ buzz) · edge-quarter rule gone (whole half counts) · 📜 scroll + Today: no turn ➡ tap = menu, hold = menu (as b4) · hints (folio line + 📖 chip pill) say th new model
-- **y**: turning = th 90 % action ➡ th cheapest gesture (1 tap, like e-readers) · menu = rare ➡ double-tap is fine
-- **alt**: hold = menu (❌ 🦠 said "single tap / hold = turn")
-- **ck**: `ReaderGestureTest` (double-tap ➡ "Note" · tap right ➡ nxt page · hold left ➡ back) · ShotsTest verse_menu via double-tap
-### D-056 @1119 · plan re-eval: bibel hand-picked · 30tage + montag re-ordered · Andachten found by verse ids · ✔️ (🦠 qa_1117 r1 via M8 #155 salvage)
-- **ctx**: 🦠 r1 "do th plans build on each other?" · re-eval: bibel = score.py `bib` flag ➡ 7/10 days hd no Bible at all · 30tage hd 13 b4 10-12 + 23 b4 22 (Marx's ladder backwards) · montag day 1 = 1,27 (coat + linen, not Monday)
-- **dc**: bibel v2 = 10 hand-picked refs (Lamb o God ➡ Revelation ➡ Bible-4-linen ➡ Paradise ➡ Eden ➡ Jehovah ➡ Moses ➡ original sin ➡ Holy Ghost) · 30tage v2 + montag v2 (no ch. 1-3) · all via D-042 · Andacht lookup = (plan, verse ids), not day idx · `data/andachten_hand.jsonl` beats andacht.py's LLM cache
-- **y**: a generated pick is fine 4 "juicy verse/day" plans, wrong 4 a plan w a promise (Bible) · re-ordered days keep their Andachten · hand Andachten survive `andacht.py --redo`
-- **alt**: tune th `bib` regex (❌ "Gott"/"heilig" hits evywhere) · LLM Andachten 4 new bibel days (❌ quality, todo "Heute lädt uns Marx ein")
-- **ck**: `test_bin.py PlanContent` 5 · translate `--only a` re-run (Andacht translations r keyed plan:idx)
-_🎨 D-045..055 @1119 = design addendum (qa_1117 D6-D11 + r4) · all 💬 · 🤖 pick marked · spec + mockups + lanes C1-C7 ➡ [design_system.md](design_system.md) § 14 (§ 14.0 = same list as a table)_
-### D-055 @1119 · close btn (D9 · Q7): variants sheet ➡ 🦠 picks · ✔️ **V2 bare ★** (🦠 @1120 via M8 · `CloseStar` dflt)
-- **options**: V1 now (★ i tinted circle) · V2 bare ★ · V3 mono ✕ · **V4 ★ w ✕ cut-out** (🤖 eye-guess) · V5 inverted red disc · V6 outline ★ · V7 wax seal · V8 V1 + spin on press
-- **y**: 🦠 r1 "many versions, diff ctx" ➡ render, don't argue · V4 = brand + new usrs read "close" · V3 ❌ loses ★ = close (§ 1)
-- **ck**: `close_sheet.png` (8 × 3 ctx + dark) · lane C6, no gate
-### D-054 @1119 · note = margin-comment card (D7 · Q4) · 💬
-- **options**: a) yellow sticky + 📌 · **b) comment card: paperHi + blue ruler + tail 2 th verse + initial disc + name/time + ✎** (🤖) · c) keep ruler, new bg only
-- **y**: a ❌ yellow = Hooked's voice (§ 7) · b = wh "oth apps" do (r2) + 1 component 4 notes AND comments · c = too close 2 "a blue quote" 🦠 disliked
-- **ck**: shots `note_card` `note_edit` `comments` (C5) · ❌ ★ i editor · tap away = save, menu stays
-### D-053 @1119 · holy-book devices (D11) · 💬
-- **options**: a) ⚡ set (section initials · red ¶ · incipit · headpiece · running head · catchword · colophon) · **b) ⚡ + 🟡 (illuminated initial · tailpiece + chapter seal · ribbon bookmark · gilt edge)** (🤖) · c) + 🧪 paper grain · margin glosses
-- **y**: b = most "worthy old book" per effort, all drawn (no raster) · c = perf + clashes w notes · ❌ margin ¶ numbers (r3 rm'd th ¶ ref line)
-- **ck**: shots `chapter` `chapter_scroll` `chapter_end_seal` `bookmark_ribbon` + rtl + zh (C4)
-### D-052 @1119 · feast calendar: + 18 feasts (R4 gaps) · 💬
-- **options**: **a) all 18** (labour history + 3 fun days, § 14.2.3) (🤖) · b) history only · c) 🦠 picks on th sheet
-- **y**: 5.5 ➡ 14.9 = 4 months w nothing · a ➡ longest gap ~4 w · fun days = variable reward (🦠 r3) · quiet († days) = no confetti
-- **ck**: `Feast.on()` tst per date · `feast_sheet.png` (C3)
-### D-051 @1119 · holiday Marx head (D8 · Q6) · 💬
-- **options**: **a) 1 base head + overlay layers** (🤖) · b) full redraw per feast · c) emoji next 2 th head (now)
-- **y**: a = 1 style, cheap per feast, no drift · b only 4 🎄 Santa-Marx · 🎃 pumpkin-Marx · 🎂 · c ❌ "half-baked" (🦠 r3)
-- **ck**: `ui/ds/MarxHead.kt` = only place th picks a head · top bar + share card + widget call it
-### D-050 @1119 · rank-up = Beförderung, fullscreen RPG · 💬
-- **options**: **a) badge flies in · Marx seals "GENEHMIGT" · rays · 1 perk line · share** (🤖) · b) bigger dialog · + cosmetic perks per rank · + rank 3 = new D-043 unlock source
-- **y**: 🦠 r4 "promotion · hero upgrade · MMORPG lvl-up" · ~evy 10 reading days = rare enough 4 big (D-034) · perks cosmetic = honest (D-004)
-- **ck**: shot `moment_rank_3` · rays stop at 2300 · reduced motion = end frame (C2)
-### D-049 @1119 · celebrations = 1 ladder, 1 big screen per tap · 💬 (✔️ as written / change)
-- **dc**: T0 press · T1 ✓ · T2 ☭ + Stempeluhr · T2b chapter seal · T3 milestone · T4 Beförderung · T5 reward dialogs · queue order = that · ≥ 2 due ➡ "Moment … ▸" · > 2 dialogs ➡ "+N" chip
-- **y**: r4 "Amen ➡ award ➡ ☭ i series" · D-034 size ∝ rarity · no dialog walls
-- **ck**: FxQueueTest: 1 big screen per tap (C2)
-### D-048 @1119 · Day complete = Stempeluhr (D10 · Q11) · 💬
-- **options**: **a) stamp thump + star count** · **b) 1 punchy line fr a pool** · **c) teasing Q 4 tomorrow (new `qd`/`qe`)** (🤖 a+b+c) · d) Marx head reacts (🧪 aftr C3)
-- **y**: 🦠 r4 "bland · txt stuffed · Moses? · not teasing" ➡ image + motion + 1 line + 1 Q · drop "Losung kommt um" (⚙️ has it)
-- **ck**: shots `moment_shift` `moment_shift_full` (C2) · all plans hv `qd`+`qe` (C7)
-### D-047 @1119 · star tier aftr a break = "Abschreibung" · ✔️ **c** (🦠 @1120 via M8 #185)
-- **options**: a) back 2 0 · b) best ever · **c) 1 tier down per missed day** (🤖)
-- **y**: a = anxiety (D-004) · b = no stakes · c = fixed capital depreciates, doesn't vanish
-- **ck**: StreakGameTest: tier falls 1/day (C1) · built = `logic/Daily.kt streakGame` (fwd replay o DayLog, no Prefs state)
-### D-046 @1119 · milestones + ✊ Streiktag (Q2 · Q3) · ✔️ as rec: ✊ Streiktag · keep Sabbat · steps 7…365 (🦠 @1120 via M8 #185)
-- **options**: steps 7 · 14 · 30 · 50 · 100 · 200 · 365 · +100 · 1 freeze per step, max 2 · name a) ❄️ Freeze · **b) ✊ Streiktag** (🤖) · c) 🛟 · Sabbat: **keep** (🤖) o fold in
-- **y**: Duolingo set (R3) + 200 (gap 100 ➡ 365) · earned only, no shop (D-014) · Sabbat = weekly grace, Streiktag = earned buffer, used aftr Sabbat
-- **ck**: StreakGameTest: earn · cap 2 · use order (C1)
-- **impl** (C1 @1120): ✊ earned only on milestone days ≥ 2026-11-20 (no retro bridges) · 🕊️ lazy: 2nd 1-day gap i a week ➡ ✊ if held, else th break moves 2 th earlier gap (= old backward walk ➡ `oldStreaksUnchanged` 300 random histories)
-### D-045 @1119 · 1 score on th hero (Q1) · ✔️ **c** hero = streak only · stamps ➡ Stempeluhr + My Capital (🦠 @1120 via M8 #185) · ⚠️ amends D-036 A
-- **options**: a) drop gift stamps · b) caption each counter (tried @1116 ❌ still confusing r3) · **c) hero = streak only (star + week + nxt-milestone bar) · stamps + rank ➡ Stempeluhr pane + My Capital** (🤖)
-- **y**: 2 worlds, 2 places: streak = hero · career (total days ➡ ranks) = stamp card · hero size + look = A (only th stamp row leaves)
-- **ck**: shot `hero_tiers` · stamp card i `mine` (C2)
-### D-044 @1119 · 📖 double-tap: left half = back · right half = fwd · amends D-022 · ✔️ (🦠 scrap @1119) · ⚠️ superseded by D-057 @1120 (swap: tap = turn · double-tap = menu)
-- **ctx**: 🦠 "read book > add hint double tap = next/prev page" · D-022 double-tap = alw fwd
-- **dc**: side by x o th double-tap (paper) o th last finger-down on th book (passage, VerseView hs no position) · hint = folio line + 📖 chip pill
-- **y**: matches th 1-tap edge zones (left back · right fwd) ➡ 1 mental model · no always-on peek (D-022 pill rm'd @1116 = distracting)
-- **alt**: double-tap alw fwd + left-quarter tap 4 back (❌ 🦠 asked 4 prev too) · hint pill on evy chapter open (❌ distracting)
-- **ck**: 👀 qa_1117 L9
-### D-043 @1118 · new reading plans unlock progressively (bonus levels, not a paywall) · ✔️ (🦠 qa_1117 Q10 yes · Q12)
-- **ctx**: r4 "more plans, unlocked later (+ DEV)" · Q12 🦠: "timeline: 3 awards o 1-3-5 plans o streak 20 · like a bonus easter egg = random reward · + 1 holiday/xmas present"
-- **dc**: `Plan.lock` = any 1 of {plans · orden · streak (best ever) · feast gift · lucky 1-in-5 per Amen day aftr N days} · locked = 🔒 mystery card at th end (no title, only HOW) · open ➡ 🎁 dialog i th reward queue · DEV switch = all, no fanfare
-  - 6 plans: 💰 reich (1 plan) · 🎓 grundkurs (3 badges) · 🏛️ faschismus (3 plans, bridges only — Vol. 1 never names it) · 🛵 gig (🎲 lucky aftr 10 days) · 🌍 erde (streak 20) · 🎁 weihnachten (Christmas gift, 3 days)
-- **y**: Hooked variable reward + progress gates (ch. 4) · best streak ➡ a broken chain nvr re-locks (D-014 kind) · feast/lucky persisted ➡ nvr taken back
-- **alt**: all open (❌ no discovery) · fixed path (❌ less surprise) · paid unlock (❌ nvr)
-- **ck**: `logic/PlanUnlock.kt` · `PlanUnlockTest` · `data/plans_extra.json` `lock`
-### D-042 @1118 · plan versioning: pin th cut u started on · ✔️ (🦠 qa_1117 "do th plan versioning")
-- **ctx**: DayLog stores plan days by index ➡ any re-cut (R1 🟡 wertform) would shift evy1 mid-plan
-- **dc**: `data/plan_versions.json` = evy cut ever shipped (frozen days incl. Andacht) · build.py bumps `ver` automatically when a plan's verse ids change · plans.json ships `old` cuts · `Prefs.planVer` set at start (null = v1) · old cut ➡ idx-keyed translations skipped (EN fallback)
-  - 1st use: wertform v2 = cut at Marx' sub-section heads (8 days, none starts mid-argument) · jahr txt "~10 min" ➡ "~5 min" (txt only, no re-cut)
-- **y**: automatic = can't forget a bump · ppl mid-plan nvr see a dif day
-- **alt**: migrate DayLogs by verse id (❌ fragile) · freeze plans forever (❌ no fixes)
-- **ck**: `bin/build.py versions()` · `test_bin.PlanVersions` (incl. archive ⬄ plans.json) · `PlanUnlockTest.daysFor`
-### D-041 @1116 · no Werkbank tab · Circles stays · Hooked entry stays i th top bar · ✔️ (🦠 qa_1116 Q8 revised)
-- **ctx**: qa_1116 D5 proposed a "Werkbank" bottom tab (Hooked notes + tools) · Q8 1st answer = b (replace Circle) ➡ revised same day
-- **dc**: 5 tabs stay (Today · Plans · Read · Circle · My Capital) · 🪝 Hooked entry stays at th top as now
-- **y**: 6 tabs = 2 much (M3 max 5) · Circles comes alive once Matrix is tested (later) · top 🪝 = a bit odd, accepted
-- **alt**: Werkbank replaces Circle (❌ Circles has a future) · 6th tab (❌ crowded)
-### D-040 @1116 · reader = 2 modes (📖 pages ⬄ 📜 endless) til 🦠 picks 1 · feed leaves Home · ✔️ (🦠 qa_1116 Q4 + Q7)
-- **ctx**: endless feed lived at th end o Home (D-024) ⬄ "daily ≤2 min" goal · 🦠 r2: Read = 2 modes, Home ends at Marxoskop
-- **dc**: toggle chip i th chapter's slim head (D-031 b) · remembers last (Prefs `read_scroll`) · 📜 = `ReadOnFeed` fr th current page · Home: no feed tail
-- **y**: 🦠 wants both tried b4 picking 1 design (Fable spec aftr this round) · **alt**: ⚙️ toggle · 1st-open choice (❌ Q7 a)
-- **ck**: `ShotsTest.zFeed` ➡ `chapter_scroll` · `ReadScreen.kt` ChapterScreen
-### D-039 @1116 · ☭ swoosh = plan day done · quote-of-th-day Amen = small ✓ pop · amends D-034 · ✔️ (🦠 Q9 b + 🐛)
-- **ctx**: D-034 b (swoosh = rare) + QA r2 `4708ab7` turned "Day complete!" into a ✓ pop ➡ th hammer + sickle nvr showed · 🦠: "finish th day's read plan ➡ boom"
-- **dc**: "Day complete!" ➡ ☭ swoosh (full stamp card ➡ confetti instead) · quote-of-th-day Amen ➡ ✓ pop (full card ➡ confetti)
-- **y**: th plan day = th real effort ➡ th big reward · th quote tap = cheap ➡ small · **ck**: `TodayScreen.kt` `amen` + plan Button
-### D-038 @1114 · updater: notify at once (all installers) · browser installs ASK by dflt, ⚙️ opt-in auto · amends D-023 · ✔️ (fon tst pending)
-- **ctx**: 🦠 deployed 1114, DEV (1113, Obtainium) showed nothing ("app doesnt show UPDATE popup") · Obtainium path waited 8 h (GRACE_H) + worker ran ~daily only ➡ nothing visible 4 hours
-- **dc**: 🦠 "do notification immediately" ➡ GRACE_H dropped · + 1 OneTime check on evy app start (WorkManager, network) next 2 th daily one · "browser apk selfupdate shd ask user … o they select autoupdate in settings" ➡ `Settings.autoUpdate` dflt OFF ➡ notification ➡ tap = UpdateDialog (1 confirm) · ON (⚙️ row, browser installs only) + Android 12+ + we r installer ➡ silent (D-023 path)
-- **y**: user sees + decides (consent) · Obtainium users: their own bg update may still win, then our ping is moot (same version ➡ no re-nag)
-- **alt**: keep grace (❌ 🦠 can't see it work) · silent by dflt (❌ 🦠: ask 1st)
-- **ck**: `UpdateWorkerTest` (obtainiumNotifiesAtOnce · autoOffAsksEvenIfWeCouldGoSilent · weInstalledOurselvesIsSilent w auto) · fon: deploy B ➡ notification within ~1 min o opening th app
-### D-037 @1114 · omm-api image ships wo pip · ✔️
-- **ctx**: 1st nightly live sweep (run 935, 03:15) ❌ — trivy = 0, red = **pip-audit**: base `python:3.12-alpine` bundles pip 25.0.1 ➡ 6 advisories (PYSEC-2026-1795 · 1796 · 2875 · 2876 · 196 · 3721, fix ≤ 26.2) · app = stdlib only, nvr calls pip
-- **dc**: `server/Dockerfile` uninstalls pip + rm `ensurepip` (same pip as a wheel) + build-time guard (`! import pip`) · nightly caller keeps `pip: true` (template skips w a warning wh no pip ➡ audit comes back by itself if deps ever land)
-- **y**: no pip = nothing 2 patch, 4 good · alt `pip install -U pip` ❌ needs PyPI at build + red again on th nxt pip advisory · alt `pip: false` i nightly.yml ❌ hides th finding, pip stays i th image
-- **ck**: local build: `pip` not found · `/v1/health` ok · trivy 0.72.0 (CI flags) exit 0 · CI canary green · live = aft ops rebuilds `/srv/omm-api` (ops-owned, SERVICE.md)
-_🎨 D-029..036 @1113 = design system (🦠 decides · 🤖 pick = 1st option) · spec ➡ [design_system.md](design_system.md) § 0 = same list as a table · @1114: D-029 + D-030 ✔️ ➡ L0 built (`ui/ds/`) · D-031..035 ✔️ (🦠 @1114) · D-036 ✔️ A (🦠 @1116)_
-### D-036 @1113 · Today above th fold (qa-D1): compact hero + stamp tag · ✔️ A @1116 (🦠 @1114: "which is which? show me" ➡ mockups `d036_all.png` a · b · c)
-- **🦠 @1115** (via M8): "as it was b4, o bigger" ➡ ❌ compact (a) + ❌ collapse (c) · now **A/B on 1 DEV APK** 4 friends: ⚙️ "🧪 Today hero" (DEV only) A = pre-ds hero (pixel-same) · B = bigger (star 124 · headline 30 · week + stamps fill th width) · shots `priv/img/d036/hero_ab.png` · 💬 pick aft friends ➡ drop th switch + loser
-- **ck**: `ShotsTest.hero` ➡ hero_a + hero_b · Prefs key `hero_ab` (old abc picks don't leak)
-- **✔️ A @1116** (🦠 via M8 aft #101: "A (smaller)") ➡ A = only hero · toggle + B + Prefs `hero_ab` + ShotsTest.hero dropped (git: 384cbab) · L1 Today unblocked
-- **ctx**: 🦠 "landing shd fit verse + streak widget + read-plan btn" · now hero (star 92 + week row + stamp row + rank) + card ➡ plan entry below th fold
-- **options**: **a) compact hero 120dp (star 48 + 7 day dots + Tag "☭ 3/10"), full stamp card ➡ My Capital** (🤖 pick) · b) keep hero, shrink quote card · c) hero collapses on scroll
-- **y**: a = only one th fits both sizes by budget (412×915: 599 o 730 · 360×760: 542 o 592) + keeps th card big (it's th content) · b ❌ smaller quote = worse share img match · c ❌ nothing fits b4 th 1st scroll
-- **ck**: shots `today*` at 360×760: hero + card + actions + plan row visible · stamp card i `mine`
-### D-035 @1113 · sounds (qa-R1 "Duolingo-satisfying"): 3 tiny, dflt off · ✔️ b @1114 (🦠 "sure lez try", lane L6)
-- **options**: a) none, haptics only · **b) page rustle · stamp thud · badge chime (≤ 300 ms), 1 ⚙️ switch, dflt off, follows ringer** (🤖 pick, later lane L6) · c) on by dflt
-- **y**: haptics 1st = 90 % o th feel 4 0 assets · sound = opt-in (reading i bed / train) · c ❌ surprise noise = uninstall
-- **ck**: ⚙️ switch · no audio focus taken · APK + < 100 KB
-### D-034 @1113 · daily Amen fx = CheckPop · sickle swoosh = rare (rank-up / full stamp card) · ✔️ b @1114
-- **🦠 @1114**: "lez try b. not everyday (variable reward!!!) ➡ add 2 hooked mode" ➡ + 1 HookNote (Hooked mode on) at th rare swoosh: "this one is rare on purpose = variable reward (Hooked ch 4)" · lane L5 (Fx queue) + L1 (Hooks.kt)
-- **ctx**: swoosh 2.3 s evy day + Orden dialog aft a fixed 2600 ms wait ➡ daily tap feels long, rewards collide
-- **options**: a) as now · **b) daily = CheckPop 1.2 s + 📳 · swoosh + confetti only on rank-up / card full / plan done · 1 celebration at a ti (queue)** (🤖 pick)
-- **y**: variable reward (Hooked) needs rare ≠ daily · D-004 calm · 🦠 QA: wants satisfying, not slow
-- **ck**: `Fx.kt` queue · tst: 2 rewards same tap ➡ shown 1 aft th oth, no fixed delay
-### D-033 @1113 · book font = system serif now · bundled face = 🧪 later · ✔️ b 🧪 @1114
-- **🦠 @1114**: "try b! maybe ab-tst / cmp" ➡ L6: bundle 1 face (Literata vs EB Garamond) ➡ side-by-side shots `chapter` ×3 (system · Literata · Garamond) 4 🦠 2 pick · then maybe ⚙️ toggle = self A/B · non-Latin langs keep system serif
-- **options**: **a) system serif (Noto Serif)** (🤖 pick) · b) bundle Literata o EB Garamond (OFL, +0.3-1 MB, Latin + Cyrillic only)
-- **y**: 13 langs incl. ar · hi · bn · ur · zh ➡ a bundled face covers 3-4 o them, rest falls back = 2 looks · APK alr 29.7 o ~30 MB · b = 🧪 aft th system lands (1 token swap)
-- **ck**: no `res/font` · `OmmType.book*` = `FontFamily.Serif`
-### D-032 @1113 · dark theme "Nachtschicht": tokens now, wire later, follow system · ✔️ c @1114 (🦠 "C!": ⚙️ toggle light · dark · system, dflt system · lane L6)
-- **options**: a) light only · **b) follow system** (🤖 pick, L6) · c) b + ⚙️ toggle (light · dark · system)
-- **y**: night readers = real (NIGHT hero alr exists) · tokens cost nothing now + keep hard-coded colours out (guard) · wiring = own QA round (shots ×2) ➡ not i th 1st pass · c = 1 more setting, only if asked
-- **ck**: `Tokens.kt` hs both schemes · `Theme.kt` uses light til L6
-### D-031 @1113 · reader chrome: slim paper head, no bottom nav i a chapter · ✔️ b (try) @1114
-- **🦠 @1114**: "not sure which is which · try b · but immersive mayb" ➡ build b i L2 · c stays 🧪 (mockups `d031_all.png` a · b · c) ➡ re-ask aft fon QA
-- **ctx**: qa-D2 "book look: old · worthy · holy" · now red top bar + lavender nav frame th page = app, not book
-- **options**: a) as now · **b) slim paper head (back · chapter · 💬 N), bottom nav hidden, status bar = page colour** (🤖 pick) · c) full immersive, tap = toggle chrome
-- **y**: b = +~100dp page + th page becomes th screen, exit stays visible · c ❌ tap is taken (verse menu · double-tap turn D-022) + hidden exit
-- **ck**: shot `chapter`: no NavigationBar · back works fr deep link
-### D-030 @1113 · buttons (qa-D7): 5 kinds · look = pill tonal + press edge on th 1 big btn · ✔️ @1114 (🦠: A+)
-- **ctx**: 🦠 "clunky-generic-microsoft98style", wants 2-3 mockups · r4 sweep #7: 7 btn looks mixed · 🦠 picked by eye fr th rendered gallery (`62be257`: now · A · A+ · B · C)
-- **dc** ✔️ **A+**: Primary (red pill, L 52 / S 40, max 1 per view) · Tonal (blueTint pill) · Text · ActionItem (icon + label, Circle / Bare) · Chip (Choice / Suggest) + singletons (★ · Switch · MoreChip · CountChip · DogEar) · no outlined btns, no emoji i labels
-- **options** (mockups ➡ design_system.md § 5): **A pill tonal + B's 4dp press edge on Primary-L only** (🤖 pick) · A pure · B letterpress evywhere · C rubric (txt + red rule)
-- **y**: round = tappable holds · press edge + 📳 = th satisfying daily tap (qa-R1) wo making evy btn loud · C ❌ weak affordance 4 th daily Amen · A pure = calm but th 1 daily btn felt flat · B evywhere = loud + r8 breaks round = tappable
-- **ck**: L0 @1114: `ui/ds/Buttons.kt` (Primary L/S · Tonal · TextBtn · ActionItem · singletons) + `Chips.kt` · `ds_gallery` shot · `DesignGuardTest`: M3 `Button(` / `OutlinedButton(` / `TextButton(` / `AssistChip(` / `FilterChip(` outside `ui/ds/` = baseline ➡ 0 by fan-in
-### D-029 @1113 · design system = [design_system.md](design_system.md) SSOT · tokens i `ui/ds/` · ratchet guard · ✔️ @1114 (🦠: as written)
-- **ctx**: M8 order (🦠): 1 spec 4 btns · nav · type · colour · space · components · motion · now: 21 txt sizes · ~60 hard-coded colours · 9 radii · `Theme.kt` fills 8 M3 roles (rest = lavender dflts)
-- **dc** ✔️ (rules as written): 3 materials (paper · ink · cloth-blue) + red = act · gold = earned · round = tappable, rect = container · serif = Marx, sans = app + ppl · chrome = vector icons, emoji = content · flat (only th quote card lifts) · 9 txt sizes, sentences ≥ 14sp · 4dp grid · 5 radii · 5 voices (**my bubbles = blue, not gold**) · plan accents = stripe / disc / tag only, titles ink
-- **y**: evy rule answers a QA line (qa-D2 book look · D6 voices · D7 btns · r4 #7) o a measured fail (gold txt 1.6 · 5 o 9 plan accents < 4.5 · `Color.Gray` 3.1)
-- **alt**: restyle screen by screen wo tokens (❌ drifts again, = how we got here) · adopt a ready M3 theme builder palette (❌ loses paper + rubric)
-- **ck**: `DesignGuardTest` baseline only goes down (L0 start @1114: `Color(0x` 48 · `.sp` 174 · `RoundedCornerShape(` 33 · btns/chips 48) · lanes L0-L5 ➡ design_system.md § 12 · ⚠️ overlaps D-015 (Amen ➡ snippet bottom, unbuilt) = lane L1
-  - guard + `TextButton(` (spec § 11 listed 4 M3 btns, `TextButton` = th same drift, ds `TextBtn` replaces it) · ratchet strict both ways: lower count ➡ lower th baseline i th same commit
-### D-028 @1113 · verse ids may move: split.py writes `data/id_moves.json` (old ➡ new by DE txt) + remaps pipeline data · app migrates marks + read log once · ✔️
-- **ctx**: M8 follow-up (am0 "Go"): DE source typo "FÜFNZEHNTES KAPITEL" ➡ Kap 15 opening sat i Kap 14 (14,37-39) + Kap 15 ids ran on fr 15,40 · fixing = 30 ids move · users' 🔖 ✍️ + progress must not break
-- **dc**: split.py `TYPOS` alias + guard (sec anchor w new Kap resets Absatz count) · moves = same DE txt, unique ➡ `id_moves.json` cumulative (chains composed) · same run renames ids i rank · andachten · i18n q · i18n_full v (no LLM re-run) · build.py ➡ assets `id_moves.json` · app `data/IdMoves.kt`: AppVm start ➡ if moves.size > Prefs `id_moves_done` ➡ 1 Room transaction renames Mark + ReadLog (collision ➡ merge) · DayLog = plan indices ➡ untouched
-- **y**: fix th data at its src, not a display hack · DE txt = stable identity across splits
-- **alt**: keep wrong ids forever (❌ Kap 15 = "15,40…", wrong footnotes) · alias table i th app only (❌ 2 id systems)
-- **ck**: `IdMovesTest` (Robolectric + in-memory Room + real asset map: 4 tsts: map dead ➡ live ids · marks/reads follow · merge · runs once) · `bin/test_bin.py` · 1868 verses, 92 Andachten + ⭐288 kept
-- **note D-024**: v1 `drop_toc` cut "toc ➡ nxt heading" = ate ch17's 3-Absatz intro ➡ now only contiguous toc/index lines · align: name anchors (EN mid-sentence capitals ⬄ DE txt + cited fns) + length may match txt+fns (Moore/Aveling inline long fns) ➡ 13,120-125 exact · churn 34 verses, sampled = fixes (V3 · 8 · 14 · 22 · 23)
-### D-027 @1113 · curated plans = `data/plans_extra.json` · 🤖 Ludditen & KI: Kap. 13 verbatim + NEW "💡 Und heute?" bridge txt (xd/xe) · ✔️
-- **ctx**: QA @1112 "add a luddites read plan and link directly to AI · xplaining txt new, bible-txt original" (R4) · big round #6
-- **dc**: build.py `extra_plans()` appends hand-curated plans (verse ids only, unknown id = build fails) right aft th flagship · PlanDay `xd`/`xe` ➡ Today box "💡 Und heute?" + "new text — Marx's paragraph above is the original" · 7 days: 13,73 Aristoteles · 13,62 · 13,110 · 13,124-125 Ludditen · 13,127+130 · 13,165 "an sich ⬄ kapitalistisch angewandt" · 13,144 · Marxoskop "KI & Maschinen" ➡ card ➡ confirm ➡ `startPlan("ludditen")`
-- **y**: bridge = separate field ≠ Andacht (Andacht = LLM devotional, bridge = authored argument) · Kapital txt stays untouched by construction
-- **alt**: LLM bridges via andacht.py (❌ local M Marx errors) · new Marxoskop card only (❌ 1-shot, no habit)
-- **ck**: `BigRoundTest.ludditesPlanIsKap13WithBridges` · oth langs = EN bridge til translate.py learns xd/xe (fan-in)
-### D-026 @1113 · 🔓 Hooked mode = progressive disclosure: unlock aft 7 reading days (total) o 1st finished plan · own badge + unlock anim · ✔️
-- **ctx**: QA @1112 "hooked mode only after 7 days or first read plan ➡ animation/award 'unlocked!'" · big round #5
-- **dc**: `Orden.HOOKED` 🪝 "Hinter den Kulissen" (`hookedUnlocked`: dates ≥ 7 ‖ plansDone ≥ 1) · MainActivity: HOOKED new ➡ `HookedUnlockDialog` 1st (padlock wiggle ➡ shackle opens ➡ 🪝 drops + 📳 + confetti, btn "Einschalten" = testMode on) · ⚙️: locked row + days left + bar until earned · alr on = stays
-- **y**: total days not streak (D-004 no anxiety) · dialog names its own trick (honest Hooked) · goal gradient i ⚙️
-- **alt**: hide th row entirely til unlock (❌ no curiosity) · streak-7 (❌ anxiety)
-- **ck**: `BigRoundTest.hookedUnlocksAfter7DaysOrFirstPlan` · shot `settings_2` = 🔒 row
-### D-025 @1113 · 📜 endless feed aft today's snippet = book order, insta-style auto-load · snippets + "weiterlesen" on Today · ✔️ v1
-- **ctx**: QA @1112 "after finishing the snippet ➡ continue for the motivated, endless feed, hooked" · am0 Q3 ✔️ auto-scroll like insta · r4 #6 plan verses = txt walls · big round #3 + #4
-- **dc**: `VerseView(preview = true)` ➡ `snippet()` cuts at sentence end ≤ 320 chars + pill "weiterlesen ▾ · noch ~N Min." (🔊 reads all) · Today: plan verses + feed use it · aft "Tag geschafft" ➡ `ReadOnFeed` at th tail o Home: passages right aft today's last one i BOOK order, 3 per load when ≤ ~1800 px left (no tap) · chapter % bar · "⬇ gleich: »…«" teaser · ☕ break card evy 10 · scrolled-past = `vm.read` (Read % + badges), NOT plan days (D-011)
-- **y**: book order = context (plans jump) · break cards keep D-014 honest tone · Marxoskop stays above (reachable)
-- **alt**: LazyColumn rewrite o Today (❌ big hot-file churn) · "weiter" btn (❌ am0 Q3) · plan's nxt day (❌ breaks D-011 continuity)
-- **ck**: `BigRoundTest` snippet/feedStart · shots `feed` `feed_2` · ⚠️ loads a bit ahead ➡ "read" marks passages b4 fully seen (v1)
-### D-024 @1113 · EN reader data = pipeline: align.py drops chapter TOC · splits merged EN paras over DE Absätze · EN section titles fr marxists.org headings · ✔️
-- **ctx**: r4 sweep #3 (DE sec titles i EN + "no English paragraph here") + #4 (ch.1 page 1 = TOC as body txt) · big round #1 #2
-- **dc**: `drop_toc` (`<p class="toc">` ➡ nxt heading; also fixed ch.3 · 13 · 15 · 23 1st verses) · `split_en`: k-1 bead ➡ EN sentences cut by DE length share (199 ➡ 11 verses wo EN) · `Heads` stack per EN paragraph ➡ verse `en_head` ➡ build.py `en_sec_titles` (innermost label match 'a)'⬄'a.' · 'IV'⬄'4', else EN chapter title 4 DE Kap 4/24) ➡ verses.json `ste` ➡ `secTitle()` (DE ➡ st, else ste)
-- **y**: no hand edits · plans + scores unchanged (DE txt identical, plans.json byte-equal) · full_xx untouched
-- ⊕ **@1117 (11 ➡ 7 ➡ 0 gaps)**: sentence end aftr a closing quote too · `Mr.`/`Dr.`… no end · `PIN` (DE id ➡ EN opening) 4 DP mis-beads (13,58 · 20,13) = th only hand-given hints · 🏷️ labels (`[95]` · ch.23 "12. Worcestershire.") = own EN, nvr eat th body's 1st sentence · too few sentences ➡ ; / : cuts ➡ longest Absatz · tables keep "all on th 1st" · **ck**: `ContentTest.englishReaderData` = 0 blanks · `test_bin.py AlignEn`
-- **alt**: LLM translate DE titles (❌ Moore/Aveling wording exists) · override table (❌ drifts)
-- **ck**: `bin/test_bin.py AlignEn` · `ContentTest.englishReaderData` (all 90 DE titles hv EN) · ⚠️ known: 13,122-125 EN shifted ~1 para (pre-existing DP slip) · DE split typo "FÜFNZEHNTES" ➡ Kap 15 opening sits i Kap 14 (ids would shift ➡ not touched)
-### D-023 @1113 · updater by installer: Obtainium ➡ poke it · self ➡ silent aft 1st · amends D-021 · ✔️ (fon tst pending)
-- **ctx**: am0: Obtainium bg updates were on but he always beat its 6 h interval (deploy ➡ reload ➡ update by hand = same friction as th website) · "use Obtainium if it's there, else th website apk" · 6 h delay ok 4 users
-- **dc**: `Update.Via` fr installer o record: OBTAINIUM ➡ notify only aft `GRACE_H` 8 h o th same version, tap = `obtainium://refresh?id=<pkg>` (Obtainium wiki deep link; no link can INSTALL) · SELF ➡ PackageInstaller session (not ACTION_VIEW) so WE become installer o record ➡ Android 12+ + `UPDATE_PACKAGES_WITHOUT_USER_ACTION` ➡ worker installs silently, `UpdatedReceiver` posts "✔️ X installed" · 1st self-update / < 12 ➡ 1 confirm · STORE ➡ nothing
-- **y**: 0 taps 4 friends fr th 2nd update on · Obtainium keeps its job (we don't install over it: it declares ENFORCE_UPDATE_OWNERSHIP ➡ extra prompts)
-- **alt**: install over Obtainium installs ourselves (❌ ownership prompt + 2 updaters fighting) · Shizuku (❌ setup 4 friends) · daily nag 4 Obtainium too (❌ noise, its bg wins mostly)
-- **ck**: `UpdateWorkerTest` 8 (per installer · grace · silent · fallback) · `UpdateTest` via/silentRule · DEV ⚙️ "🧪 bg update check now · installer: X"
-### D-022 @1113 · reader gestures: double-tap = turn page · 📐 dog-ear = turn · 1st chapters peek + hint · ✔️
-- **ctx**: QA r5: am0 found page turn by accident ("NICE") ➡ needs discovery · "double tap = turn page, drop bookmark-via-double-tap"
-- **dc**: `LocalPageTurn` (ChapterScreen) ⬅ VerseView `onDoubleClick` + paper `detectTapGestures` · `DogEar` bottom-right (tap = turn) · until 3 own turns (`omm_ui` SharedPrefs "turns"): page lifts 2× + pill "swipe or double-tap" ~6 s · 🔖 = verse menu only
-- **y**: 3 cues (motion · object · words) w/o a tutorial screen · outside th book (Today) no double-tap ➡ tap reacts at once
-- **alt**: HorizontalPager w dots (❌ loses th spine-hinged turn) · persistent ‹ › btns (❌ clutter on "pure Marx" page)
-- **ck**: `ui/ReadScreen.kt` TURN_HINT · DogEar · grep `onDoubleClick` VerseView = turnPage
-### D-021 @1113 · self-update 4 hand-installed APKs: daily bg check ➡ notification ➡ download + install dialog · ✔️
-- **ctx**: QA r5 🔑: friends install th APK directly ➡ must nvr sit on a stale version · audit: only `Update.check` on app start ➡ Today banner ➡ opened th web page (manual download) · DEV: Changelog line "➡ Obtainium" only · no bg, no notification
-- **dc**: `notify/UpdateWorker.kt` WorkManager 1 d (network) ➡ `Update.check` on th app's own channel (`.dev` ➡ `<web>/dev/version.json`, else `<web>/version.json`) ➡ notification "🆕 X is out" (new version at once, same one again evy 2 d) ➡ tap / Today banner ➡ `UpdateDialog`: download `apk` fr version.json (plain name only, sha256 checked) ➡ `ACTION_VIEW` apk via FileProvider (`REQUEST_INSTALL_PACKAGES`; 1st time ➡ "allow this source" page, resumes by itself) · fail ➡ web page
-- **y**: same debug key ➡ installs over, data stays · installer = Obtainium/F-Droid/Play ➡ skip (they update themselves) · lib.sh alr writes apk + sha256
-- **alt**: PackageInstaller session API (❌ more code, same system dialog) · in-app silent install (❌ impossible wo device owner) · Obtainium 4 all (❌ friends won't)
-- **ck**: `UpdateTest` (parse · channel · nag · sha · installer) + `UpdateWorkerTest` (Robolectric, fake version.json ➡ notification, no repeat, older = silent) · manifest REQUEST_INSTALL_PACKAGES
-### D-020 @1113 · Mitlesen always on (toggle gone) · name field only i ⚙️, label "Name" · supersedes D-005 switch + D-016 label · ✔️
-- **ctx**: QA r5: "rm the Mitlesen/read-along option + its txt (always on)" · "label just 'Name'" · sweep #8 name field on ⚙️ + Kreis (+ comments sheet)
-- **dc**: `Settings.community = true` (old stored off ignored) · ⚙️ Name field (D-016 prefill + blur-save stay) · Kreis + comments: `WritesAs` line "you write as X · change: ⚙️"
-- **y**: am0 · 1 place 2 change identity · still anonymous daily token (D-005), UI says nothing about it now
-- **alt**: keep switch (❌ am0) · name field evywhere (❌ 3 fields drift)
-- **ck**: grep `setCommunity` i ui/ = 0 · `nameLabel()` = "Name"
-- **note D-017**: QA r5 amends th note editor: no ★ (only app-wide close elsewhere) · ANY short tap while open = close (save if changed, blank = gone) + th tap is eaten (can't toggle th action row) · 👥 chip exempt · look = `NoteBubble` (side ruler · ✍️ icon · blue tint · sans)
-### D-019 @1113 · headless screenshots = Robolectric native graphics (`ShotsTest`, -Pshots) · ✔️
-- **ctx**: am0 r4: "design keeps slipping thru ➡ compare screens side by side" · no /dev/kvm on tow ➡ emulator ❌ · fon screencap = private (memory)
-- **dc**: `test/…/ShotsTest.kt` drives th real MainActivity (tabs · chapter · verse menu · note · settings · In book) + cardBitmap variants ➡ `app/build/shots/*.png` · skipped i normal `testDebugUnitTest`
-- **y**: real app, real Compose, 20 s, no device · catches overlaps/stale copy before am0's fon
-- **alt**: emulator (no KVM) · Paparazzi (lib modules only) · Roborazzi (extra plugin, same engine)
-- **ck**: `./gradlew testDebugUnitTest --tests '*ShotsTest*' -Pshots` · ⚠️ Robolectric fonts: newer emoji (🪝) = tofu, ignore
-### D-018 @1113 · no share i th reader: verse menu = 🔊 · 🔖 · ✍️ · 📋 · page share pills gone · ✔️
-- **ctx**: QA r1 "2 boxes i each other look weird · drop sharing here?" · r4 "rm share from th Read page" · r4 "Listen on th LEFT"
-- **dc**: rm verse-menu Teilen (also on Today's plan verses = same menu) + r3's 2 pills at page end · `CardDialog` + `LosungPopup` deleted (dead) · 🔊 1st i evy action row
-- **y**: Read = pure Marx · sharing lives on th Today card (Karte teilen · App teilen)
-- **alt**: keep verse share on Today plan only (❌ 2 dif menus) · 💬 am0 may want it back
-- **ck**: grep `CardDialog` = 0 · VerseView Action order
-### D-017 @1113 · writing on th book = 1 pattern: tap passage ➡ ✍️ Notiz (inline) · 👥 chip = also public · ✔️
-- **ctx**: r4: upper "Notiz" + lower "comment on this page" = same function, 2 looks ➡ merge · note editor: tap outside = save, empty = cancel, small X, no Save/Cancel words
-- **dc**: rm page-end "Mitreden" btn · inline editor: tap outside (root watcher `tapOutsideNote`) = commit · ★ (CloseButton, app-wide close) = discard · blank = no note/note gone · Mitlesen on ➡ chip "👥 auch im Lesesaal posten — als <name>" posts "¶ <id> — txt" 2 th page's room · reading oth's = 💬 N i th running head ➡ sheet
-- **y**: 1 entry, 1 composer, privacy = 1 toggle · comment keeps its passage ref
-- **alt**: 2 btns side by side i th menu (Notiz · Kommentar) · Matrix field 4 verse id (later, if threads per passage wanted)
-- **ck**: VerseView `NoteFocus` · ReadScreen has no OutlinedButton · ★ not ✕ = r1 rule "red star closes" — 💬 am0 said "small X"
-### D-016 @1112 · public name = "Lesesaal-Name", prefilled random comrade name, saves on blur · ✔️ (label 💬 am0 may swap)
-- **ctx**: QA r3: "Your name" label dull · empty field = friction · Save btn = extra step
-- **dc**: label "Lesesaal-Name / Reading-room name" · prefill = socialist thinker 1st name + movement year (Rosa 1871 …), 1 per app run · ⚙️ field saves on blur/Done only if changed
-- **y**: am0 r3 ask · label fits D-014 reading-room theme · no Lenin/Stalin/Mao (D-014: lens, not regime)
-- **alt**: Genoss:in (gendered/party-ish) · Kampfname (militant) · Name / Username (generic) ➡ am0 picks if he prefers
-- **ck**: `nameLabel()` + `comradeName()` i `ui/Comments.kt` · `NameTest.kt`
-### D-015 @1112 · streak = Amen (ez 1 tap), placed under th reading snippet · ✔️ (not built) · amended @1112
-- **ctx**: streak counted quote Amen; plan "done" looked meagre next 2 it (Mi) · options a any day · b plan days · c hybrid
-- **dc**: Amen = th streak action, stays ez (1 tap, no read-gate / timer) · 1 place: bottom o th reading snippet (rm card + hover dup) ➡ th investment (Hooked/IKEA) = actually reading a bit
-- **y**: am0 @1112: "its not the quote … its the actual book" + "Amen counts 4 th streak, keep it an ez action · investment = reading a bit"
-- **alt**: a/b/c chip (❌) · gate Amen on scroll/ti read (❌ friction)
-- **ck**: (aft build) Amen only i read snippet · Amen btn i `Cards.kt` = 0 · streak tst
-### D-014 @1112 · Orden ➡ Abzeichen (badges), reading-room blue/gold · ✔️
-- **ctx**: Mi feedback: Orden = too real-socialism/authoritarian, ☭ evywhere
-- **dc**: rename + re-theme (reading-room look), positive reframes ("missed a day" tone out), stamp gift = ☭, Marx = lens not utopia
-- **y**: user feedback (Mi) via am0 · **alt**: keep Orden (❌ alienates non-hardcore users)
-- **ck**: `grep -rn "Orden" ui/` = only enum/code names, UI text says Abzeichen/badges · `OrdenTest.kt`
-- **amend @1112 (am0)**: tone = positive + friendly, **nudging allowed** (miss ➡ kind nudge, e.g. sad Marx) · ❌ guilt / shame / loss threats · ck: nudge strings carry no blame ("verpasst" / "verloren")
-### D-013 @1112 · Krisenfest = 15 shakes · ✔️
-- **ctx**: crisis medal too easy · **dc**: `KRISE_SHAKES = 15` · **y**: Mi: "needs more shakes" · **ck**: `logic/Orden.kt` KRISE_SHAKES
-### D-012 @1112 · 1 sober voice only · ✔️
-- **ctx**: holy voices (Gottvater, Gott, Pfarrer…) cringe · **dc**: `Persona.picker = [NORMAL]`, rest hidden i code, not deleted · old stored dflt ➡ sober
-- **y**: Mi + am0 agree · **alt**: keep as opt-in (❌ clutter) · **ck**: `Persona.picker` i `ui/Share.kt` · `VoiceTest.kt`
-### D-011 @1112 · reading plan: continuous, no repeat, evy1 i a default plan · ✔️
-- **ctx**: real-user 🐛 same page 2× · plan didn't train regular reading
-- **dc**: `planIndex` continuity, finished plan doesn't repeat, default plan 4 all · **y**: Mi feedback · **ck**: `PlanTest.kt`
-### D-010 @1031 · UI strings inline DE+EN i code, rest via translate.py · ✔️
-- **ctx**: 13 langs, lone dev · **dc**: `T("de","en")` / `tr(..)` pairs i Kotlin (key = EN) ➡ `bin/translate.py --only ui` ➡ i18n_xx.json · ❌ translate_full 4 UI · 1 pass at fan-in
-- **y**: am0 · **alt**: strings.xml per lang (❌ 13× by hand)
-- **ck**: `bin/translate.py --only ui` finds 0 new · only launcher/shortcut/tile names i `res/values*`
-### D-009 @1108 · GitHub release + Forgejo origin, gh fetch-only · ✔️
-- **y**: mirror carries tags 2 GH; ship.sh waits ≤120 s · **ck**: `git remote -v` · `bin/ship.sh`
-### D-008 @1107 · Obtainium DEV: stamp version into APK's 1st zip entry · ✔️
-- **ctx**: default pseudo-version hashes 1st 1 KiB = identical across builds ➡ never updates
-- **dc**: ommStamp + deploy guard · **y**: root cause measured · **ck**: `ref.md` (trap documented) · `bin/deploy.sh`
-### D-007 @1107 · 1 dialog style (MarxDialog), ☭ = close only · ✔️
-- **y**: am0: "windows look weird — frame colour, no frames, ☭ at odd spots" · **ck**: `ui/MarxDialog.kt` · no raw AlertDialog elsewhere
-### D-006 @1105 · repo public, GPL-3.0, `priv/` git-ignored · ✔️
-- **ctx**: friends need build-it-yourself · **dc**: public GitHub am0ebe/oh-my-marx, Hooked OCR out o tree + history · **y**: ❓ am0 · accepted risk: GH keeps old SHAs reachable
-- **ck**: `.gitignore` priv/ · LICENSE
-### D-005 @1103 · community = Mitlesen opt-in (dflt ON), anonymous daily token · ✔️
-- **ctx**: social proof (Hooked tribe) vs privacy · **dc**: counter + Matrix comments/Kreise, switch off i ⚙️, not E2E (said i UI) · **y**: ❓ am0 (dflt ON by am0)
-- **ck**: `data/Community.kt` · `Prefs.community` · 💬 toggle's fate = open Q
-### D-004 @1101 · 🔥 streak w 🕊️ Sabbat-Joker + Stempelkarte counts *total* days · ✔️
-- **y**: streak anxiety ➡ 1 miss = rage-quit (notes.md § judgment) · **alt**: plain streak (❌) · **ck**: Prefs flag "sabbath" · `logic/Daily.kt` · `OrdenTest.kt`
-### D-003 @1028 · Android native Kotlin+Compose, offline, no server (server added @1103 opt-in) · ✔️
-- **y**: L project + friends sideload · **ck**: `android/` · INTERNET perm only 4 Community/Update
-### D-002 @1028 · book src = MEW 23 (DE PD) + Moore/Aveling 1887 (EN PD) · ✔️
-- **y**: am0 owns MEW 23 ➡ page refs match · **alt**: DTA 1867 (❌ CC BY-NC, dif structure) · **ck**: `bin/fetch.py` · `ContentTest.kt`
-### D-001 @1031 · UI langs DE + EN, EN dflt (fon lang if supported), DE 2nd · ✔️
-- **y**: ❓ am0 · **ck**: `data/I18n.kt`
+
+### D-059 @1120 · ⏱️ The "long in the app" award measures time in the book, not time the app is open · Proposed, time rule superseded by D-062
+- **Y:** The chapter 8 frame (the 8-hour day had to be fought for) is a wink and honest. Counting total time, not one sitting, avoids binge pressure; counting book time, not app time, can't be farmed by leaving the app open.
+- **Ctx:** You asked for an award "for staying in the app a long time" (via M8 #185). D-014 earned-only · D-004 no anxiety · Hooked ch. 6 (facilitator, not dealer).
+- **Options:**
+  - a) 1 long session (≥ N minutes at once): rejected, rewards bingeing
+  - **b) total active reading time in the 📖 book, 2 tiers** (rec, built by crew)
+  - c) daily minutes streak: rejected, a second streak = anxiety
+  - d) skip: rejected, you asked for it
+- **Scope:** ⏱️ **Normalarbeitstag** = 8 h total · 🏭 **Arbeitswoche** = 40 h total · group READ. The original rule (a page counts ≥ 10 s, capped at 5 min, a paused app stops the clock) was replaced by D-062.
+- **Ck:** `OrdenTest.readingTimeMedals` · `Prefs.readSecs` · ChapterScreen timer
+- **Note:** @1120 (M8 #185): D-048, 049, 050, 051, 052, 053 and 054 were built on the crew's pick (lanes C2-C5 + C7) and stay Proposed until you evaluate them on the phone. Gaps at that time (🔵 todo): perk effects · 12 heads still emoji tokens · Share/Widget head · illuminated + section initials · 📜 pilcrow (most closed later, see D-063).
+
+### D-058 @1120 · 🖨️ Book text is set in Literata, justified, with automatic hyphenation · Accepted (🦠 @1120 via M8)
+- **Y:** You wanted text that looks like a printed book ("block-justified like a printed book + a good book font, hyphenation DE/EN so justify doesn't gap"). Literata is made for long reading on screens (large x-height, sturdy at 17sp), and hyphenation in the text's own language keeps justified lines from leaving rivers on a 360dp column.
+- **Scope:** All serif text (`BookSerif`): body justified, auto hyphens, paragraph line breaker, hyphenation follows the shown language. Literata covers Latin, Cyrillic (ru) and Greek; Chinese, Arabic, Hindi, Bengali and Urdu fall back to the system font glyph by glyph. Drop cap: the 3-line block clips the whole paragraph, so line 3 stays justified and keeps its hyphen. Licence (OFL 1.1) in `assets/licenses/Literata-OFL.txt`.
+- **Cost:** First +1.86 MB APK (2 variable TTFs, not subset). Since @1120 #218 (you OK'd fonttools): 5 static styles, Latin + Greek + Cyrillic = 1.07 MB (−748 KB, not −1.3 MB, because 5 styles are kept) · `bin/font_subset.sh`.
+- **Alt:** EB Garamond (small x-height, thin at 17sp on a phone; more "old" but less readable) · Source Serif 4 · system Noto Serif (the old look, D-033 a).
+- **Prev:** D-033 b (you said "try b" @1114: Literata vs. EB Garamond, never built).
+- **Ck:** shot `chapter` (justified, "im-" | "mense" at the drop cap) · `OmmType.book*` uses `BookSerif`
+
+### D-057 @1120 · 📖 In the book, a tap turns the page and double-tap opens the passage menu · Accepted (🦠 @1120 via M8), hold part superseded by D-065
+- **Y:** Turning pages is 90 % of what you do there, so it gets the cheapest gesture, like other e-readers. The menu is rare, so a double-tap is fine.
+- **Ctx:** D-044 had double-tap = turn and tap = menu. In your evaluation of DEV 0009 you said: swap.
+- **Scope:** Book view only: tap or hold anywhere (passage or paper) turns, the side comes from the finger position, the whole half counts (the edge-quarter rule is gone). Double-tap a passage = menu with a buzz. Scroll view and Today have no page turn, so tap and hold still open the menu there. The hints (folio line + 📖 chip pill) describe this. Hold was changed to "menu" by D-065.
+- **Alt:** Hold opens the menu (rejected at the time: you said "single tap / hold = turn").
+- **Prev:** D-044.
+- **Ck:** `ReaderGestureTest` (double-tap = "Note" · tap right = next page) · `ShotsTest` verse_menu via double-tap
+
+### D-056 @1119 · Plans with a promise are hand-picked, and each Andacht is found by its verse ids · Accepted (🦠 qa_1117 r1 via M8 #155)
+- **Y:** A generated pick is fine for "juicy verse per day" plans, but wrong for a plan with a promise (the Bible plan). Re-ordered days keep their Andachten, and hand-written Andachten survive `andacht.py --redo`.
+- **Ctx:** You asked in r1 "do the plans build on each other?". The re-evaluation found: bibel used the score.py `bib` flag, so 7 of 10 days had no Bible at all · 30tage had chapter 13 before 10-12 and 23 before 22 (Marx's ladder backwards) · montag day 1 was 1,27 (coat and linen, not Monday).
+- **Scope:** bibel v2 = 10 hand-picked references (Lamb of God, Revelation, Bible for linen, Paradise, Eden, Jehovah, Moses, original sin, Holy Ghost) · 30tage v2 and montag v2 (no chapters 1-3) · all via D-042 · Andacht lookup = (plan, verse ids), not the day index · `data/andachten_hand.jsonl` beats andacht.py's LLM cache.
+- **Alt:** Tune the `bib` regex (rejected: "Gott" and "heilig" hit everywhere) · LLM Andachten for new bibel days (rejected: quality, todo "Heute lädt uns Marx ein").
+- **Ck:** `test_bin.py PlanContent` (5) · translate `--only a` re-run (Andacht translations are keyed plan:idx)
+
+### D-055 @1119 · ★ The close button is a bare star (V2) · Accepted (🦠 @1120 via M8)
+- **Y:** You said in r1 "many versions, different contexts", so the crew rendered the options instead of arguing, and you picked by eye.
+- **Options:**
+  - V1 the old one (★ in a tinted circle)
+  - **V2 bare ★** (picked, now the `CloseStar` default)
+  - V3 mono ✕: rejected, it loses ★ = close (§ 1)
+  - V4 ★ with a ✕ cut-out (crew's eye-guess: brand + new users read "close")
+  - V5 inverted red disc · V6 outline ★ · V7 wax seal · V8 V1 + spin on press
+- **Ck:** `close_sheet.png` (8 variants × 3 contexts + dark) · lane C6, no gate
+- **Note:** D-045 to D-055 (@1119) are the design addendum (qa_1117 D6-D11 + r4), all decided by you with the crew's pick marked. Spec, mockups and lanes C1-C7: [design_system.md](design_system.md) § 14 (§ 14.0 = the same list as a table).
+
+### D-054 @1119 · ✍️ A note is a margin-comment card, one component for notes and comments · Proposed
+- **Y:** Comment cards are what other apps do (your r2 note), and one card can serve both notes and comments.
+- **Ctx:** qa D7 · Q4.
+- **Options:**
+  - a) yellow sticky + 📌: rejected, yellow is the Hooked voice (§ 7)
+  - **b) comment card: paperHi + blue ruler + tail to the verse + initial disc + name/time + ✎** (rec, built by crew in C5)
+  - c) keep the ruler, new background only: too close to "a blue quote", which you disliked
+- **Ck:** shots `note_card` `note_edit` `comments` (C5) · no ★ in the editor · tap away = save, menu stays
+
+### D-053 @1119 · 📜 The book gets the old-book devices that are worth their effort · Proposed
+- **Y:** Option b gives the most "worthy old book" per effort, and everything is drawn (no raster images).
+- **Ctx:** qa D11.
+- **Options:**
+  - a) ⚡ set only (section initials · red ¶ · incipit · headpiece · running head · catchword · colophon)
+  - **b) ⚡ + 🟡 (illuminated initial · tailpiece + chapter seal · ribbon bookmark · gilt edge)** (rec, built by crew in C4)
+  - c) + 🧪 paper grain and margin glosses: rejected, costs performance and clashes with notes
+- **Scope:** No margin ¶ numbers (r3 removed the ¶ reference line). The catchword was removed after your r1 note ("why? confusing").
+- **Ck:** shots `chapter` `chapter_scroll` `chapter_end_seal` `bookmark_ribbon` + rtl + zh (C4)
+
+### D-052 @1119 · 🎉 The feast calendar gets 18 more days, so no gap is longer than about a month · Proposed
+- **Y:** 5 May to 14 September had 4 months with nothing. With all 18 the longest gap is about 4 weeks. Fun days are a variable reward (your r3 note); quiet († days) get no confetti.
+- **Ctx:** R4 gaps.
+- **Options:**
+  - **a) all 18** (labour history + 3 fun days, § 14.2.3) (rec, built by crew in C3)
+  - b) history only
+  - c) you pick on the sheet
+- **Ck:** `Feast.on()` test per date · `feast_sheet.png` (C3)
+
+### D-051 @1119 · 🧔 The holiday Marx is one base head plus overlay props · Proposed
+- **Y:** One style, cheap per feast, no drift. Option c was "half-baked" (your r3 note).
+- **Ctx:** qa D8 · Q6.
+- **Options:**
+  - **a) 1 base head + overlay layers** (rec, built by crew in C3)
+  - b) a full redraw per feast, only for 🎄 Santa-Marx · 🎃 pumpkin-Marx · 🎂
+  - c) emoji next to the head (the old way)
+- **Ck:** `ui/ds/MarxHead.kt` = the only place that picks a head · top bar + share card + widget call it
+
+### D-050 @1119 · 🎖️ A rank-up is a fullscreen "Beförderung", like a game level-up · Proposed, seal part superseded by D-060
+- **Y:** You asked for "promotion · hero upgrade · MMORPG level-up" (r4). It happens about every 10 reading days, rare enough for a big moment (D-034). Perks are cosmetic, which keeps it honest (D-004).
+- **Options:**
+  - **a) badge flies in · Marx seals "GENEHMIGT" · rays · 1 perk line · share** (rec, built by crew in C2; the seal was replaced by D-060)
+  - b) bigger dialog only
+  - plus: cosmetic perks per rank · rank 3 as a new D-043 unlock source (both built, D-063)
+- **Ck:** shot `moment_rank_3` · rays stop at 2300 ms · reduced motion = end frame (C2)
+
+### D-049 @1119 · Celebrations form one ladder and show one big screen per tap · Proposed
+- **Y:** Your r4 note: "Amen, then award, then ☭, in series". Size follows rarity (D-034), and there are no walls of dialogs.
+- **Scope:** T0 press · T1 ✓ · T2 ☭ + Stempeluhr · T2b chapter seal · T3 milestone · T4 Beförderung · T5 reward dialogs · the queue follows that order · 2 or more due = "Moment … ▸" · more than 2 dialogs = "+N" chip. Built as written; you accept or change it.
+- **Ck:** `FxQueueTest`: 1 big screen per tap (C2)
+
+### D-048 @1119 · ⏱️ "Day complete" is the Stempeluhr: a stamp, one line and a teasing question · Proposed
+- **Y:** Your r4 note: "bland · text-stuffed · Moses? · not teasing". So: image + motion + 1 line + 1 question, and "Losung kommt um" goes (Settings already has it).
+- **Ctx:** qa D10 · Q11.
+- **Options:**
+  - **a) stamp thump + star count** (rec)
+  - **b) 1 punchy line from a pool** (rec)
+  - **c) a teasing question for tomorrow (new `qd`/`qe`)** (rec; a + b + c built by crew in C2 + C7)
+  - d) Marx head reacts (🧪 after C3)
+- **Ck:** shots `moment_shift` `moment_shift_full` (C2) · all plans have `qd` + `qe` (C7)
+
+### D-047 @1119 · 📉 After a break the star tier falls one step per missed day ("Abschreibung") · Accepted (🦠 @1120 via M8 #185)
+- **Y:** Fixed capital depreciates, it doesn't vanish: kind, but there are still stakes.
+- **Options:**
+  - a) back to 0: rejected, anxiety (D-004)
+  - b) best ever: rejected, no stakes
+  - **c) 1 tier down per missed day** (picked)
+- **Ck:** `StreakGameTest`: tier falls 1 per day (C1) · built in `logic/Daily.kt streakGame` (forward replay of the DayLog, no Prefs state)
+
+### D-046 @1119 · ✊ Streak milestones earn a Streiktag, and the Sabbath joker stays · Accepted (🦠 @1120 via M8 #185)
+- **Y:** The Duolingo set (R3) plus 200 (to close the 100 to 365 gap). Earned only, no shop (D-014). The Sabbath is the weekly grace; a Streiktag is an earned buffer, used after the Sabbath.
+- **Options:**
+  - steps 7 · 14 · 30 · 50 · 100 · 200 · 365 · then every +100 · 1 freeze per step, max 2 (picked)
+  - name: a) ❄️ Freeze · **b) ✊ Streiktag** (picked) · c) 🛟
+  - Sabbath: **keep** (picked) or fold in
+- **Scope:** Built in C1 (@1120): ✊ is earned only on milestone days from 2026-11-20 on (no retro bridges). Lazy Sabbath: a second 1-day gap in a week uses a ✊ if one is held, otherwise the break moves to the earlier gap (the same result as the old backward walk; checked on 300 random histories in `oldStreaksUnchanged`).
+- **Ck:** `StreakGameTest`: earn · cap 2 · use order (C1)
+
+### D-045 @1119 · The hero shows only the streak; stamps and rank move to the Stempeluhr and My Capital · Accepted (🦠 @1120 via M8 #185)
+- **Y:** Two worlds, two places: the streak is the hero; the career (total days, then ranks) is the stamp card. Hero size and look stay as D-036 A; only the stamp row leaves.
+- **Ctx:** qa Q1 ("1 score").
+- **Options:**
+  - a) drop the gift stamps
+  - b) caption each counter (tried @1116, still confusing in r3)
+  - **c) hero = streak only (star + week + next-milestone bar), stamps + rank go to the Stempeluhr pane and My Capital** (picked)
+- **Prev:** D-036 A (amended).
+- **Ck:** shot `hero_tiers` · stamp card in `mine` (C2)
+
+### D-044 @1119 · 📖 Double-tap turned the page by side (left back, right forward) · Superseded by D-057
+- **Y:** It matched the one-tap edge zones (left back, right forward), so one mental model. No always-on peek (the D-022 pill was removed @1116 as distracting).
+- **Ctx:** You said "read book: add hint, double tap = next/prev page". D-022 had double-tap = always forward. Accepted by you @1119 (scrap).
+- **Scope:** The side came from the x of the double-tap (paper) or from the last finger-down on the book (passage; VerseView has no position). Hint = folio line + 📖 chip pill. Swapped @1120 by D-057 (tap = turn, double-tap = menu).
+- **Alt:** Double-tap always forward + left-quarter tap for back (rejected: you asked for previous too) · hint pill on every chapter open (rejected: distracting).
+- **Prev:** D-022 (amended).
+- **Ck:** 👀 qa_1117 L9
+
+### D-043 @1118 · 🔒 New reading plans unlock step by step, as bonus levels, not a paywall · Accepted (🦠 qa_1117 Q10 and Q12)
+- **Y:** Hooked variable reward plus progress gates (ch. 4). Using the best-ever streak means a broken chain never re-locks a plan (D-014 kindness); feast and lucky unlocks are stored and never taken back.
+- **Ctx:** r4: "more plans, unlocked later (+ DEV)". Q12, your words: "timeline: 3 awards or 1-3-5 plans or streak 20 · like a bonus easter egg = random reward · + 1 holiday/xmas present".
+- **Scope:** `Plan.lock` = any one of {plans · orden · streak (best ever) · feast gift · lucky 1-in-5 per Amen day after N days} (rank was added by D-063). A locked plan is a 🔒 mystery card at the end (no title, only how it opens). Opening it shows a 🎁 dialog in the reward queue. The DEV switch opens all, without fanfare.
+  - 6 plans: 💰 reich (1 plan) · 🎓 grundkurs (3 badges) · 🏛️ faschismus (3 plans, bridges only — Vol. 1 never names it) · 🛵 gig (🎲 lucky after 10 days) · 🌍 erde (streak 20) · 🎁 weihnachten (Christmas gift, 3 days)
+- **Alt:** All open (rejected: no discovery) · fixed path (rejected: less surprise) · paid unlock (never).
+- **Ck:** `logic/PlanUnlock.kt` · `PlanUnlockTest` · `data/plans_extra.json` `lock`
+
+### D-042 @1118 · 🏛️ Each reader stays on the plan cut they started; every shipped cut is archived · Accepted (🦠 qa_1117 "do the plan versioning")
+- **Y:** Bumping automatically means nobody can forget it, and people in the middle of a plan never see a different day.
+- **Ctx:** DayLog stores plan days by index, so any re-cut (R1 🟡 wertform) would have shifted everyone mid-plan.
+- **Scope:** `data/plan_versions.json` = every cut ever shipped (frozen days incl. Andacht) · build.py bumps `ver` automatically when a plan's verse ids change · plans.json ships the `old` cuts · `Prefs.planVer` is set at start (null = v1) · an old cut skips index-keyed translations (EN fallback).
+  - First use: wertform v2 = cut at Marx's sub-section heads (8 days, none starts mid-argument) · jahr text "~10 min" became "~5 min" (text only, no re-cut).
+- **Alt:** Migrate DayLogs by verse id (rejected: fragile) · freeze plans forever (rejected: no fixes).
+- **Effects:** Plans can be fixed and re-cut freely. Every change to a plan's verse ids must commit `data/plan_versions.json` with it (test_bin fails otherwise).
+- **Lock-in:** Readers' progress is stored as (plan, version, day index); dropping the archive would move people to the wrong day.
+- **Ck:** `bin/build.py versions()` · `test_bin.PlanVersions` (incl. archive vs. plans.json) · `PlanUnlockTest.daysFor`
+
+### D-041 @1116 · There is no Werkbank tab: Circles stays, and the Hooked entry stays in the top bar · Accepted (🦠 qa_1116 Q8 revised)
+- **Y:** 6 tabs are too many (Material 3 maximum is 5). Circles comes alive once Matrix is tested (later). A 🪝 at the top is a bit odd, but accepted.
+- **Ctx:** qa_1116 D5 proposed a "Werkbank" bottom tab (Hooked notes + tools). Your first Q8 answer was b (replace Circle); you revised it the same day.
+- **Scope:** 5 tabs stay (Today · Plans · Read · Circle · My Capital).
+- **Alt:** Werkbank replaces Circle (rejected: Circles has a future) · a 6th tab (rejected: crowded).
+
+### D-040 @1116 · 📖📜 The reader has two modes, pages and endless scroll, and the feed left Home · Accepted (🦠 qa_1116 Q4 and Q7)
+- **Y:** You want both tried before picking one design (Fable spec after that round).
+- **Ctx:** The endless feed lived at the end of Home (D-024), which fought the "daily ≤ 2 min" goal. Your r2: Read = 2 modes, Home ends at the Marxoskop.
+- **Scope:** Toggle chip in the chapter's slim head (D-031 b) · remembers the last mode (Prefs `read_scroll`) · Home has no feed tail.
+- **Alt:** A Settings toggle · a choice on first open (rejected, Q7 a).
+- **Ck:** `ShotsTest.zFeed` (`chapter_scroll`) · `ReadScreen.kt` ChapterScreen
+- **Note:** 📜 was `ReadOnFeed` from the current page; since @1120 (#200) it is `ScrollBook`, a lazy list over the whole book that scrolls both ways and keeps the page when you switch modes.
+
+### D-039 @1116 · ☭ The swoosh marks a finished plan day; the quote Amen gets a small ✓ pop · Accepted (🦠 Q9 b)
+- **Y:** The plan day is the real effort, so it gets the big reward; the quote tap is cheap, so it stays small.
+- **Ctx:** D-034 b (swoosh = rare) plus QA r2 `4708ab7` turned "Day complete!" into a ✓ pop, so the hammer and sickle never showed (a bug). Your words: "finish the day's read plan, then boom".
+- **Scope:** "Day complete!" = ☭ swoosh (full stamp card = confetti instead) · quote-of-the-day Amen = ✓ pop (full card = confetti).
+- **Prev:** D-034 (amended).
+- **Ck:** `TodayScreen.kt` `amen` + plan Button
+
+### D-038 @1114 · 🆕 Updates are announced at once; browser installs ask first, with an opt-in to auto-install · Accepted (🦠 @1114), phone test pending
+- **Y:** You see the update and decide (consent). Obtainium users: their own background update may still win, and then our ping is moot (same version, no re-nag).
+- **Ctx:** You deployed 1114 and DEV (1113, Obtainium) showed nothing ("app doesnt show UPDATE popup"). The Obtainium path waited 8 h (GRACE_H) and the worker ran about daily, so nothing was visible for hours.
+- **Scope:** Your words "do notification immediately": GRACE_H dropped, plus one OneTime check on every app start (WorkManager, network) next to the daily one. Your words "browser apk selfupdate should ask user … or they select autoupdate in settings": `Settings.autoUpdate` default OFF = notification, tap = UpdateDialog (1 confirm) · ON (Settings row, browser installs only) + Android 12+ + we are the installer = silent (D-023 path).
+- **Alt:** Keep the grace period (rejected: you couldn't see it work) · silent by default (rejected: you want to be asked first).
+- **Prev:** D-023 (amended).
+- **Ck:** `UpdateWorkerTest` (obtainiumNotifiesAtOnce · autoOffAsksEvenIfWeCouldGoSilent · weInstalledOurselvesIsSilent with auto) · phone: deploy B, notification within about 1 min of opening the app
+
+### D-037 @1114 · The omm-api image ships without pip · Accepted (@1114)
+- **Y:** No pip means nothing to patch, for good. The app is stdlib only and never calls pip.
+- **Ctx:** The first nightly live sweep (run 935, 03:15) failed: trivy = 0, the red one was **pip-audit**. The base `python:3.12-alpine` bundles pip 25.0.1 with 6 advisories (PYSEC-2026-1795 · 1796 · 2875 · 2876 · 196 · 3721, fixed in ≤ 26.2).
+- **Scope:** `server/Dockerfile` uninstalls pip, removes `ensurepip` (the same pip as a wheel) and has a build-time guard (`! import pip`). The nightly caller keeps `pip: true` (the template skips with a warning when there is no pip, so the audit comes back by itself if dependencies ever land).
+- **Alt:** `pip install -U pip` (rejected: needs PyPI at build time and goes red again on the next pip advisory) · `pip: false` in nightly.yml (rejected: hides the finding, pip stays in the image).
+- **Ck:** local build: `pip` not found · `/v1/health` ok · trivy 0.72.0 (CI flags) exit 0 · CI canary green · live after ops rebuilds `/srv/omm-api` (ops-owned, SERVICE.md)
+
+### D-036 @1113 · Today keeps its original hero (version A) · Accepted (🦠 @1116, A)
+- **Y:** You chose "A (smaller)" after trying A and B on one DEV build.
+- **Ctx:** You said "landing should fit verse + streak widget + read-plan button"; the hero (star 92 + week row + stamp row + rank) plus the card pushed the plan entry below the fold. @1114 you asked "which is which? show me" (mockups `d036_all.png` a · b · c). @1115 (via M8): "as it was before, or bigger", so compact (a) and collapse (c) were out, and A/B went on one DEV APK for friends (⚙️ "🧪 Today hero", DEV only: A = pre-ds hero, pixel-same · B = bigger: star 124, headline 30, week + stamps fill the width; shots `priv/img/d036/hero_ab.png`).
+- **Options:**
+  - a) compact hero 120dp (star 48 + 7 day dots + Tag "☭ 3/10"), full stamp card in My Capital (crew's first pick: the only one that fits both screen sizes by budget, 412×915: 599 of 730 · 360×760: 542 of 592, and keeps the card big)
+  - b) keep the hero, shrink the quote card (rejected: a smaller quote = worse share image match)
+  - c) hero collapses on scroll (rejected: nothing fits before the first scroll)
+  - **A** = the pre-ds hero (picked @1116 via M8 after #101)
+- **Scope:** A is the only hero; the toggle, B, Prefs `hero_ab` and `ShotsTest.hero` were dropped (git: 384cbab). L1 Today unblocked.
+- **Ck:** `ShotsTest.hero` (hero_a + hero_b, removed after the pick) · Prefs key `hero_ab` (old abc picks don't leak)
+- **Note:** D-029 to D-036 (@1113) are the design system (you decide, crew pick = first option). Spec: [design_system.md](design_system.md) § 0 has the same list as a table. @1114: D-029 + D-030 accepted, so L0 was built (`ui/ds/`) · D-031 to D-035 accepted by you @1114 · D-036 = A by you @1116.
+
+### D-035 @1113 · 🔊 Three tiny sounds exist, off by default · Accepted (🦠 @1114, b, "sure lez try", lane L6)
+- **Y:** Haptics come first: 90 % of the feel for zero assets. Sound is opt-in (reading in bed or on a train); a surprise noise means an uninstall.
+- **Ctx:** qa R1: "Duolingo-satisfying".
+- **Options:**
+  - a) none, haptics only
+  - **b) page rustle · stamp thud · badge chime (≤ 300 ms), 1 Settings switch, default off, follows the ringer** (picked, later lane L6)
+  - c) on by default (rejected: surprise noise)
+- **Ck:** Settings switch · no audio focus taken · APK grows < 100 KB
+
+### D-034 @1113 · The daily Amen gets a ✓ pop; the sickle swoosh is rare · Accepted (🦠 @1114, b)
+- **Y:** A variable reward (Hooked) needs rare to differ from daily. D-004 calm. Your QA: you want it satisfying, not slow.
+- **Ctx:** The 2.3 s swoosh every day plus the Orden dialog after a fixed 2600 ms wait made the daily tap feel long, and rewards collided.
+- **Options:**
+  - a) as it was
+  - **b) daily = CheckPop 1.2 s + 📳 · swoosh + confetti only on rank-up, full stamp card or plan done · 1 celebration at a time (queue)** (picked)
+- **Scope:** Your words @1114: "lez try b. not everyday (variable reward!!!), add to hooked mode". So there is one HookNote (Hooked mode on) at the rare swoosh: "this one is rare on purpose = variable reward (Hooked ch 4)". Lanes L5 (Fx queue) + L1 (Hooks.kt).
+- **Ck:** `Fx.kt` queue · test: 2 rewards in the same tap are shown one after the other, no fixed delay
+
+### D-033 @1113 · The book font was the system serif, with a bundled face as a later trial · Superseded by D-058
+- **Y:** 13 languages incl. ar · hi · bn · ur · zh: a bundled face covers 3-4 of them and the rest falls back, which gives 2 looks. The APK was already 29.7 of about 30 MB. Option b was a trial for after the system font landed (a 1-token swap).
+- **Options:**
+  - **a) system serif (Noto Serif)** (crew pick)
+  - b) bundle Literata or EB Garamond (OFL, +0.3-1 MB, Latin + Cyrillic only)
+- **Scope:** Your words @1114: "try b! maybe ab-test / compare". Plan: L6 bundles one face (Literata vs EB Garamond), side-by-side shots `chapter` ×3 (system · Literata · Garamond) for you to pick, then maybe a Settings toggle as a self A/B; non-Latin languages keep the system serif. Accepted as b 🧪 @1114; built as Literata in D-058.
+- **Ck:** (at the time) no `res/font` · `OmmType.book*` = `FontFamily.Serif`
+
+### D-032 @1113 · 🌙 A dark theme "Nachtschicht" exists as tokens, follows the system, with a Settings toggle · Accepted (🦠 @1114, c "C!")
+- **Y:** Night readers are real (a NIGHT hero already exists). Tokens cost nothing now and keep hard-coded colours out (guard). Wiring needs its own QA round (shots ×2), so not in the first pass.
+- **Options:**
+  - a) light only
+  - b) follow the system (crew pick, L6)
+  - **c) b + Settings toggle (light · dark · system), default system** (picked, lane L6)
+- **Ck:** `Tokens.kt` has both schemes · `Theme.kt` uses light until L6
+
+### D-031 @1113 · 📖 In a chapter the reader has a slim paper head and no bottom navigation · Accepted (🦠 @1114, b as a trial)
+- **Y:** About 100dp more page, the page becomes the screen, and the exit stays visible.
+- **Ctx:** qa D2 "book look: old · worthy · holy". The red top bar and lavender navigation framed the page as an app, not a book. Your words @1114: "not sure which is which · try b · but immersive maybe", so b was built in L2, c stays 🧪 (mockups `d031_all.png` a · b · c), re-ask after phone QA.
+- **Options:**
+  - a) as it was
+  - **b) slim paper head (back · chapter · 💬 N), bottom navigation hidden, status bar = page colour** (picked)
+  - c) full immersive, tap = toggle chrome (rejected: tap is taken by the verse menu and the double-tap turn of D-022, and the exit would hide)
+- **Ck:** shot `chapter`: no NavigationBar · back works from a deep link
+
+### D-030 @1113 · There are 5 button kinds, tonal pills with a press edge on the one big button · Accepted (🦠 @1114, A+)
+- **Y:** Round means tappable. The press edge + 📳 makes the daily tap satisfying (qa R1) without making every button loud.
+- **Ctx:** You called the old buttons "clunky-generic-microsoft98style" and wanted 2-3 mockups. r4 sweep #7: 7 button looks mixed. You picked by eye from the rendered gallery (`62be257`: now · A · A+ · B · C).
+- **Options:** (mockups in design_system.md § 5)
+  - **A+ = A pill tonal + B's 4dp press edge on Primary-L only** (picked; crew pick)
+  - A pure (calm, but the one daily button felt flat)
+  - B letterpress everywhere (loud, and r8 breaks round = tappable)
+  - C rubric (text + red rule; rejected: weak affordance for the daily Amen)
+- **Scope:** Primary (red pill, L 52 / S 40, max 1 per view) · Tonal (blueTint pill) · Text · ActionItem (icon + label, Circle / Bare) · Chip (Choice / Suggest) + singletons (★ · Switch · MoreChip · CountChip · DogEar) · no outlined buttons, no emoji in labels.
+- **Ck:** L0 @1114: `ui/ds/Buttons.kt` (Primary L/S · Tonal · TextBtn · ActionItem · singletons) + `Chips.kt` · `ds_gallery` shot · `DesignGuardTest`: M3 `Button(` / `OutlinedButton(` / `TextButton(` / `AssistChip(` / `FilterChip(` outside `ui/ds/` = baseline, down to 0 by fan-in
+
+### D-029 @1113 · 🎨 The design system has one source of truth, tokens in ui/ds/, and a ratchet guard · Accepted (🦠 @1114, as written)
+- **Y:** Every rule answers a QA line (qa D2 book look · D6 voices · D7 buttons · r4 #7) or a measured failure (gold text contrast 1.6 · 5 of 9 plan accents < 4.5 · `Color.Gray` 3.1).
+- **Ctx:** M8 order (from you): one spec for buttons · navigation · type · colour · space · components · motion. Before: 21 text sizes · about 60 hard-coded colours · 9 radii · `Theme.kt` filled 8 M3 roles (the rest = lavender defaults).
+- **Scope:** Spec = [design_system.md](design_system.md). Rules: 3 materials (paper · ink · cloth-blue) + red = act · gold = earned · round = tappable, rectangle = container · serif = Marx, sans = app + people · chrome = vector icons, emoji = content · flat (only the quote card lifts) · 9 text sizes, sentences ≥ 14sp · 4dp grid · 5 radii · 5 voices (**my bubbles are blue, not gold**) · plan accents = stripe / disc / tag only, titles ink. The guard also counts `TextButton(` (the spec listed 4 M3 buttons; `TextButton` is the same drift, ds `TextBtn` replaces it); the ratchet is strict both ways: a lower count must lower the baseline in the same commit.
+- **Alt:** Restyle screen by screen without tokens (rejected: it drifts again, which is how we got here) · a ready M3 theme builder palette (rejected: loses paper + rubric).
+- **Ck:** `DesignGuardTest` baseline only goes down (L0 start @1114: `Color(0x` 48 · `.sp` 174 · `RoundedCornerShape(` 33 · buttons/chips 48) · lanes L0-L5 in design_system.md § 12 · ⚠️ overlaps D-015 (Amen to snippet bottom, unbuilt) = lane L1
+
+### D-028 @1113 · 🏛️ Verse ids may move; a recorded map moves pipeline data and users' marks with them · Accepted (@1113)
+- **Y:** Fix the data at its source, not with a display hack. The German text is the stable identity across splits.
+- **Ctx:** M8 follow-up (you said "Go"): a typo in the German source ("FÜFNZEHNTES KAPITEL") put the opening of chapter 15 into chapter 14 (14,37-39), and chapter 15 ids ran on from 15,40. Fixing it moves 30 ids, and users' 🔖 ✍️ and progress must not break.
+- **Scope:** split.py `TYPOS` alias + guard (a section anchor with a new chapter resets the paragraph count) · moves = same German text, unique, so `data/id_moves.json` is cumulative (chains composed) · the same run renames ids in rank · andachten · i18n q · i18n_full v (no LLM re-run) · build.py copies `id_moves.json` to assets · the app's `data/IdMoves.kt`: on AppVm start, if moves.size > Prefs `id_moves_done`, one Room transaction renames Mark + ReadLog (collision = merge) · DayLog holds plan indices, so it is untouched.
+- **Alt:** Keep the wrong ids forever (rejected: chapter 15 would start at "15,40…", wrong footnotes) · an alias table in the app only (rejected: two id systems).
+- **Effects:** Re-splitting the book is safe; marks and reading progress follow the text.
+- **Lock-in:** Shipped apps migrate from `id_moves.json`; the file must stay cumulative forever, or older installs lose their marks.
+- **Ck:** `IdMovesTest` (Robolectric + in-memory Room + the real asset map: 4 tests: map dead to live ids · marks/reads follow · merge · runs once) · `bin/test_bin.py` · 1868 verses, 92 Andachten + ⭐288 kept
+- **Note:** (about D-024) v1 `drop_toc` cut "toc to next heading", which ate chapter 17's 3-paragraph intro; now only contiguous toc/index lines are dropped. align: name anchors (EN mid-sentence capitals vs. DE text + cited footnotes) + length may match text+footnotes (Moore/Aveling inline long footnotes), so 13,120-125 are exact. Churn: 34 verses, sampled = fixes (V3 · 8 · 14 · 22 · 23).
+
+### D-027 @1113 · 🤖 Curated plans live in data/plans_extra.json; "Ludditen & KI" pairs chapter 13 with new "Und heute?" bridge texts · Accepted (@1113)
+- **Y:** A bridge is its own field, not an Andacht (an Andacht is an LLM devotional, a bridge is an authored argument). The Kapital text stays untouched by construction.
+- **Ctx:** QA @1112: "add a luddites read plan and link directly to AI · explaining text new, bible text original" (R4) · big round #6.
+- **Scope:** build.py `extra_plans()` appends hand-curated plans (verse ids only; an unknown id fails the build) right after the flagship · PlanDay `xd`/`xe` = the Today box "💡 Und heute?" + "new text — Marx's paragraph above is the original" · 7 days: 13,73 Aristoteles · 13,62 · 13,110 · 13,124-125 Ludditen · 13,127+130 · 13,165 "an sich vs. kapitalistisch angewandt" · 13,144 · Marxoskop "KI & Maschinen" leads to a card, a confirm, then `startPlan("ludditen")`.
+- **Alt:** LLM bridges via andacht.py (rejected: the local model makes Marx errors) · only a new Marxoskop card (rejected: one-shot, no habit).
+- **Ck:** `BigRoundTest.ludditesPlanIsKap13WithBridges` · other languages showed the EN bridge until translate.py learned xd/xe (fan-in)
+
+### D-026 @1113 · 🔓 Hooked mode unlocks after 7 reading days or the first finished plan, with its own badge and animation · Accepted (@1113)
+- **Y:** Total days, not streak (D-004 no anxiety). The dialog names its own trick (honest Hooked). The Settings bar is a goal gradient.
+- **Ctx:** QA @1112: "hooked mode only after 7 days or first read plan, animation/award 'unlocked!'" · big round #5.
+- **Scope:** `Orden.HOOKED` 🪝 "Hinter den Kulissen" (`hookedUnlocked`: dates ≥ 7 or plansDone ≥ 1) · MainActivity: HOOKED new = `HookedUnlockDialog` first (padlock wiggle, shackle opens, 🪝 drops + 📳 + confetti, button "Einschalten" = testMode on) · Settings: locked row + days left + bar until earned · already on = stays on.
+- **Alt:** Hide the row until unlocked (rejected: no curiosity) · a 7-day streak (rejected: anxiety).
+- **Ck:** `BigRoundTest.hookedUnlocksAfter7DaysOrFirstPlan` · shot `settings_2` = 🔒 row
+
+### D-025 @1113 · 📜 After today's snippet comes an endless feed in book order, loading by itself · Accepted (@1113, v1)
+- **Y:** Book order gives context (plans jump around). Break cards keep D-014's honest tone. The Marxoskop stays above it, reachable.
+- **Ctx:** QA @1112: "after finishing the snippet, continue for the motivated, endless feed, hooked". You answered Q3: auto-scroll like Instagram. r4 #6: plan verses were text walls · big round #3 + #4.
+- **Scope:** `VerseView(preview = true)` with `snippet()` cut at a sentence end ≤ 320 chars + pill "weiterlesen ▾ · noch ~N Min." (🔊 reads all) · Today: plan verses + feed use it · after "Tag geschafft", `ReadOnFeed` at the tail of Home: passages right after today's last one in BOOK order, 3 per load when ≤ about 1800 px are left (no tap) · chapter % bar · "⬇ gleich: »…«" teaser · ☕ break card every 10 · scrolled past = `vm.read` (Read % + badges), NOT plan days (D-011).
+- **Alt:** LazyColumn rewrite of Today (rejected: big hot-file churn) · a "weiter" button (rejected: your Q3) · the plan's next day (rejected: breaks D-011 continuity).
+- **Ck:** `BigRoundTest` snippet/feedStart · shots `feed` `feed_2` · ⚠️ (v1) it loads a bit ahead, so "read" marks passages before they are fully seen
+- **Note:** The feed moved into the reader's 📜 mode (D-040) and was replaced by `ScrollBook` @1120 (#200).
+
+### D-024 @1113 · English reader data comes from the pipeline: align.py drops the chapter TOC, splits merged paragraphs and takes section titles from marxists.org · Accepted (@1113)
+- **Y:** No hand edits. Plans and scores stay unchanged (German text identical, plans.json byte-equal); full_xx is untouched.
+- **Ctx:** r4 sweep #3 (German section titles in EN + "no English paragraph here") and #4 (chapter 1 page 1 = TOC as body text) · big round #1 #2.
+- **Scope:** `drop_toc` (`<p class="toc">` to the next heading; also fixed the first verses of chapters 3 · 13 · 15 · 23) · `split_en`: a k-1 bead is cut into EN sentences by DE length share (199 down to 11 verses without EN) · a `Heads` stack per EN paragraph gives verse `en_head`, then build.py `en_sec_titles` (innermost label match 'a)' = 'a.' · 'IV' = '4', else the EN chapter title for DE chapters 4/24) writes verses.json `ste`, which `secTitle()` uses (DE = st, else ste).
+  - @1117 (11, then 7, then 0 gaps): a sentence can end after a closing quote · `Mr.`/`Dr.`… don't end one · `PIN` (DE id to EN opening) for DP mis-beads (13,58 · 20,13) = the only hand-given hints · 🏷️ labels (`[95]` · ch. 23 "12. Worcestershire.") are their own EN and never eat the body's first sentence · too few sentences = cuts at ; / : then the longest paragraph · tables keep "all on the first".
+- **Alt:** LLM-translate the DE titles (rejected: the Moore/Aveling wording exists) · an override table (rejected: drifts).
+- **Ck:** `bin/test_bin.py AlignEn` · `ContentTest.englishReaderData` (0 blanks; all 90 DE titles have EN) · ⚠️ known: 13,122-125 EN shifted about 1 paragraph (pre-existing DP slip) · the DE split typo "FÜFNZEHNTES" put chapter 15's opening into chapter 14 (fixed later by D-028)
+
+### D-023 @1113 · 🆕 The updater acts by installer: Obtainium gets poked, self-installs go silent after the first · Accepted (@1113), phone test pending
+- **Y:** Friends need 0 taps from the second update on. Obtainium keeps its job: we don't install over it (it declares ENFORCE_UPDATE_OWNERSHIP, which would add prompts).
+- **Ctx:** You had Obtainium background updates on, but always beat its 6 h interval (deploy, reload, update by hand = the same friction as the website). Your words: "use Obtainium if it's there, else the website apk". A 6 h delay is fine for users.
+- **Scope:** `Update.Via` from the installer of record: OBTAINIUM = notify only after `GRACE_H` 8 h on the same version, tap = `obtainium://refresh?id=<pkg>` (Obtainium wiki deep link; no link can INSTALL) · SELF = PackageInstaller session (not ACTION_VIEW), so WE become the installer of record, then Android 12+ + `UPDATE_PACKAGES_WITHOUT_USER_ACTION` lets the worker install silently and `UpdatedReceiver` posts "✔️ X installed" · the first self-update or < 12 = 1 confirm · STORE = nothing.
+- **Alt:** Install over Obtainium installs ourselves (rejected: ownership prompt + 2 updaters fighting) · Shizuku (rejected: setup for friends) · a daily nag for Obtainium too (rejected: noise, its background update mostly wins).
+- **Prev:** D-021 (amended). D-038 later dropped the grace period.
+- **Ck:** `UpdateWorkerTest` 8 (per installer · grace · silent · fallback) · `UpdateTest` via/silentRule · DEV Settings "🧪 bg update check now · installer: X"
+
+### D-022 @1113 · 📖 Double-tap turned the page, the dog-ear turns it, and the first chapters showed a hint · Superseded by D-044
+- **Y:** Three cues (motion · object · words) without a tutorial screen. Outside the book (Today) there is no double-tap, so a tap reacts at once.
+- **Ctx:** QA r5: you found page turning by accident ("NICE"), so it needed discovery. Your words: "double tap = turn page, drop bookmark-via-double-tap".
+- **Scope:** `LocalPageTurn` (ChapterScreen) fed by VerseView `onDoubleClick` + paper `detectTapGestures` · `DogEar` bottom-right (tap = turn) · until 3 own turns (`omm_ui` SharedPrefs "turns"): the page lifted 2× + pill "swipe or double-tap" for about 6 s · 🔖 = verse menu only. Amended by D-044, swapped by D-057, hold changed by D-065.
+- **Alt:** HorizontalPager with dots (rejected: loses the spine-hinged turn) · persistent ‹ › buttons (rejected: clutter on the "pure Marx" page).
+- **Ck:** (at the time) `ui/ReadScreen.kt` TURN_HINT · DogEar · VerseView `onDoubleClick` = turnPage
+
+### D-021 @1113 · 🆕 Hand-installed APKs update themselves: a daily check, a notification, then download and install · Accepted (@1113), amended by D-023
+- **Y:** The same debug key installs over the old app, so data stays. If the installer is Obtainium, F-Droid or Play, skip (they update themselves). lib.sh already writes the apk + sha256.
+- **Ctx:** QA r5 🔑: friends install the APK directly and must never sit on a stale version. Audit: only `Update.check` on app start, then a Today banner that opened the web page (manual download). DEV: a Changelog line "Obtainium" only. No background check, no notification.
+- **Scope:** `notify/UpdateWorker.kt` WorkManager, daily (network): `Update.check` on the app's own channel (`.dev` = `<web>/dev/version.json`, else `<web>/version.json`), notification "🆕 X is out" (a new version at once, the same one again every 2 days), tap or Today banner opens `UpdateDialog`: download the `apk` from version.json (plain name only, sha256 checked), `ACTION_VIEW` the apk via FileProvider (`REQUEST_INSTALL_PACKAGES`; first time: the "allow this source" page, which resumes by itself) · on failure: the web page.
+- **Alt:** PackageInstaller session API (rejected at the time: more code, same system dialog) · in-app silent install (impossible without device owner) · Obtainium for all (rejected: friends won't).
+- **Ck:** `UpdateTest` (parse · channel · nag · sha · installer) + `UpdateWorkerTest` (Robolectric, fake version.json: notification, no repeat, older = silent) · manifest REQUEST_INSTALL_PACKAGES
+
+### D-020 @1113 · 👥 Mitlesen is always on, and the name lives only in Settings, labelled "Name" · Accepted (@1113)
+- **Y:** Your call: one place to change identity. It is still an anonymous daily token (D-005); the UI just says nothing about it now.
+- **Ctx:** QA r5: "remove the Mitlesen/read-along option and its text (always on)" · "label just 'Name'" · sweep #8: name field on Settings + Kreis (+ comments sheet).
+- **Scope:** `Settings.community = true` (an old stored "off" is ignored) · Settings Name field (D-016 prefill + save on blur stay) · Kreis + comments: `WritesAs` line "you write as X · change: ⚙️".
+- **Alt:** Keep the switch (rejected by you) · a name field everywhere (rejected: 3 fields drift).
+- **Prev:** D-005 (the switch) · D-016 (the label).
+- **Ck:** grep `setCommunity` in ui/ = 0 · `nameLabel()` = "Name"
+- **Note:** (about D-017) QA r5 amended the note editor: no ★ (only the app-wide close elsewhere) · ANY short tap while open = close (save if changed, blank = gone), and the tap is eaten (it can't toggle the action row) · the 👥 chip is exempt · look = `NoteBubble` (side ruler · ✍️ icon · blue tint · sans), later replaced by the D-054 card.
+
+### D-019 @1113 · 📸 Screenshots are made headless with Robolectric native graphics · Accepted (@1113)
+- **Y:** The real app, real Compose, 20 s, no device. It catches overlaps and stale copy before your phone does.
+- **Ctx:** Your r4: "design keeps slipping through, compare screens side by side". No /dev/kvm on tow, so no emulator; phone screencaps are private (memory).
+- **Scope:** `test/…/ShotsTest.kt` drives the real MainActivity (tabs · chapter · verse menu · note · settings · In book) + cardBitmap variants into `app/build/shots/*.png`; skipped in a normal `testDebugUnitTest`.
+- **Alt:** Emulator (no KVM) · Paparazzi (library modules only) · Roborazzi (extra plugin, same engine).
+- **Ck:** `./gradlew testDebugUnitTest --tests '*ShotsTest*' -Pshots` · ⚠️ Robolectric fonts: newer emoji (🪝) render as tofu, ignore
+
+### D-018 @1113 · The reader has no share: the verse menu is listen, bookmark, note and copy · Accepted (@1113)
+- **Y:** Read stays pure Marx; sharing lives on the Today card (Karte teilen · App teilen).
+- **Ctx:** QA r1: "2 boxes in each other look weird · drop sharing here?" · r4: "remove share from the Read page" · r4: "Listen on the LEFT".
+- **Scope:** Removed the verse-menu Teilen (also on Today's plan verses, which use the same menu) and r3's 2 pills at the page end · `CardDialog` + `LosungPopup` deleted (dead) · 🔊 first in every action row.
+- **Alt:** Keep verse share on Today plans only (rejected: 2 different menus) · 💬 you may want it back.
+- **Ck:** grep `CardDialog` = 0 · VerseView action order
+
+### D-017 @1113 · ✍️ Writing on the book is one pattern: a passage's ✍️ Notiz, inline, with a 👥 chip to also post it · Accepted (@1113)
+- **Y:** One entry, one composer, privacy = one toggle, and the comment keeps its passage reference.
+- **Ctx:** r4: the upper "Notiz" and the lower "comment on this page" were the same function with 2 looks, so merge. Note editor: tap outside = save, empty = cancel, small X, no Save/Cancel words.
+- **Scope:** Removed the page-end "Mitreden" button · inline editor: tap outside (root watcher `tapOutsideNote`) = commit · ★ (CloseButton, app-wide close) = discard · blank = no note / note gone · with Mitlesen on, the chip "👥 auch im Lesesaal posten — als <name>" posts "¶ <id> — text" to the page's room · reading others = 💬 N in the running head, which opens the sheet.
+- **Alt:** 2 buttons side by side in the menu (Notiz · Kommentar) · a Matrix field for the verse id (later, if threads per passage are wanted).
+- **Ck:** VerseView `NoteFocus` · ReadScreen has no OutlinedButton · ★ not ✕ = the r1 rule "red star closes" — 💬 you said "small X"
+
+### D-016 @1112 · The public name is prefilled with a random comrade name and saves on blur · Accepted (@1112), label superseded by D-020
+- **Y:** Your r3 ask. The label fit D-014's reading-room theme. No Lenin, Stalin or Mao (D-014: a lens, not a regime).
+- **Ctx:** QA r3: the "Your name" label was dull, an empty field is friction, a Save button is an extra step.
+- **Scope:** Label was "Lesesaal-Name / Reading-room name" (now "Name", D-020) · prefill = a socialist thinker's first name + a movement year (Rosa 1871 …), 1 per app run · the Settings field saves on blur/Done only if changed.
+- **Alt:** Genoss:in (gendered, party-ish) · Kampfname (militant) · Name / Username (generic): you could pick if you preferred.
+- **Ck:** `nameLabel()` + `comradeName()` in `ui/Comments.kt` · `NameTest.kt`
+
+### D-015 @1112 · The streak action is the easy Amen, placed under the reading snippet · Accepted (@1112), not built
+- **Y:** Your words @1112: "its not the quote … its the actual book" and "Amen counts for the streak, keep it an easy action · investment = reading a bit".
+- **Ctx:** The streak counted the quote Amen; the plan "done" looked meagre next to it (Mi). Options were a any day · b plan days · c hybrid. Amended @1112.
+- **Scope:** Amen = the streak action and stays easy (1 tap, no read-gate or timer) · one place: the bottom of the reading snippet (remove the card + hover duplicate), so the investment (Hooked/IKEA) is actually reading a bit.
+- **Alt:** a/b/c chip (rejected) · gate Amen on scroll or time read (rejected: friction).
+- **Ck:** (after the build) Amen only in the read snippet · Amen button in `Cards.kt` = 0 · streak test
+
+### D-014 @1112 · 🎖️ Orden became Abzeichen (badges), with a reading-room look in blue and gold · Accepted (@1112)
+- **Y:** User feedback (Mi) via you: Orden felt too real-socialist and authoritarian, with ☭ everywhere.
+- **Scope:** Rename + re-theme (reading-room look), positive reframes ("missed a day" tone out), the stamp gift = ☭, Marx = a lens, not a utopia. Amended @1112 (you): tone = positive and friendly, **nudging allowed** (a miss gets a kind nudge, e.g. a sad Marx) · no guilt, shame or loss threats.
+- **Alt:** Keep Orden (rejected: alienates non-hardcore users).
+- **Ck:** `grep -rn "Orden" ui/` = only enum/code names, UI text says Abzeichen/badges · `OrdenTest.kt` · nudge strings carry no blame ("verpasst" / "verloren")
+
+### D-013 @1112 · 📉 The crisis badge needs 15 shakes · Accepted (@1112)
+- **Y:** Mi: "needs more shakes".
+- **Ctx:** The crisis medal was too easy.
+- **Scope:** `KRISE_SHAKES = 15`.
+- **Ck:** `logic/Orden.kt` KRISE_SHAKES
+
+### D-012 @1112 · 🔊 There is one sober voice only · Accepted (@1112)
+- **Y:** Mi and you agree the holy voices (Gottvater, Gott, Pfarrer…) are cringe.
+- **Scope:** `Persona.picker = [NORMAL]`; the rest is hidden in code, not deleted · an old stored default becomes sober.
+- **Alt:** Keep them as opt-in (rejected: clutter).
+- **Ck:** `Persona.picker` in `ui/Share.kt` · `VoiceTest.kt`
+
+### D-011 @1112 · 📖 A reading plan continues day by day, never repeats, and everyone starts in a default plan · Accepted (@1112)
+- **Y:** Mi's feedback.
+- **Ctx:** A real-user bug: the same page twice. The plan didn't train regular reading.
+- **Scope:** `planIndex` continuity, a finished plan doesn't repeat, a default plan for all.
+- **Ck:** `PlanTest.kt`
+
+### D-010 @1031 · UI strings are written inline in German and English in the code; other languages come from translate.py · Accepted (@1031)
+- **Y:** Your call: 13 languages and a lone developer.
+- **Scope:** `T("de","en")` / `tr(..)` pairs in Kotlin (key = EN) are translated by `bin/translate.py --only ui` into i18n_xx.json · not translate_full for UI · one pass at fan-in.
+- **Alt:** strings.xml per language (rejected: 13× by hand).
+- **Ck:** `bin/translate.py --only ui` finds 0 new · only launcher/shortcut/tile names live in `res/values*`
+
+### D-009 @1108 · Releases go to GitHub, Forgejo is the origin, and gh only fetches · Accepted (@1108)
+- **Y:** The mirror carries tags to GitHub; ship.sh waits up to 120 s.
+- **Ck:** `git remote -v` · `bin/ship.sh`
+
+### D-008 @1107 · The DEV build stamps its version into the APK's first zip entry, so Obtainium sees updates · Accepted (@1107)
+- **Y:** The root cause was measured.
+- **Ctx:** Obtainium's default pseudo-version hashes the first 1 KiB, which was identical across builds, so it never updated.
+- **Scope:** ommStamp + a deploy guard.
+- **Ck:** `ref.md` (the trap is documented) · `bin/deploy.sh`
+
+### D-007 @1107 · There is one dialog style (MarxDialog), and ☭ only closes · Accepted (@1107)
+- **Y:** Your words: "windows look weird — frame colour, no frames, ☭ at odd spots".
+- **Ck:** `ui/MarxDialog.kt` · no raw AlertDialog elsewhere
+
+### D-006 @1105 · The repo is public under GPL-3.0, with priv/ git-ignored · Accepted (@1105)
+- **Y:** ❓ am0 (no reason recorded). Accepted risk: GitHub keeps old SHAs reachable.
+- **Ctx:** Friends need to build it themselves.
+- **Scope:** Public GitHub am0ebe/oh-my-marx; the Hooked OCR is out of the tree and out of history.
+- **Ck:** `.gitignore` priv/ · LICENSE
+
+### D-005 @1103 · 👥 Community reading (Mitlesen) uses an anonymous daily token, on by default · Accepted (@1103), switch superseded by D-020
+- **Y:** ❓ am0 (on by default was your call). Social proof (Hooked tribe) weighed against privacy.
+- **Scope:** Counter + Matrix comments/Kreise, a switch-off in Settings (gone since D-020), not end-to-end encrypted (the UI says so).
+- **Ck:** `data/Community.kt` · `Prefs.community` · 💬 the toggle's fate was an open question
+
+### D-004 @1101 · 🔥 The streak has a 🕊️ Sabbath joker, and the stamp card counts total days · Accepted (@1101)
+- **Y:** Streak anxiety: one miss leads to rage-quitting (notes.md § judgment).
+- **Alt:** A plain streak (rejected).
+- **Ck:** Prefs flag "sabbath" · `logic/Daily.kt` · `OrdenTest.kt`
+
+### D-003 @1028 · 🏛️ The app is native Android (Kotlin + Compose), offline, with an optional server · Accepted (@1028)
+- **Y:** It is a learning project, and friends sideload it.
+- **Ctx:** One developer plus AI crew; friends get the APK directly, no store.
+- **Scope:** Offline-first, the whole book in the APK. A server was added @1103, opt-in.
+- **Alt:** none recorded.
+- **Effects:** Everything works without a network; online parts (counter, Matrix, updates) degrade gracefully.
+- **Lock-in:** All UI, logic and tests are Kotlin/Compose; a cross-platform rewrite would start from scratch.
+- **Ck:** `android/` · the INTERNET permission is only for Community/Update
+
+### D-002 @1028 · 📕 The book source is MEW 23 (German, public domain) and Moore/Aveling 1887 (English, public domain) · Accepted (@1028)
+- **Y:** You own MEW 23, so page references match.
+- **Alt:** DTA 1867 (rejected: CC BY-NC, different structure).
+- **Ck:** `bin/fetch.py` · `ContentTest.kt`
+
+### D-001 @1031 · 🌍 The UI languages are German and English, English by default (phone language if supported), German second · Accepted (@1031)
+- **Y:** ❓ am0 (no reason recorded).
+- **Ck:** `data/I18n.kt`
 
 ## ❓ open Qs
 - 💬 **streak**: (a) any reading day · (b) plan days only · (c) hybrid chip — Mi: 2nd "done" looks meagre next 2 big streak widget
