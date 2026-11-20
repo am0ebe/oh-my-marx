@@ -229,6 +229,20 @@ fun ChapterScreen(vm: AppVm, kap: String, focus: String?, @Suppress("UNUSED_PARA
     val speaker = rememberSpeaker()
     val density = LocalDensity.current
     LaunchedEffect(index) { vm.read(pages[index].verses.map { it.id }); vm.pageSeen(pages[index].page) }  // page seen = read (+ 👥 count)
+    // ⏱️ D-059 reading time: each page's shown time on leave (turn · back · app away) ➡ ≥ 10 s counts, ≤ 5 min per page
+    val lifecycle = androidx.lifecycle.compose.LocalLifecycleOwner.current.lifecycle
+    androidx.compose.runtime.DisposableEffect(index, lifecycle) {
+        var since = System.currentTimeMillis()
+        val obs = androidx.lifecycle.LifecycleEventObserver { _, e ->
+            when (e) {
+                androidx.lifecycle.Lifecycle.Event.ON_PAUSE -> { vm.pageTime(System.currentTimeMillis() - since); since = Long.MAX_VALUE }
+                androidx.lifecycle.Lifecycle.Event.ON_RESUME -> since = System.currentTimeMillis()
+                else -> {}
+            }
+        }
+        lifecycle.addObserver(obs)
+        onDispose { lifecycle.removeObserver(obs); if (since != Long.MAX_VALUE) vm.pageTime(System.currentTimeMillis() - since) }
+    }
     // 💬 comments: load th chapter's room when entering a chapter · sheet = th page whose 💬 was tapped
     LaunchedEffect(pages[index].kap, s.community) { vm.loadComments(pages[index].kap) }
     var talk by remember { mutableStateOf<BookPage?>(null) }

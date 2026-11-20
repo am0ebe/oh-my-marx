@@ -18,6 +18,14 @@ _SDD: code says **wh** · th file says **y** · drift = a bug · fmt ➡ `pr/vib
 - 🔥 hot files (1 owner at a ti — fan-out lanes nvr split these): `assets/content/i18n_*.json` + `data/i18n/*.jsonl` (translate pass = fan-in only) · `android/app/build.gradle.kts` (version) · `ui/Changelog.kt` · `res/values*/strings.xml` · `TodayScreen.kt` · `MineScreen.kt` · `Share.kt`
 
 ## 🧾 decisions (newest on top)
+### D-059 @1120 · ⏱️ "long i th app" award = time IN TH BOOK, not app-open time · 🤖 built as rec (🦠 @1120 via M8 #185 asked) · 💬 eval on fon
+- **ctx**: 🦠 "award 4 staying i th app a long time" · D-014 earned-only · D-004 no anxiety · Hooked ch6 (facilitator, not dealer)
+- **options**: a) 1 long session (≥ N min at once) · **b) total active reading time i th 📖 book, 2 tiers** (🤖) · c) daily minutes streak · d) skip
+- **dc**: b · ⏱️ **Normalarbeitstag** = 8 h total · 🏭 **Arbeitswoche** = 40 h total · group READ · a page counts ≥ 10 s, cap 5 min (idle screen ≠ reading) · paused app = clock stops
+- **y**: Kap. 8 frame (8-hour day fought for) = wink + honest · total, not at-once ➡ no binge pressure · a + c reward compulsive use = th exact Hooked trap th app mocks · counting book time, not app time ➡ can't be farmed by leaving it open
+- **alt**: a ❌ binge · c ❌ 2nd streak = anxiety · d ❌ 🦠 asked 4 it
+- **ck**: `OrdenTest.readingTimeMedals` · `Prefs.readSecs` · ChapterScreen page timer (DisposableEffect + lifecycle)
+_🛠️ @1120 (M8 #185): D-048 · 049 · 050 · 051 · 052 · 053 · 054 = built on th 🤖 pick (C2-C5 + C7) ➡ still 💬 til 🦠 evals on th fon · gaps (🔵 todo): perk effects · 12 heads still emoji tokens · Share/Widget head · illuminated + section initials · 📜 pilcrow_
 ### D-058 @1120 · 🖨️ book type: Literata bundled · block-justified · auto hyphens · ✔️ (🦠 @1120 via M8 · closes D-033 b 🧪)
 - **ctx**: 🦠 "block-justified like a printed book + a good book font, hyphenation DE/EN so justify doesn't gap" · D-033 b (🦠 @1114 "try b") = Literata ⬄ EB Garamond, never built
 - **dc**: **Literata** (OFL 1.1, Google's e-book face, `res/font` variable wght + opsz, opsz 12 body · 18 italic) = `BookSerif` 4 all serif tokens · `bookBody` = `TextAlign.Justify` + `Hyphens.Auto` + `LineBreak.Paragraph` · `localeList` = shown lang (DE rules 4 DE txt) · drop cap: 3-line block = whole ¶ clipped (line 3 stays justified + hyphen) · licence ➡ `assets/licenses/Literata-OFL.txt`

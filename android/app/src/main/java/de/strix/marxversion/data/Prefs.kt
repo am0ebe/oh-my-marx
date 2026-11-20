@@ -153,9 +153,11 @@ class Prefs(private val context: Context) {
         val flags = stringSetPreferencesKey("orden_flags")   // "night" · "founder" · "invite" · "krise" · "sabbath"
         val shares = intPreferencesKey("orden_shares")
         val shown = stringSetPreferencesKey("orden_shown")   // announced (so "new medal!" pops once)
+        val readSecs = longPreferencesKey("read_secs")       // ⏱️ D-059: active reading time i th 📖 book (page ≥ 10 s, ≤ 5 min per page)
     }
-    data class OrdenState(val flags: Set<String>, val shares: Int, val shown: Set<String>?)
-    val orden: Flow<OrdenState> = context.store.data.map { OrdenState(it[O.flags].orEmpty(), it[O.shares] ?: 0, it[O.shown]) }
+    data class OrdenState(val flags: Set<String>, val shares: Int, val shown: Set<String>?, val readSecs: Long = 0)
+    val orden: Flow<OrdenState> = context.store.data.map { OrdenState(it[O.flags].orEmpty(), it[O.shares] ?: 0, it[O.shown], it[O.readSecs] ?: 0) }
+    suspend fun addReadSecs(s: Long) = context.store.edit { it[O.readSecs] = (it[O.readSecs] ?: 0) + s }
     suspend fun flag(f: String) = context.store.edit { it[O.flags] = it[O.flags].orEmpty() + f }
     suspend fun shared() = context.store.edit { it[O.shares] = (it[O.shares] ?: 0) + 1 }
     suspend fun ordenShown(ids: Set<String>) = context.store.edit { it[O.shown] = it[O.shown].orEmpty() + ids }

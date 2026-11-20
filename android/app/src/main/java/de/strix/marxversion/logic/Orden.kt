@@ -21,7 +21,11 @@ data class Stats(
     val shares: Int = 0,
     val kreise: Int = 0,
     val flags: Set<String> = emptySet(),           // "night" · "founder" · "invite" · "krise" · "sabbath"
+    val readMinutes: Long = 0,                     // ⏱️ D-059: active reading time i th book (not app-open time)
 )
+
+/** ⏱️ D-059: 1 page counts its time only if read ≥ 10 s, capped at 5 min (idle screen ≠ reading) */
+fun pageSecs(shownMs: Long): Long = (shownMs / 1000).let { if (it < 10) 0 else minOf(it, 300) }
 
 enum class OrdenGroup(val label: Pair<String, String>) {
     READ(T("Lesen", "Reading")), BOOK(T("Das Buch", "The book")), SOCIAL(T("Gemeinsam", "Together")), SECRET(T("Geheim", "Secret")),
@@ -86,6 +90,13 @@ enum class Orden(
         OrdenGroup.SECRET, hidden = true, earned = { "night" in it.flags }),
     SABBATH("🕊️", T("Sabbat gehalten", "Kept the Sabbath"), T("Den Sabbat-Joker eingelöst — Ruhe gehört dazu.", "Used the Sabbath joker — rest is part of the work."),
         OrdenGroup.SECRET, hidden = true, earned = { "sabbath" in it.flags }),
+    // ⏱️ D-059 time i th book (earned-only, D-014) · Kap. 8: th 8-hour day had 2 b fought for · counts reading, not staying
+    NORMALTAG("⏱️", T("Normalarbeitstag", "Normal working day"), T("8 Stunden im Buch gelesen — insgesamt, nicht am Stück. Erkämpft, nicht abgesessen.",
+        "Read 8 hours in the book — in total, not in one go. Fought for, not sat out."),
+        OrdenGroup.READ, earned = { it.readMinutes >= 8 * 60 }),
+    ARBEITSWOCHE("🏭", T("Arbeitswoche", "Working week"), T("40 Stunden im Buch gelesen. Mehr als eine Woche Mehrarbeit — für dich selbst.",
+        "Read 40 hours in the book. More than a week of surplus labour — for yourself."),
+        OrdenGroup.READ, earned = { it.readMinutes >= 40 * 60 }),
     KRISE("📉", T("Krisenfest", "Crisis-proof"), T("Das Handy 15× geschüttelt — du hast eine ganze Krise ausgelöst.", "Shook the phone 15× — you caused a whole crisis."),
         OrdenGroup.SECRET, hidden = true, earned = { s -> s.flags.count { it.startsWith("krise") } >= KRISE_SHAKES });
 

@@ -300,6 +300,7 @@ class AppVm(app: Application) : AndroidViewModel(app) {
             chaptersDone = chapters, bookDone = content.verses.all { it.id in read }, plansDone = plansDone,
             marks = m.count { it.highlight != null || it.note != null || it.bookmark }, shares = o.shares, kreise = k.size,
             flags = o.flags + if (rest.isNotEmpty()) setOf("sabbath") else emptySet(),
+            readMinutes = o.readSecs / 60,
         ))
     }.flowOn(Dispatchers.Default).stateIn(viewModelScope, SharingStarted.Eagerly, emptySet())
 
@@ -333,6 +334,8 @@ class AppVm(app: Application) : AndroidViewModel(app) {
         if (ids.isNotEmpty()) marx.prefs.openPlans(ids)
     }
     fun flag(f: String) = viewModelScope.launch { marx.prefs.flag(f) }
+    /** ⏱️ D-059: 1 page's shown time ➡ active reading secs (logic pageSecs: ≥ 10 s, ≤ 5 min) */
+    fun pageTime(shownMs: Long) { val s = de.strix.marxversion.logic.pageSecs(shownMs); if (s > 0) viewModelScope.launch { marx.prefs.addReadSecs(s) } }
     private suspend fun nightCheck() { if (java.time.LocalTime.now().hour < 4) marx.prefs.flag("night") }
 
     /** "Amen ☭" on th Losung = th tiny habit: 1 verse read counts as a reading day (Fogg: ability > motivation) */
