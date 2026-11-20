@@ -42,6 +42,7 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
   - 📱 Widget: show the day's egg (still the ☭ / emoji text head).
   - 🧔 ✂️ Guest heads (Clara Zetkin · Engels · Jenny Marx) = moot since eggs (D-066) · `Head` enum + `Feast.head` now unused by the UI ➡ rm?
   - 🖼️ Feast frames (design § 14.2.1) · 🔊 stamp thud sound (D-035).
+- 🤖🩹 AR feast greetings: Latin junk i i18n_ar.json ("تrier" · "aruss") ➡ re-run translate.py on those keys (seen i egg_arch_ar.png #246)
 - 🎨 💬 Fable design pass over the 30 eggs (`bin/eggs.py`) — only if 🦠 wants more polish aftr the gallery
 - 🤖🏗️ ✂️ Literata subset still needs fonttools installed ➡ done in 627731e (5 static styles, `bin/font_subset.sh`)? = stale
 - ‼️ ⭐🧪 **QA @1116** ➡ [qa_1116.md](qa_1116.md) — 14 ⚡ i 6 lanes (L3 share 1st) · 3 🎨 (➡ Fable spec aftr) · 2 🔍 · 💬 Qs ✔️ answered @1116 ➡ lanes built (D-039 · D-040) · Q8 revised = no Werkbank (D-041) · left: D3 joker · fon items

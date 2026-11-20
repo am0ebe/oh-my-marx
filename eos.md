@@ -1,6 +1,12 @@
 # eos omm — resume log · newest on TOP
 _1 block per /eos · written by /eos § 3 · todo keeps 1 line: `▶ resume ➡ eos.md`_
 
+## 261120 23:00 · #246 (M8): arch title cut off on feast cards · /eos
+- **at** · DEV `0.13.0-dev.1120.2256` live = 640e349 · feast arch = headline only (`Share.archSplit`), rest = small italic lines under th egg, arc 56➡100° (D-068 Proposed) · `EggArchShotTest` (split + 30×13 fit, shots `egg_arch_<lang>.png` w `-Pshots`) · full unit green · pushed
+- **▶ NEXT** · 🦠 qa_1121 r2 (prev block) + #246 👀 box (shots / fon on nxt feast) ➡ D-068 Accepted o fix
+- **👤 🦠** · D-068 judgment: headline + tail split ok?
+- **⚠️** · AR feast tails carry translation junk ("تrier", "arus") = data, not layout ➡ 🔵
+
 ## 261120 22:30 · #229 + #241 (M8): 🥚 eggs in-app · drop cap · pinch · /eos
 - **at** · DEV `0.13.0-dev.1120.2220` live = c52e1af · 30 eggs (`bin/eggs.py` ➡ vectors + EggRes) i top bar · hero (EggPop) · quote card · launcher icon = plain again (aliases built i 1911, dropped #241) · drop cap = bare red letter by baselines (D-067), no ¶ i 📜 · 📜 pinch back · unit 138 + lint + test_bin + check_langs green · pushed
 - **▶ NEXT** · 🦠 does [qa_1121.md § r2](qa_1121.md) (4 checks, ~3 min) ➡ fix wh he marks ❌
