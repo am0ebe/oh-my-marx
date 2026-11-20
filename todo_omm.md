@@ -2,7 +2,7 @@
 _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm wo 🦠 ok · dropped @1113 ➡ [notes.md § 🗃️](notes.md)_
 
 ## 🏔️
-- ☭ **v1** (roadmap 1/3 now · 🦠 @1120 ➡ [compass § 🗺️](../compass.md)) — design § 14 C-lanes + **Matrix chat** + **audio** (TTS/STT fr pr/audio) i app · done = stable release w all 3 ➡ then only feedback + analytics/Hooked
+- ☭ **v1** (roadmap 1/3 now · 🦠 @1120 ➡ [compass § 🗺️](../compass.md)) — design § 14 C-lanes + **Matrix chat** + **audio** (many langs · how deployed) + feedback loop · v1 = **QY bar**: UX + func + purpose feel ~80-90 % aftr thorough eval/tst (🦠) · done = stable release at th bar ➡ then analytics/Hooked · spin-off: Matrix 4 ourselves (ops)
 
 ## 🎯 sprint goal
 - 🧪 **QA + iterate 0.9.x b4 anything new** (was 0.7.0, bumped @1112) (🦠 @1106: "test existing feats + iterate a couple o times, else slop") ➡ friends' feedback in ➡ fix ➡ only then 0.8.0
