@@ -61,6 +61,9 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInWindow
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
@@ -238,9 +241,10 @@ fun ChapterScreen(vm: AppVm, kap: String, focus: String?, @Suppress("UNUSED_PARA
         }
     }
     // 👆 tap / hold = turn: left half ➡ back · right half ➡ fwd · 👆👆 double-tap a passage = its menu (D-057, swaps D-044)
-    //   x o th last finger down on th book (Initial pass below) ➡ VerseView's tap (no position) uses it too
-    var downX by remember { mutableFloatStateOf(1f) }
-    val turnAt: () -> Unit = { if (downX < 0.5f) back() else fwd() }
+    //   all 3 = 1 detector on th book (below) · passages only report their boxes (BookTaps)
+    val book = remember { BookTaps() }
+    var bookAt by remember { mutableStateOf(Offset.Zero) }   // th book box's window offset (tap pos ➡ window coords)
+    val haptic = androidx.compose.ui.platform.LocalHapticFeedback.current
     // (QA r5 peek + hint pill rm'd @1116 qa_1116 L2: "distracting" ➡ th dog-ears r th only hint · git: 65a2639)
     // 📖 ⬄ 📜 (qa_1116 Q4/Q7, 🦠 @1116): 2 reading modes til 🦠 picks 1 design · toggle i th slim head · remembers last
     //   📜 starts at th current page's 1st passage (fixed when th mode flips) · scrolled past ➡ index follows ➡ 📖 resumes there
@@ -257,7 +261,7 @@ fun ChapterScreen(vm: AppVm, kap: String, focus: String?, @Suppress("UNUSED_PARA
     }
 
     // 📜 scroll mode = no pages ➡ no turn ➡ a passage tap = its menu again (like Today)
-    CompositionLocalProvider(LocalReadScale provides scale, LocalPageTurn provides if (scrollMode) null else turnAt) {
+    CompositionLocalProvider(LocalReadScale provides scale, LocalBook provides if (scrollMode) null else book) {
      Box(Modifier.fillMaxSize()) {
       // ⌨️ imePadding: th page shrinks above th keyboard ➡ a note at th page bottom stays visible (qa_1116 r2.5)
       Column(Modifier.fillMaxSize().background(Ds.page).imePadding()) {
@@ -274,7 +278,7 @@ fun ChapterScreen(vm: AppVm, kap: String, focus: String?, @Suppress("UNUSED_PARA
             Modifier.weight(1f).fillMaxWidth().background(DESK)  // th desk under th book
                 .pointerInput(Unit) {  // 🤏 pinch (Initial pass: before th page scrolls)
                     awaitEachGesture {
-                        downX = awaitFirstDown(requireUnconsumed = false).position.x / size.width
+                        awaitFirstDown(requireUnconsumed = false)
                         var pinched = false
                         do {
                             val ev = awaitPointerEvent(PointerEventPass.Initial)
@@ -309,12 +313,15 @@ fun ChapterScreen(vm: AppVm, kap: String, focus: String?, @Suppress("UNUSED_PARA
                         onDragCancel = { scope.launch { turn.animateTo(0f) } },
                     )
                 }
-                // 👆 D-057 (🦠 @1120 "swap"): tap o hold on th paper (margins, head, folio) = turn · left half back ·
-                //   right half fwd · a passage does th same via LocalPageTurn (VerseView) · its menu = double-tap
+                // 👆 D-057 (🦠 @1120 "swap"): tap o hold anywhere on th book (passage o paper) = turn · left half back ·
+                //   right half fwd · double-tap a passage = its menu (+ buzz) · passages hv no click o their own (🐛 1009)
                 //   (was D-044: double-tap = turn · tap = menu · edge quarters = turn)
+                .onGloballyPositioned { bookAt = it.positionInWindow() }
                 .pointerInput(index, pages.size) {
-                    val at = { o: androidx.compose.ui.geometry.Offset -> if (o.x < size.width / 2) back() else fwd() }
-                    detectTapGestures(onTap = at, onLongPress = at)
+                    val at = { o: Offset -> if (o.x < size.width / 2) back() else fwd() }
+                    detectTapGestures(onTap = at, onLongPress = at, onDoubleTap = { o ->
+                        if (book.menuAt(o + bookAt)) haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                    })
                 },
         ) {
             val t = turn.value
@@ -404,9 +411,18 @@ private fun BackArrow(desc: String, onClick: () -> Unit) {
     }
 }
 
-/** 👉 turn by th last finger-down side fr inside a page (VerseView tap / hold, D-057) · null = not i th 📖 book
- *  (Today plan verses · 📜 scroll) ➡ there a tap = th passage menu */
-val LocalPageTurn = compositionLocalOf<(() -> Unit)?> { null }
+/** 📖 book taps (D-057): ONE detector on th book owns tap · hold · double-tap ➡ passages r NOT clickable i th book
+ *  🐛 DEV 1009 (🦠 @1120 "tap still selects th ¶"): passage = combinedClickable ➡ evy tap painted a ripple over th whole ¶
+ *  (= "selected") + th turn waited 300 ms 4 a maybe-2nd tap · now: passages only report their box (window coords) ·
+ *  double-tap ➡ `menu` = {id, n} ➡ that VerseView toggles its menu · null = not i th 📖 (Today · 📜 scroll) ➡ tap = menu */
+class BookTaps {
+    val boxes = mutableMapOf<String, androidx.compose.ui.geometry.Rect>()
+    var menu by mutableStateOf<Pair<String, Int>?>(null)
+    private var n = 0
+    /** double-tap at `p` (window coords) ➡ th passage under it, if any, toggles its menu */
+    fun menuAt(p: Offset): Boolean = boxes.entries.firstOrNull { it.value.contains(p) }?.let { menu = it.key to ++n; true } ?: false
+}
+val LocalBook = compositionLocalOf<BookTaps?> { null }
 
 /** 📐 folded page corner: desk shows thru th cut, th flap lies on th page w a soft shadow */
 @Composable

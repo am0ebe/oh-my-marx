@@ -90,6 +90,10 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.text
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.customActions
+import androidx.compose.ui.semantics.CustomAccessibilityAction
+import androidx.compose.ui.layout.boundsInWindow
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.rememberTextMeasurer
@@ -350,16 +354,23 @@ fun VerseView(
     val haptic = LocalHapticFeedback.current
     // D-057 (🦠 @1120, swaps D-044): i th 📖 book tap o hold = turn th page (side = finger x) · double-tap = this passage's
     //   menu · outside th book (Today · 📜 scroll) no turn ➡ tap = menu at once, hold = menu + buzz (as b4)
-    val turnPage = LocalPageTurn.current
+    //   📖: th book's 1 detector does all (🐛 1009: a clickable ¶ = ripple "selection" + 300 ms wait) ➡ here only
+    //   report th box + react 2 a double-tap request · TalkBack: custom action "menu" (no click = no ripple)
+    val book = LocalBook.current
+    if (book != null && showActions) {
+        val req = book.menu
+        LaunchedEffect(req) { if (req?.first == v.id) open = !open }
+        DisposableEffect(book, v.id) { onDispose { book.boxes.remove(v.id) } }
+    }
+    val menuLabel = tr("Absatz-Menü", "Passage menu")
     Box {
     Column(
         Modifier.fillMaxWidth().bringIntoViewRequester(into).clip(r6).background(bg)
             .background(Ds.gold.copy(alpha = 0.45f * glow.value)).then(frame)
-            .then(if (showActions && turnPage != null) Modifier.combinedClickable(
-                onClick = turnPage,
-                onDoubleClick = { haptic.performHapticFeedback(HapticFeedbackType.LongPress); open = !open },
-                onLongClick = turnPage,
-            ) else if (showActions) Modifier.combinedClickable(
+            .then(if (showActions && book != null) Modifier
+                .onGloballyPositioned { book.boxes[v.id] = it.boundsInWindow() }
+                .semantics { customActions = listOf(CustomAccessibilityAction(menuLabel) { open = !open; true }) }
+            else if (showActions) Modifier.combinedClickable(
                 onClick = { open = !open },
                 onLongClick = { haptic.performHapticFeedback(HapticFeedbackType.LongPress); open = true },
             ) else Modifier)

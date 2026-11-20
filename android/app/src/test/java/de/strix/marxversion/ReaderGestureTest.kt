@@ -38,6 +38,17 @@ class ReaderGestureTest {
     private val first = "wealth of those societies"
     private fun passage() = rule.onAllNodesWithText(first, substring = true).onFirst()
 
+    /** 🐛 DEV 1009 (🦠 @1120): 1st tap on a fresh page = th menu, not a turn · no double-tap b4 (th old tst hid it) */
+    @Test fun firstTapTurnsNoMenu() {
+        tap("Read", true); tap("p. 49"); settle()
+        // 🐛 old: ¶ = combinedClickable ➡ OnClick action + ripple over th whole ¶ on evy tap ("selected" look on th fon)
+        assertFalse("📖 passage is not clickable (book detector owns taps)",
+            passage().fetchSemanticsNode().config.contains(androidx.compose.ui.semantics.SemanticsActions.OnClick))
+        passage().performTouchInput { click(centerRight - Offset(24f, 0f)) }; settle()
+        assertFalse("1 tap opens no menu", has("Note", true))
+        assertFalse("1 tap right = next page", has(first))
+    }
+
     @Test fun tapTurnsDoubleTapOpensMenu() {
         tap("Read", true); tap("p. 49"); settle()
         // 👆👆 ➡ menu (Note · Copy …), page stays
