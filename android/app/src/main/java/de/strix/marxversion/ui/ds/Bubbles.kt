@@ -32,7 +32,8 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun MarxVoice(text: String, modifier: Modifier = Modifier, scale: Float = 1f) =
     Text(text, color = Ds.ink, modifier = modifier,
-        style = OmmType.bookBody.let { it.copy(fontSize = it.fontSize * scale, lineHeight = it.lineHeight * scale) })
+        style = OmmType.bookBody.let { it.copy(fontSize = it.fontSize * scale, lineHeight = it.lineHeight * scale,
+            localeList = androidx.compose.ui.text.intl.LocaleList(de.strix.marxversion.ui.LocalLang.current.locale.toLanguageTag())) })
 
 /** me (notes · my msgs): 3dp blue start ruler + blueTint, r12 end corners · lead = "✍" o null */
 @Composable

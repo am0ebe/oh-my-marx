@@ -189,7 +189,7 @@ fun ActionItem(
 /** ★ = close, evywhere (top-end o dialogs + sheets) · 36 visual, 48 target */
 @Composable
 fun CloseStar(onClick: () -> Unit, modifier: Modifier = Modifier, tint: Color = Ds.red, size: Dp = 36.dp, desc: String = "Close",
-              variant: CloseVariant = CloseVariant.V1) {
+              variant: CloseVariant = CloseVariant.V2) {   // ✔️ D-055 V2 (🦠 @1120 via M8) · was V1
     // qa_1116 L3 #6 + #7: th 1 star asset (res/drawable/ic_star.xml, bbox-centred i its box = no nudge) · bigger (pad 8 %) ·
     //   gold rim = th hero star's, scaled · circle = tint 10 % + 30 % hairline
     // qa_1117 r1 "star too low + too big i th circle": pad 8 ➡ 18 % · bbox-centred ≠ optically centred (th star's mass =

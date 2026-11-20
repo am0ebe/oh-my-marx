@@ -10,7 +10,7 @@ _contrast = WCAG 2.x, computed (text ≥ 4.5 · large txt / icon / border ≥ 3)
 | D-030 | btn look (qa-D7, mockups § 5) | A pill tonal · B letterpress · C rubric | ✔️ **A + B's press edge on th 1 big btn** (🦠 @1114) |
 | D-031 | reader chrome | a) as now · b) slim paper head, no bottom nav · c) immersive, tap = toggle | ✔️ **b** (try, c = 🧪) 🦠 @1114 |
 | D-032 | dark theme | a) light only · b) follow system · c) + ⚙️ toggle | ✔️ **c** 🦠 @1114 (L6) |
-| D-033 | book font | a) system serif · b) bundle 1 (Literata / EB Garamond, +0.3-1 MB) | ✔️ **b 🧪** 🦠 @1114 (cmp shots, L6) |
+| D-033 | book font | a) system serif · b) bundle 1 (Literata / EB Garamond, +0.3-1 MB) | ✔️ **b 🧪** 🦠 @1114 (cmp shots, L6) · ✔️ built @1120 = **Literata** + justify + hyphens (arch D-058) |
 | D-034 | daily Amen fx | a) sickle swoosh evy day (now) · b) CheckPop daily, swoosh = rank-up / full card | ✔️ **b** + Hooked note 🦠 @1114 |
 | D-035 | sounds (qa-R1) | a) none · b) 3 tiny (page · stamp · badge) + ⚙️ switch, dflt off | ✔️ **b** 🦠 @1114 (L6) |
 | D-036 | Today above th fold (qa-D1) | a) compact hero + stamp tag · b) keep hero, shrink card · c) hero collapses on scroll | 💬 **a** · mockups ➡ `d036_all.png` |
@@ -382,7 +382,7 @@ _ordered by wh they unlock · D-042/043 (plan versioning · unlocks) + D-044 (db
 | D-052 | **feast calendar** (R4 gaps) | a) **all 18 new** (§ 14.2.3) · b) labour history only, no fun days · c) 🦠 picks fr th sheet | **a** (gaps ≤ ~4 w) · c stays possible on th sheet | C3 |
 | D-053 | **holy-book devices** (D11) | a) ⚡ set only · b) **⚡ + 🟡** · c) all incl 🧪 (grain · margin glosses) | **b** · ❌ margin ¶ numbers (r3: "metadata, usr no need") | C4 |
 | D-054 | **note look** (D7 · Q4) | a) yellow sticky + 📌 (⚠️ = Hooked's yellow ➡ voice clash) · b) **margin-comment card** (tail · initial disc · name + time · ✎) · c) keep ruler, only new bg | **b** | C5 ➡ C4 |
-| D-055 | **close btn** (D9 · Q7) | V1-V8 sheet (§ 14.5) ➡ 🦠 picks by eye | 🤖 renders th sheet now (C6, no gate) · eye-guess **V4** (★ w ✕ cut-out = new usrs read "close") | C6 |
+| D-055 | **close btn** (D9 · Q7) | V1-V8 sheet (§ 14.5) ➡ 🦠 picks by eye | 🤖 renders th sheet now (C6, no gate) · eye-guess **V4** (★ w ✕ cut-out = new usrs read "close") · ✔️ **V2** 🦠 @1120 | C6 |
 
 ### 14.1 · 🏆 celebrations = 1 system
 _🦠 r3 + r4: "anti-climax" · "bland, txt stuffed, no icon/anim" · "Moses?" · "morgen kommt = not teasing" · rank-up "shd feel like hero upgrade / MMORPG lvl-up"_

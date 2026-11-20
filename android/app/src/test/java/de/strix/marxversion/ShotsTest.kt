@@ -13,6 +13,7 @@ import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTouchInput
+import androidx.compose.ui.test.doubleClick
 import androidx.compose.ui.test.swipeUp
 import androidx.compose.ui.test.swipeDown
 import androidx.test.core.app.ApplicationProvider
@@ -109,7 +110,9 @@ class ShotsTest {
         rule.onRoot().performTouchInput { repeat(6) { swipeDown() } }
         tap("Read", true); shot("read")
         tap("p. 49"); shot("chapter")
-        tap("wealth of those societies"); shot("verse_menu")   // ref line "Capital 1,1" gone i th reader (qa_1117)
+        // D-057: i th book a tap turns ➡ th menu = double-tap · ref line "Capital 1,1" gone i th reader (qa_1117)
+        rule.onAllNodesWithText("wealth of those societies", substring = true).onFirst().performTouchInput { doubleClick() }
+        shot("verse_menu")
         tap("Note"); shot("note_edit")
         // qa_1117 r2: tap away = save only ➡ th verse menu below stays open
         rule.onAllNodes(hasSetTextAction()).onFirst().performTextInput("Ware = Zelle")

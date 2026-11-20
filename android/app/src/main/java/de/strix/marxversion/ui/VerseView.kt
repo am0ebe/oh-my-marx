@@ -278,7 +278,10 @@ private fun DropCapText(t: AnnotatedString, style: TextStyle) {
                 // box = exactly 3 lines (glyph may overhang) ➡ line 4 follows at th normal leading, no gap
                 Text(cap, style = capStyle, modifier = Modifier.width(with(density) { capW.toDp() })
                     .height(with(density) { (style.lineHeight * 3).toDp() }).wrapContentHeight(Alignment.Top, unbounded = true))
-                Text(head, style = style, modifier = Modifier.weight(1f))
+                // D-058 justify: th WHOLE ¶ clipped 2 3 lines (not `head`) ➡ line 3 isn't a last line ➡ stays justified +
+                //   keeps its hyphen ("im-" | "mense" below) · same style + width as th measure ➡ same breaks
+                Text(rest, style = style, maxLines = 3, overflow = androidx.compose.ui.text.style.TextOverflow.Clip,
+                    modifier = Modifier.weight(1f))
             }
             if (tailStart < rest.length) Text(rest.subSequence(tailStart, rest.length), style = style)
         }
@@ -345,15 +348,19 @@ fun VerseView(
     }
     val scale = LocalReadScale.current
     val haptic = LocalHapticFeedback.current
-    // QA r5: double-tap = turn th page (i th book) · was 🔖 + ☭ burst · outside th book (Today) no double-tap ➡ tap reacts at once
+    // D-057 (🦠 @1120, swaps D-044): i th 📖 book tap o hold = turn th page (side = finger x) · double-tap = this passage's
+    //   menu · outside th book (Today · 📜 scroll) no turn ➡ tap = menu at once, hold = menu + buzz (as b4)
     val turnPage = LocalPageTurn.current
     Box {
     Column(
         Modifier.fillMaxWidth().bringIntoViewRequester(into).clip(r6).background(bg)
             .background(Ds.gold.copy(alpha = 0.45f * glow.value)).then(frame)
-            .then(if (showActions) Modifier.combinedClickable(
+            .then(if (showActions && turnPage != null) Modifier.combinedClickable(
+                onClick = turnPage,
+                onDoubleClick = { haptic.performHapticFeedback(HapticFeedbackType.LongPress); open = !open },
+                onLongClick = turnPage,
+            ) else if (showActions) Modifier.combinedClickable(
                 onClick = { open = !open },
-                onDoubleClick = turnPage,
                 onLongClick = { haptic.performHapticFeedback(HapticFeedbackType.LongPress); open = true },
             ) else Modifier)
             .padding(6.dp),
@@ -378,7 +385,9 @@ fun VerseView(
             append(txt.substring(last))
         }
         // Marx voice: book-body 17/26 serif × readScale (pinch)
-        val body = OmmType.bookBody.let { it.copy(color = Ds.ink, fontSize = it.fontSize * scale, lineHeight = it.lineHeight * scale) }
+        //   + localeList = shown lang ➡ hyphens follow DE / EN / … rules, not th fon's (D-058)
+        val body = OmmType.bookBody.let { it.copy(color = Ds.ink, fontSize = it.fontSize * scale, lineHeight = it.lineHeight * scale,
+            localeList = androidx.compose.ui.text.intl.LocaleList(LocalLang.current.locale.toLanguageTag())) }
         if (dropCap && cut == null) DropCapText(annotated, body) else Text(annotated, style = body)
         if (cut != null) MoreChip(tr("weiterlesen · noch ~%d Min.", "read more · ~%d min left").f(readMinutes(fullTxt.drop(cut.length))),
             { expanded = true }, Modifier.padding(top = Space.xs))

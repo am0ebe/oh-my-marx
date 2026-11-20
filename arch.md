@@ -18,6 +18,19 @@ _SDD: code says **wh** · th file says **y** · drift = a bug · fmt ➡ `pr/vib
 - 🔥 hot files (1 owner at a ti — fan-out lanes nvr split these): `assets/content/i18n_*.json` + `data/i18n/*.jsonl` (translate pass = fan-in only) · `android/app/build.gradle.kts` (version) · `ui/Changelog.kt` · `res/values*/strings.xml` · `TodayScreen.kt` · `MineScreen.kt` · `Share.kt`
 
 ## 🧾 decisions (newest on top)
+### D-058 @1120 · 🖨️ book type: Literata bundled · block-justified · auto hyphens · ✔️ (🦠 @1120 via M8 · closes D-033 b 🧪)
+- **ctx**: 🦠 "block-justified like a printed book + a good book font, hyphenation DE/EN so justify doesn't gap" · D-033 b (🦠 @1114 "try b") = Literata ⬄ EB Garamond, never built
+- **dc**: **Literata** (OFL 1.1, Google's e-book face, `res/font` variable wght + opsz, opsz 12 body · 18 italic) = `BookSerif` 4 all serif tokens · `bookBody` = `TextAlign.Justify` + `Hyphens.Auto` + `LineBreak.Paragraph` · `localeList` = shown lang (DE rules 4 DE txt) · drop cap: 3-line block = whole ¶ clipped (line 3 stays justified + hyphen) · licence ➡ `assets/licenses/Literata-OFL.txt`
+- **y**: Literata = built 4 long reading on screens (large x-height, sturdy at 17sp) · has Latin + Cyrillic (ru) + Greek · justify wo hyphens = rivers on a 360dp column · Paragraph breaker = fewer gaps
+- **alt**: EB Garamond (❌ small x-height, thin at 17sp on a fon · more "old" but less readable) · Source Serif 4 · system Noto Serif = old (D-033 a)
+- **cost**: +1.86 MB APK (2 variable TTFs, not subset) · 🔵 subset 2 Latin + Cyrillic static (fonttools) ≈ −1.3 MB · zh · ar · hi · bn · ur glyphs fall back 2 system per glyph
+- **ck**: shot `chapter` (justified, "im-" | "mense" at th drop cap) · `OmmType.book*` = `BookSerif`
+### D-057 @1120 · 📖 gestures SWAPPED: tap o hold = turn (left half back · right fwd) · double-tap a passage = its menu · ✔️ (🦠 @1120 via M8) · supersedes D-044 (below)
+- **ctx**: D-044 = double-tap turns (side by x) · tap = passage menu · 🦠 eval DEV 0009: swap
+- **dc**: i th 📖 book: tap o hold anywhere (passage o paper) = turn, side = finger x · double-tap a passage = menu (+ buzz) · edge-quarter rule gone (whole half counts) · 📜 scroll + Today: no turn ➡ tap = menu, hold = menu (as b4) · hints (folio line + 📖 chip pill) say th new model
+- **y**: turning = th 90 % action ➡ th cheapest gesture (1 tap, like e-readers) · menu = rare ➡ double-tap is fine
+- **alt**: hold = menu (❌ 🦠 said "single tap / hold = turn")
+- **ck**: `ReaderGestureTest` (double-tap ➡ "Note" · tap right ➡ nxt page · hold left ➡ back) · ShotsTest verse_menu via double-tap
 ### D-056 @1119 · plan re-eval: bibel hand-picked · 30tage + montag re-ordered · Andachten found by verse ids · ✔️ (🦠 qa_1117 r1 via M8 #155 salvage)
 - **ctx**: 🦠 r1 "do th plans build on each other?" · re-eval: bibel = score.py `bib` flag ➡ 7/10 days hd no Bible at all · 30tage hd 13 b4 10-12 + 23 b4 22 (Marx's ladder backwards) · montag day 1 = 1,27 (coat + linen, not Monday)
 - **dc**: bibel v2 = 10 hand-picked refs (Lamb o God ➡ Revelation ➡ Bible-4-linen ➡ Paradise ➡ Eden ➡ Jehovah ➡ Moses ➡ original sin ➡ Holy Ghost) · 30tage v2 + montag v2 (no ch. 1-3) · all via D-042 · Andacht lookup = (plan, verse ids), not day idx · `data/andachten_hand.jsonl` beats andacht.py's LLM cache
@@ -25,7 +38,7 @@ _SDD: code says **wh** · th file says **y** · drift = a bug · fmt ➡ `pr/vib
 - **alt**: tune th `bib` regex (❌ "Gott"/"heilig" hits evywhere) · LLM Andachten 4 new bibel days (❌ quality, todo "Heute lädt uns Marx ein")
 - **ck**: `test_bin.py PlanContent` 5 · translate `--only a` re-run (Andacht translations r keyed plan:idx)
 _🎨 D-045..055 @1119 = design addendum (qa_1117 D6-D11 + r4) · all 💬 · 🤖 pick marked · spec + mockups + lanes C1-C7 ➡ [design_system.md](design_system.md) § 14 (§ 14.0 = same list as a table)_
-### D-055 @1119 · close btn (D9 · Q7): variants sheet ➡ 🦠 picks · 💬
+### D-055 @1119 · close btn (D9 · Q7): variants sheet ➡ 🦠 picks · ✔️ **V2 bare ★** (🦠 @1120 via M8 · `CloseStar` dflt)
 - **options**: V1 now (★ i tinted circle) · V2 bare ★ · V3 mono ✕ · **V4 ★ w ✕ cut-out** (🤖 eye-guess) · V5 inverted red disc · V6 outline ★ · V7 wax seal · V8 V1 + spin on press
 - **y**: 🦠 r1 "many versions, diff ctx" ➡ render, don't argue · V4 = brand + new usrs read "close" · V3 ❌ loses ★ = close (§ 1)
 - **ck**: `close_sheet.png` (8 × 3 ctx + dark) · lane C6, no gate
@@ -69,7 +82,7 @@ _🎨 D-045..055 @1119 = design addendum (qa_1117 D6-D11 + r4) · all 💬 · �
 - **options**: a) drop gift stamps · b) caption each counter (tried @1116 ❌ still confusing r3) · **c) hero = streak only (star + week + nxt-milestone bar) · stamps + rank ➡ Stempeluhr pane + My Capital** (🤖)
 - **y**: 2 worlds, 2 places: streak = hero · career (total days ➡ ranks) = stamp card · hero size + look = A (only th stamp row leaves)
 - **ck**: shot `hero_tiers` · stamp card i `mine` (C2)
-### D-044 @1119 · 📖 double-tap: left half = back · right half = fwd · amends D-022 · ✔️ (🦠 scrap @1119)
+### D-044 @1119 · 📖 double-tap: left half = back · right half = fwd · amends D-022 · ✔️ (🦠 scrap @1119) · ⚠️ superseded by D-057 @1120 (swap: tap = turn · double-tap = menu)
 - **ctx**: 🦠 "read book > add hint double tap = next/prev page" · D-022 double-tap = alw fwd
 - **dc**: side by x o th double-tap (paper) o th last finger-down on th book (passage, VerseView hs no position) · hint = folio line + 📖 chip pill
 - **y**: matches th 1-tap edge zones (left back · right fwd) ➡ 1 mental model · no always-on peek (D-022 pill rm'd @1116 = distracting)

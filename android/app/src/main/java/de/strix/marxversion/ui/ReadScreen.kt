@@ -200,7 +200,7 @@ private val FLAP_DARK = lerp(Ds.page, Ds.goldDeep, .16f)
  * 📖 th book (strix @1103: "like th actual old book, swipe ➡ th page turns"):
  *  whole Kapital as 1 stack o pages · drag ⬅ = th page lifts off th spine + turns · drag ➡ = turn back
  *  🤏 pinch = font size (saved) · long page ➡ scroll down inside it
- *  verse: tap = menu · hold = menu · double-tap anywhere = turn (QA r5, was 🔖) · 📐 dog-ear = turn
+ *  tap o hold anywhere = turn (left half back · right fwd) · double-tap a passage = its menu (D-057) · 📐 dog-ear = turn
  * Own pager (not HorizontalPager): th turning page must be drawn ABOVE th next one, pinned at th spine.
  * D-031 b: slim paper head on top (back · chapter · 💬 N) · app bars hidden by MainActivity (L5)
  */
@@ -237,8 +237,8 @@ fun ChapterScreen(vm: AppVm, kap: String, focus: String?, @Suppress("UNUSED_PARA
             turn.animateTo(1f, tween(320)); index--; turn.snapTo(0f)
         }
     }
-    // 👆👆 double-tap = left half ➡ back · right half ➡ fwd (🦠 scrap @1119 "double tap = next/prev page")
-    //   x o th last finger down on th book (Initial pass below) ➡ VerseView's double-tap (no position) uses it too
+    // 👆 tap / hold = turn: left half ➡ back · right half ➡ fwd · 👆👆 double-tap a passage = its menu (D-057, swaps D-044)
+    //   x o th last finger down on th book (Initial pass below) ➡ VerseView's tap (no position) uses it too
     var downX by remember { mutableFloatStateOf(1f) }
     val turnAt: () -> Unit = { if (downX < 0.5f) back() else fwd() }
     // (QA r5 peek + hint pill rm'd @1116 qa_1116 L2: "distracting" ➡ th dog-ears r th only hint · git: 65a2639)
@@ -256,7 +256,8 @@ fun ChapterScreen(vm: AppVm, kap: String, focus: String?, @Suppress("UNUSED_PARA
         if (hintKey > 0 && !scrollMode && turn.value == 0f) { turn.animateTo(-0.14f, tween(380)); turn.animateTo(0f, tween(320)) }
     }
 
-    CompositionLocalProvider(LocalReadScale provides scale, LocalPageTurn provides turnAt) {
+    // 📜 scroll mode = no pages ➡ no turn ➡ a passage tap = its menu again (like Today)
+    CompositionLocalProvider(LocalReadScale provides scale, LocalPageTurn provides if (scrollMode) null else turnAt) {
      Box(Modifier.fillMaxSize()) {
       // ⌨️ imePadding: th page shrinks above th keyboard ➡ a note at th page bottom stays visible (qa_1116 r2.5)
       Column(Modifier.fillMaxSize().background(Ds.page).imePadding()) {
@@ -308,15 +309,12 @@ fun ChapterScreen(vm: AppVm, kap: String, focus: String?, @Suppress("UNUSED_PARA
                         onDragCancel = { scope.launch { turn.animateTo(0f) } },
                     )
                 }
-                // 👆👆 double-tap on th paper (margins, head, folio) = turn (left half back · right fwd) · on a passage
-                //   VerseView routes its double-tap here too (turnAt)
-                // 👆 1 tap on th paper's left / right quarter = back / fwd (qa_1116 r2.4, like an e-reader) · a tap on a
-                //   passage = its menu (VerseView consumes it ➡ nvr reaches here)
+                // 👆 D-057 (🦠 @1120 "swap"): tap o hold on th paper (margins, head, folio) = turn · left half back ·
+                //   right half fwd · a passage does th same via LocalPageTurn (VerseView) · its menu = double-tap
+                //   (was D-044: double-tap = turn · tap = menu · edge quarters = turn)
                 .pointerInput(index, pages.size) {
-                    detectTapGestures(onDoubleTap = { o -> if (o.x < size.width / 2) back() else fwd() }, onTap = { o ->
-                        val w = size.width
-                        when { o.x < w * TAP_ZONE -> back(); o.x > w * (1 - TAP_ZONE) -> fwd() }
-                    })
+                    val at = { o: androidx.compose.ui.geometry.Offset -> if (o.x < size.width / 2) back() else fwd() }
+                    detectTapGestures(onTap = at, onLongPress = at)
                 },
         ) {
             val t = turn.value
@@ -358,8 +356,8 @@ private fun ModeHint(scrollMode: Boolean, modifier: Modifier) {
         if (scrollMode) Text("⬇", color = Ds.page, style = OmmType.bookMeta,
             modifier = Modifier.graphicsLayer { translationY = bob.value * 6 * density }.padding(end = Space.s))
         Text(if (scrollMode) tr("Endlos: einfach nach unten scrollen", "Endless: just keep scrolling down")
-            else tr("Buch: doppelt tippen = umblättern (links zurück, rechts weiter) · oder wischen",
-                "Book: double-tap to turn (left = back, right = next) · or swipe"),
+            else tr("Buch: tippen = umblättern (links zurück, rechts weiter) · doppelt tippen = Absatz-Menü",
+                "Book: tap to turn (left = back, right = next) · double-tap = passage menu"),
             color = Ds.page, style = OmmType.bookMeta)
     }
 }
@@ -406,10 +404,8 @@ private fun BackArrow(desc: String, onClick: () -> Unit) {
     }
 }
 
-/** 👆 tap zone per side (share o th page width) ➡ 1 tap = turn */
-private const val TAP_ZONE = 0.25f
-
-/** 👉 "turn forward" fr inside a page (VerseView double-tap) · null = not i th book (Today plan verses) */
+/** 👉 turn by th last finger-down side fr inside a page (VerseView tap / hold, D-057) · null = not i th 📖 book
+ *  (Today plan verses · 📜 scroll) ➡ there a tap = th passage menu */
 val LocalPageTurn = compositionLocalOf<(() -> Unit)?> { null }
 
 /** 📐 folded page corner: desk shows thru th cut, th flap lies on th page w a soft shadow */
@@ -467,9 +463,9 @@ private fun Page(vm: AppVm, p: BookPage, speaker: Speaker, i: Int, n: Int, modif
             Text("— ${p.page ?: (i + 1)} —", style = OmmType.bookMeta.copy(fontFamily = FontFamily.Serif), color = Ds.inkMuted,
                 textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
             // 👆 wh u can press (qa_1117 r3, like Today's "⬅ swipe · ⬇ pull · 📳 shake" line) · tiny + muted, under th folio
-            //   + double-tap left/right (🦠 scrap @1119) · edge tap still works, dropped fr th line (length)
-            Text(tr("👆👆 doppelt tippen: links = zurück · rechts = weiter · ↔ wischen · Absatz antippen = Menü · 🤏 Schriftgröße",
-                "👆👆 double-tap: left = back · right = next · ↔ swipe · tap a passage = menu · 🤏 pinch = text size"),
+            //   D-057: tap/hold = turn by side · double-tap a passage = menu
+            Text(tr("👆 tippen: links = zurück · rechts = weiter · 👆👆 Absatz doppelt tippen = Menü · ↔ wischen · 🤏 Schriftgröße",
+                "👆 tap: left = back · right = next · 👆👆 double-tap a passage = menu · ↔ swipe · 🤏 pinch = text size"),
                 style = OmmType.bookMeta, color = Ds.inkMuted.copy(alpha = .7f), textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth().padding(top = Space.s))
         }
