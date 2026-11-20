@@ -211,10 +211,12 @@ private fun App(vm: AppVm) {
                     // tap Marx (or th name) = home
                     // 🧪 DEV app: Marx on a blue disc (= its launcher icon) ➡ nvr confuse it w th stable one
                     navigationIcon = {
-                        Image(painterResource(R.mipmap.ic_marx_fg), contentDescription = tr("Heute", "Today"),
-                            modifier = Modifier.padding(start = 4.dp).size(44.dp)
-                                .then(if (IS_DEV) Modifier.background(DevBlue, CircleShape) else Modifier)
-                                .clickable(onClick = home))
+                        // 🧔 C3 · D-051: feast head (base + prop) via ui/ds/MarxHead = th only place th picks a head
+                        val feastNow = vm.feastPreview.collectAsStateWithLifecycle().value ?: de.strix.marxversion.logic.Feast.on(java.time.LocalDate.now())
+                        val todayDesc = tr("Heute", "Today")
+                        de.strix.marxversion.ui.ds.MarxHead(feastNow, Modifier.padding(start = 4.dp)
+                            .then(if (IS_DEV) Modifier.background(DevBlue, CircleShape) else Modifier)
+                            .clickable(onClick = home, onClickLabel = todayDesc))
                     },
                     title = { Text(APP_NAME, style = MaterialTheme.typography.titleMedium, modifier = Modifier.clickable(onClick = home)) },
                     colors = TopAppBarDefaults.topAppBarColors(containerColor = Ds.red, titleContentColor = Ds.white,
