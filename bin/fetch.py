@@ -4,10 +4,17 @@
 DE: MEW 23 (Dietz) fr archived mlwerke.de (wayback) — has MEW page markers <NNN> + footnote nos
 EN: Moore/Aveling 1887 fr marxists.org — 33 ch, DE Kap 4 ➡ EN 4-6 · DE 24.1-7 ➡ EN 26-32 (see DE2EN)
 
+y: th whole pipeline starts fr th 2 public-domain sources, kept as raw html so nothing re-downloads
+
 usage: fetch.py            # both
        fetch.py de|en
+examples:
+  bin/fetch.py       # fetch wh's missing i data/raw/{de,en}/ (network, polite delay)
+  bin/fetch.py en    # EN (marxists.org) only
 """
 import pathlib, re, sys, time, urllib.request
+if __name__ == "__main__" and {"-h", "--help"} & set(sys.argv[1:]):
+    print(__doc__); sys.exit(0)
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent / "data" / "raw"
 DE_BASE = "https://web.archive.org/web/2016id_/http://www.mlwerke.de/me/me23/"

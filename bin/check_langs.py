@@ -9,7 +9,12 @@
   + evy plan day's Andacht ("a") + "Und heute?" bridge ("x", Ludditen) i plans.json needs its entry too
     (@1116: bridges were EN i all 11 langs · ur missed 1 Andacht) ➡ bin/translate.py --only a x
 
+  + no half-Latin words ("تrier") · no quote still i Marx's German (#248) ➡ data/i18n/hand_fix.json
+
   bin/check_langs.py [ROOT]      ROOT = repo root (dflt: th one above bin/) · tsts pass a fake tree
+examples:
+  bin/check_langs.py             # ck th real tree · exit 1 + list = ship refuses (read-only)
+  bin/check_langs.py /tmp/fake   # ck a fake tree (test_bin does this)
 """
 import difflib
 import json
@@ -144,6 +149,8 @@ def problems(root):
 
 
 def main(argv):
+    if {"-h", "--help"} & set(argv):
+        print(__doc__); return 0
     root = pathlib.Path(argv[0]) if argv else pathlib.Path(__file__).resolve().parent.parent
     bad = problems(root)
     for b in bad:

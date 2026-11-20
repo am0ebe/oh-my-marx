@@ -5,6 +5,10 @@ per Vers: quote_de/quote_en (best short verbatim line = "Vers des Tages" candida
 standalone · tags · polemic (Marx roasting sb) · bible (biblical/religious ref)
 
 usage: score.py [-m MODEL] [-n LIMIT] [--ids 8,9 8,10]
+examples (ollama on tow = GPU):
+  bin/score.py              # score all unscored Verse ➡ data/scores.jsonl
+  bin/score.py -n 20        # try th prompt on 20 Verse 1st
+  bin/score.py --ids 8,9    # (re-)score 1 Vers
 """
 import argparse, json, pathlib, sys, time, urllib.request
 

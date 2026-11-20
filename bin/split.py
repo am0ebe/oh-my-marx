@@ -7,14 +7,21 @@ kind: text · table (stat tables, cells ' | ') · meta (headings, signatures, fo
 lead-ins ending w ':' ("Mill sagt:") merged into th following Absatz
 footnote refs i txt ➡ [52] · page markers <245> dropped (page = MEW page at Absatz start)
 
+y: 1 Absatz = 1 "Vers" is th app's unit (verse o th day · marks · plans) ➡ MEW html must become numbered Absätze
+
 usage: split.py   (re-runs fully, overwrites outputs)
+examples:
+  bin/split.py                          # re-split all Kap ➡ data/de.jsonl + notes_de.jsonl (+ id_moves.json if ids moved)
+  bin/split.py && bin/align.py && bin/build.py   # full DE re-run aftr a split fix
 
 🔁 ids moved vs th previous data/de.jsonl (same DE txt, new id) ➡ data/id_moves.json (cumulative old ➡ new, chains
 composed) + th id-keyed data files remapped once, here (rank · andachten · i18n q · i18n_full v) · th app migrates
 th usr's marks/progress fr th exported copy (assets id_moves.json, data/IdMoves.kt) · @1113: "FÜFNZEHNTES" typo
 put Kap 15's opening i Kap 14 + Kap 15 ids continued at 15,40
 """
-import html, json, pathlib, re
+import html, json, pathlib, re, sys
+if __name__ == "__main__" and {"-h", "--help"} & set(sys.argv[1:]):
+    print(__doc__); sys.exit(0)
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 RAW = ROOT / "data" / "raw" / "de"

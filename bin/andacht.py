@@ -5,6 +5,9 @@ reads data/plans.json (fr build.py) · skips th 1-year plan (too many days, pure
 a cached Andacht is reused only while th day's verse ids stay th same ➡ re-run build.py aftwards
 
 usage: andacht.py [-m MODEL] [--plans 30tage vampir] [--redo]
+examples (ollama on tow = GPU):
+  bin/andacht.py                         # fill missing Andachten 4 all plans ➡ then bin/build.py
+  bin/andacht.py --plans vampir --redo   # regenerate 1 plan's Andachten (hand ones i andachten_hand.jsonl still win)
 """
 import argparse, json, pathlib, sys, time, urllib.request
 

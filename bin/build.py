@@ -4,9 +4,16 @@
 also generates th reading plans (deterministic) ➡ data/plans.json (input 4 andacht.py)
 scores r joined by DE text (ids shifted once aft a split.py fix ➡ data/verses_scored_v0.jsonl maps old ids)
 
+y: th app reads only assets/content/*.json ➡ evy data/ change (Andacht · score · split · translation) needs a rebuild
+
 usage: build.py
+examples:
+  bin/build.py                                  # rebuild all assets (~10 s, overwrites assets/content + data/plans.json)
+  bin/build.py && bin/translate.py --export-only  # aftr a data fix: rebuild + re-export th 11 i18n files (no LLM)
 """
-import difflib, json, pathlib, re
+import difflib, json, pathlib, re, sys
+if __name__ == "__main__" and {"-h", "--help"} & set(sys.argv[1:]):
+    print(__doc__); sys.exit(0)
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 DATA = ROOT / "data"

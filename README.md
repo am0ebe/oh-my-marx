@@ -145,6 +145,27 @@ Release cycle:
 5. Commit + push ➡ `bin/ship.sh minor` (features), `patch` (fixes only) or an exact `X.Y.Z`: bumps, commits, pushes, tags, publishes.
    Refuses on a dirty tree, an unpushed HEAD, a missing changelog entry or an already-shipped version
 
+## bin
+
+Every script answers `--help` (why · what · examples) and does nothing else when asked.
+
+| script | what it does |
+|---|---|
+| `fetch.py` | downloads the raw Kapital html (MEW 23 German, Moore/Aveling English) into `data/raw/` |
+| `split.py` | MEW html ➡ one numbered paragraph ("verse") per line in `data/de.jsonl` |
+| `align.py` | pairs each German paragraph with its English one(s) ➡ `data/verses.jsonl` |
+| `score.py` · `rank.py` | local LLM rates every verse, then picks the best quotes per section |
+| `build.py` | all of `data/` ➡ the app's `assets/content/*.json` + reading plans |
+| `andacht.py` · `tease.py` | local LLM writes the daily devotional and the "tomorrow?" question per plan day |
+| `translate.py` | app texts ➡ 11 languages (local LLM, cached) · `--export-only` rebuilds the files without the LLM |
+| `translate_full.py` | the whole book + footnotes ➡ one language (hours, resumable) |
+| `check_langs.py` | ship guard: every menu language is complete and free of translation junk |
+| `eggs.py` | the 30 holiday icons ➡ Android vectors + preview gallery |
+| `font_subset.sh` | cuts the 5 Literata styles the app uses |
+| `notes.py` | one version's release notes from `ui/Changelog.kt` |
+| `deploy.sh` · `ship.sh` | DEV build to the phone · stable release |
+| `test_bin.py` | tests for the scripts above |
+
 ## Sources
 
 - **German:** Karl Marx, *Das Kapital* vol. 1, 4th ed. 1890 (ed. Engels), text and page numbers as in MEW 23 (Dietz),

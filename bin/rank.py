@@ -6,6 +6,9 @@ here th LLM sees all quotes o 1 section at once and picks th best ~1/6 (⭐ = Ve
 + th ones that really mock a *named* person/group (= "Marx teilt aus" plan).
 
 usage: rank.py [-m MODEL] [--redo]
+examples (ollama on tow = GPU):
+  bin/rank.py           # rank sections not yet ranked ➡ data/rank.jsonl ➡ then bin/build.py
+  bin/rank.py --redo    # re-rank evy section (aftr a score.py re-run)
 """
 import argparse, json, pathlib, sys, time, urllib.request
 

@@ -9,9 +9,16 @@ k-1 beads (marxists.org merged paragraphs) ➡ EN sentences split over th DE Abs
 EN headings (h3-h6 + subhead spans) tracked per paragraph ➡ verse["en_head"] ➡ build.py derives EN section titles
 chapter TOC (<p class="toc"> + index lines) dropped b4 aligning (was ch.1 page 1 body txt)
 
+y: th app shows DE + EN side by side ➡ evy DE Absatz needs its EN paragraph(s) (P1 step 3, aftr fetch + split)
+
 usage: align.py [--show KAP]   # --show prints th alignment o 1 Kap 4 eyeballing
+examples:
+  bin/align.py              # re-align all Kap ➡ data/verses.jsonl + data/notes.jsonl (then bin/build.py)
+  bin/align.py --show 8     # print Kap 8's DE ⬄ EN pairs, writes nothing
 """
 import html, json, math, pathlib, re, sys
+if __name__ == "__main__" and {"-h", "--help"} & set(sys.argv[1:]):
+    print(__doc__); sys.exit(0)
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 EN = ROOT / "data" / "raw" / "en"

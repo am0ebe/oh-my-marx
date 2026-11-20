@@ -13,6 +13,10 @@ NOT translated: full verse text + footnotes (app falls back 2 EN) — 1.3 M char
 cache: data/i18n/<lang>.jsonl · entry reused while its source txt is unchanged
 
 usage: translate.py [--langs it es] [--only q a plan chap ui] [--export-only] [-m MODEL]
+examples:
+  bin/translate.py --only ui           # new tr() strings ➡ all 11 langs (ollama on tow = GPU, ~18 min / 100 strings)
+  bin/translate.py --export-only       # no LLM: cache + data/i18n/hand_fix.json ➡ assets i18n_*.json (aftr a hand fix)
+  bin/translate.py --langs ar --only q # 1 lang, quotes only
 """
 import argparse, json, pathlib, re, sys, time, urllib.request
 
