@@ -190,18 +190,6 @@ fun SettingsScreen(vm: AppVm, askNotifPermission: () -> Unit) {
         Gap(8)
         HorizontalDivider()
 
-        // ── 🥚 feast icon (D-066): launcher icon turns into th day's egg · off-switch 4 launchers th drop th home icon ──
-        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(vertical = 8.dp)) {
-            Column(Modifier.weight(1f)) {
-                Text(tr("🥚 Feiertags-Icon", "🥚 Holiday icon"))
-                Text(tr("An Feiertagen verkleidet sich Marx auch auf dem Homescreen. Wirkt, sobald du die App verlässt.",
-                    "On holidays Marx dresses up on your home screen too. Applies once you leave the app."),
-                    style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
-            }
-            de.strix.marxversion.ui.ds.DsSwitch(s.eggIcon, { vm.setEggIcon(it) })
-        }
-        HorizontalDivider()
-
         // ── 🆕 updates (🦠 @1114): browser install = ask by dflt, opt-in auto · Obtainium/store = their job ──
         run {
             val ctx = androidx.compose.ui.platform.LocalContext.current

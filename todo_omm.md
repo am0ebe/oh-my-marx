@@ -26,16 +26,16 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
 
 ## 👀
 ### 🏔️ v1
-- **Review:** 🥚 eggs on DEV `0.13.0-dev.1120.1911` ➡ [qa_1121.md](qa_1121.md), 5 checks, about 6 minutes (+ 1 min gallery, no fon).
-  - Look at: the 30 eggs ([img/eggs/gallery.png](img/eggs/gallery.png)) · in-app egg (head · hero · quote card) · launcher icon switch · drop cap (D-067) · 📜 pinch.
-  - Ticks accept D-066 (eggs, Proposed in [adr.md](adr.md)).
-  - [x] 🤖 EggIconTest 5/5 · unit 141 + lint + test_bin 43 + check_langs green · DEV deployed
-  - [ ] 🦠 good / note (❓ in qa_1121: does your launcher keep the home-screen icon?)
+- **Review:** [qa_1121.md § r2](qa_1121.md) on DEV `0.13.0-dev.1120.2220`, 4 checks, about 3 minutes.
+  - Look at: launcher icon stays plain · in-app egg · drop cap without box (D-067) · 📜 no ¶ + pinch.
+  - [x] 🤖 EggResTest 2/2 · unit 138 + lint + test_bin + check_langs green · DEV deployed
+  - [ ] 🦠 good / note
 
 ## 📆
 
 ## 🔵
-- 🤖🎨 **C-lane gaps** (done @1120: rank perks, feast emblems, 11 heads, initials, ¶, rtl / zh shots, gold swoosh · @1120 #229: 🥚 eggs replace heads in top bar, hero, quote card + launcher, D-066):
+- 🤖🎨 **C-lane gaps** (done @1120: rank perks, feast emblems, 11 heads, initials, ¶, rtl / zh shots, gold swoosh · @1120 #229: 🥚 eggs replace heads in top bar, hero, quote card, D-066 · launcher egg dropped #241):
+  - 🤖 ✂️ `launcherReset` (notify/UpdateWorker.kt) = DEV 1911 cleanup ➡ rm aftr th nxt stable
   - 📱 Widget: show the day's egg (still the ☭ / emoji text head).
   - 🧔 ✂️ Guest heads (Clara Zetkin · Engels · Jenny Marx) = moot since eggs (D-066) · `Head` enum + `Feast.head` now unused by the UI ➡ rm?
   - 🖼️ Feast frames (design § 14.2.1) · 🔊 stamp thud sound (D-035).
@@ -83,6 +83,7 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
 - 🦠🧪 fon update banner on Today · DEV 0.11.0-dev + stable 0.11.0 (fr M8 board #125)
 
 ## ✔️
+- ✔️ @1120 #241: qa_1121 r1 1-3 ticked ➡ D-066 Accepted in-app · launcher egg dropped ("too silly") · drop cap w/o box + no ¶ (D-067 amended)
 - ✔️ @1120 #229: qa_1120 r2 passed (🦠 "omm looks good") ➡ D-048..054 + D-059..062 Accepted · 🥚 30 eggs (D-066) · 🔴 drop cap by baselines (D-067) · 🐛 📜 pinch back · DEV 1911
 - ✔️ @1120 (M8: 🔵 wo 🦠 answer): 🐛 DEV 1944 startup crash (`newPlans` b4 content load · UpgradeStartTest) · ★ C6 close sheet ([img/close_sheet.png](img/close_sheet.png) ➡ ❓ D-055 i qa_1119) · 🔤 13,319 ⬄ 13,320 DE/EN fixed (split.py: long Part head = meta ➡ jahr auto v2, day 161 only) · 🏗️ plan versioning = D-042 ✔️ @1119 (line moved here)
 - ✔️ @1117 bl_triage (🦠 via M8 #139): ❌ in-app analytics (dupe ops 📊) · ❌ persona voices pointer (lives i pr/audio) · ✂️ rule ➡ file header · Matrix public room = yes · `/omm` + Spruchkarte As inline

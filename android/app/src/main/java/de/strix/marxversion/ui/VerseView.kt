@@ -268,7 +268,7 @@ private fun NoteBubble(modifier: Modifier = Modifier, at: Long? = null, onEdit: 
  */
 @Composable
 private fun DropCapText(t: AnnotatedString, style: TextStyle, lines: Int = 3) {
-    // C4 (D-053 b): 3 lines = chapter's illuminated initial (red on a gold square, ink hairline) · 2 lines = section initial, no box
+    // C4 (D-053 b): 3 lines = chapter initial · 2 lines = section initial · both bare red, no box (🦠 #241)
     val first = t.text.indexOfFirst { !it.isWhitespace() }
     // qa_1120 ar shot: splitting th 1st letter breaks shaping i joined scripts (ar · ur) + Indic conjuncts (hi · bn) ➡ plain ¶
     val lang = LocalLang.current
@@ -276,23 +276,21 @@ private fun DropCapText(t: AnnotatedString, style: TextStyle, lines: Int = 3) {
     if (splitBreaks || first < 0 || !t.text[first].isLetter() || t.length < first + 2) { Text(t, style = style); return }
     val cap = t.text[first].toString()
     val rest = t.subSequence(first + 1, t.length)
-    val illum = lines >= 3
     val measurer = rememberTextMeasurer()
     val density = LocalDensity.current
     // D-067 · 🦠 @1120 "bigger + higher": placed by baselines now (was: centred i a 3-line box ➡ Literata's tall ascender 1.18 em pushed th
     //   ink down) · classic rule: cap ink top = line 1's cap height · cap baseline = line N's baseline · Literata capHeight = .70 em
-    //   illuminated (gold box = N lines) = ink 74 % o th box, centred i it
+    //   🦠 #241: no gold box any more (chapter cap = same bare red letter, just 3 lines tall)
     val lhPx = with(density) { style.lineHeight.toPx() }
     val base1 = remember(style) { measurer.measure("X", style).firstBaseline }
-    val capFs: Float; val capBase: Float
-    if (illum) { val ink = .74f * lines * lhPx; capFs = ink / CAP_H; capBase = (lines * lhPx + ink) / 2 }
-    else { val ink = (lines - 1) * lhPx + CAP_H * with(density) { style.fontSize.toPx() }; capFs = ink / CAP_H; capBase = base1 + (lines - 1) * lhPx }
+    val ink = (lines - 1) * lhPx + CAP_H * with(density) { style.fontSize.toPx() }
+    val capFs = ink / CAP_H; val capBase = base1 + (lines - 1) * lhPx
     val capStyle = style.copy(color = Ds.red, fontWeight = FontWeight.Bold, fontSize = with(density) { capFs.toSp() },
         lineHeight = androidx.compose.ui.unit.TextUnit.Unspecified, lineHeightStyle = null)
     BoxWithConstraints(Modifier.fillMaxWidth()) {
         val capLayout = remember(cap, capStyle) { measurer.measure(cap, capStyle) }
         val capDy = (capBase - capLayout.firstBaseline).roundToInt()
-        val capW = capLayout.size.width + with(density) { (if (illum) Space.m else Space.s).roundToPx() }
+        val capW = capLayout.size.width + with(density) { Space.s.roundToPx() }
         val narrow = (constraints.maxWidth - capW).coerceAtLeast(1)
         val split = remember(rest, style, narrow) {
             val l = measurer.measure(rest, style, constraints = Constraints(maxWidth = narrow))
@@ -304,10 +302,9 @@ private fun DropCapText(t: AnnotatedString, style: TextStyle, lines: Int = 3) {
             // TalkBack: 1 word, not "T · he wealth"
             Row(Modifier.clearAndSetSemantics { text = AnnotatedString(cap + head.text) }) {
                 // box = exactly 3 lines (glyph may overhang) ➡ line 4 follows at th normal leading, no gap
-                Text(cap, style = capStyle, textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                Text(cap, style = capStyle, textAlign = androidx.compose.ui.text.style.TextAlign.Start,
                     modifier = Modifier.width(with(density) { capW.toDp() })
                     .height(with(density) { (style.lineHeight * lines).toDp() })
-                    .then(if (illum) Modifier.padding(end = Space.s).background(Ds.goldTint).border(1.dp, Ds.ink.copy(alpha = .5f)) else Modifier)
                     .wrapContentHeight(Alignment.Top, unbounded = true)
                     .offset { androidx.compose.ui.unit.IntOffset(0, capDy) })
                 // D-058 justify: th WHOLE ¶ clipped 2 3 lines (not `head`) ➡ line 3 isn't a last line ➡ stays justified +
@@ -334,7 +331,6 @@ fun VerseView(
     vm: AppVm, v: Verse, speaker: Speaker? = null, showActions: Boolean = true, flash: Boolean = false, preview: Boolean = false,
     dropCap: Boolean = false, showRef: Boolean = true,
     sectionCap: Boolean = false,   // C4: section's 1st passage = 2-line red initial
-    pilcrow: Boolean = false,      // C4: 📜 scroll = small red ¶ starts th paragraph
 
 ) {
     val mark by vm.mark(v.id).collectAsStateWithLifecycle(null)
@@ -418,7 +414,6 @@ fun VerseView(
         if (fallbackNote.isNotBlank()) Text(fallbackNote, style = MaterialTheme.typography.bodyMedium, color = Ds.inkMuted)
         val capped = (dropCap || sectionCap) && cut == null
         val annotated = buildAnnotatedString {
-            if (pilcrow && !capped) withStyle(SpanStyle(color = Ds.red, fontWeight = FontWeight.Bold)) { append("¶ ") }
             var last = 0
             Regex("\\[(\\d+[a-z]?)]").findAll(txt).forEach { m ->
                 append(txt.substring(last, m.range.first))

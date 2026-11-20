@@ -94,14 +94,8 @@ import de.strix.marxversion.ui.ds.Ds
 import de.strix.marxversion.ui.tapOutsideNote
 import de.strix.marxversion.ui.tr
 
-/**
- * 🥚 D-066: `.MainActivity` is now th dflt launcher *alias* (manifest) ➡ old home-screen icons stay valid · 30 egg aliases
- * point here 2 · code keeps saying MainActivity (intents · tests) via this typealias
- */
-typealias MainActivity = HomeActivity
-
 /** th only Activity · evythg else = composables swapped by th NavHost */
-class HomeActivity : ComponentActivity() {
+class MainActivity : ComponentActivity() {
     private val vm: AppVm by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {

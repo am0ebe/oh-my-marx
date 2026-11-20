@@ -71,7 +71,7 @@ fun ScrollBook(vm: AppVm, start: Int, speaker: Speaker, modifier: Modifier = Mod
                 if (v.kap == prev?.kap && v.page != null && v.page != prev.page) PageBreak(v.page)
                 if (v.secTitle.isNotBlank() && v.sec != prev?.sec) SectionTitle(secTitle(v))
                 VerseView(vm, v, speaker, showRef = false, dropCap = v.kap != prev?.kap,
-                    sectionCap = v.secTitle.isNotBlank() && v.sec != prev?.sec, pilcrow = true)
+                    sectionCap = v.secTitle.isNotBlank() && v.sec != prev?.sec)   // ¶ marks rm'd (🦠 #241)
                 Gap(6)
                 if (i == verses.lastIndex) Text(tr("🏁 Das war Band 1. Ganz. Respekt.", "🏁 That was volume 1. All of it. Respect."),
                     textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp))

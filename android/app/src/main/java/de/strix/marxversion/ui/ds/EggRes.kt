@@ -4,7 +4,7 @@ package de.strix.marxversion.ui.ds
 import de.strix.marxversion.R
 import de.strix.marxversion.logic.Feast
 
-/** 🥚 D-066 · 1 cartoon icon per feast: fg + bg vectors (in-app head + hero) + launcher activity-alias (data/EggIcon.kt) */
+/** 🥚 D-066 · 1 cartoon icon per feast: fg + bg vectors ➡ top-bar head · Today hero · quote card (in-app only, 🦠 #241) */
 object EggRes {
     fun fg(f: Feast): Int = when (f) {
         Feast.NEUJAHR -> R.drawable.egg_neujahr
@@ -70,39 +70,5 @@ object EggRes {
         Feast.ARMUT -> R.drawable.egg_bg_armut
         Feast.ENGELS_GEB -> R.drawable.egg_bg_engels_geb
         Feast.JENNY -> R.drawable.egg_bg_jenny
-    }
-
-    /** activity-alias class name (manifest) · namespace, not applicationId ➡ same in DEV */
-    fun alias(f: Feast): String = "de.strix.marxversion.Egg" + when (f) {
-        Feast.NEUJAHR -> "Neujahr"
-        Feast.VALENTIN -> "Valentin"
-        Feast.FRAUENTAG -> "Frauentag"
-        Feast.TODESTAG -> "Todestag"
-        Feast.OSTERN -> "Ostern"
-        Feast.ERSTER_MAI -> "ErsterMai"
-        Feast.GEBURTSTAG -> "Geburtstag"
-        Feast.KAPITAL -> "Kapital"
-        Feast.HALLOWEEN -> "Halloween"
-        Feast.BLACK_FRIDAY -> "BlackFriday"
-        Feast.WEIHNACHTEN -> "Weihnachten"
-        Feast.SILVESTER -> "Silvester"
-        Feast.ROSA_KARL -> "RosaKarl"
-        Feast.MANIFEST -> "Manifest"
-        Feast.KOMMUNE -> "Kommune"
-        Feast.WORKERS_MEMORIAL -> "WorkersMemorial"
-        Feast.BEFREIUNG -> "Befreiung"
-        Feast.KINDERTAG -> "Kindertag"
-        Feast.WEBER -> "Weber"
-        Feast.LAENGSTER_TAG -> "LaengsterTag"
-        Feast.CSD -> "Csd"
-        Feast.MATCHGIRLS -> "Matchgirls"
-        Feast.BASTILLE -> "Bastille"
-        Feast.ENGELS_TOD -> "EngelsTod"
-        Feast.PETERLOO -> "Peterloo"
-        Feast.ANTIKRIEG -> "Antikrieg"
-        Feast.INTERNATIONALE -> "Internationale"
-        Feast.ARMUT -> "Armut"
-        Feast.ENGELS_GEB -> "EngelsGeb"
-        Feast.JENNY -> "Jenny"
     }
 }

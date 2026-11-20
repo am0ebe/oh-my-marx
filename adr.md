@@ -22,21 +22,22 @@ _Template v2.1 since 20 Nov (converted via `pr/vibe++/adr_convert.md`). Field na
 
 ### D-067 @1120 · 🔴 A drop cap is placed by baselines: ink top = line 1's cap height, foot = line N's baseline · Accepted (🦠 via M8 #229)
 - **Y:** You saw the red letter too small and sitting low. It was centred in a 3-line box, and Literata's tall ascender (1.18 em) pushed the ink down.
-- **Scope:** 2-line section initial = classic rule (top flush with line 1's capitals, foot on line 2's baseline) · 3-line illuminated initial = ink 74 % of its gold box, centred · Literata capHeight .70 em is a constant (`CAP_H`, from the font's OS/2 table).
+- **Scope:** classic rule for both sizes: top flush with line 1's capitals, foot on the last line's baseline (2-line section initial · 3-line chapter initial) · Literata capHeight .70 em is a constant (`CAP_H`, from the font's OS/2 table).
+- **Amended @1120 (🦠 #241):** the chapter initial lost its gold box ("rm th bounding box") ➡ a bare red letter like the section ones · the small red ¶ at each 📜 paragraph start is gone too (D-053 b).
 - **Prev:** D-053 b (initials) · D-064 (no cap in ar/ur/hi/bn) unchanged.
 - **Ck:** `VerseView.DropCapText` · shot `chapter` (ShotsTest, `-Pshots`)
 
-### D-066 @1120 · 🥚 On a feast day Marx turns into the day's egg: launcher icon, top bar, Today hero and the quote card · Proposed (🦠 judges the gallery + qa_1121)
+### D-066 @1120 · 🥚 On a feast day Marx turns into the day's egg inside the app: top bar, Today hero and the quote card · Accepted (🦠 qa_1121 1-3), launcher part dropped (🦠 #241 "too silly")
 - **Y:** You said colours plus a line are not an Easter egg; "the icon should change". A visible costume change is the surprise people screenshot (Hooked ch7, YouVersion's Christmas push).
 - **Ctx:** D-051's small props on the photo head were hard to see at 44 dp.
 - **Scope:**
-  - 30 cartoon eggs, one per feast, all drawn in `bin/eggs.py` (one source ➡ Android vectors + SVG previews + `img/eggs/gallery.png` + manifest aliases + `EggRes.kt`). Playful days get a comic Marx (Todestag = X eyes + tongue out, Halloween = pumpkin with his beard, Christmas = Santa, Manifest = the spectre as a bearded ghost …). The 6 death days of others stay quiet: a symbol, no joke (carnation, candle, rose, hard hat + ribbon, flag over a broken chain, Peterloo banner). Women's Day = ♀ with a red fist.
+  - 30 cartoon eggs, one per feast, all drawn in `bin/eggs.py` (one source ➡ Android vectors + SVG previews + `img/eggs/gallery.png` + `EggRes.kt`). Playful days get a comic Marx (Todestag = X eyes + tongue out, Halloween = pumpkin with his beard, Christmas = Santa, Manifest = the spectre as a bearded ghost …). The 6 death days of others stay quiet: a symbol, no joke (carnation, candle, rose, hard hat + ribbon, flag over a broken chain, Peterloo banner). Women's Day = ♀ with a red fist.
   - In the app: top-bar head (`MarxHead` ➡ `EggBadge`) · Today hero (`EggPop`: pops in, wiggles, tap = wiggle) · quote card / share PNG (egg replaces the saint + emoji).
-  - Launcher: 30 `activity-alias` entries (disabled) + `.MainActivity` as the default alias; the real activity is now `HomeActivity`. `data/EggIcon.kt` enables exactly one: at 00:01 (WorkManager) and whenever the app leaves the screen. ⚙️ "Holiday icon" switches it off. The 🎉 Holiday test chip drives it too.
-- **Limits (Android):** no runtime icon API, so every icon ships in the APK (30 vectors ≈ 100 KB) · launchers redraw after 1-10 s · some launchers are reported to drop the home-screen icon when its alias is disabled, while Launcher3-based ones (Pixel, Lineage) re-point it to the app's enabled entry; unverified here, qa_1121 checks your phone · switching while the app is on screen can close its task, so we never do that · no `<monochrome>` layer: with themed icons on, the egg shows in full colour, which makes it stand out.
-- **Alt:** a) keep props on the photo (D-051, too small) · b) redraw the photo per feast (raster, 30 × ~80 KB, no comic range) · c) Fable design pass on top of this set (💬 open).
+  - The launcher icon stays the plain Marx, every day.
+- **Amended @1120 (🦠 #241):** DEV 1911 also swapped the launcher icon (30 `activity-alias` entries, switched at 00:01 and when the app left the screen, ⚙️ off-switch). It worked on your phone (qa_1121 2-3 ticked) but you found it "too silly" ➡ aliases, `EggIcon`, the ⚙️ toggle and the 30 adaptive icons are gone, `MainActivity` is the launcher activity again. `launcherReset` in the update receiver re-enables it once, because 1911 could leave it disabled (✂️ after the next stable). Android limits we had found: icons must ship in the APK · launchers redraw after 1-10 s · switching while the app is on screen can close its task.
+- **Alt:** a) keep props on the photo (D-051, too small) · b) redraw the photo per feast (raster, 30 × ~80 KB, no comic range) · c) Fable design pass on top of this set (🔵, only if you want more polish) · d) launcher egg too (built, dropped: too silly).
 - **Prev:** D-051 (superseded) · D-052 (the 30 days) unchanged.
-- **Ck:** `EggIconTest` (aliases in the manifest, exactly one launcher entry, off switch, test chip) · `FeastSheetTest.sheet` + `eggCards` · `ShotsTest.zEgg` · [img/eggs/gallery.png](img/eggs/gallery.png) · qa_1121 on the phone.
+- **Ck:** `EggResTest` (30 eggs inflate · update re-enables the launcher) · `FeastSheetTest.sheet` + `eggCards` · `ShotsTest.zEgg` · [img/eggs/gallery.png](img/eggs/gallery.png)
 
 ### D-065 @1120 · ✋ Holding a passage opens its menu, and pages and scroll share every gesture · Accepted (🦠 @1120 via M8 #218)
 - **Y:** You found that hold was often read as a tap, and wanted both reading modes to behave the same. Turning is the only thing a tap does; the menu is hold (or double-tap) everywhere.
@@ -144,7 +145,7 @@ _Template v2.1 since 20 Nov (converted via `pr/vibe++/adr_convert.md`). Field na
   - a) ⚡ set only (section initials · red ¶ · incipit · headpiece · running head · catchword · colophon)
   - **b) ⚡ + 🟡 (illuminated initial · tailpiece + chapter seal · ribbon bookmark · gilt edge)** (rec, built by crew in C4)
   - c) + 🧪 paper grain and margin glosses: rejected, costs performance and clashes with notes
-- **Scope:** No margin ¶ numbers (r3 removed the ¶ reference line). The catchword was removed after your r1 note ("why? confusing").
+- **Scope:** No margin ¶ numbers (r3 removed the ¶ reference line). The catchword was removed after your r1 note ("why? confusing"). @1120 #241: the illuminated initial's gold box and the red ¶ before each 📜 paragraph are gone too (see D-067).
 - **Ck:** shots `chapter` `chapter_scroll` `chapter_end_seal` `bookmark_ribbon` + rtl + zh (C4)
 
 ### D-052 @1119 · 🎉 The feast calendar gets 18 more days, so no gap is longer than about a month · Accepted (🦠 qa_1120 r2 via M8 #229)

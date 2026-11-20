@@ -36,7 +36,6 @@ data class Settings(
     val readPos: String? = null,        // 📍 qa_1120: last passage on screen i th reader (📖 page's 1st o 📜 top) ➡ "Continue reading"
     val community: Boolean = true,      // 👥 Mitlesen: anonymous daily-token counts + comments · always on since QA r5 (D-020, no ⚙️ toggle)
     val autoUpdate: Boolean = false,    // 🆕 browser installs: install updates wo asking (Android 12+) · dflt = ask (🦠 @1114)
-    val eggIcon: Boolean = true,        // 🥚 D-066: launcher icon = th feast's egg on th day · off = alw th plain Marx
 )
 
 /** 👥 a Lesekreis = 1 Matrix room, found by its code */
@@ -61,7 +60,6 @@ class Prefs(private val context: Context) {
         val readPos = stringPreferencesKey("read_pos")
         val community = booleanPreferencesKey("community")
         val autoUpdate = booleanPreferencesKey("auto_update")
-        val eggIcon = booleanPreferencesKey("egg_icon")
         val commDay = stringPreferencesKey("comm_day")      // th day th token belongs 2
         val commToken = stringPreferencesKey("comm_token")  // random, new evy day
     }
@@ -132,13 +130,10 @@ class Prefs(private val context: Context) {
             readPos = p[K.readPos],
             community = true,   // QA r5 (D-020): Mitlesen always on, toggle gone ➡ an old stored "off" no longer counts
             autoUpdate = p[K.autoUpdate] ?: false,
-            eggIcon = p[K.eggIcon] ?: true,
         )
     }
 
     suspend fun setAutoUpdate(on: Boolean) = context.store.edit { it[K.autoUpdate] = on }
-    suspend fun setEggIcon(on: Boolean) = context.store.edit { it[K.eggIcon] = on }
-
     suspend fun setLang(l: Lang) = context.store.edit { it[K.lang] = l.name }
     suspend fun setTestMode(on: Boolean) = context.store.edit { it[K.testMode] = on }
     suspend fun setDevUnlock(on: Boolean) = context.store.edit { it[K.devUnlock] = on }

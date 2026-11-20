@@ -163,9 +163,21 @@ private fun onScreen(): Boolean = runCatching {
 }.getOrDefault(true)
 
 /** ✔️ aft a SILENT update th new version starts here (MY_PACKAGE_REPLACED) ➡ quiet "updated 2 X" so it's not a mystery */
+/**
+ * 🥚 D-066 amended (🦠 #241: no launcher egg): DEV 0.13.0-dev.1120.1911 could leave `.MainActivity` DISABLED (it was an alias
+ * then, an egg alias was on) ➡ that state survives th update ➡ no launcher icon · reset 2 manifest dflt + drop th egg worker
+ * ✂️ rm once no DEV 1911 install is left (aftr th nxt stable)
+ */
+internal fun launcherReset(ctx: Context) = runCatching {
+    ctx.packageManager.setComponentEnabledSetting(android.content.ComponentName(ctx, MainActivity::class.java),
+        android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_DEFAULT, android.content.pm.PackageManager.DONT_KILL_APP)
+    WorkManager.getInstance(ctx).cancelUniqueWork("egg-icon")
+}
+
 class UpdatedReceiver : BroadcastReceiver() {
     override fun onReceive(ctx: Context, i: Intent) {
         if (i.action != Intent.ACTION_MY_PACKAGE_REPLACED) return
+        launcherReset(ctx)
         val sp = ctx.getSharedPreferences(SP, Context.MODE_PRIVATE)
         sp.getString("silent", null) ?: return
         sp.edit { remove("silent") }
