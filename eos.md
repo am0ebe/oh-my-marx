@@ -1,6 +1,12 @@
 # eos omm — resume log · newest on TOP
 _1 block per /eos · written by /eos § 3 · todo keeps 1 line: `▶ resume ➡ eos.md`_
 
+## 261121 00:40 · #248 bg burn + #259 bin docs (M8) · /eos
+- **at** · DEV `0.13.0-dev.1121.0014` live = all #248 work (5e4bc85 = +#259 docs only) · 🧹 translation junk fixed via `data/i18n/hand_fix.json` at export (D-069) · check_langs refuses half-Latin + still-German quotes · 📱 widget egg badge · guard Color 24➡18 · shapes 17➡6 · 142 unit + 46 py + lint green · pushed
+- **▶ NEXT** · 🦠 👀 Decide ×2 (rm `Head` enum · GPU slot) + qa_1121 r2 + D-068 box ➡ widget egg box on Black Friday 11/27
+- **👤 🦠** · GPU free aftr audio ➡ 1 `translate.py` run (3 src-fixed Andachten × 11 langs re-ask) + tags retag
+- **⚠️** · 3 Andachten src changed (30tage d2 d24 · wertform d4) ➡ cache src stale on purpose, hand_fix covers til re-ask · new `T()` strings still need GPU translate (no Changelog lines written) · gradlew outside bin/ needs `JAVA_HOME=~/.local/opt/jdk21`
+
 ## 261120 23:00 · #246 (M8): arch title cut off on feast cards · /eos
 - **at** · DEV `0.13.0-dev.1120.2256` live = 640e349 · feast arch = headline only (`Share.archSplit`), rest = small italic lines under th egg, arc 56➡100° (D-068 Proposed) · `EggArchShotTest` (split + 30×13 fit, shots `egg_arch_<lang>.png` w `-Pshots`) · full unit green · pushed
 - **▶ NEXT** · 🦠 qa_1121 r2 (prev block) + #246 👀 box (shots / fon on nxt feast) ➡ D-068 Accepted o fix
