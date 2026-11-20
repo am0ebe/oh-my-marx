@@ -11,6 +11,7 @@
 
   bin/check_langs.py [ROOT]      ROOT = repo root (dflt: th one above bin/) · tsts pass a fake tree
 """
+import difflib
 import json
 import pathlib
 import re
@@ -51,6 +52,9 @@ PH = re.compile(r"%(?:\d+\$)?[-0]?\d*[sdf]")
 #   gave up mid-word ➡ fix = data/i18n/hand_fix.json (+ translate.py --export-only) · zh hs no spaces ➡ "的App" = fine, skipped
 SCRIPT = {"ar": "ء-يٱ-ۓ", "ur": "ء-يٱ-ۓ", "ru": "Ѐ-ӿ",
           "hi": "ऀ-ॣ०-ॿ", "bn": "ঀ-৿"}
+
+
+GERMAN = re.compile(r"\b(?:und|der|die|das|ist|nicht|sich|mit|von|auf|ein|eine|den|dem|des|zu|es|ob|du)\b")
 
 
 def fused(lang, ui):
@@ -94,7 +98,9 @@ def problems(root):
     root = pathlib.Path(root)
     out = []
     keys, days = ui_keys(root), day_keys(root)
-    secs = {v["st"] for v in _json(root / CONTENT / "verses.json") or [] if v.get("st")}
+    verses = _json(root / CONTENT / "verses.json") or []
+    secs = {v["st"] for v in verses if v.get("st")}
+    qd = {v["id"]: v["qd"] for v in verses if len(v.get("qd") or "") > 40 and len(GERMAN.findall(v["qd"])) >= 2}  # Dante = Italian i th src ✔️
     for lang in menu(root):
         if lang in BUILTIN:
             continue
@@ -122,6 +128,12 @@ def problems(root):
                 if miss:
                     out.append(f"{lang}: {len(miss)} {name} untranslated (e.g. {', '.join(miss[:3])}) "
                                f"➡ bin/translate.py --only {kind}")
+            # #248: id 13,246-258 = th model echoed Marx's German (12 quotes) ➡ ~same as th DE source = untranslated
+            echo = [k for k, t in ui.get("q", {}).items() if k in qd and isinstance(t, str)
+                    and difflib.SequenceMatcher(None, t, qd[k]).quick_ratio() > .8 and difflib.SequenceMatcher(None, t, qd[k]).ratio() > .8]
+            if echo:
+                out.append(f"{lang}: {len(echo)} quotes still German (e.g. {', '.join(echo[:3])}) "
+                           "➡ data/i18n/hand_fix.json + bin/translate.py --export-only")
             junk = fused(lang, ui)
             if junk:
                 out.append(f"{lang}: {len(junk)} half-Latin words (e.g. {', '.join(f'{w} ({at})' for at, w in junk[:3])}) "

@@ -5,6 +5,13 @@
   ["Atschaft : ", ""],
   ["K0: Marx", "Marx"]
  ],
+ "it": [
+  ["Segui il tuo corso, e lascia dir le genti! ⟨Gehe deinen Weg, und laß die Leute reden!⟩", "Segui il tuo corso, e lascia dir le genti!"],
+  ["«Gar wohl durchgangen ist jetzo Schrot und Korn schon jener Münze Doch sprich, ob du sie hast in deiner Börse.»", "«Assai bene è trascorsa d’esta moneta già la lega e ’l peso, ma dimmi se tu l’hai ne la tua borsa.»"]
+ ],
+ "fr": [
+  ["« Gar wohl durchgangen ist jetzo Schrot und Korn schon jener Münze Doch sprich, ob du sie hast in deiner Börse. »", "« On a fort bien examiné l’alliage et le poids de cette monnaie ; mais dis-moi si tu l’as dans ta bourse. »"]
+ ],
  "ar": [
   ["أتسchaft: ", ""],
   ["ماذا سAYS", "ماذا ستقول"],
@@ -62,6 +69,20 @@
   ["immobilизируется", "иммобилизуется"],
   ["usurпаторского", "узурпаторского"],
   ["колophonе", "колофоне"]
+ ],
+ "id": [
+  ["Mirabeaus 'Unmöglich? Sage mir niemals dieses törichte Wort!' ist besonders anwendbar auf die moderne Technologie.", "Ucapan Mirabeau „Impossible! ne me dites jamais ce bête de mot!“ (Mustahil? Jangan pernah ucapkan kata bodoh itu padaku!) terutama berlaku bagi teknologi modern."],
+  ["Gewohnheit der letztern erstreckt sich mit Eisenbahnen und Telegraphie.", "Kebiasaan memberi pesanan semacam itu makin sering seiring meluasnya jalur kereta api dan telegraf."],
+  ["In früheren Jahren waren wir stets fähig, während der schlaffen Zeit für die Nachfrage der nächsten Saison vorauszuarbeiten, aber jetzt kann niemand vorhersagen, was dann in Nachfrage sein wird.", "Dulu kami selalu bisa bekerja lebih dulu di masa sepi untuk memenuhi permintaan musim berikutnya, tetapi kini tak seorang pun bisa meramalkan apa yang nanti akan diminta."],
+  ["Ihr geht vielleicht bis an die Tür und öffnet sie, aber schaudert zurück von weitrem Vorgehn.", "Kalian mungkin melangkah sampai ke pintu dan membukanya, tetapi lalu mundur bergidik sebelum melangkah lebih jauh."],
+  ["Es sind komische Käuze, unsre Anwender, sagt einer der verhörten Zeugen, ein Schuster, sie glauben, es tue einem Jungen keinen Harm, wenn er während eines halben Jahrs totgerackert und während der andren Hälfte fast gezwungen wird, herumzuludern.", "Mereka orang-orang aneh, kata salah seorang saksi yang diperiksa, seorang tukang sepatu: mereka kira tidak ada salahnya bagi seorang anak laki-laki bila setengah tahun ia diperas kerja sampai hampir mati dan setengah tahun sisanya nyaris dipaksa luntang-lantung."],
+  ["Obgleich ihre Industrie mehr als jede andre auf dem Weltmarkt und daher der Schiffahrt beruht, strafte die Erfahrung sie Lügen.", "Meskipun industri mereka, lebih dari industri lain mana pun, bergantung pada pasar dunia dan karena itu pada pelayaran, pengalaman membuktikan mereka keliru."],
+  ["Die Fabrikgesetzgebung, diese erste bewußte und planmäßige Rückwirkung der Gesellschaft auf die naturwüchsige Gestalt ihres Produktionsprozesses, ist, wie man gesehn, ebensosehr ein notwendiges Produkt der großen Industrie als Baumwollgarn, Selfactors und der elektrische Telegraph.", "Perundang-undangan pabrik, reaksi pertama yang sadar dan terencana dari masyarakat terhadap bentuk proses produksinya yang tumbuh secara alamiah, adalah, seperti telah kita lihat, sama-sama produk niscaya dari industri besar seperti benang kapas, mesin pintal otomatis (selfactor), dan telegraf listrik."],
+  ["Ein Beispiel genügt. Man weiß, daß sich während der letztverfloßnen zwanzigjährigen Periode die Flachsindustrie und mit ihr die scutching mills (Fabriken zum Schlagen und Brechen des Flachses) in Irland sehr vermehrt haben.", "Satu contoh sudah cukup. Diketahui bahwa selama dua puluh tahun terakhir industri rami, dan bersamanya scutching mills (pabrik penumbuk dan pemecah rami), sangat bertambah di Irlandia."],
+  ["In vielen Fällen wird ein Vierteil des Körpers vom Rumpfe gerissen.", "Dalam banyak kasus, seperempat tubuh terenggut dari batang badan, yang berujung pada kematian atau masa depan penuh cacat dan penderitaan."],
+  ["Was könnte die kapitalistische Produktionsweise besser charakterisieren als die Notwendigkeit, ihr durch Zwangsgesetz von Staats wegen die einfachsten Reinlichkeits- und Gesundheitsvorrichtungen aufzuherrschen?", "Apa yang lebih mencirikan cara produksi kapitalis daripada keharusan untuk memaksakan kepadanya, lewat undang-undang negara, perlengkapan kebersihan dan kesehatan yang paling sederhana?"],
+  ["Vor diesen 500 Kubikfuß Luft geht daher der Fabrikgesetzgebung der Atem aus.", "Karena itu, di hadapan 500 kaki kubik udara ini, perundang-undangan pabrik kehabisan napas."],
+  ["Ihr Erfolg bewies zuerst die Möglichkeit der Verbindung von Unterricht und Gymnastik mit Handarbeit, also auch von Handarbeit mit Unterricht und Gymnastik.", "Keberhasilannya untuk pertama kali membuktikan kemungkinan menggabungkan pengajaran dan senam dengan kerja tangan, dan dengan demikian juga kerja tangan dengan pengajaran dan senam."]
  ],
  "bn": [
   ["আটশাফ্ট: ", ""],

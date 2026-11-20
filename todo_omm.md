@@ -87,6 +87,7 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
 - 🦠🧪 fon update banner on Today · DEV 0.11.0-dev + stable 0.11.0 (fr M8 board #125)
 
 ## ✔️
+- ✔️ @1121 #248: 🧹 id 12 quotes were still German (model echoed th src) ➡ hand-translated · it/fr Dante gloss 3,22 · check_langs refuses a quote ≈ its German src (Dante = Italian, skipped)
 - ✔️ @1121 #248: 🧹 translation junk ar 30 · ur 23 · ru 9 · bn 5 fixed (`data/i18n/hand_fix.json`, D-069) · check_langs refuses half-Latin words · 3 DE/EN Andachten cleaned at src (30tage d2 + d24 · wertform d4) · ✔️ Literata subset = done i 627731e (2 stale lines closed)
 - ✔️ @1120 #241: qa_1121 r1 1-3 ticked ➡ D-066 Accepted in-app · launcher egg dropped ("too silly") · drop cap w/o box + no ¶ (D-067 amended)
 - ✔️ @1120 #229: qa_1120 r2 passed (🦠 "omm looks good") ➡ D-048..054 + D-059..062 Accepted · 🥚 30 eggs (D-066) · 🔴 drop cap by baselines (D-067) · 🐛 📜 pinch back · DEV 1911

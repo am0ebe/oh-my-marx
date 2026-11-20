@@ -61,6 +61,16 @@ class ShipGuard(unittest.TestCase):
         p = check_langs.problems(root)
         self.assertEqual(len(p), 1); self.assertIn("ar: 1 half-Latin", p[0]); self.assertIn("تrier", p[0]); d.cleanup()
 
+    def test_quote_left_in_german_is_refused(self):
+        # #248: id echoed Marx's German for 12 quotes · Dante (Italian i th DE src) = fine
+        de = "Vor diesen 500 Kubikfuß Luft geht daher der Fabrikgesetzgebung der Atem aus und ist zu Ende."
+        dante = "Assai bene è trascorsa d'esta moneta già la lega e'l peso, ma dimmi se tu l'hai nella tua borsa."
+        verses = [{"id": "13,257", "qd": de}, {"id": "3,21", "qd": dante}]
+        d, root = fake_tree(["en", "id"], {"verses.json": verses, "full_id.json": {"v": {"1": "x"}},
+                                           "i18n_id.json": {"ui": {}, "q": {"13,257": de + " ", "3,21": dante}}})
+        p = check_langs.problems(root)
+        self.assertEqual(len(p), 1); self.assertIn("id: 1 quotes still German (e.g. 13,257)", p[0]); d.cleanup()
+
     def test_hand_fix_and_dup_tail(self):
         tr = load("translate")
         fx = {"*": [["Atschaft: ", ""]], "ar": [["تrier", "ترير"]]}
