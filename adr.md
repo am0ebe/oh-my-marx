@@ -1,5 +1,5 @@
 # arch — omm ☭ 🧩 (living · hu + agents read it)
-_SDD: code says **wh** · th file says **y** · drift = a bug · fmt ➡ `pr/vibe++/arch_tpl.md` · backfilled @1112 fr notes.md "decided" · todo ✔️ · git log · y unknown = "❓ am0"_
+_SDD: code says **wh** · th file says **y** · drift = a bug · fmt ➡ `pr/vibe++/adr_tpl.md` · backfilled @1112 fr notes.md "decided" · todo ✔️ · git log · y unknown = "❓ am0"_
 
 ## 🎯 intent
 - 4 strix + few friends: actually get thru Kapital Bd.1 — habit, not willpower · Hooked L hands-on · L Android (Kotlin + Compose) · fun, honest about its own hooks (notes.md § 🎯 goals)

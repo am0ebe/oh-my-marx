@@ -1,6 +1,6 @@
 # design system — omm ☭ 🎨
 _spec @1113 · docs only, ❌ code yet · SSOT 4 look + feel: rules ➡ tokens ➡ components ➡ per-screen deltas ➡ build lanes · § 14 addendum @1119 (celebrations · holidays · holy book · note · close, D-045..055)_
-_y lives i [arch.md](arch.md) D-029..036 (💬 = open, 🤖 pick marked) · base = app @ `eb033ae` (`ui/Theme.kt` + 20 `ui/*.kt` + headless shots) · [qa_1112.md](qa_1112.md) § 🎨 qa-D1..D10 + r4 sweep #7_
+_y lives i [adr.md](adr.md) D-029..036 (💬 = open, 🤖 pick marked) · base = app @ `eb033ae` (`ui/Theme.kt` + 20 `ui/*.kt` + headless shots) · [qa_1112.md](qa_1112.md) § 🎨 qa-D1..D10 + r4 sweep #7_
 _contrast = WCAG 2.x, computed (text ≥ 4.5 · large txt / icon / border ≥ 3) · sizes = dp / sp_
 
 ## 0 · 💬 open choices (🦠 decides · "picks ok" = enough)
