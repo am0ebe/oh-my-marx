@@ -203,6 +203,14 @@ class PlanContent(unittest.TestCase):
             bare = [i for i, d in enumerate(p["days"]) if not d.get("ad") and not d.get("xd")]
             self.assertFalse(bare, f"{p['id']}: days w/o Andacht + w/o bridge {bare}")
 
+    def test_evy_plan_day_hs_a_teaser_q(self):
+        """❓ C7 (D-048 c · bin/tease.py): Stempeluhr 'Tomorrow: …?' = a question, nvr a cut quote"""
+        for p in self.P.values():
+            if p["id"] == "jahr": continue
+            for i, d in enumerate(p["days"]):
+                for k in ("qd", "qe"):
+                    self.assertTrue(d.get(k, "").endswith("?"), f"{p['id']} day {i + 1}: {k} = {d.get(k)!r}")
+
     def test_bibel_evy_day_hs_a_bible_ref(self):
         """v1 = 7/10 days w no Bible at all (score.py 'bib' flag)"""
         bib = re.compile(r"Moses|prophet|Bible|Lamb of God|Christian|Revelation|Gospel|Paradise|Eden|Jehovah|original sin|Holy Ghost")

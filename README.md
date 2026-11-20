@@ -105,7 +105,7 @@ notes.md          design notes + decisions (my own shorthand)
 ```
 
 Pipeline: `fetch.py` ➡ `split.py` ➡ `align.py` (DE⬄EN) ➡ `score.py` + `rank.py` (LLM picks quotable verses) ➡
-`build.py` (app JSON) ➡ `andacht.py` (devotionals) ➡ `translate.py` (quotes, devotionals, plan texts, UI: 11 languages) ➡
+`build.py` (app JSON) ➡ `andacht.py` (devotionals) + `tease.py` (one "tomorrow?" question per plan day) ➡ `translate.py` (quotes, devotionals, plan texts, UI: 11 languages) ➡
 `translate_full.py` + `--export` (the whole book + footnotes, ~6-9 h on a local GPU).
 
 ### Versions and releases

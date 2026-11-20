@@ -1,0 +1,136 @@
+{"plan": "weihnachten", "day": 0, "v": ["1,124"], "de": "Warum tanzt der Tisch auf dem Kopf?", "en": "Why does the table dance on its head?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "weihnachten", "day": 1, "v": ["2,1"], "de": "Wer verkauft, was er gar nicht besitzt?", "en": "Who sells what they don’t own?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "weihnachten", "day": 2, "v": ["3,99"], "de": "Warum tanzen Gold und Silber im Schatten der Maschinen?", "en": "Why do gold and silver dance in the machine's shadow?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "30tage", "day": 0, "v": ["8,8", "8,9"], "de": "Wie viel Zeit stiehlt das Kapital täglich?", "en": "How much time does capital steal daily?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "30tage", "day": 1, "v": ["8,15", "8,35"], "de": "Wer verdient an deiner Überstunden-Maschine?", "en": "Who profits from your overtime machine?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "30tage", "day": 2, "v": ["8,41", "8,43"], "de": "Wer zahlt für die 15 Stunden eines Kindes?", "en": "Who pays for a child's 15-hour day?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "30tage", "day": 3, "v": ["8,128", "8,148"], "de": "Wer hat die Nacht zum Arbeitstag gemacht?", "en": "Who turned night into work time?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "30tage", "day": 4, "v": ["24,5", "24,12"], "de": "Wer hat die Freiheit zum Arbeiten gestohlen?", "en": "Who stole the freedom to work?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "30tage", "day": 5, "v": ["24,50", "24,53"], "de": "Wer zwingt die Armen, sich selbst zu verkaufen?", "en": "Who forces the poor to sell themselves?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "30tage", "day": 6, "v": ["24,82", "24,86"], "de": "Wer zahlt mit Blut für den 'sanften Handel'?", "en": "Who pays for 'doux commerce' with blood?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "30tage", "day": 7, "v": ["1,124", "1,134"], "de": "Warum tanzt der Tisch auf dem Kopf?", "en": "Why does the table dance on its head?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "30tage", "day": 8, "v": ["10,13", "10,14"], "de": "Warum arbeitet der Arbeiter länger, wenn die Maschine schneller wird?", "en": "Why does the worker work longer when the machine gets faster?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "30tage", "day": 9, "v": ["11,19", "11,25"], "de": "Wer dirigiert, wenn das Kapital regiert?", "en": "Who’s really in charge when capital takes the baton?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "30tage", "day": 10, "v": ["12,3", "12,45"], "de": "Warum verlernt der Arbeiter, was er einmal konnte?", "en": "Why does the worker forget his old craft?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "30tage", "day": 11, "v": ["13,4", "13,55"], "de": "Warum spinnt der Esel statt der Frau?", "en": "Why does the donkey spin instead of the woman?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "30tage", "day": 12, "v": ["13,117", "13,128"], "de": "Wer denkt, dass Maschinen die Arbeit erleichtern? ?", "en": "Who thinks machines make work easier?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "30tage", "day": 13, "v": ["13,199", "13,314"], "de": "Wer verdient an Schlichte mehr als an Baumwolle?", "en": "Who profits more from sizing than from cotton?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "30tage", "day": 14, "v": ["22,2", "22,14"], "de": "Warum wächst das Kapital wie ein Vampire?", "en": "Why does capital grow like a vampire?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "30tage", "day": 15, "v": ["23,6", "23,26"], "de": "Warum zahlt der Boss nicht für die Maschinen?", "en": "Why doesn't the boss pay for the machines?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "30tage", "day": 16, "v": ["23,76", "23,95"], "de": "Warum ist der Lohn ein Vampir?", "en": "Why is the wage a vampire?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "30tage", "day": 17, "v": ["25,5", "25,13"], "de": "Warum fehlt dem Kapital der Lohnarbeiter?", "en": "Why does capital lack its worker?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "30tage", "day": 18, "v": ["4,3", "4,15"], "de": "Warum verwandelt sich Geld in einen Vampir?", "en": "Why does money turn into a vampire?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "30tage", "day": 19, "v": ["4,63", "4,79"], "de": "Warum zahlt der Kapitalist nicht für die Haut?", "en": "Why doesn't the capitalist pay for the skin?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "30tage", "day": 20, "v": ["5,1", "5,17"], "de": "Warum frisst die Maschine den Arbeiter?", "en": "Why does the machine eat the worker?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "30tage", "day": 21, "v": ["6,17", "6,18"], "de": "Wer verdient, ohne zu arbeiten?", "en": "Who earns without working?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "30tage", "day": 22, "v": ["7,11", "7,14"], "de": "Wie viel Zeit stiehlt der Boss aus deinem Tag?", "en": "How much of your day does the boss steal?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "30tage", "day": 23, "v": ["9,2", "9,17"], "de": "Wer zahlt für die 6 Stunden Extra? ?", "en": "Who pays for the extra 6 hours?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "30tage", "day": 24, "v": ["14,3", "14,23"], "de": "Ist Lehrerarbeit nur Mehrwert-Abnutzung?", "en": "Is teaching just value-exhaustion?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "30tage", "day": 25, "v": ["17,1", "17,4"], "de": "Warum zahlt der Boss weniger als die Arbeit wert ist?", "en": "Why does the boss pay less than work is worth?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "30tage", "day": 26, "v": ["18,8", "18,18"], "de": "Wer zahlt für die unbezahlte Stunde?", "en": "Who pays for the unpaid hour?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "30tage", "day": 27, "v": ["19,9", "19,23"], "de": "Warum zahlt der Boss nicht für die Arbeit? ?", "en": "Why doesn’t the boss pay for the work? ?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "30tage", "day": 28, "v": ["21,3", "21,16"], "de": "Warum zahlt der Lohnarbeiter für seine Freiheit?", "en": "Why does the worker pay for his own freedom?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "30tage", "day": 29, "v": ["1,1", "1,27"], "de": "Wer zahlt die Mutter der Arbeit?", "en": "Who pays the mother of labor?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "ludditen", "day": 0, "v": ["13,73"], "de": "Wer schreibt die Zukunft – Maschine oder Kapital?", "en": "Who writes the future – machine or capital?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "ludditen", "day": 1, "v": ["13,62"], "de": "Kann eine Maschine den Boss überleben?", "en": "Can a machine outlive its boss?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "ludditen", "day": 2, "v": ["13,110"], "de": "Ist der Automat der neue Chef?", "en": "Is the machine now the boss?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "ludditen", "day": 3, "v": ["13,124", "13,125"], "de": "Wer versteckt sich hinter der Maschine?", "en": "Who’s really behind the machine?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "ludditen", "day": 4, "v": ["13,127", "13,130"], "de": "Kann die Maschine den Arbeiter bezahlen?", "en": "Can machines pay workers?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "ludditen", "day": 5, "v": ["13,165"], "de": "Kann die Maschine den Kapitalisten überlisten?", "en": "Can machines outsmart the capitalist?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "ludditen", "day": 6, "v": ["13,144"], "de": "Wer zahlt die Rechnung für die Maschinenkönigin?", "en": "Who pays the bill for the machine queen?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "erschoepft", "day": 0, "v": ["V3,7"], "de": "Wer den Arbeitstag stiehlt, verdient mehr – wer?", "en": "Who steals the workday and earns more – who?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "erschoepft", "day": 1, "v": ["3,76"], "de": "Wer macht Gold zum neuen Gott?", "en": "Who made gold the new god?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "erschoepft", "day": 2, "v": ["13,314"], "de": "Wer zahlt für die 10-Jahres-Inspektion?", "en": "Who pays for the ten-year inspection?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "erschoepft", "day": 3, "v": ["14,23"], "de": "Warum verdienen Maschinen länger?", "en": "Why do machines earn longer?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "erschoepft", "day": 4, "v": ["8,41"], "de": "Kann ein Kind 15 Stunden lang arbeiten? ?", "en": "Can a child work 15 hours a day??", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "erschoepft", "day": 5, "v": ["11,19"], "de": "Wer lenkt das Orchester – und warum zahlt keiner?", "en": "Who directs the orchestra – and why does no one pay?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "erschoepft", "day": 6, "v": ["12,45"], "de": "Wer zehrt von der Stupidität der Maschinen?", "en": "Who feeds on machine-induced stupidity?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "montag", "day": 0, "v": ["8,41"], "de": "Wer zahlt, wenn Kinder die Maschine schuften?", "en": "Who pays when kids work machines?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "montag", "day": 1, "v": ["8,43"], "de": "Warum stiehlt der Boss die halbe Stunde?", "en": "Who stole the half hour from the worker?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "montag", "day": 2, "v": ["8,55"], "de": "Wer zahlt für die Kinderaugen in der Hölle?", "en": "Who pays for the children's eyes in hell?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "montag", "day": 3, "v": ["8,77"], "de": "Wer verdient an der Überarbeit des Todes?", "en": "Who profits from the death of overwork?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "montag", "day": 4, "v": ["8,78"], "de": "Wer zahlt für die letzten Atemzüge der Maschine?", "en": "Who pays for the machine's final breath?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "montag", "day": 5, "v": ["8,81"], "de": "Wer zahlt für die Nachtstunden?", "en": "Who pays for the night hours?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "montag", "day": 6, "v": ["8,87"], "de": "Warum schlafen Junge besser bei Nacht?", "en": "Why do boys sleep better at night?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "montag", "day": 7, "v": ["8,128"], "de": "Wer hat die Nacht zum Arbeitsplatz gemacht?", "en": "Who turned night into a workplace?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "montag", "day": 8, "v": ["8,200"], "de": "Wer hat die 8 Stunden gestohlen – und warum jetzt?", "en": "Who stole the 8-hour day – and why now?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "montag", "day": 9, "v": ["11,19"], "de": "Wer dirigiert eigentlich, wenn die Maschinen kooperieren?", "en": "Who’s really in charge when machines cooperate?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "montag", "day": 10, "v": ["12,3"], "de": "Wer vergoldet wen – und warum?", "en": "Who gilds whom – and why?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "montag", "day": 11, "v": ["12,45"], "de": "Warum sind Maschinen klüger als der Arbeiter?", "en": "Why are machines smarter than the worker?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "montag", "day": 12, "v": ["13,55"], "de": "Warum zählt kein Kind wirklich?", "en": "Why does no child truly count?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "montag", "day": 13, "v": ["13,199"], "de": "Kann Schlichte mehr als nur kleben?", "en": "Can size beat the fabric?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "vampir", "day": 0, "v": ["5,49"], "de": "Wer verdient, wenn der Spinnprozess schläft?", "en": "Who profits when the spinning process sleeps?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "vampir", "day": 1, "v": ["8,9"], "de": "Warum arbeitet der Arbeiter für den Vampir?", "en": "Why does the worker feed the vampire?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "vampir", "day": 2, "v": ["8,38"], "de": "Wer saugt noch heute die Arbeitskraft aus?", "en": "Who’s still draining labor today?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "vampir", "day": 3, "v": ["8,39"], "de": "Wer frisst die Kinderzeit?", "en": "Who eats children's time?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "vampir", "day": 4, "v": ["8,112"], "de": "Wer zahlt für die letzten Schritte ins Nichts?", "en": "Who pays for the final steps into nothing?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "vampir", "day": 5, "v": ["8,155"], "de": "Wer zahlt die Rechnung für die Vampire?", "en": "Who pays the vampire's bill?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "vampir", "day": 6, "v": ["24,50"], "de": "Wer zahlt die Rechnung für die Vampire?", "en": "Who pays the vampire's bill?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "bibel", "day": 0, "v": ["1,54"], "de": "Warum sieht Leinwand aus wie ein Rock?", "en": "Why does linen look like a coat?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "bibel", "day": 1, "v": ["1,139"], "de": "Wer verbirgt sich hinter der Ware als Gott?", "en": "Who hides behind the commodity as god?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "bibel", "day": 2, "v": ["2,7"], "de": "Wer zahlt für die Maschine, die dich ausbeutet?", "en": "Who pays for the machine that exploits you?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "bibel", "day": 3, "v": ["3,28", "3,29"], "de": "Warum tauscht der Weber Gold gegen Bibel??", "en": "Why does the weaver trade gold for a Bible?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "bibel", "day": 4, "v": ["3,76", "3,79"], "de": "Warum opfert der Schatzgräber sein Fleisch?", "en": "Why does the treasure hunter sacrifice his flesh?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "bibel", "day": 5, "v": ["4,78"], "de": "Warum ist der Lohn ein Vampir? ?", "en": "Why is wages a vampire? ?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "bibel", "day": 6, "v": ["12,40"], "de": "Warum ist der Arbeiter nur noch ein Teil?", "en": "Why is the worker just a part?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "bibel", "day": 7, "v": ["22,56"], "de": "Warum ist der Kapitalist eine Maschine für mehr Maschinen?", "en": "Why is the capitalist a machine for more machines?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "bibel", "day": 8, "v": ["24,2"], "de": "Wer verdient, ohne zu arbeiten?", "en": "Who profits without toiling?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "bibel", "day": 9, "v": ["24,93"], "de": "Wer zahlt die Rechnung für die kapitalistische Gottesdienst?", "en": "Who pays the bill for capitalist worship?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "burns", "day": 0, "v": ["V6,17"], "de": "Wer zahlt die Rechnung für den Drachen?", "en": "Who pays the dragon's bill?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "burns", "day": 1, "v": ["4,79"], "de": "Wer macht den Arbeiter zum Produkt?", "en": "Who turns the worker into a product?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "burns", "day": 2, "v": ["8,175"], "de": "Warum spricht der Chef den Chef frei?", "en": "Why does the boss free the boss?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "burns", "day": 3, "v": ["8,183"], "de": "Wer hat die Maschinen auf die Arbeiter gehetzt?", "en": "Who set the machines against the workers?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "burns", "day": 4, "v": ["13,167"], "de": "Wer steckt hinter der abgeschnittenen Gurgel?", "en": "Who’s behind the severed throat?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "burns", "day": 5, "v": ["13,312"], "de": "Wer zahlt, wenn die Maschine rebelliert?", "en": "Who pays when the machine rebels?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "burns", "day": 6, "v": ["23,160"], "de": "Wer schuftet für die Maschine?", "en": "Who works for the machine?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "burns", "day": 7, "v": ["23,211"], "de": "Wer zwingt die Bauern, im Winter zu frieren?", "en": "Who forces peasants to freeze in winter?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "burns", "day": 8, "v": ["23,270"], "de": "Wer hat Irlands Hunger zum Geschäftsmodell gemacht?", "en": "Who turned Ireland's hunger into a business model?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "burns", "day": 9, "v": ["24,86"], "de": "Wer zahlt die Miete für die Verödung?", "en": "Who pays rent for the desolation?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "fetisch", "day": 0, "v": ["1,124", "1,125", "1,126"], "de": "Warum tanzt der Tisch auf dem Kopf??", "en": "Why does the table dance on its head?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "fetisch", "day": 1, "v": ["1,127", "1,128", "1,129"], "de": "Warum verhandelt der Kaffee mit mir? ?", "en": "Why does coffee bargain with me?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "fetisch", "day": 2, "v": ["1,130", "1,131", "1,132", "1,133"], "de": "Warum zahlen wir für Dinge, die uns nichts zahlen?", "en": "Why do we pay for things that pay us nothing?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "fetisch", "day": 3, "v": ["1,134", "1,135", "1,136"], "de": "Warum zahlt der Roboter keine Miete?", "en": "Why does the robot pay no rent?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "fetisch", "day": 4, "v": ["1,137", "1,138", "1,139", "1,140"], "de": "Wer versteckt sich hinter jedem Lohn?", "en": "Who hides behind every wage?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "fetisch", "day": 5, "v": ["1,141", "1,142", "1,143"], "de": "Warum zahlt das Gold nicht mal selbst?", "en": "Why doesn't gold pay itself?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "fetisch", "day": 6, "v": ["1,144", "1,145", "1,146", "1,147"], "de": "Warum ist die Perle ein kapitalistischer Vampir?", "en": "Why is the pearl a capitalist vampire?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "wertform", "day": 0, "v": ["1,36", "1,37", "1,38", "1,39", "1,40", "1,41", "1,42", "1,43", "1,44", "1,45"], "de": "Warum ist Leinwand ein Rock wert?", "en": "Why is linen worth a coat?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "wertform", "day": 1, "v": ["1,46", "1,47", "1,48", "1,49", "1,50", "1,51", "1,52", "1,53", "1,54", "1,55", "1,56"], "de": "Warum ist der Rock der Wert? Frage: Wer ist der wertvollere? –?", "en": "Why is the rock the value? Question: Who's the more valuable?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "wertform", "day": 2, "v": ["1,57", "1,58", "1,59", "1,60", "1,61", "1,62", "1,63", "1,64"], "de": "Warum verdoppelt sich der Rock, wenn die Webstühle schlafen?", "en": "Why does the coat double when looms go to sleep?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "wertform", "day": 3, "v": ["1,65", "1,66", "1,67", "1,68", "1,69", "1,70", "1,71", "1,72", "1,73", "1,74", "1,75", "1,76", "1,77", "1,78", "1,79", "1,80", "1,81", "1,82", "1,83"], "de": "Warum ist der Rock ein Wert-Vampir?", "en": "Why is the coat a value vampire?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "wertform", "day": 4, "v": ["1,84", "1,85", "1,86", "1,87", "1,88", "1,89"], "de": "Warum tauscht der Rock nur mit Leinwand? ?", "en": "Why does the coat only trade with linen??", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "wertform", "day": 5, "v": ["1,90", "1,91", "1,92", "1,93", "1,94", "1,95", "1,96", "1,97", "1,98"], "de": "Warum ist jeder Rock ein Spiegel des Wertes?", "en": "Why is every coat a mirror of value?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "wertform", "day": 6, "v": ["1,100", "1,101", "1,102", "1,103", "1,104", "1,105", "1,106", "1,107", "1,108", "1,109", "1,110", "1,111", "1,112", "1,113", "1,114", "1,115"], "de": "Warum ist Leinwand die neue Superkraft?", "en": "Why is linen the new superpower?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "wertform", "day": 7, "v": ["1,117", "1,118", "1,119", "1,122", "1,123"], "de": "Warum ist Gold der Boss der Ware?", "en": "Why is gold the boss of commodities?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "reich", "day": 0, "v": ["23,1"], "de": "Wer verdient, wenn Maschinen arbeiten?", "en": "Who profits when machines work?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "reich", "day": 1, "v": ["23,30"], "de": "Wer macht die Maschinen reicher als die Arbeiter?", "en": "Who makes machines richer than workers?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "reich", "day": 2, "v": ["24,111"], "de": "Wer wird bald das letzte Kapital verlieren?", "en": "Who will soon lose the last capital?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "reich", "day": 3, "v": ["23,37"], "de": "Wer macht die Maschinen zum neuen Boss?", "en": "Who made machines the new boss?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "reich", "day": 4, "v": ["23,60"], "de": "Wer zahlt die Rechnung für die kapitalistische Maschine?", "en": "Who pays for the capitalist machine?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "reich", "day": 5, "v": ["23,64"], "de": "Wer verdient, während die Maschine schläft?", "en": "Who profits while the machine sleeps?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "reich", "day": 6, "v": ["23,61"], "de": "Warum wachsen die Reichen mit der Armut?", "en": "Why do the rich grow richer with poverty?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "grundkurs", "day": 0, "v": ["1,1", "1,2"], "de": "Warum ist jede Ware ein kapitalistisches Monster?", "en": "Why is every commodity a capitalist monster?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "grundkurs", "day": 1, "v": ["1,4", "1,5"], "de": "Warum zahlt der Hammer nicht für sich selbst?", "en": "Why doesn't the hammer pay for itself?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "grundkurs", "day": 2, "v": ["1,17"], "de": "Warum zahlt der Staat für Arbeit, die er nicht braucht?", "en": "Why does the state pay for work it doesn’t need?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "grundkurs", "day": 3, "v": ["4,49"], "de": "Kann ein Kaufmann wirklich nur stehlen?", "en": "Can a merchant really only steal?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "grundkurs", "day": 4, "v": ["4,62"], "de": "Warum ist der Arbeiter frei – und doch gefangen?", "en": "Why is the worker free – and yet trapped?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "grundkurs", "day": 5, "v": ["5,47"], "de": "Kann ein Boss ohne Arbeit sein Geld verdoppeln?", "en": "Can a boss double his money without work?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "grundkurs", "day": 6, "v": ["8,9"], "de": "Wie viel Zeit stiehlt das Kapital von dir?", "en": "How much time does capital steal from you?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "faschismus", "day": 0, "v": ["24,48"], "de": "Warum sind Kapitalisten Vagabunden-Experten?", "en": "Why are capitalists experts on vagabonds?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "faschismus", "day": 1, "v": ["24,50"], "de": "Wer zwingt die Armen, sich selbst zu verkaufen?", "en": "Who forces the poor to sell themselves?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "faschismus", "day": 2, "v": ["23,37"], "de": "Wer macht die Maschinen zur Vampir-Beute?", "en": "Who turns machines into vampire prey?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "faschismus", "day": 3, "v": ["24,82"], "de": "Wer zwingt die Welt zum Kapital?", "en": "Who forces the world to capital?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "faschismus", "day": 4, "v": ["23,26"], "de": "Wer zwingt die Kleinen zum Schreien?", "en": "Who forces the small ones to scream?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "faschismus", "day": 5, "v": ["24,105"], "de": "Wer verdient, wenn Maschinen arbeiten?", "en": "Who profits when machines work?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "faschismus", "day": 6, "v": ["24,111"], "de": "Wer wird endlich die Maschinen expropriiert?", "en": "Who will finally expropriate the machines?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "gig", "day": 0, "v": ["19,1", "19,2"], "de": "Wer zahlt, wenn die Maschine arbeitet?", "en": "Who pays when the machine works?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "gig", "day": 1, "v": ["19,9"], "de": "Wer zahlt, wenn der Gig-Markt den Lohn frisst?", "en": "Who pays when the gig economy eats wages?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "gig", "day": 2, "v": ["19,11"], "de": "Wer verdient am Stücklohn, ohne zu arbeiten?", "en": "Who profits from piecework without working?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "gig", "day": 3, "v": ["19,12", "19,13"], "de": "Wem gehört die Zeit, die du nicht verdienst?", "en": "Whose time is it when you don’t get paid?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "gig", "day": 4, "v": ["19,10"], "de": "Wer zahlt, wenn der Gig-Tag zu kurz ist?", "en": "Who pays when the gig day's too short?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "gig", "day": 5, "v": ["19,14"], "de": "Warum zahlt der Boss nur für das, was du nicht schaffst?", "en": "Why does the boss pay only for what you don’t deliver?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "gig", "day": 6, "v": ["8,12"], "de": "Wer zahlt den Preis für die letzte Stunde?", "en": "Who pays for the final hour?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "erde", "day": 0, "v": ["1,27"], "de": "Wer ist der wahre Schöpfer des Reichtums?", "en": "Who’s really creating wealth?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "erde", "day": 1, "v": ["24,10"], "de": "Wer macht die Erde zur Fabrik?", "en": "Who turned the earth into a factory?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "erde", "day": 2, "v": ["13,318"], "de": "Wer verdient, wenn Maschinen den Acker bestellen?", "en": "Who profits when machines farm the land?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "erde", "day": 3, "v": ["13,319"], "de": "Wer frisst den Boden auf – und warum zahlt der Arbeiter?", "en": "Who eats the soil — and why does the worker pay?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}
+{"plan": "erde", "day": 4, "v": ["23,58"], "de": "Warum flieht die Landbevölkerung in die Stadt?", "en": "Why does rural population flee to the city?", "model": "qwen3:30b-a3b-instruct-2507-q4_K_M"}

@@ -275,9 +275,13 @@ def main():
     # Andacht = by th day's verse ids, not its index (D-056: a re-ordered cut keeps its Andachten)
     # + andachten_hand.jsonl = hand-written (re-cut bibel/montag days) · wins over andacht.py's LLM cache (--redo can't eat it)
     andachten = {(a["plan"], tuple(a["v"])): a for a in jl("andachten.jsonl") + jl("andachten_hand.jsonl")}
+    # ❓ C7 teasers (bin/tease.py · D-048 c) = by verse ids too · qd/qe = th day's own Q, th app shows it th day b4
+    teasers = {(t["plan"], tuple(t["v"])): t for t in jl("teasers.jsonl")}
     for p in P:
         p["days"] = [{"v": ids} | ({"ad": andachten[(p["id"], tuple(ids))]["de"], "ae": andachten[(p["id"], tuple(ids))]["en"]}
                                    if (p["id"], tuple(ids)) in andachten else {})
+                     | ({"qd": teasers[(p["id"], tuple(ids))]["de"], "qe": teasers[(p["id"], tuple(ids))]["en"]}
+                        if (p["id"], tuple(ids)) in teasers else {})
                      | (p["x"][i] if p.get("x") else {})
                      for i, ids in enumerate(p["days"]) if ids]
         p.pop("x", None)
