@@ -34,7 +34,7 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
   - [x] 🤖 `EggArchShotTest` (30 eggs × 13 langs fit) · full unit suite green · shots `egg_arch_{en,de,ru,ar}.png` · DEV deployed
   - [ ] 🦠 shots `android/app/build/shots/egg_arch_de.png` (+ ru · ar): headline + tail split reads ok?
 - **📱 widget shows th day's egg** (#248 · D-066): feast day ➡ 22 dp egg badge left o th head (was: feast emoji) · else ☭ as before · quote card shares th same `drawEgg`
-  - [x] 🤖 `EggResTest.widgetShowsTheDaysEgg` (30 eggs render) · unit + lint (6 = baseline) green
+  - [x] 🤖 `EggResTest.widgetShowsTheDaysEgg` (30 eggs render) · unit 142 + lint (6 = baseline) green · DEV `0.13.0-dev.1121.0014` deployed (+ #248 translation fixes)
   - [ ] 🦠 nxt feast = **Black Friday Fr 11/27**: home-screen widget ➡ egg left o "Marx verse" reads ok?
 
 ## 📆
