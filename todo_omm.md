@@ -59,7 +59,7 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
   - ✔️ L1-L5 shipped i **v0.12.0** @1118 (+ DEV `0.12.0-dev.1118.0151`) · r4 ✔️ built @1119 (L6-L8 · plan versioning D-042 · 6 🔒 plans D-043) ➡ ✔️ 🦠 eval @1120 · D-045 to D-047 accepted @1120 (#185) and built (C1) · the qa_1119 leftovers and D-048 to D-054 are now in the qa_1120 round-two check (👀 above)
 - 🎨⭐ **design system** — spec ✔️ @1113 ➡ [design_system.md](design_system.md) (tokens · 5 btn kinds · voices · per-screen deltas) · D-029..035 ✔️ @1114 · D-036 = A ✔️ @1116
   - 🤖 lanes: ✔️ L0 · L2 · L3 · L5 @1114 ➡ left L1 Today · L4 Mine/⚙️/Hooked ➡ fan-in ➡ fon QA · L6 later (dark c · font b 🧪 · sounds b)
-    - ✔️ @1121 #248 guard `Color(0x` 24 ➡ 18 (exact-hex swaps only) · rest (`.sp` 80 · shapes 17 · M3 btns/chips) = real look changes ➡ need th lanes' b4/aft shots
+    - ✔️ @1121 #248 guard `Color(0x` 24 ➡ 18 · `RoundedCornerShape(` 17 ➡ 6 (same-value swaps only, 0 visual change) · rest (`.sp` 80 · 8/10/18dp shapes · M3 btns/chips) = real look changes ➡ need th lanes' b4/aft shots
 - 🦠🔑 keystore: ✔️ symlink @1105 · left: KeePass note (`base64 -w0`, notes.md § 🔑) · 1 offline/restic copy · lap same `ln -s` ✔️ IaC @1117 (sys `lap.yml --tags keystore`, applies on lap catch-up · real file i th way = left + warn)
 - 💬 ops (optional): `/omm/*` ➡ `/oh-my-marx/{path}` (Obtainium URL `scagent.de/omm/`) · `/omm/src` ➡ GitHub 302 · `/omm/dev` redirect = valid again (/dev back @1106) · 🦠 @1117 "alr redirects" ➡ A: bare `/omm` yes · Q = deep paths (`/omm/dev` · `/omm/src`) ➡ want them?
 - 🪝⭐ **Hooked/Fogg pass** (aft QA sprint) — raw ➡ `re/boox/hooked/hooked.md` § 📥 @1112

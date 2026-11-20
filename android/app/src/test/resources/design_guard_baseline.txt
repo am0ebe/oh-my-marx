@@ -3,9 +3,10 @@
 # L0 @1114 start: 48 · 174 · 33 · 19 · 5 · 12 · 9 · 3 (exempt: Share.kt · Fx.kt · notify/ · Feast.kt)
 # @1114 aft L2 + L3 + L5 fan-in · left = L1 Today · L4 Mine/⚙️/Hooked
 # @1121 #248: 6 exact-hex swaps ➡ Ds.hook · Ds.onHook · PlanAccents[1] (Today · Hooks · Hooked) = 0 visual change
+#   + same-value shapes ➡ Shapes.m (12dp) · Shapes.l (16dp) · Shapes.pill (50) · Shapes.xl (Radius.xl) i Today · Hooked · Cards · Orden · MarxDialog
 Color(0x = 18
 .sp = 80
-RoundedCornerShape( = 17
+RoundedCornerShape( = 6
 Button( = 6
 OutlinedButton( = 1
 TextButton( = 5

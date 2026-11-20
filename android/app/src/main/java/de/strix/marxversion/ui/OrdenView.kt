@@ -13,7 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
+import de.strix.marxversion.ui.ds.Shapes
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
@@ -95,8 +95,8 @@ fun OrdenSection(earned: Set<Orden>, hooked: Boolean) {
         MarxDialog({ open = null },
             title = if (have || !o.hidden) tr(o.title) else "???",
             icon = {
-                Box(Modifier.clip(RoundedCornerShape(16.dp)).background(Brush.verticalGradient(listOf(Color(0xFF2B1B4F), Color(0xFF14284A))))
-                    .border(2.dp, if (have) Gold else Color(0xFFB9B2A6), RoundedCornerShape(16.dp)).padding(12.dp)) { Medal(o, have, 72.dp) }
+                Box(Modifier.clip(Shapes.l).background(Brush.verticalGradient(listOf(Color(0xFF2B1B4F), Color(0xFF14284A))))
+                    .border(2.dp, if (have) Gold else Color(0xFFB9B2A6), Shapes.l).padding(12.dp)) { Medal(o, have, 72.dp) }
             },
         ) {
             Text(when {
@@ -119,9 +119,9 @@ fun NewOrdenDialog(new: List<Orden>, onDone: () -> Unit) {
             Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
                 // medals on a dark "velvet cushion" (gold on th white dialog looked washed out @1107)
                 Column(horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.clip(RoundedCornerShape(16.dp))
+                    modifier = Modifier.clip(Shapes.l)
                         .background(Brush.verticalGradient(listOf(Color(0xFF2B1B4F), Color(0xFF14284A))))
-                        .border(2.dp, Gold, RoundedCornerShape(16.dp)).padding(horizontal = 18.dp, vertical = 12.dp)) {
+                        .border(2.dp, Gold, Shapes.l).padding(horizontal = 18.dp, vertical = 12.dp)) {
                     new.take(6).chunked(3).forEach { row ->
                         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) { row.forEach { Medal(it, true, 52.dp) } }
                     }

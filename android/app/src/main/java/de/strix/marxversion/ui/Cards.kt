@@ -21,7 +21,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -61,6 +60,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.lerp
 import de.strix.marxversion.R
 import de.strix.marxversion.ui.ds.ActStyle
+import de.strix.marxversion.ui.ds.Shapes
 import de.strix.marxversion.ui.ds.ActionItem
 import de.strix.marxversion.data.Verse
 import de.strix.marxversion.data.f
@@ -128,7 +128,7 @@ fun CardCarousel(
             // 🙏 today's card itself = th Amen btn (@1106) · th pulsing "☭ Tap = Amen" pill on it rm'd @1113 (QA r4 shots: it sat
             //   on th ref line o th shorter card · r1: "amen 2 times") ➡ th 1 visible Amen = th big red btn under th actions
             val amenHere = it.kind == CardItem.Kind.TODAY && !doneToday
-            Box(Modifier.fillMaxWidth().aspectRatio(CARD_RATIO).shadow(10.dp, RoundedCornerShape(16.dp)).clip(RoundedCornerShape(16.dp))
+            Box(Modifier.fillMaxWidth().aspectRatio(CARD_RATIO).shadow(10.dp, Shapes.l).clip(Shapes.l)
                 .background(Brush.verticalGradient(listOf(Color(0xFF2B1B4F), Color(0xFFB3261E), Color(0xFFF29E4C))))
                 .then(if (amenHere) Modifier.clickable { onAmen(it.v) } else Modifier)) {
                 bmp?.let { b -> Image(b, contentDescription = q, modifier = Modifier.fillMaxWidth().aspectRatio(CARD_RATIO)) }

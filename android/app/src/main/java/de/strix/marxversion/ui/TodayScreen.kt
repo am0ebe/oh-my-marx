@@ -100,6 +100,7 @@ import de.strix.marxversion.logic.stampCard
 import de.strix.marxversion.logic.streak
 import de.strix.marxversion.ui.ds.Ds
 import de.strix.marxversion.ui.ds.PlanAccents
+import de.strix.marxversion.ui.ds.Shapes
 import de.strix.marxversion.logic.streakInfo
 import de.strix.marxversion.logic.streakGame
 import de.strix.marxversion.logic.today
@@ -313,7 +314,7 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
                 }
                 LinearProgressIndicator(progress = { (idx + if (planToday != null) 1 else 0).toFloat() / planDays.size },
                     color = accent, trackColor = accent.copy(alpha = 0.15f),
-                    modifier = Modifier.fillMaxWidth().padding(top = 10.dp).height(4.dp).clip(RoundedCornerShape(50)))
+                    modifier = Modifier.fillMaxWidth().padding(top = 10.dp).height(4.dp).clip(Shapes.pill))
                 Gap(8)
 
             // Hooked ch7: day-1 missed ➡ suggest a less challenging plan
@@ -330,7 +331,7 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
             val ad = andacht(plan.id, idx, day, pinned)
             if (ad.isNotBlank()) {
                 Gap(8)
-                Column(Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).background(accent.copy(alpha = 0.07f)).padding(12.dp)) {
+                Column(Modifier.fillMaxWidth().clip(Shapes.m).background(accent.copy(alpha = 0.07f)).padding(12.dp)) {
                     Text(tr("🕯️ Andacht", "🕯️ Devotional"), fontSize = 12.sp, fontWeight = FontWeight.Bold, color = accent)
                     Text(ad, fontSize = 15.sp, lineHeight = 22.sp, modifier = Modifier.padding(top = 4.dp))
                 }
@@ -342,7 +343,7 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
             val br = bridge(plan.id, idx, day, pinned)
             if (br.isNotBlank()) {
                 Gap(4)
-                Column(Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).background(Blue.copy(alpha = 0.07f)).padding(12.dp)) {
+                Column(Modifier.fillMaxWidth().clip(Shapes.m).background(Blue.copy(alpha = 0.07f)).padding(12.dp)) {
                     Text(tr("💡 Und heute?", "💡 And today?"), fontSize = 12.sp, fontWeight = FontWeight.Bold, color = Blue)
                     Text(br, fontSize = 15.sp, lineHeight = 22.sp, modifier = Modifier.padding(top = 4.dp))
                     Text(tr("neuer Text — Marx' Absatz oben ist original", "new text — Marx's paragraph above is the original"),

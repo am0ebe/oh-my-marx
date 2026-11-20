@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -25,8 +24,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import de.strix.marxversion.ui.ds.CloseStar
 import de.strix.marxversion.ui.ds.Ds
+import de.strix.marxversion.ui.ds.Shapes
 import de.strix.marxversion.ui.ds.Primary
-import de.strix.marxversion.ui.ds.Radius
 import de.strix.marxversion.ui.ds.Space
 import de.strix.marxversion.ui.ds.TextBtn
 
@@ -65,7 +64,7 @@ fun MarxDialogPanel(
 ) {
     run {
         Surface(
-            shape = RoundedCornerShape(Radius.xl), color = Ds.paperHi, shadowElevation = 6.dp,
+            shape = Shapes.xl, color = Ds.paperHi, shadowElevation = 6.dp,
             border = BorderStroke(1.dp, Ds.gold.copy(alpha = 0.55f)), modifier = Modifier.fillMaxWidth(),
         ) {
             Box {
