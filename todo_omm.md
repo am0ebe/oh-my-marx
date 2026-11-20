@@ -25,6 +25,9 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
     - 0.9.0 ➡ 0.10.0 APK users: banner ➡ page ➡ install by hand 1× (then 1-tap / silent fr there)
 
 ## 👀
+### ❓ Decide (#248)
+- **rm dead guest heads?** `Head` enum + `Feast.head` unused since eggs (D-066) · rec: **yes, rm** (eggs = th heads now · portrait art nvr coming) ❓
+- **GPU slot aftr audio cloning?** 1 bg `translate.py` run = re-asks th 3 src-fixed Andachten × 11 langs (~5 min, hand_fix covers til then) + tags retag (0-2 tags, weight) · rec: **yes, 1 night run** once tow's GPU is free ❓
 ### 🏔️ v1
 - **Review:** [qa_1121.md § r2](qa_1121.md) on DEV `0.13.0-dev.1120.2220`, 4 checks, about 3 minutes.
   - Look at: launcher icon stays plain · in-app egg · drop cap without box (D-067) · 📜 no ¶ + pinch.
