@@ -1,6 +1,13 @@
 # eos omm — resume log · newest on TOP
 _1 block per /eos · written by /eos § 3 · todo keeps 1 line: `▶ resume ➡ eos.md`_
 
+## 261120 10:20 · eval DEV 0009 ✔️ · crash fix · C6 · D-057 tap = turn · D-058 Literata justified
+- **at** · DEV = `0.13.0-dev.1120.1009` (= `e813452`) · stable = v0.12.0 · unit + lint + test_bin 40 + check_langs green · pushed
+  - 🦠 ok'd 0009 (L9 · plans v2 · L6-L8) · D-055 ✔️ V2 · D-057 swaps D-044 · D-058 Literata + justify + hyphens
+- **▶ NEXT** · 🦠 fon pass over qa_1119 § 👀 new i 1009 (7 lines) ➡ then C1 streak logic once D-045..047 answered
+- **👤 🦠** · D-045/046/047 ❓ i qa_1119 (gate C1 ➡ C2) · ok 4 fonttools (font subset −1.3 MB, todo 🔵) · D-048..054 = nxt Fable round
+- **⚠️** · DE hyphenation unverified (shots EN only) · jahr = v2 since 146a631 (day 161 heading only) · ShotsTest verse_menu now via double-tap · Robolectric swallows coroutine crashes ➡ use UpgradeStartTest's main-looper handler pattern
+
 ## 261119 15:30 · qa_1117 r1-r4 built · v0.12.0 stable · plan versioning + 6 🔒 plans
 - **at** · stable = v0.12.0 (@1118) · DEV = `0.13.0-dev.1119.1507` (= all up 2 `01b7e27`) · lint + unit + 39 py + check_langs green · pushed
   - ⚠️ oth crew lanes landed aftr th deploy: `6f48c4d` L9 double-tap + `55fa867` design § 14 addendum ➡ NOT on DEV yet
