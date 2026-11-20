@@ -6,6 +6,7 @@ import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.view.View
 import android.widget.RemoteViews
 import de.strix.marxversion.MainActivity
 import de.strix.marxversion.MarxApp
@@ -16,6 +17,7 @@ import de.strix.marxversion.data.t
 import de.strix.marxversion.logic.DayTime
 import de.strix.marxversion.logic.Feast
 import de.strix.marxversion.logic.streak
+import de.strix.marxversion.ui.ds.eggBitmap
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -48,6 +50,10 @@ private fun DayTime.bg() = when (this) {
     DayTime.NIGHT -> R.drawable.wg_night
 }
 
+/** head line: "☭ Marx verse · 🔥 7" · feast day = no ☭ (th egg badge sits left o it) */
+internal fun widgetHead(feast: Feast?, head: String, streak: Int) =
+    (if (feast == null) "☭ " else "") + head + if (streak > 0) "  ·  🔥 $streak" else ""
+
 suspend fun refreshWidgets(ctx: Context) {
     val mgr = AppWidgetManager.getInstance(ctx)
     val ids = mgr.getAppWidgetIds(ComponentName(ctx, LosungWidget::class.java))
@@ -64,7 +70,12 @@ suspend fun refreshWidgets(ctx: Context) {
         PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
     val rv = RemoteViews(ctx.packageName, R.layout.widget_losung).apply {
         setInt(R.id.root, "setBackgroundResource", DayTime.at(LocalTime.now().hour).bg())
-        setTextViewText(R.id.head, "${feast?.emoji ?: "☭"} ${table.t(lang, HEAD.first, HEAD.second)}" + if (st > 0) "  ·  🔥 $st" else "")
+        // 🥚 feast ➡ th day's egg as a badge (D-066, was: th feast emoji) · else ☭ i th txt
+        if (feast != null) {
+            setImageViewBitmap(R.id.egg, eggBitmap(ctx, feast, (22 * ctx.resources.displayMetrics.density).toInt().coerceAtLeast(22)))
+            setViewVisibility(R.id.egg, View.VISIBLE)
+        } else setViewVisibility(R.id.egg, View.GONE)
+        setTextViewText(R.id.head, widgetHead(feast, table.t(lang, HEAD.first, HEAD.second), st))
         setTextViewText(R.id.quote, lang.quote(quoteFor(v, lang, table)))
         setTextViewText(R.id.ref, "— Karl Marx, " + table.t(lang, BOOK.first, BOOK.second).f(v.id))
         setOnClickPendingIntent(R.id.root, open)

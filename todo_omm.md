@@ -33,13 +33,15 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
 - **#246 arch title cut off (D-068):** feast arch = headline only, rest = small lines under th egg · DEV `0.13.0-dev.1120.2256`
   - [x] 🤖 `EggArchShotTest` (30 eggs × 13 langs fit) · full unit suite green · shots `egg_arch_{en,de,ru,ar}.png` · DEV deployed
   - [ ] 🦠 shots `android/app/build/shots/egg_arch_de.png` (+ ru · ar): headline + tail split reads ok?
+- **📱 widget shows th day's egg** (#248 · D-066): feast day ➡ 22 dp egg badge left o th head (was: feast emoji) · else ☭ as before · quote card shares th same `drawEgg`
+  - [x] 🤖 `EggResTest.widgetShowsTheDaysEgg` (30 eggs render) · unit + lint (6 = baseline) green
+  - [ ] 🦠 nxt feast = **Black Friday Fr 11/27**: home-screen widget ➡ egg left o "Marx verse" reads ok?
 
 ## 📆
 
 ## 🔵
 - 🤖🎨 **C-lane gaps** (done @1120: rank perks, feast emblems, 11 heads, initials, ¶, rtl / zh shots, gold swoosh · @1120 #229: 🥚 eggs replace heads in top bar, hero, quote card, D-066 · launcher egg dropped #241):
   - 🤖 ✂️ `launcherReset` (notify/UpdateWorker.kt) = DEV 1911 cleanup ➡ rm aftr th nxt stable
-  - 📱 Widget: show the day's egg (still the ☭ / emoji text head).
   - 🧔 ✂️ Guest heads (Clara Zetkin · Engels · Jenny Marx) = moot since eggs (D-066) · `Head` enum + `Feast.head` now unused by the UI ➡ rm?
   - 🖼️ Feast frames (design § 14.2.1) · 🔊 stamp thud sound (D-035).
 - 🎨 💬 Fable design pass over the 30 eggs (`bin/eggs.py`) — only if 🦠 wants more polish aftr the gallery
