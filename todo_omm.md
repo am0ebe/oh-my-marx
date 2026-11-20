@@ -26,7 +26,6 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
 
 ## 👀
 ### ❓ Decide (#248)
-- **rm dead guest heads?** `Head` enum + `Feast.head` unused since eggs (D-066) · rec: **yes, rm** (eggs = th heads now · portrait art nvr coming) ❓
 - **GPU slot aftr audio cloning?** 1 bg `translate.py` run = re-asks th 3 src-fixed Andachten × 11 langs (~5 min, hand_fix covers til then) + tags retag (0-2 tags, weight) · rec: **yes, 1 night run** once tow's GPU is free ❓
 ### 🏔️ v1
 - **Review:** [qa_1121.md § r2](qa_1121.md) on DEV `0.13.0-dev.1120.2220`, 4 checks, about 3 minutes.
@@ -90,6 +89,7 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
 - 🦠🧪 fon update banner on Today · DEV 0.11.0-dev + stable 0.11.0 (fr M8 board #125)
 
 ## ✔️
+- ✔️ @1121 #260: ✂️ dead `Head` enum + `Feast.head` rm'd (🦠 yes · D-066 amended) · unit + lint green
 - ✔️ @1121 #248: 🧹 id 12 quotes were still German (model echoed th src) ➡ hand-translated · it/fr Dante gloss 3,22 · check_langs refuses a quote ≈ its German src (Dante = Italian, skipped)
 - ✔️ @1121 #248: 🧹 translation junk ar 30 · ur 23 · ru 9 · bn 5 fixed (`data/i18n/hand_fix.json`, D-069) · check_langs refuses half-Latin words · 3 DE/EN Andachten cleaned at src (30tage d2 + d24 · wertform d4) · ✔️ Literata subset = done i 627731e (2 stale lines closed)
 - ✔️ @1120 #241: qa_1121 r1 1-3 ticked ➡ D-066 Accepted in-app · launcher egg dropped ("too silly") · drop cap w/o box + no ¶ (D-067 amended)

@@ -49,6 +49,7 @@ _Template v2.1 since 20 Nov (converted via `pr/vibe++/adr_convert.md`). Field na
 - **Amended @1120 (🦠 #241):** DEV 1911 also swapped the launcher icon (30 `activity-alias` entries, switched at 00:01 and when the app left the screen, ⚙️ off-switch). It worked on your phone (qa_1121 2-3 ticked) but you found it "too silly" ➡ aliases, `EggIcon`, the ⚙️ toggle and the 30 adaptive icons are gone, `MainActivity` is the launcher activity again. `launcherReset` in the update receiver re-enables it once, because 1911 could leave it disabled (✂️ after the next stable). Android limits we had found: icons must ship in the APK · launchers redraw after 1-10 s · switching while the app is on screen can close its task.
 - **Alt:** a) keep props on the photo (D-051, too small) · b) redraw the photo per feast (raster, 30 × ~80 KB, no comic range) · c) Fable design pass on top of this set (🔵, only if you want more polish) · d) launcher egg too (built, dropped: too silly).
 - **Prev:** D-051 (superseded) · D-052 (the 30 days) unchanged.
+- **Amended @1121 (🦠 #260 "rm dead Head enum"):** D-051's `Head` enum + `Feast.head` were unused since the eggs ➡ removed from `logic/Feast.kt`. The eggs are the only feast heads now.
 - **Ck:** `EggResTest` (30 eggs inflate · update re-enables the launcher) · `FeastSheetTest.sheet` + `eggCards` · `ShotsTest.zEgg` · [img/eggs/gallery.png](img/eggs/gallery.png)
 
 ### D-065 @1120 · ✋ Holding a passage opens its menu, and pages and scroll share every gesture · Accepted (🦠 @1120 via M8 #218)
