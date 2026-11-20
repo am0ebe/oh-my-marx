@@ -63,11 +63,11 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
 - 🔍 tags over-applied ("kapitalist" 83 %) ➡ relative re-tag
   - ✔️ 🔍 @1116: root = score.py `maxItems: 4` ➡ LLM pads evy quote 2 4 tags ➡ chip "chef" 1233/1511 ≈ random (miete only 94)
   - 🤖 nxt (aftr QA round): retag "0-2 tags, only if ABOUT it" + weight 1-3 · chip = weight ≥ 2 · guard ≥ ~30 quotes/chip
-- 🤖🏗️ **plan versioning** b4 any plan content fix (R1 🟡 wertform cuts · jahr 365 · qa_1116 § R1): days r addressed by index ➡ changing cuts shifts ppl mid-plan ➡ keep old cut fr running plans (plan id + version i Prefs)
 - 🤖 aft QA: rm page fotos (boox proc step 8)
 - 👀 ck: fon update banner on Today · DEV 0.11.0-dev + stable 0.11.0 (fr M8 board #125)
 
 ## ✔️
+- ✔️ @1120 (M8: 🔵 wo 🦠 answer): 🐛 DEV 1944 startup crash (`newPlans` b4 content load · UpgradeStartTest) · ★ C6 close sheet ([img/close_sheet.png](img/close_sheet.png) ➡ ❓ D-055 i qa_1119) · 🔤 13,319 ⬄ 13,320 DE/EN fixed (split.py: long Part head = meta ➡ jahr auto v2, day 161 only) · 🏗️ plan versioning = D-042 ✔️ @1119 (line moved here)
 - ✔️ @1117 bl_triage (🦠 via M8 #139): ❌ in-app analytics (dupe ops 📊) · ❌ persona voices pointer (lives i pr/audio) · ✂️ rule ➡ file header · Matrix public room = yes · `/omm` + Spruchkarte As inline
 - ✔️ @1116b-1117: 🔵 sweep (lint warn 35 ➡ 25 · glue tsts · Ludditen bridges ×11 · README · tags 🔍) · qa_1116 Q1-Q9 lanes (☭ back · 📖⬄📜 · DEV unlock · Forgejo icon · stamps total) · D-039/040/041 · DEV 2227 · EN gaps 7 ➡ 0 · fx queue · MatrixTest 13 · R1 plan table · 0.11.0 notes draft
 - ✔️ @1116: D-030 CI OOM (gradle 1280m · 2× green) · D-036 = A · ship.sh X.Y.Z + README how-to · **v0.10.0 shipped** · qa_1116 r1+r2 triage · 6 ⚡ lanes (Book · Today · share/★ · settings · i18n 47 strings + guard · startup lazy JSON) · updater BAL fix

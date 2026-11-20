@@ -28,6 +28,7 @@ TYPOS = {"FÜFNZEHNTES": "FÜNFZEHNTES"}   # mlwerke source typos i chapter head
 KAP_HEAD = re.compile(r"\b(" + "|".join(ORDINALS + list(TYPOS)) + r")\s+KAPITEL\b")
 SEC_ANCHOR = re.compile(r'<A NAME="Kap_(\d+)((?:_[A-Za-z0-9]+)*)">(.*?)(?:</A>|$)', re.S | re.I)  # </A> sometimes missing
 PAGE = re.compile(r"<(\d{1,3})>")
+ABSCHNITT = re.compile(r"^(Erster|Zweiter|Dritter|Vierter|Fünfter|Sechster|Siebenter) Abschnitt\b")   # Part heads, any length
 
 def clean(frag):
     frag = re.sub(r'<A [^>]*HREF="#[MZ](\d+[a-z]?)"[^>]*>(?:(?!&lt;=).)*?</A>', r" [\1] ", frag, flags=re.S | re.I)  # fn refs
@@ -101,8 +102,9 @@ def main():
             kind = "table" if txt.startswith("⟦T⟧") else "text"
             if txt == "Fußnoten" or re.fullmatch(r"_+", txt):
                 continue
-            if kind == "text" and len(txt) < 60 and not re.search(r"[.!?;:\"“”)\]]$", txt):
+            if kind == "text" and not re.search(r"[.!?;:\"“”)\]]$", txt) and (len(txt) < 60 or ABSCHNITT.match(txt)):
                 kind = "meta"  # headings · signatures · dates · formula lines
+                # 📑 + Part heads (Fünfter Abschnitt … = 71 chars ➡ was 'text' ➡ align.py gave it EN's last sentence o 13,319)
             txt = re.sub(r"(\s*\|\s*)+", " | ", txt.removeprefix("⟦T⟧").strip()).strip(" |")
             prev = verses[-1] if verses else None
             if prev and prev["kap"] == kap and prev["kind"] == "text" and kind == "text" \
