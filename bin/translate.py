@@ -49,6 +49,8 @@ STYLE = {
     "plan": "These are reading-plan titles and descriptions from a playful Marx-as-Bible app. Keep puns and the wink; "
             "titles stay short.",
     "chap": "These are chapter titles of Marx' 'Das Kapital' vol. 1. Use the established title in the target language if one exists.",
+    "sec": "These are section headings inside chapters of Marx' 'Das Kapital' vol. 1 (keep the leading number). "
+           "Use the established wording in the target language if one exists.",
     "ui": "These are UI strings of a playful Android app that presents Marx' Kapital like a Bible app (with a wink: Marxist "
           "jokes, Bible-app parody, honest about its own Hooked/habit tricks). Translate from the English, the German is "
           "the original for reference. Keep emojis, keep placeholders like %d %s %02d exactly, keep it short for buttons. "
@@ -77,6 +79,11 @@ def src_items(only):
     if "chap" in only:
         for c in load("chapters.json"):
             yield "chap", c["kap"], c["de"], c["en"]
+    if "sec" in only:   # qa_1120 zh/ar shots: section heads stayed English · key = DE heading (always set)
+        seen = set()
+        for v in load("verses.json"):
+            if v.get("st") and v["st"] not in seen:
+                seen.add(v["st"]); yield "sec", v["st"], v["st"], v.get("ste") or v["st"]
     if "ui" in only:
         yield from ui_strings()
 
@@ -148,7 +155,7 @@ def load_cache(lang):
     return c
 
 def export(lang, cache):
-    out = {"q": {}, "a": {}, "x": {}, "plan": {}, "chap": {}, "ui": {}}
+    out = {"q": {}, "a": {}, "x": {}, "plan": {}, "chap": {}, "sec": {}, "ui": {}}
     for (kind, k), x in cache.items():
         out[kind][k] = x["t"]
     plans = {}
@@ -163,7 +170,7 @@ def export(lang, cache):
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--langs", nargs="*", default=list(LANGS))
-    ap.add_argument("--only", nargs="*", default=["ui", "chap", "plan", "x", "a", "q"])
+    ap.add_argument("--only", nargs="*", default=["ui", "chap", "sec", "plan", "x", "a", "q"])
     ap.add_argument("--export-only", action="store_true")
     ap.add_argument("-m", "--model", default="qwen3:30b-a3b-instruct-2507-q4_K_M")
     ap.add_argument("--url", default="http://localhost:11434/api/generate")

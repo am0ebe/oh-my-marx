@@ -177,6 +177,7 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
         else tr("☭ Lesetag gezählt — 🔥 %d", "☭ Reading day counted — 🔥 %d").f(streak(days) + 1)
     // 🏆 C2: wh today's reading day would bring (computed b4 th log lands) ➡ T3 milestone · T4 Beförderung
     val gameAfter = remember(days) { streakGame(days + DayLog(today(), "losung", 0)) }
+    LaunchedEffect(total) { fx?.gold = cardsDone(total) >= 7 }   // 🎖️ level-7 perk: gold ☭ swoosh (D-063)
     val amen: (Verse) -> Unit = { v ->
         Toast.makeText(ctx, amenMsg, Toast.LENGTH_LONG).show()
         buzz(ctx, longArrayOf(0, 40, 60, 90))

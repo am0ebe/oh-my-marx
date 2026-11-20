@@ -202,7 +202,11 @@ fun planDesc(p: Plan) = when (LocalLang.current) {
 
 /** section heading: DE ➡ MEW · evy oth lang ➡ th EN (Moore/Aveling) heading · DE only if build.py found none */
 @Composable
-fun secTitle(v: Verse) = if (LocalLang.current == Lang.DE) v.secTitle else v.secTitleEn.ifBlank { v.secTitle }
+fun secTitle(v: Verse) = when (LocalLang.current) {
+    Lang.DE -> v.secTitle
+    Lang.EN -> v.secTitleEn.ifBlank { v.secTitle }
+    else -> LocalTr.current?.sec?.get(v.secTitle) ?: v.secTitleEn.ifBlank { v.secTitle }
+}
 
 @Composable
 fun chapterTitle(c: Chapter) = when (LocalLang.current) {

@@ -55,6 +55,7 @@ data class Tr(
     val x: Map<String, String> = emptyMap(),            // "plan:dayIdx" ➡ "Und heute?" bridge (PlanDay xd/xe)
     val plan: Map<String, List<String>> = emptyMap(),   // plan id ➡ [title, desc]
     val chap: Map<String, String> = emptyMap(),         // kap ➡ title
+    val sec: Map<String, String> = emptyMap(),          // DE section heading ➡ translation (qa_1120: were EN i all 11 langs)
 )
 
 /** translatable pair, 4 strings that live outside composables (enums, maps) · bin/translate.py greps `T("…", "…")` */

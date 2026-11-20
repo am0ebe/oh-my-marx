@@ -75,6 +75,7 @@ def problems(root):
     root = pathlib.Path(root)
     out = []
     keys, days = ui_keys(root), day_keys(root)
+    secs = {v["st"] for v in _json(root / CONTENT / "verses.json") or [] if v.get("st")}
     for lang in menu(root):
         if lang in BUILTIN:
             continue
@@ -93,6 +94,10 @@ def problems(root):
             if bad:
                 out.append(f"{lang}: {len(bad)} UI strings w broken %s/%d (e.g. {', '.join(repr(m[:30]) for m in bad[:3])}) "
                            "➡ bin/translate.py --only ui (re-asks them)")
+            miss = sorted(secs - set(ui.get("sec", {})))   # section heads (qa_1120: EN i all 11 langs)
+            if miss:
+                out.append(f"{lang}: {len(miss)} section headings untranslated (e.g. {', '.join(repr(m[:30]) for m in miss[:2])}) "
+                           "➡ bin/translate.py --only sec")
             for kind, name in (("a", "Andachten"), ("x", "bridges")):
                 miss = sorted(days[kind] - set(ui.get(kind, {})))
                 if miss:

@@ -115,6 +115,8 @@ class CelebrationQueue {
     private var holds by mutableIntStateOf(0)
 
     val queued: List<Celebration> get() = waiting.toList()
+    /** 🎖️ level-7 perk (D-050 · D-063): th ☭ swoosh turns gold for good · set by Today fr th reading days */
+    var gold by mutableStateOf(false)
     /** sth showing (queued item o a held direct fx) */
     val busy: Boolean get() = current != null || holds > 0
 
@@ -156,7 +158,7 @@ val LocalCelebrations = compositionLocalOf<CelebrationQueue?> { null }
 @Composable
 fun CelebrationHost(q: CelebrationQueue) {
     val c = q.current
-    if (c is Celebration.Effect) key(c) { FxOverlay(c.fx) { q.done(c) } }
+    if (c is Celebration.Effect) key(c) { FxOverlay(c.fx, q.gold) { q.done(c) } }
 }
 
 /** renders `content` only wh reward `key` is th queue's current · `done` = nxt i line */
@@ -169,10 +171,10 @@ fun RewardSlot(key: String, content: @Composable (done: () -> Unit) -> Unit) {
 }
 
 @Composable
-private fun FxOverlay(fx: Fx, onDone: () -> Unit) = when (fx) {
+private fun FxOverlay(fx: Fx, gold: Boolean, onDone: () -> Unit) = when (fx) {
     Fx.Check -> CheckPop(onDone)
-    Fx.Swoosh -> SickleSwoosh(onDone)
-    Fx.Big -> { Confetti {}; SickleSwoosh(onDone) }
+    Fx.Swoosh -> SickleSwoosh(onDone, gold)
+    Fx.Big -> { Confetti {}; SickleSwoosh(onDone, gold) }
     Fx.Confetti -> Confetti(onDone)
     Fx.Krise -> KriseFlash(onDone)
 }
@@ -333,7 +335,7 @@ private fun pose(u0: Float, side: Float): FloatArray {
 }
 
 @Composable
-fun SickleSwoosh(onDone: () -> Unit) {
+fun SickleSwoosh(onDone: () -> Unit, allGold: Boolean = false) {
     val done by rememberUpdatedState(onDone)
     val ctx = LocalContext.current
     val still = rememberReducedMotion()
@@ -347,7 +349,7 @@ fun SickleSwoosh(onDone: () -> Unit) {
         }
         done()
     }
-    val gold = Color(0xFFE8B931); val red = Color(0xFFE53935)
+    val gold = Color(0xFFE8B931); val red = if (allGold) Color(0xFFF6D365) else Color(0xFFE53935)   // level 7: no red left
     val sparks = remember { List(36) { Spark((Random.nextFloat() * 2 * PI).toFloat(), 0.4f + Random.nextFloat() * 0.8f, Random.nextBoolean()) } }
     Overlay {
         Canvas(Modifier.fillMaxSize()) {
