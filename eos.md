@@ -1,6 +1,12 @@
 # eos omm — resume log · newest on TOP
 _1 block per /eos · written by /eos § 3 · todo keeps 1 line: `▶ resume ➡ eos.md`_
 
+## 261120 late · #218 deploy + D-065 · #208 adr v2.1 · /eos
+- **at** · DEV `0.13.0-dev.1120.1813` live = all work incl. #206 (perks · heads · initials · i18n fixes) + D-065 hold = menu + 5 static Literata styles · unit + lint + test_bin + check_langs green · pushed (a5cea67)
+- **▶ NEXT** · 🦠 does [qa_1120.md § r2](qa_1120.md) (8 checks, ~10 min) ➡ flip D-048..054 + D-060..064 to Accepted o fix wh he marks ❌
+- **👤 🦠** · th r2 fon check = th only open ask · 🔵 left: guest heads (needs portrait art) · share card + widget head · feast frames · stamp sound
+- **⚠️** · adr.md = template v2.1 now (outcome titles, Y/Scope/Ck) ➡ new Ds i that shape · Robolectric prefs leak between test methods (mem) · translate re-asks lost %s/%d, check_langs refuses them
+
 ## 261120 ~21:00 · #200 + #201 + #206 (M8, autonomous)
 - **State:** DEV `0.13.0-dev.1120.1730` is live (#200 fixes + #201 decisions). Everything after it (D-063 perks, initials, heads, translations) is pushed but not deployed: #206 forbids deploys.
 - **Next:** 🦠 answers the two Decide items in todo 👀 (hold gesture, unified reading modes) and reviews qa_1120 § r2. Then deploy and build the gesture fix.
