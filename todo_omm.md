@@ -63,6 +63,7 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
 - 🔍 tags over-applied ("kapitalist" 83 %) ➡ relative re-tag
   - ✔️ 🔍 @1116: root = score.py `maxItems: 4` ➡ LLM pads evy quote 2 4 tags ➡ chip "chef" 1233/1511 ≈ random (miete only 94)
   - 🤖 nxt (aftr QA round): retag "0-2 tags, only if ABOUT it" + weight 1-3 · chip = weight ≥ 2 · guard ≥ ~30 quotes/chip
+- 🤖🏗️ subset Literata (D-058): 2 variable TTFs = +1.86 MB ➡ static Latin + Cyrillic (fonttools instancer + pyftsubset) ≈ −1.3 MB · ⚠️ `uvx fonttools` blocked by auto mode @1120 ➡ 🦠 ok / install fonttools 1st
 - 🤖 aft QA: rm page fotos (boox proc step 8)
 - 👀 ck: fon update banner on Today · DEV 0.11.0-dev + stable 0.11.0 (fr M8 board #125)
 
