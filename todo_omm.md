@@ -65,7 +65,7 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
   - 🤖 nxt (aftr QA round): retag "0-2 tags, only if ABOUT it" + weight 1-3 · chip = weight ≥ 2 · guard ≥ ~30 quotes/chip
 - 🤖🏗️ subset Literata (D-058): 2 variable TTFs = +1.86 MB ➡ static Latin + Cyrillic (fonttools instancer + pyftsubset) ≈ −1.3 MB · ⚠️ `uvx fonttools` blocked by auto mode @1120 ➡ 🦠 ok / install fonttools 1st
 - 🤖 aft QA: rm page fotos (boox proc step 8)
-- 👀 ck: fon update banner on Today · DEV 0.11.0-dev + stable 0.11.0 (fr M8 board #125)
+- 🦠🧪 fon update banner on Today · DEV 0.11.0-dev + stable 0.11.0 (fr M8 board #125)
 
 ## ✔️
 - ✔️ @1120 (M8: 🔵 wo 🦠 answer): 🐛 DEV 1944 startup crash (`newPlans` b4 content load · UpgradeStartTest) · ★ C6 close sheet ([img/close_sheet.png](img/close_sheet.png) ➡ ❓ D-055 i qa_1119) · 🔤 13,319 ⬄ 13,320 DE/EN fixed (split.py: long Part head = meta ➡ jahr auto v2, day 161 only) · 🏗️ plan versioning = D-042 ✔️ @1119 (line moved here)
