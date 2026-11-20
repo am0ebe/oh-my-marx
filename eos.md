@@ -1,6 +1,12 @@
 # eos omm — resume log · newest on TOP
 _1 block per /eos · written by /eos § 3 · todo keeps 1 line: `▶ resume ➡ eos.md`_
 
+## 261121 · #260 rm dead Head enum (M8) · /eos
+- **at** · `Head` enum + `Feast.head` gone (f48aa08) · D-066 amended · unit + lint green · not deployed (0 behaviour change)
+- **▶ NEXT** · 🦠 👀 GPU slot Decide + qa_1121 r2 + D-068 box ➡ widget egg box on Black Friday 11/27
+- **👤 🦠** · GPU free aftr audio ➡ 1 `translate.py` run + tags retag
+- **⚠️** · gradlew outside bin/ needs `JAVA_HOME=~/.local/opt/jdk21 ANDROID_HOME=~/Android/Sdk`
+
 ## 261121 00:40 · #248 bg burn + #259 bin docs (M8) · /eos
 - **at** · DEV `0.13.0-dev.1121.0014` live = all #248 work (5e4bc85 = +#259 docs only) · 🧹 translation junk fixed via `data/i18n/hand_fix.json` at export (D-069) · check_langs refuses half-Latin + still-German quotes · 📱 widget egg badge · guard Color 24➡18 · shapes 17➡6 · 142 unit + 46 py + lint green · pushed
 - **▶ NEXT** · 🦠 👀 Decide ×2 (rm `Head` enum · GPU slot) + qa_1121 r2 + D-068 box ➡ widget egg box on Black Friday 11/27
