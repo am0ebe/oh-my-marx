@@ -70,15 +70,16 @@ _🎨 D-045..055 @1119 = design addendum (qa_1117 D6-D11 + r4) · all 💬 · �
 - **options**: **a) stamp thump + star count** · **b) 1 punchy line fr a pool** · **c) teasing Q 4 tomorrow (new `qd`/`qe`)** (🤖 a+b+c) · d) Marx head reacts (🧪 aftr C3)
 - **y**: 🦠 r4 "bland · txt stuffed · Moses? · not teasing" ➡ image + motion + 1 line + 1 Q · drop "Losung kommt um" (⚙️ has it)
 - **ck**: shots `moment_shift` `moment_shift_full` (C2) · all plans hv `qd`+`qe` (C7)
-### D-047 @1119 · star tier aftr a break = "Abschreibung" · 💬
+### D-047 @1119 · star tier aftr a break = "Abschreibung" · ✔️ **c** (🦠 @1120 via M8 #185)
 - **options**: a) back 2 0 · b) best ever · **c) 1 tier down per missed day** (🤖)
 - **y**: a = anxiety (D-004) · b = no stakes · c = fixed capital depreciates, doesn't vanish
-- **ck**: StreakGameTest: tier falls 1/day (C1)
-### D-046 @1119 · milestones + ✊ Streiktag (Q2 · Q3) · 💬
+- **ck**: StreakGameTest: tier falls 1/day (C1) · built = `logic/Daily.kt streakGame` (fwd replay o DayLog, no Prefs state)
+### D-046 @1119 · milestones + ✊ Streiktag (Q2 · Q3) · ✔️ as rec: ✊ Streiktag · keep Sabbat · steps 7…365 (🦠 @1120 via M8 #185)
 - **options**: steps 7 · 14 · 30 · 50 · 100 · 200 · 365 · +100 · 1 freeze per step, max 2 · name a) ❄️ Freeze · **b) ✊ Streiktag** (🤖) · c) 🛟 · Sabbat: **keep** (🤖) o fold in
 - **y**: Duolingo set (R3) + 200 (gap 100 ➡ 365) · earned only, no shop (D-014) · Sabbat = weekly grace, Streiktag = earned buffer, used aftr Sabbat
 - **ck**: StreakGameTest: earn · cap 2 · use order (C1)
-### D-045 @1119 · 1 score on th hero (Q1) · 💬 · ⚠️ amends D-036 A
+- **impl** (C1 @1120): ✊ earned only on milestone days ≥ 2026-11-20 (no retro bridges) · 🕊️ lazy: 2nd 1-day gap i a week ➡ ✊ if held, else th break moves 2 th earlier gap (= old backward walk ➡ `oldStreaksUnchanged` 300 random histories)
+### D-045 @1119 · 1 score on th hero (Q1) · ✔️ **c** hero = streak only · stamps ➡ Stempeluhr + My Capital (🦠 @1120 via M8 #185) · ⚠️ amends D-036 A
 - **options**: a) drop gift stamps · b) caption each counter (tried @1116 ❌ still confusing r3) · **c) hero = streak only (star + week + nxt-milestone bar) · stamps + rank ➡ Stempeluhr pane + My Capital** (🤖)
 - **y**: 2 worlds, 2 places: streak = hero · career (total days ➡ ranks) = stamp card · hero size + look = A (only th stamp row leaves)
 - **ck**: shot `hero_tiers` · stamp card i `mine` (C2)

@@ -24,37 +24,99 @@ fun verseOfDay(pool: List<Verse>, date: String = today(), reroll: Int = 0): Vers
 /** ISO week key 4 th Sabbat-Joker (max 1 rest day / week) */
 private fun week(d: LocalDate) = d.get(IsoFields.WEEK_BASED_YEAR) * 100 + d.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR)
 
-/**
- * consecutive reading days, counting back fr today (or yesterday if today not done yet).
- * 🕊️ Sabbat-Joker: 1 missed day per ISO week is bridged (= rest, not counted) — streak anxiety kills habits too.
- * returns (streak, bridged rest days)
- */
-fun streakInfo(days: List<DayLog>, now: LocalDate = LocalDate.now()): Pair<Int, Set<LocalDate>> {
-    val done = days.map { LocalDate.parse(it.date) }.toSet()
-    val rest = mutableSetOf<LocalDate>()
-    var d = if (now in done) now else now.minusDays(1)
-    var n = 0
-    while (true) {
-        when {
-            d in done -> n++
-            d.minusDays(1) in done && rest.none { week(it) == week(d) } -> rest += d
-            else -> break
-        }
-        d = d.minusDays(1)
-    }
-    return n to rest
+// ── 🧮 streak game (C1 · D-046 milestones + ✊ Streiktag · D-047 Abschreibung) ──────────────────────────────
+// 1 fwd replay o th DayLog = th whole truth (no extra state i Prefs ➡ nothing 2 drift, reinstall-safe)
+
+/** D-046: 7 · 14 · 30 · 50 · 100 · 200 · 365 · then evy +100 (465 · 565 …) */
+val MILESTONES = listOf(7, 14, 30, 50, 100, 200, 365)
+fun isMilestone(n: Int) = n in MILESTONES || (n > 365 && (n - 365) % 100 == 0)
+fun nextMilestone(n: Int): Int = MILESTONES.firstOrNull { it > n } ?: (365 + ((n - 365) / 100 + 1) * 100)
+
+/** ✊ max held · 1 earned per milestone */
+const val STRIKES_MAX = 2
+/** ✊ earned only on milestone days fr th C1 ship day on ➡ old streaks unchanged (no retro bridges) */
+val STRIKES_FROM: LocalDate = LocalDate.of(2026, 11, 20)
+
+/** ★ tier by streak (design § 14.1.3): 0 plain · 1 glow 7+ · 2 ring 14+ · 3 laurel 30+ · 4 stars 50+ · 5 halo 100+ · 6 ribbon 200+ · 7 Orden 365+ */
+private val TIER_AT = listOf(0, 7, 14, 30, 50, 100, 200, 365)
+fun tierOf(streak: Int): Int = TIER_AT.indexOfLast { streak >= it }
+const val TIER_MAX = 7
+
+data class StreakGame(
+    val streak: Int = 0,
+    val rest: Set<LocalDate> = emptySet(),       // 🕊️ Sabbat days i th current streak
+    val struck: Set<LocalDate> = emptySet(),     // ✊ Streiktag days i th current streak
+    val strikes: Int = 0,                        // ✊ held now (0..2)
+    val tier: Int = 0,                           // ★ shown tier (Abschreibung: falls 1 / missed day, nvr a cliff)
+    val best: Int = 0,                           // longest streak ever
+    val milestoneToday: Int? = null,             // today's done day hit a milestone (➡ T3 screen)
+    val strikeEarnedToday: Boolean = false,
+    val strikeUsedLast: LocalDate? = null,       // ✊ last day a Streiktag bridged (➡ "Streiktag eingelöst" copy)
+    val depreciating: Boolean = false,           // tier > tierOf(streak) = capital writing itself off (➡ Callout 1×)
+) {
+    val next get() = nextMilestone(streak)
+    val toNext get() = next - streak
 }
+
+/**
+ * replay day by day fr th 1st log 2 `now`:
+ * - done ➡ streak +1 · milestone ➡ +1 ✊ (cap 2) · tier = max(tier, tierOf(streak))
+ * - missed (past) ➡ 🕊️ Sabbat 1st (1/ISO week, only if th day b4 was read — as always) ➡ else ✊ if held ➡ else break:
+ *   streak 0 · tier −1 per missed day (D-047 c) · ✊ kept (earned, nvr taken back)
+ * - today not done yet = not missed (still time)
+ */
+fun streakGame(days: List<DayLog>, now: LocalDate = LocalDate.now()): StreakGame {
+    val done = days.mapNotNull { runCatching { LocalDate.parse(it.date) }.getOrNull() }.filter { !it.isAfter(now) }.toSortedSet()
+    if (done.isEmpty()) return StreakGame()
+    var n = 0; var best = 0; var strikes = 0; var tier = 0
+    var rest = mutableSetOf<LocalDate>(); var struck = mutableSetOf<LocalDate>()
+    var mile: Int? = null; var earned = false; var used: LocalDate? = null
+    var d = done.first()
+    while (!d.isAfter(now)) {
+        when {
+            d in done -> {
+                n++; best = maxOf(best, n); tier = maxOf(tier, tierOf(n))
+                val hit = isMilestone(n)
+                if (hit && !d.isBefore(STRIKES_FROM) && strikes < STRIKES_MAX) { strikes++; if (d == now) earned = true }
+                if (d == now && hit) mile = n
+            }
+            d == now -> {}   // today, not read yet ➡ still open
+            n > 0 && d.minusDays(1) in done && rest.none { week(it) == week(d) } -> rest += d
+            n > 0 && strikes > 0 -> { strikes--; struck += d; used = d }
+            // 🕊️ lazy: this week's Sabbat alr spent on an earlier 1-day gap `r` ➡ th break moves 2 r, Sabbat 2 d
+            //   (= th old backward walk: th LATEST gap o a week gets th Sabbat ➡ old streaks unchanged)
+            n > 0 && d.minusDays(1) in done -> {
+                val r = rest.first { week(it) == week(d) }
+                n = done.count { it.isAfter(r) && it.isBefore(d) }
+                rest = mutableSetOf(d); struck = struck.filterTo(mutableSetOf()) { it.isAfter(r) }
+                tier = maxOf(maxOf(0, tier - 1), tierOf(n))
+            }
+            else -> { if (n > 0) { rest = mutableSetOf(); struck = mutableSetOf() }; n = 0; tier = maxOf(0, tier - 1) }
+        }
+        d = d.plusDays(1)
+    }
+    return StreakGame(n, rest, struck, strikes, tier, best, mile, earned, used, tier > tierOf(n))
+}
+
+/** consecutive reading days (🕊️ + ✊ bridged, not counted) · returns (streak, bridged rest days) — old API */
+fun streakInfo(days: List<DayLog>, now: LocalDate = LocalDate.now()): Pair<Int, Set<LocalDate>> =
+    streakGame(days, now).let { it.streak to it.rest }
 
 fun streak(days: List<DayLog>, now: LocalDate = LocalDate.now()) = streakInfo(days, now).first
 
-enum class Cell { DONE, REST, EMPTY }
+/** C1 API (design § 14.6): milestone hit by today's reading day, else null */
+fun milestoneHit(days: List<DayLog>, now: LocalDate = LocalDate.now()): Int? = streakGame(days, now).milestoneToday
+fun starTier(days: List<DayLog>, now: LocalDate = LocalDate.now()): Int = streakGame(days, now).tier
+fun strikes(days: List<DayLog>, now: LocalDate = LocalDate.now()): Int = streakGame(days, now).strikes
 
-/** last 14 days 4 th "don't break th chain" row: ☭ read · 🕊️ Sabbat · · nothing */
+enum class Cell { DONE, REST, STRIKE, EMPTY }
+
+/** last 14 days 4 th "don't break th chain" row: ☭ read · 🕊️ Sabbat · ✊ Streiktag · · nothing */
 fun chain(days: List<DayLog>, now: LocalDate = LocalDate.now()): List<Cell> {
     val done = days.map { it.date }.toSet()
-    val rest = streakInfo(days, now).second
+    val g = streakGame(days, now)
     return (13 downTo 0).map { now.minusDays(it.toLong()) }.map {
-        when { it.toString() in done -> Cell.DONE; it in rest -> Cell.REST; else -> Cell.EMPTY }
+        when { it.toString() in done -> Cell.DONE; it in g.rest -> Cell.REST; it in g.struck -> Cell.STRIKE; else -> Cell.EMPTY }
     }
 }
 
