@@ -43,6 +43,11 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.lerp
+import androidx.compose.ui.graphics.luminance
+import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
+import androidx.compose.ui.graphics.drawscope.translate
+import androidx.compose.ui.graphics.drawscope.scale
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
@@ -183,15 +188,110 @@ fun ActionItem(
 
 /** ★ = close, evywhere (top-end o dialogs + sheets) · 36 visual, 48 target */
 @Composable
-fun CloseStar(onClick: () -> Unit, modifier: Modifier = Modifier, tint: Color = Ds.red, size: Dp = 36.dp, desc: String = "Close") {
+fun CloseStar(onClick: () -> Unit, modifier: Modifier = Modifier, tint: Color = Ds.red, size: Dp = 36.dp, desc: String = "Close",
+              variant: CloseVariant = CloseVariant.V1) {
     // qa_1116 L3 #6 + #7: th 1 star asset (res/drawable/ic_star.xml, bbox-centred i its box = no nudge) · bigger (pad 8 %) ·
     //   gold rim = th hero star's, scaled · circle = tint 10 % + 30 % hairline
     // qa_1117 r1 "star too low + too big i th circle": pad 8 ➡ 18 % · bbox-centred ≠ optically centred (th star's mass =
     //   its circumcentre, 1.09/24 below th bbox centre) ➡ lift by that share o th star's drawn size · hero star untouched
-    val star = size * (1 - 2 * 0.18f)
-    Surface(onClick = onClick, shape = CircleShape, color = tint.copy(alpha = 0.10f),
-        border = BorderStroke(1.dp, tint.copy(alpha = 0.30f)), modifier = modifier.size(size).semantics { contentDescription = desc }) {
-        Box(contentAlignment = Alignment.Center) { StarImage(Modifier.size(star).offset(y = -star * (1.09f / 24f))) }
+    // 🎨 D-055 (design § 14.5 · lane C6): V1-V8 = th variants sheet (test/CloseSheetTest ➡ close_sheet.png) · 🦠 picks ➡ dflt
+    //   changes here, 1 line · evy variant draws th SAME ic_star (tint · cut-outs via blend), nvr a Path() copy o it
+    val v = variant
+    // V5 · V7 = solid red objects ➡ a light tint (white on th hero gradient) would vanish ➡ they stay brand red there
+    val solid = if (tint.luminance() > 0.5f) Ds.red else tint
+    val star = size * (1 - 2 * (if (v == CloseVariant.V2) 0.11f else 0.18f))
+    val lift = Modifier.offset(y = -star * (1.09f / 24f))
+    val src = remember { MutableInteractionSource() }
+    val pressed by src.collectIsPressedAsState()
+    val spin by androidx.compose.animation.core.animateFloatAsState(if (v == CloseVariant.V8 && pressed) 72f else 0f,
+        spring(dampingRatio = 0.45f, stiffness = 500f), label = "spin")
+    val (bg, rim) = when (v) {
+        CloseVariant.V2, CloseVariant.V7 -> Color.Transparent to null
+        CloseVariant.V5 -> solid to null
+        CloseVariant.V6 -> Color.Transparent to BorderStroke(1.dp, Ds.gold.copy(alpha = 0.55f))
+        else -> tint.copy(alpha = 0.10f) to BorderStroke(1.dp, tint.copy(alpha = 0.30f))
+    }
+    Surface(onClick = onClick, shape = CircleShape, color = bg, border = rim, interactionSource = src,
+        modifier = modifier.size(size).semantics { contentDescription = desc }) {
+        Box(contentAlignment = Alignment.Center) {
+            when (v) {
+                CloseVariant.V1, CloseVariant.V2 -> StarImage(Modifier.size(star).then(lift))
+                CloseVariant.V8 -> StarImage(Modifier.size(star).then(lift).graphicsLayer { rotationZ = spin; transformOrigin = STAR_PIVOT })
+                CloseVariant.V3 -> CloseCross(Modifier.size(size * 0.42f), tint)
+                CloseVariant.V4 -> StarDrawn(Modifier.size(star).then(lift), cross = true)
+                CloseVariant.V5 -> StarDrawn(Modifier.size(star).then(lift), fill = Ds.white)
+                CloseVariant.V6 -> StarDrawn(Modifier.size(star).then(lift), fill = Ds.gold, hole = 0.62f)
+                CloseVariant.V7 -> WaxSeal(Modifier.size(size), solid)
+            }
+        }
+    }
+}
+
+/** 🎨 D-055 close btn variants (design § 14.5) · V1 = now · 🦠 picks fr close_sheet.png */
+enum class CloseVariant(val look: String) {
+    V1("now: ★ i tinted circle"), V2("bare ★, no circle"), V3("mono ✕ i circle"), V4("★ w ✕ cut-out"),
+    V5("red disc, white ★"), V6("outline ★, gold rim"), V7("wax seal, embossed ★"), V8("V1 + spins 72° on press"),
+}
+
+/** th star's optical centre i its 24 box (circumcentre y 13.09) ➡ pivot 4 spin + hole scaling */
+private val STAR_PIVOT = androidx.compose.ui.graphics.TransformOrigin(0.5f, 13.09f / 24f)
+
+/** ic_star drawn i a Canvas ➡ tint (fill) · hole = same star scaled around its centre, punched out (outline look) ·
+ *  cross = ✕ punched out o th middle · offscreen layer ➡ punches show whatever is behind (circle · gradient · dark) */
+@Composable
+private fun StarDrawn(modifier: Modifier, fill: Color? = null, hole: Float = 0f, cross: Boolean = false) {
+    val p = painterResource(de.strix.marxversion.R.drawable.ic_star)
+    Canvas(modifier.graphicsLayer { compositingStrategy = androidx.compose.ui.graphics.CompositingStrategy.Offscreen }) {
+        val cf = fill?.let { androidx.compose.ui.graphics.ColorFilter.tint(it) }
+        with(p) { draw(size, colorFilter = cf) }
+        val c = Offset(size.width / 2, size.height * 13.09f / 24f)
+        if (hole > 0f) scale(hole, hole, c) {
+            drawIntoCanvas { cv ->
+                cv.saveLayer(androidx.compose.ui.geometry.Rect(Offset.Zero, size),
+                    androidx.compose.ui.graphics.Paint().apply { blendMode = androidx.compose.ui.graphics.BlendMode.DstOut })
+                with(p) { draw(size) }
+                cv.restore()
+            }
+        }
+        if (cross) {
+            val a = size.width * 0.13f; val w = size.width * 0.085f
+            listOf(Offset(-a, -a) to Offset(a, a), Offset(-a, a) to Offset(a, -a)).forEach { (s, e) ->
+                drawLine(Color.Black, c + s, c + e, w, androidx.compose.ui.graphics.StrokeCap.Round,
+                    blendMode = androidx.compose.ui.graphics.BlendMode.Clear)
+            }
+        }
+    }
+}
+
+/** V3: plain ✕, 2 round strokes */
+@Composable
+private fun CloseCross(modifier: Modifier, tint: Color) = Canvas(modifier) {
+    val w = size.width * 0.16f
+    drawLine(tint, Offset.Zero, Offset(size.width, size.height), w, androidx.compose.ui.graphics.StrokeCap.Round)
+    drawLine(tint, Offset(0f, size.height), Offset(size.width, 0f), w, androidx.compose.ui.graphics.StrokeCap.Round)
+}
+
+/** V7: red wax blob (12 soft bumps) + embossed ★ (dark drop 1 px below, light star on top) */
+@Composable
+private fun WaxSeal(modifier: Modifier, tint: Color) {
+    val p = painterResource(de.strix.marxversion.R.drawable.ic_star)
+    Canvas(modifier) {
+        val c = center; val r = size.minDimension / 2 * 0.94f
+        val blob = Path().apply {
+            for (i in 0..96) {
+                val t = i / 96f * 2 * Math.PI
+                val rr = r * (0.93f + 0.07f * kotlin.math.cos(12 * t).toFloat())
+                val pt = Offset(c.x + rr * kotlin.math.cos(t).toFloat(), c.y + rr * kotlin.math.sin(t).toFloat())
+                if (i == 0) moveTo(pt.x, pt.y) else lineTo(pt.x, pt.y)
+            }
+            close()
+        }
+        drawPath(blob, tint)
+        drawCircle(lerp(tint, Color.Black, 0.25f), r * 0.66f, c, style = Stroke(r * 0.05f))
+        val s = size.width * 0.5f
+        val tl = Offset(c.x - s / 2, c.y - s / 2 - s * (1.09f / 24f))
+        translate(tl.x, tl.y + 1.2f) { with(p) { draw(androidx.compose.ui.geometry.Size(s, s), colorFilter = androidx.compose.ui.graphics.ColorFilter.tint(lerp(tint, Color.Black, 0.35f))) } }
+        translate(tl.x, tl.y) { with(p) { draw(androidx.compose.ui.geometry.Size(s, s), colorFilter = androidx.compose.ui.graphics.ColorFilter.tint(lerp(tint, Color.White, 0.30f))) } }
     }
 }
 

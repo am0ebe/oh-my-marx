@@ -649,6 +649,7 @@ _now (V1): ★ red, 64 % o a 36 circle (red 10 % + 30 % hairline), optically lif
 | V7 | red wax-seal blob w embossed ★ | ties 2 stamps + seals | busy at 36 |
 | V8 | V1 + ★ spins 72° on press (spring) | playful, 0 cost at rest | motion only, same static look |
 - sheet = 8 variants × 3 ctx (MarxDialog on paperHi · sheet · hero gradient) + 1 dark row ➡ `close_sheet.png` · 🦠 picks ➡ `CloseStar` dflt changes, 1 line
+- ✔️ C6 built @1120: `CloseStar(variant = CloseVariant.Vn)` (dflt V1, app look unchanged) · all off ic_star (tint · DstOut hole · Clear ✕) · V5 + V7 stay red on light tints (hero) · sheet ➡ [img/close_sheet.png](img/close_sheet.png) · `CloseSheetTest` (click smoke + `-Pshots` sheet)
 
 ### 14.6 · 🏗️ lanes 4 Opus — disjoint files (§ 12 rules apply: look only unless th lane says · tr() · b4 + aft shots · tsts green · guard ratchet down · ❌ bump / deploy)
 _lane ids = **C1-C7** (§ 12 uses L0-L6, qa uses L1-L8 ➡ no clash)_
