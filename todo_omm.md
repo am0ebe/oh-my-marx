@@ -26,23 +26,9 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
 
 ## 👀
 ### 🏔️ v1
-- **Decide:** What should holding a passage do — turn the page, or open its menu?
-  - Recommendation: **hold = menu, in both reading modes** (with a buzz). Tap = turn stays in 📖. Double-tap = menu stays as a second way in.
-  - Why now: your r1 note says hold is often read as a tap, and [adr.md](adr.md) D-057 still says hold = turn. The gesture fix waits on this.
-  - Evidence: [qa_1120.md § tap fix](qa_1120.md) note · D-057
-- **Decide:** Should 📖 pages and 📜 scroll share every gesture and the same top bar, so the only difference is pages vs. endless?
-  - Recommendation: **yes** — one gesture set (above) and one head bar in both. Today 📜 still opens the menu on a single tap.
-  - Why now: same fix as the item above; one build covers both.
-  - Evidence: your r1 note in [qa_1120.md](qa_1120.md) line 8
-- **Review:** 10 checks in [qa_1120.md § r2](qa_1120.md), about 10 minutes on DEV `0.13.0-dev.1120.1730`.
-  - Look at: Today Werkbank chips (Time clock · Milestone · Promotion) · My Capital level card · reader mode toggle + Continue.
-  - Includes accepting or changing D-048 to D-054 and D-059 to D-062 (all marked Proposed in [adr.md](adr.md)).
-  - [ ] 🦠 good / note
-- **Review:** Built after DEV 1730, not on the phone yet (needs a deploy, which only you can order):
-  - Rank perks for all 7 levels (D-063) · feast emblems ([hero_feasts.png](img/qa_1120/hero_feasts.png)) · 11 more drawn feast heads ([feast_sheet.png](img/feast_sheet.png)).
-  - Illuminated chapter initial, section initials, red ¶ in scroll mode ([chapter.png](img/qa_1120/chapter.png)).
-  - Arabic, Urdu, Hindi, Bengali: no drop cap (D-064) · section headings now translated in all 11 languages · 12 broken %s/%d translations fixed ([chapter_ar.png](img/qa_1120/chapter_ar.png)).
-  - The decay note shows only on the day after a missed day.
+- **Review:** 8 checks in [qa_1120.md § r2](qa_1120.md), about 10 minutes on DEV `0.13.0-dev.1120.1813`.
+  - Look at: reader gestures (hold = menu, D-065) · holy book · note card · Werkbank chips · My Capital · feasts.
+  - Each tick also accepts the decisions on its line: D-048 to D-054 and D-060 to D-064 (all Proposed in [adr.md](adr.md)).
   - [ ] 🦠 good / note
 
 ## 📆
