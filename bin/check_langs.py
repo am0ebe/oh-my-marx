@@ -45,6 +45,14 @@ def ui_keys(root):
     return keys
 
 
+PH = re.compile(r"%(?:\d+\$)?[-0]?\d*[sdf]")
+
+
+def placeholders(s):
+    """format args i a string, sorted (order may change i translation, th set may not)"""
+    return sorted(PH.findall(s))
+
+
 def _json(f):
     try:
         return json.loads(f.read_text(encoding="utf-8"))
@@ -79,6 +87,12 @@ def problems(root):
             if miss:
                 out.append(f"{lang}: {len(miss)} UI strings untranslated (e.g. {', '.join(repr(m[:30]) for m in miss[:3])}) "
                            "➡ bin/translate.py --only ui")
+            # %s / %d must survive translation exactly (qa_1120: ar + ur wrote "٪s" ➡ "HERE BEGINS CHAPTER s٪") —
+            #   a wrong placeholder = garbled txt, o a crash when th arg type doesn't fit
+            bad = sorted(en for en, t in ui.get("ui", {}).items() if placeholders(en) != placeholders(t))
+            if bad:
+                out.append(f"{lang}: {len(bad)} UI strings w broken %s/%d (e.g. {', '.join(repr(m[:30]) for m in bad[:3])}) "
+                           "➡ bin/translate.py --only ui (re-asks them)")
             for kind, name in (("a", "Andachten"), ("x", "bridges")):
                 miss = sorted(days[kind] - set(ui.get(kind, {})))
                 if miss:

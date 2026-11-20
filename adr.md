@@ -18,6 +18,11 @@ _SDD: code says **wh** · th file says **y** · drift = a bug · fmt ➡ `pr/vib
 - 🔥 hot files (1 owner at a ti — fan-out lanes nvr split these): `assets/content/i18n_*.json` + `data/i18n/*.jsonl` (translate pass = fan-in only) · `android/app/build.gradle.kts` (version) · `ui/Changelog.kt` · `res/values*/strings.xml` · `TodayScreen.kt` · `MineScreen.kt` · `Share.kt`
 
 ## 🧾 decisions (newest on top)
+### D-064 @1120 · Arabic, Urdu, Hindi and Bengali get no drop cap; Chinese keeps its initial box · Accepted (🤖 @1120, M8 #206)
+- **Y:** The Arabic shot showed a cut-off, unjoined first letter: these scripts join or stack letters, so pulling one out breaks the word. Chinese characters stand alone, so the box works there.
+- **Scope:** Chapter and section initials only. Headpiece, incipit, seal and ribbon stay in every language.
+- **Prev:** design § 14.3 said "hi · bn = initial box with first glyph"; that breaks conjuncts the same way.
+- **Ck:** `ShotsTest.zLangs` (chapter_ar · chapter_zh) · `VerseView.kt DropCapText` `splitBreaks`
 ### D-063 @1120 · All 7 rank perks now exist, so the promotion screen shows its perk line · Accepted (🤖 @1120, M8 #206 autonomous)
 - **Y:** The perks table in D-050 was a promise with no code behind it. Hiding the line was honest but empty; building the perks keeps the promise.
 - **What each level gives:** 1 gold rim on the hero · 2 stamp card turns blue cloth · 3 opens the "Marx Basics" plan (new lock source `rank`, D-043) · 4 your rank title next to "you" in Circles (your screen only, nothing is sent) · 5 gear rim around the star · 6 your name in the book's colophon · 7 the star turns gold.

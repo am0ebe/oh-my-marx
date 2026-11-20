@@ -262,7 +262,10 @@ private fun NoteBubble(modifier: Modifier = Modifier, at: Long? = null, onEdit: 
 private fun DropCapText(t: AnnotatedString, style: TextStyle, lines: Int = 3) {
     // C4 (D-053 b): 3 lines = chapter's illuminated initial (red on a gold square, ink hairline) · 2 lines = section initial, no box
     val first = t.text.indexOfFirst { !it.isWhitespace() }
-    if (first < 0 || !t.text[first].isLetter() || t.length < first + 2) { Text(t, style = style); return }
+    // qa_1120 ar shot: splitting th 1st letter breaks shaping i joined scripts (ar · ur) + Indic conjuncts (hi · bn) ➡ plain ¶
+    val lang = LocalLang.current
+    val splitBreaks = lang.rtl || lang == de.strix.marxversion.data.Lang.HI || lang == de.strix.marxversion.data.Lang.BN
+    if (splitBreaks || first < 0 || !t.text[first].isLetter() || t.length < first + 2) { Text(t, style = style); return }
     val cap = t.text[first].toString()
     val rest = t.subSequence(first + 1, t.length)
     val illum = lines >= 3

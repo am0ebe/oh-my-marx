@@ -2445,3 +2445,4 @@
 {"kind": "ui", "k": "New: in Circles your rank shows next to “you”", "src": "Neu: in Kreisen steht dein Rang neben „du“\u0000New: in Circles your rank shows next to “you”", "t": "नया: गोले में तुम्हारा रैंक 'तुम' के साथ दिखाई देगा"}
 {"kind": "ui", "k": "at level %d", "src": "ab Level %d\u0000at level %d", "t": "स्तर %d से"}
 {"kind": "ui", "k": "Read by %s — classic status", "src": "Gelesen von %s — Klassiker-Status\u0000Read by %s — classic status", "t": "%s द्वारा पढ़ा गया — क्लासिक स्टेटस"}
+{"kind": "ui", "k": "The chat and shared stamp card of “%s” disappear. You can rejoin with the code %s.", "src": "Chat und gemeinsame Stempelkarte von „%s“ verschwinden. Mit dem Code %s kannst du wieder beitreten.\u0000The chat and shared stamp card of “%s” disappear. You can rejoin with the code %s.", "t": "चैट और साझा स्टम्प कार्ड ऑफ “%s” गायब हो जाते हैं। कोड %s के साथ आप फिर से शामिल हो सकते हैं।"}

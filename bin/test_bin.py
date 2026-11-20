@@ -93,6 +93,23 @@ class ShipGuard(unittest.TestCase):
         self.assertLess(s.index("bin/check_langs.py"), s.index('sed -i -E "s/^val appVersion'))
 
 
+class Placeholders(unittest.TestCase):
+    """qa_1120 (ar shot): "HERE BEGINS CHAPTER %s" ➡ ar "… ٪s" ➡ shown "s٪" · 26 such UI strings i 8 langs"""
+    def test_check_langs_flags_lost_placeholder(self):
+        d, root = fake_tree(["en", "ar"], {"i18n_ar.json": {"ui": {"Day %d": "اليوم ٪d", "Hi": "مرحبا"}},
+                                           "full_ar.json": {"v": {"1,1": "x"}}})
+        with d:
+            bad = check_langs.problems(root)
+        self.assertTrue(any("broken %s/%d" in b for b in bad), bad)
+
+    def test_translate_normalizes_arabic_percent_and_rejects_lost_ones(self):
+        tr = load("translate")
+        self.assertEqual("الفصل %s", tr.fix_ph("CHAPTER %s", "الفصل ٪s"))
+        self.assertEqual("%d / %d", tr.fix_ph("%d of %d", "%d / %d"))
+        self.assertIsNone(tr.fix_ph("Day %d", "Tag"))
+        self.assertIsNone(tr.fix_ph("(full text only)", "Capítulo %d"))
+
+
 class Reply(io.BytesIO):
     """urlopen() result: json.load() reads it"""
     def __enter__(self): return self

@@ -122,12 +122,29 @@ def batches(items, max_chars=3500, max_n=20):
 
 # ── main ─────────────────────────────────────────────────────────────────────
 
+PH = re.compile(r"%(?:\d+\$)?[-0]?\d*[sdf]")
+ARABIC_PCT = re.compile(r"٪(?=(?:\d+\$)?[-0]?\d*[sdf])")
+
+
+def fix_ph(en, t):
+    """%s/%d kept exactly? ar/ur models write th Arabic percent sign (٪s) ➡ normalized · still off = None (re-ask)"""
+    t = ARABIC_PCT.sub("%", t)
+    return t if sorted(PH.findall(en)) == sorted(PH.findall(t)) else None
+
+
 def load_cache(lang):
+    """cached translations · one w broken placeholders is dropped here ➡ th run re-asks it (qa_1120 ar/ur ٪s)"""
     f = CACHE / f"{lang}.jsonl"
     c = {}
     if f.exists():
         for l in open(f, encoding="utf-8"):
-            x = json.loads(l); c[(x["kind"], x["k"])] = x
+            x = json.loads(l)
+            en = x["src"].split("\x00")[-1] if "src" in x else x["k"]
+            t = fix_ph(en, x["t"])
+            if t is None:
+                c.pop((x["kind"], x["k"]), None)
+                continue
+            c[(x["kind"], x["k"])] = x | {"t": t}
     return c
 
 def export(lang, cache):
@@ -175,7 +192,17 @@ def main():
                                     r |= ask(a.model, a.url, kind, lang, {k: b[k]})
                                 except Exception as e1:
                                     print(f"  ❌ {k}: {e1}", file=sys.stderr)
-                        for k, tr in r.items():
+                        for k, tr in list(r.items()):
+                            fixed = fix_ph(b[k][1], tr)
+                            if fixed is None:   # 1 more try alone, then leave it out (EN fallback · check_langs says so)
+                                try:
+                                    fixed = fix_ph(b[k][1], ask(a.model, a.url, kind, lang, {k: b[k]}).get(k, ""))
+                                except Exception:
+                                    fixed = None
+                            if fixed is None:
+                                print(f"  ❌ {k[:50]!r}: %s/%d lost twice ➡ skipped", file=sys.stderr)
+                                continue
+                            tr = fixed
                             x = {"kind": kind, "k": k, "src": b[k][0] + "\x00" + b[k][1], "t": tr}
                             cache[(kind, k)] = x
                             fo.write(json.dumps(x, ensure_ascii=False) + "\n")

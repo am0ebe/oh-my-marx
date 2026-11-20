@@ -159,6 +159,24 @@ class ShotsTest {
     }
 
     /** 🪝 Hooked on (DEV unlock) ➡ Today: does th top hook cover th streak hero? (qa_1117 r3) · runs aftr zFeed */
+    /** 📜 C4 holy book i rtl (ar: ribbon + gilt edge mirror) + zh (no caps ➡ initial box w 1st glyph) · runs last */
+    @Test fun zLangs() {
+        rule.waitUntil(30_000) { rule.onAllNodesWithText("Today").fetchSemanticsNodes().isNotEmpty() }
+        val vm = androidx.lifecycle.ViewModelProvider(rule.activity)[de.strix.marxversion.ui.AppVm::class.java]
+        rule.runOnUiThread { vm.setReadScroll(false) }
+        rule.mainClock.advanceTimeBy(1000)
+        tap("Read", true); tap("p. 49"); rule.mainClock.advanceTimeBy(1500)
+        listOf(Lang.AR to "chapter_ar", Lang.ZH to "chapter_zh").forEach { (l, name) ->
+            rule.runOnUiThread { vm.setLang(l) }
+            // full_xx.json loads async ➡ wait til th head chip left English
+            rule.waitUntil(30_000) { rule.mainClock.advanceTimeBy(500); rule.onAllNodesWithText("Scroll", substring = true).fetchSemanticsNodes().isEmpty() }
+            rule.mainClock.advanceTimeBy(2000); rule.waitForIdle()
+            shot(name)
+        }
+        rule.runOnUiThread { vm.setLang(Lang.EN) }
+        rule.mainClock.advanceTimeBy(2000)
+    }
+
     @Test fun zHooked() {
         rule.waitUntil(30_000) { rule.onAllNodesWithText("Today").fetchSemanticsNodes().isNotEmpty() }
         val vm = androidx.lifecycle.ViewModelProvider(rule.activity)[de.strix.marxversion.ui.AppVm::class.java]
