@@ -1,0 +1,11 @@
+# omm status @1121 — brief 4 🦠 (via M8) · no build · DEV = `0.13.0-dev.1121.0014`
+
+1. 🔊 **Voice: yes, but only th fon's own Android TTS**: 1 plain voice reads th text i its lang (any o 13 if th fon hs that voice installed, else a toast "voice missing ➡ install") · no audio files, nothing deployed on a server · 3 "holy" voices (God · Gottvater Marx · Marx) exist i code, picker hidden (D-012 = 1 sober voice) · ❌ missing 4 v1: good natural voices per lang + how 2 ship them (inside th APK · download · server) ➡ audio crew
+2. 🌍 **Translated locally, 11 langs** (it es pt fr ru zh ar hi bn ur id) · DE = Marx original · EN = Moore/Aveling · = **whole book** (1948 paragraphs + footnotes) + all quotes + Andachten + "Und heute?" bridges + plan texts + chapter titles + UI · M = `qwen3:30b-a3b-instruct-2507` (ollama, tow GPU) · fixes by hand i `data/i18n/hand_fix.json`
+   - 🦠 ck: `bin/translate_full.py --show 5 --langs it es` (DE | EN | xx side by side) · `--stats` (coverage + warnings) · `bin/check_langs.py` (ship guard) · o switch lang i th app
+   - 👤 native needed: zh · ar · hi · bn · ur (u can't judge them) · ideally 1 reader per lang 4 tone
+3. 💬 **Matrix built**: Synapse on VPS `scagent.de` (live ✔️ answers now · federation off · signup only w token) · 31 chapter rooms · app = comments per book page + Lesekreise (private rooms by code, polled ~hourly, no push) · `MatrixTest` 13 vs a fake server · ❌ **missing: `bin/matrix_e2e.py` was nvr written** (todo names it, file doesn't exist) · nothing ever tested vs live · no E2E encryption
+   - **standalone** (Element, ~5 min, `server/matrix/README.md` § friends): `ssh -t vps docker exec -it omm-matrix register_new_matrix_user -c /data/homeserver.yaml -u strix -a http://localhost:8008` ➡ app.element.io ➡ homeserver `scagent.de` ➡ log in ➡ join `#omm-kap-8:scagent.de` ➡ post 1 line
+   - **in-app** (DEV): ⚙️ Mitlesen on ➡ book ch 8 ➡ 💬 ➡ name ➡ post ➡ shows i Element? ➡ Kreis tab ➡ create ➡ join it fr Element (`#omm-kreis-<code>:scagent.de`) ➡ write both ways
+   - ok 2 write + run `matrix_e2e.py` vs live? (mks real test accounts + rooms on Synapse) ❓
+4. 👀 **ck now on DEV**: [qa_1121.md § r2](qa_1121.md) (4 checks ~3 min) · shots `android/app/build/shots/egg_arch_{de,ru,ar}.png` · Decide: GPU night run 4 translate re-ask ❓ · widget egg on Black Friday Fr 11/27
