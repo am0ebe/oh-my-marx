@@ -14,6 +14,6 @@
 **tools:** no `<x>tool`. Worth knowing: `bin/matrix_e2e.py` (live chat test · `--app` = through the app · `--cleanup`) · `bin/retag.py --stats` · `bin/check_langs.py` (ship guard). Lesson: notes.md § 🏗️ technical: Matrix (10 min).
 
 **needs you** (recommendation first)
-1. The 13 questions in todo 👀 "M8 cd decide": say "ok all", or name the ones you reject.
+1. ✔️ 12 questions settled by your "ok all" (D-073, D-074). One left: mark D-015 as replaced by D-039, no code change. Rec yes.
 2. Delete-account wording (quoted in todo 👀): rec ok as is.
 3. Send scagent.de/omm to 2-3 friends: rec yes after the next DEV deploy.

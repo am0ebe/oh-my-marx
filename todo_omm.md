@@ -36,26 +36,14 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
   - [ ] 🤖 print 3 quotes per chip (Chef · Miete · …) i th log tail ➡ 🦠 reads there, no fon
   - [ ] 🦠 1 min: `tail -40 data/retag_night_1122.log` ➡ quotes about their chip? (rec ✔️ if ≥ 2/3 fit · was ≈ random)
 ### 🐙 M8 cd decide
-- **13 Qs w rec 1st** (#290 · +1 #299 · reversible · inside omm) · M8 o 🦠: "ok all" o name th ❌ ones
-  - Element look: skip it (`--app` alr asserts B reads txt · page 245 · name) ➡ 🤖 runs `bin/matrix_e2e.py --cleanup` ❓
-  - Matrix v1 spam (reg token i public APK): accept 4 v1, friends-scale · rate limit / captcha = ops, b4 public push ❓
-  - Matrix v1 lost fon = lost account: accept 4 v1 (rejoin Kreis by code works) ❓
-  - Matrix v1 no E2E: accept 4 v1 (app alr says so · rust-sdk = big) ❓
-  - Matrix v1 report + mod: not 4 friends · yes b4 strangers ➡ min "Melden" on a comment ➡ Matrix `/report` ➡ ops · = 🔵 gate on "send scagent.de/omm beyond friends" ❓
-  - ops deep paths `/omm/dev` · `/omm/src`: no (bare `/omm` alr redirects, Obtainium uses full URL) ❓
-  - licence AGPL ⬄ GPL: keep GPL-3 4 all (server = tiny counter API, no fork value) ❓
-  - url printed on th Spruchkarte PNG: no (link alw rides i th share txt) ❓
-  - share-app prompt aftr streak/medal: park it i th 🪝 Hooked pass ❓
-  - qa_1117 Q8 gesture line under evy page (D-065 hints since): keep as is ❓
-  - qa_1117 Q9 licence icon: keep gavel ❓
-  - ✂️ Fable polish pass over th 30 eggs: drop (gallery passed · egg_arch all fit) ❓
+- ✔️ 12 Qs applied @1121 (#307, 🦠 via M8 "ok all") ➡ D-073 + D-074 · ✔️ below · left = 1 Q added aftr th batch he saw (#299 19:19):
   - D-015 "Amen only under th snippet" nvr built + D-039 @1116 kept th quote-card Amen (✓ pop) ➡ mark D-015 Superseded by D-039, 0 code (#299) ❓
 ### 🏔️ v1
 - **💬 Matrix v1 — wh's left** (aftr th in-app tst, 1 list · 🤖 = can build · ❓ = 🦠 picks)
   - ✔️ 🤖 **delete my account** built @1121 (D-072 Proposed): ⚙️ under Name ➡ "Delete account" ➡ confirm ➡ Matrix deactivate + erase ➡ app forgets account + Kreise · live step 12 ✔️ · 6 strings hand-translated ×11 · ❌ not deployed
     - [x] 🤖 `MatrixTest.deactivateErasesWithPasswordAuth` · `--app` 12/12 · check_langs green
     - [ ] 🦠 ½ min, read here (rec ✔️ as is): red txt btn "Delete account" i ⚙️ under Name (only once u hv an account) ➡ dialog **"Delete account?"** "Your account on scagent.de is deleted: new readers no longer see your comments, and you leave all reading circles. Your notes, bookmarks and stamps on this phone stay." [Delete] [Keep] ➡ "✔️ Account deleted. Your next comment makes a new one." (D-072 ➡ Accepted)
-  - ❓ 4 open (spam · lost fon · no E2E · report + mod) ➡ 🐙 M8 cd decide above
+  - ✔️ spam · lost fon · no E2E = accepted 4 v1 · report + mod = gate b4 strangers (D-073 · #307)
   - 🤖 Kreis = hourly poll, no push (UnifiedPush/ntfy = 🔵 community ideas) · fine 4 v1
   - 👤 ops: Synapse `user_ips_max_age` shorter (dflt 28d) · signing key i bup (`pr/ops/omm.md` § 3i ck)
 - **🥚 eggs + drop cap** (merged #290: qa_1121 r2 · #246 D-068 · #248 widget) · DEV `0.13.0-dev.1121.0014`
@@ -71,35 +59,33 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
 - 🤖🎨 **C-lane gaps** (done @1120: rank perks, feast emblems, 11 heads, initials, ¶, rtl / zh shots, gold swoosh · @1120 #229: 🥚 eggs replace heads in top bar, hero, quote card, D-066 · launcher egg dropped #241):
   - 🤖 ✂️ `launcherReset` (notify/UpdateWorker.kt) = DEV 1911 cleanup ➡ rm aftr th nxt stable
   - 🖼️ Feast frames (design § 14.2.1) · 🔊 stamp thud sound (D-035).
-- 🦠✂️ 🎨 Fable design pass over the 30 eggs (`bin/eggs.py`) — only if 🦠 wants more polish aftr the gallery ➡ 🐙 M8 cd decide (rec drop)
 - 🦠 ‼️ ⭐🧪 **QA @1116** ➡ [qa_1116.md](qa_1116.md) — 14 ⚡ i 6 lanes (L3 share 1st) · 3 🎨 (➡ Fable spec aftr) · 2 🔍 · 💬 Qs ✔️ answered @1116 ➡ lanes built (D-039 · D-040) · Q8 revised = no Werkbank (D-041) · left: D3 joker · fon items (#13 cold-start ms · ✔️ #14 lib baseline profiles alr ship i th APK, #299)
 - 🦠 ‼️ ⭐🧪 **QA sprint 0.9.x** — r1-r3 ✔️ · left ➡ [qa_1112.md](qa_1112.md) (🎨 10 design · ✔️ 🔍 5 research closed @1121 #299 · 💬 Qs) · ✔️ streak widget "shd show 2 at start" = superseded by D-045 (hero = streak only, stamps ➡ Stempeluhr) #290
   - later (needs design): 📖 real book look · ⏰ daily verse off-switch · name entry · 🔮 Marxoskop tiles · 🔓 Lesekreis unlock · 🏷️ quotes off-topic ➡ [notes.md § 🗃️](notes.md)
 - 🦠 ‼️ 📨⭐ **user feedback** — 1st real users = gold · log (M · M2 · Jan · Mi) ➡ `feedback.md` + [notes.md § 🗃️](notes.md) · phase 1 ✔️ (page mail + GH issue forms + app ⚙️ btn)
   - 🤖🛠️ `/triage` skill (gh issues + Migadu ➡ label · dedupe · draft) · 🔵 phase 2 in-app form ➡ `POST /feedback` aft QA rounds
 - 🦠📣 ‼️ send **scagent.de/omm** 2 2-3 friends (0.6.0 ppl need 1 manual update, banner only fr ≥0.7.0)
+  - 🚧 gate (D-073): beyond friends ➡ 1st 🤖 min "Melden" on a comment (Matrix `/report`) + 👤 ops rate limit / captcha on signup
 - 👤 ‼️ 🌍 **LLM book qy** — 👤 native QA zh/ar/hi/bn/ur · `bin/translate_full.py --show 5 --langs it es` · alt = existing translations (© check) ➡ [notes.md § 🗃️](notes.md)
 - 🦠 ‼️ **P3 habit test 2w** — aft th nxt big version is out, w audio (🦠 @1114) · Hooked ch 8: identify ➡ codify ➡ modify · start = 🦠's 1st day, log it here
 - 🦠📚 ‼️ **Matrix + chat: K + tst** — 🦠 re notes § 🏗️ technical + `server/matrix/README.md` · ✔️ `bin/matrix_e2e.py` smoke vs live 18/18 @1121 (👀 above) · ✔️ `Matrix.kt` JVM tst (fake server) @1116: MatrixTest 8 ➡ 13, all calls covered (+ Lesekreis: create · members · name · leave · redact · setName · code)
 - 🦠 ‼️ ⭐🧪 **QA @1117** ➡ [qa_1117.md](qa_1117.md) § triage — r1 = qa_1116 again (✔️) · ⚡ L1-L5 built @1117 (🐛 Hooked notes on hero · reader hints · ¶ ref gone · labels) = 👀 ck on DEV · 🎨 D6 streak game · D7 note = comment · D8 holidays · D9 close variants · ✔️ 🔍 R3 Duolingo (➡ D-046/047) · R4 holiday gaps (➡ D-052, 30 feasts) · ✔️ r4 @1118 triaged (qa_1117 § triage r4) + ⚡ built @1119 · left = 🎨 Fable: D6 + rank-up level-up · D8 + Xmas/NY/Valentine/Frauentag · D10 Day complete · D11 holy-book look
-  - ✔️ Q1-Q7 answered by Ds (#290: Q1-Q3 D-045..047 · Q4-Q5 D-054 · Q6 D-051/052 + eggs · Q7 D-055) · Q8 + Q9 ➡ 🐙 M8 cd decide
+  - ✔️ Q1-Q7 answered by Ds (#290: Q1-Q3 D-045..047 · Q4-Q5 D-054 · Q6 D-051/052 + eggs · Q7 D-055) · ✔️ Q8 + Q9 = keep as is (D-074 · #307)
   - ✔️ L1-L5 shipped i **v0.12.0** @1118 (+ DEV `0.12.0-dev.1118.0151`) · r4 ✔️ built @1119 (L6-L8 · plan versioning D-042 · 6 🔒 plans D-043) ➡ ✔️ 🦠 eval @1120 · D-045 to D-047 accepted @1120 (#185) and built (C1) · qa_1119 leftovers + D-048..054 ➡ ✔️ qa_1120 r2 passed @1120 (#229, Accepted)
 - 🤖🎨⭐ **design system** — spec ✔️ @1113 ➡ [design_system.md](design_system.md) (tokens · 5 btn kinds · voices · per-screen deltas) · D-029..035 ✔️ @1114 · D-036 = A ✔️ @1116
   - 🤖 lanes: ✔️ L0 · L2 · L3 · L5 @1114 ➡ left L1 Today · L4 Mine/⚙️/Hooked ➡ fan-in ➡ fon QA · L6 later (dark c · font b 🧪 · sounds b)
     - ✔️ @1121 #248 guard `Color(0x` 24 ➡ 18 · `RoundedCornerShape(` 17 ➡ 6 (same-value swaps only, 0 visual change) · rest (`.sp` 80 · 8/10/18dp shapes · M3 btns/chips) = real look changes ➡ need th lanes' b4/aft shots
 - 🦠🔑 keystore: ✔️ symlink @1105 · left: KeePass note (`base64 -w0`, notes.md § 🔑) · 1 offline/restic copy · lap same `ln -s` ✔️ IaC @1117 (sys `lap.yml --tags keystore`, applies on lap catch-up · real file i th way = left + warn)
-- 👤💬 ops (optional): `/omm/*` ➡ `/oh-my-marx/{path}` (Obtainium URL `scagent.de/omm/`) · `/omm/src` ➡ GitHub 302 · `/omm/dev` redirect = valid again (/dev back @1106) · 🦠 @1117 "alr redirects" ➡ A: bare `/omm` yes · deep paths ➡ 🐙 M8 cd decide (rec no)
 - 🦠🪝⭐ **Hooked/Fogg pass** (aft QA sprint) — raw ➡ `re/boox/hooked/hooked.md` § 📥 @1112
+  - + share-app prompt aftr streak / medal (parked here, D-074 · #307)
   - audit: variable rewards · friction removed? · novelty · observable impact (Fogg) · measured impact ➡ A/B · gen txts w persuasion ♟️ (4 share-txt drafts ✔️ [qa_1112 § research](qa_1112.md), A/B needs a share counter) · inspire (Sinek) · AI-Luddites hook
 - 🦠📄 **README ⬄ GH ⬄ scagent.de/omm polish** (merged 2 dups) — ✔️ @1116: README mirrors page (Obtainium 1st ➡ APK ➡ build: GH + Forgejo) · badges row (release · license · Android 8+ · Forgejo) · stale `0.8.0` ➡ release badge · lang lists 5 ➡ 11 · iPhone line alr gone
   - left: badges discussion + matrix (✔️ 🦠 @1117: yes Matrix public room · 🦠 1st needs a Matrix 🔍 dive ➡ ops 🌐 personal Matrix item) · lang btn · 😉 fake star-history · stats row · 🔑 T: 1 SSOT ➡ gen both (md + html) = pattern 4 ALL docs (wiki · kb · pr scaffold)
-- 🦠 **AGPL-3 ⬄ GPL-3** (scrap @1112 · ➡ 🐙 M8 cd decide, rec keep GPL-3) — M8 A: same copyleft + AGPL also triggers on **network use** · ➡ app = GPL fine · 🤔 `server/` (omm_api) ➡ AGPL if u want forks o th server 2 share back · 🦠 @1117 Qs (agpl⬄gpl⬄lgpl⬄MIT · wh is th omm server) ➡ A i [🔗 kb answers](../kb/bl_triage_1117_answers.md) § 7
 - 🦠💭 small Marx animation (🦠 @1113) — tiny, e.g. Marx reacts 2 Amen / streak · ⬄ halo states i design_system.md § 7 hero · big avatar + xp idea ➡ moved 2 `pr/cali/notes.md` § 🔵
 - 🦠💡 app ideas: zuletzt gelesen/angeguckt · who's online (Matrix · Lesekreis) · events/Termine near u (⚠️ location implications) · personalize (Hooked: user invests data · usage analytics) · notif toggle (Android may alr do it)
-- 🦠💬 viral: in-app Spruchkarte share ➡ `scagent.de/omm` under th card img? · ✔️ checked @1116: link alw rides i th share txt (`Share.kt` shareCard, appended if missing) · on th img ❌ since QA r4 (no app-name line on th card) ➡ 🦠 only if u want it back on th img · 🦠 @1117 "on wh img?" ➡ A: th Spruchkarte share PNG (quote card) ➡ url printed on th card itself · ➡ 🐙 M8 cd decide (rec no)
 - 🦠📦 **Ask Marx**: everyday problem (boss, rent, overtime) ➡ Marx answers short + punchy w a Kapital quote + ref (tap ➡ chapter)
   - 🔍 persona prompt + RAG over scored verses (must cite 1) · LLM: on-device Gemma 3 1B (~600 MB 👎) ⬄ ollama on tow/vps ⬄ API · ⚠️ no real legal/medical/money advice, crisis ➡ real help · ironic, not cringe
-- 🦠👥 community nxt: QR invite (zxing) · ⚠️ report btn + mod tools b4 strangers join (= Matrix v1 ❓ ➡ 🐙 M8 cd decide)
+- 🦠👥 community nxt: QR invite (zxing) · ⚠️ report btn + mod tools b4 strangers join (= gate D-073 on th "send beyond friends" line)
 - 🦠💡 community ideas (split @1113): Kreis plan (all same day) · real push (UnifiedPush/ntfy) instead o hourly poll · ④ Salon (forum per Abschnitt) · 💬 on cards · Randnotizen teilen (opt-in per note) · weekly Sitzung = Jitsi link · short invite `scagent.de/omm/k?c=` (ops)
 - 🦠 Mitlesen opt-in prompt on 1st start (now dflt on) · ops `user_ips_max_age` ➡ Matrix v1 list (👤 ops line)
 - 🦠🤔 QA 10 sample Andachten (tone: wink, not cringe) ➡ tweak `bin/andacht.py` · ⚠️ local M Marx errors + "Heute lädt uns Marx ein" evy day ➡ regen w Claude?
@@ -111,12 +97,13 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
 - 🤖 aft QA: rm page fotos (boox proc step 8)
 
 ## ✔️
+- ✔️ @1121 #307 M8 cd decide (🦠 via M8 "ok all"): 12 recs applied ➡ D-073 (Matrix v1 risks accepted · report/mod = gate b4 strangers) + D-074 (8 small keeps/drops) · closed: Fable egg pass (drop) · AGPL (keep GPL-3, D-006) · `/omm` deep paths (no) · url on Spruchkarte PNG (no) · share-app prompt ➡ Hooked pass · qa_1117 Q8 + Q9 keep · Element look ➡ cleanup 10/10
 - ✔️ @1121 #305 🩹 matrix_e2e state per run: API run ➡ `priv/matrix_e2e_<stamp>.json` (no overwrite) · `--cleanup` / `--login` read all `matrix_e2e*.json` (legacy incl) · 55 py green
 - ✔️ @1121 #299 🔵 sweep (closed, not dropped): 🔑 cross-app insights board = done by [app_lessons.md](app_lessons.md) (#297, omm ➡ cali · nxt app adds its own) · 🦠🧪 "fon update banner on Today, 0.11.0" (#125) = superseded by th ⏳ updater fon tst (step 3 = notif + Today banner) · qa_1117 r4 "untriaged" = stale, triaged + built @1119
 - @1121 **Matrix e2e vs live Synapse** (#M8 @1121 · 🦠 ✔️ run) · `bin/matrix_e2e.py` = 18/18 ✔️ (token signup · chapter comment + delete · Lesekreis join/chat/Amen · guards) ➡ [status_1121.md § r2](status_1121.md)
   - [x] 🤖 18/18 ✔️ live @1121 13:27
   - [x] 🤖 **in-app path** (M8 @1121 14:27): `bin/matrix_e2e.py --app` = `MatrixLiveTest` drives th REAL app UI (Robolectric) vs live = 11/11 ✔️ ×3 · 12/12 ×2 (+ ⚙️ delete account) · ch 8 Note + 👥 chip ➡ app signs up + posts ➡ B reads (txt · page 245 · name) ➡ B replies ➡ 💬 sheet shows it ➡ hold = delete ➡ gone 4 B · Circle: found ➡ B joins by code ➡ chat both ways (Refresh) ➡ members both ➡ app joins B's Kreis by code
-  - [x] 🤖 Element look = optional (#290): `--app` asserts B reads txt · page · name · cleanup ➡ 🐙 M8 cd decide above · want a look anyway: `bin/matrix_e2e.py --login` ➡ `#omm-kreis-pqv6wu` + `#omm-kreis-54t8rk`
+  - [x] 🤖 Element look skipped (D-074 · #307) ➡ `bin/matrix_e2e.py --cleanup` @1121 23:2x = 10/10 ✔️ (run 1427: 2 aliases dropped · 2 accounts deactivated · 2 leftover msgs redacted)
   - ⚠️ th app tst counts 1 anonymous read of p. 245 on th live Mitlesen counter (always on, D-020) · not i CI (needs token + live) ➡ run by hand aftr Matrix changes
 - ✔️ @1121 M8 🔵 sweep: ✂️ dropped obsolete "🧔 guest heads (Zetkin · Engels · Jenny)" = moot since eggs (D-066) + `Head` enum rm'd (#260)
 - ✔️ @1121 #260: ✂️ dead `Head` enum + `Feast.head` rm'd (🦠 yes · D-066 amended) · unit + lint green

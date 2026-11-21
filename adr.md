@@ -20,6 +20,18 @@ _SDD: code says **wh** · th file says **y** · drift = a bug · fmt ➡ `pr/vib
 ## 🧾 decisions (newest on top)
 _Template v2.1 since 20 Nov (converted via `pr/vibe++/adr_convert.md`). Field names: Y = why · Ctx = what forced it · Scope = what it covers · Ck = how to check._
 
+### D-074 @1121 · 🧹 Eight small open questions are settled by keeping what exists or dropping the extra work · Accepted (🦠 @1121 via M8 "ok all", #307)
+- **Ctx:** The 👀 board held 12 reversible questions with a recommendation each (#290). You accepted all of them as written. The four Matrix ones are D-073; the rest are here.
+- **Scope:** Element look at the test rooms skipped (`--app` already checks what B reads) ➡ `bin/matrix_e2e.py --cleanup` run · no deep `/omm/dev` · `/omm/src` redirects (bare `/omm` already redirects, Obtainium uses the full URL) · licence stays GPL-3 for app and server (D-006; the server is a tiny counter API, AGPL adds nothing) · no URL printed on the Spruchkarte PNG (the link rides in the share text) · the share-app prompt after a streak/medal is parked in the 🪝 Hooked pass · qa_1117 Q8 gesture line under every page stays (D-065 hints) · qa_1117 Q9 licence icon stays a gavel · no Fable polish pass over the 30 eggs (gallery passed, all arches fit, D-068).
+- **Alt:** answer each one separately on the phone (rejected: each was a keep or a drop, and every one is reversible).
+- **Ck:** todo 🔵 has no AGPL, Spruchkarte-URL, `/omm` deep-path or Fable-egg line · Hooked pass line names the share prompt · `priv/` has no `matrix_e2e*.json` left.
+
+### D-073 @1121 · 💬 Matrix v1 accepts spam risk, phone-bound accounts and no encryption at friends scale; report + moderation gate any wider sharing · Accepted (🦠 @1121 via M8 "ok all", #307)
+- **Y:** v1 is for you and a few friends. Each of these risks is real only with strangers, and each fix is large (rust-sdk for E2E, account recovery, a mod queue). Shipping v1 without them is fine if the step to strangers is blocked until they exist.
+- **Scope:** spam: the registration token sits in the public APK, accepted (rate limit / captcha = ops, before a public push) · lost phone = lost account, accepted (rejoin a circle by its code) · no E2E, accepted (the app already says so) · report + moderation: not for friends · before strangers a minimal "Melden" on a comment ➡ Matrix `/report` ➡ ops = 🚧 gate on "send scagent.de/omm beyond friends".
+- **Alt:** build E2E / recovery / mod tools first (rejected: months of work for a friends-only test) · keep Matrix off until then (rejected: chat is a v1 goal).
+- **Ck:** todo 🔵 "send scagent.de/omm" carries the 🚧 gate line · todo 🏔️ v1 Matrix list has no open ❓.
+
 ### D-072 @1121 · 🗑️ You can delete your comment account in ⚙️; it is deactivated and erased on the server, your phone data stays · Proposed (🤖 built · 🦠 judges wording + place)
 - **Y:** The app makes a Matrix account with your first comment or circle, but there was no way to remove it: comments and name stayed on scagent.de forever (GDPR Art. 17 right to erasure). Found while listing what Matrix v1 still lacks.
 - **Scope:** ⚙️ under the Name field, only once an account exists · danger text button "Delete account" ➡ confirm dialog (Delete / Keep, like "Leave circle") ➡ `Matrix.deactivate` (`erase: true`, password auth with the random pw kept on the phone) ➡ Synapse leaves every room and hides your messages from new joiners ➡ the app forgets the account + its circles · name, notes, bookmarks, stamps stay · next comment = a new account · a circle you founded keeps its code (friends still use it).
