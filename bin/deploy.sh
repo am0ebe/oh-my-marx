@@ -11,6 +11,8 @@ usage() {
     cat <<EOF
 usage: bin/deploy.sh [-a|--adb] [-q|--quiet] [-h|--help|-?]
 
+  y: tst a change on ur own fon i ~1 min, wo a release, a tag o touching th friends' stable app
+
   🧪 dev build "Oh My Marx DEV", version <next release>-dev.MMDD.HHMM (newer evy minute), no commit needed
      next release = appVersion if not shipped yet, else th next minor (0.8.0 shipped ➡ 0.9.0-dev…) · nvr bump by hand
 

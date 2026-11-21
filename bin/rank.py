@@ -37,8 +37,8 @@ def ask(model, prompt, url):
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("-m", "--model", default="qwen3:30b-a3b-instruct-2507-q4_K_M")
-    ap.add_argument("--redo", action="store_true")
-    ap.add_argument("--url", default="http://localhost:11434/api/generate")
+    ap.add_argument("-r", "--redo", action="store_true")
+    ap.add_argument("-u", "--url", default="http://localhost:11434/api/generate")
     a = ap.parse_args()
     verses = [json.loads(l) for l in open(ROOT / "data" / "verses.jsonl", encoding="utf-8")]
     old = {json.loads(l)["id"]: json.loads(l)["de"] for l in open(ROOT / "data" / "verses_scored_v0.jsonl", encoding="utf-8")}

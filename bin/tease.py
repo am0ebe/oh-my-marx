@@ -54,9 +54,9 @@ def clean(q):
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("-m", "--model", default="qwen3:30b-a3b-instruct-2507-q4_K_M")
-    ap.add_argument("--plans", nargs="*")
-    ap.add_argument("--redo", action="store_true")
-    ap.add_argument("--url", default="http://localhost:11434/api/generate")
+    ap.add_argument("-p", "--plans", nargs="*")
+    ap.add_argument("-r", "--redo", action="store_true")
+    ap.add_argument("-u", "--url", default="http://localhost:11434/api/generate")
     a = ap.parse_args()
     verses = {json.loads(l)["id"]: json.loads(l) for l in open(ROOT / "data" / "verses.jsonl", encoding="utf-8")}
     plans = json.load(open(ROOT / "data" / "plans.json", encoding="utf-8"))

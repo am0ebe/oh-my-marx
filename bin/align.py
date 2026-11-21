@@ -11,7 +11,7 @@ chapter TOC (<p class="toc"> + index lines) dropped b4 aligning (was ch.1 page 1
 
 y: th app shows DE + EN side by side ➡ evy DE Absatz needs its EN paragraph(s) (P1 step 3, aftr fetch + split)
 
-usage: align.py [--show KAP]   # --show prints th alignment o 1 Kap 4 eyeballing
+usage: align.py [-s|--show KAP]   # --show prints th alignment o 1 Kap 4 eyeballing
 examples:
   bin/align.py              # re-align all Kap ➡ data/verses.jsonl + data/notes.jsonl (then bin/build.py)
   bin/align.py --show 8     # print Kap 8's DE ⬄ EN pairs, writes nothing
@@ -252,7 +252,7 @@ def align(de, en, de_fn=None, pins=None):
     return beads[::-1]
 
 def main():
-    show = sys.argv[2] if len(sys.argv) > 2 and sys.argv[1] == "--show" else None
+    show = sys.argv[2] if len(sys.argv) > 2 and sys.argv[1] in ("-s", "--show") else None
     verses = [json.loads(l) for l in open(ROOT / "data" / "de.jsonl", encoding="utf-8")]
     notes_de = [json.loads(l) for l in open(ROOT / "data" / "notes_de.jsonl", encoding="utf-8")]
     kaps = list(dict.fromkeys(v["kap"] for v in verses))

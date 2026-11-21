@@ -73,8 +73,8 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("-m", "--model", default="qwen3:30b-a3b-instruct-2507-q4_K_M")
     ap.add_argument("-n", "--limit", type=int, default=0)
-    ap.add_argument("--url", default="http://localhost:11434/api/generate")
-    ap.add_argument("--stats", action="store_true", help="pool size per chip (weight ≥ 2) · exit 1 if one < 30")
+    ap.add_argument("-u", "--url", default="http://localhost:11434/api/generate")
+    ap.add_argument("-s", "--stats", action="store_true", help="pool size per chip (weight ≥ 2) · exit 1 if one < 30")
     a = ap.parse_args()
     if a.stats:
         p = pools(load_rows())

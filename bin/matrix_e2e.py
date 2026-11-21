@@ -286,10 +286,10 @@ def app_run():
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--kap", default="8", help="chapter room 4 th comment step (dflt 8 = #omm-kap-8)")
-    ap.add_argument("--login", action="store_true", help="print th e2e-a login 4 Element")
-    ap.add_argument("--app", action="store_true", help="th REAL app UI (MatrixLiveTest, Robolectric) vs live Synapse")
-    ap.add_argument("--cleanup", nargs="?", const="", metavar="MATCH",
+    ap.add_argument("-k", "--kap", default="8", help="chapter room 4 th comment step (dflt 8 = #omm-kap-8)")
+    ap.add_argument("-l", "--login", action="store_true", help="print th e2e-a login 4 Element")
+    ap.add_argument("-a", "--app", action="store_true", help="th REAL app UI (MatrixLiveTest, Robolectric) vs live Synapse")
+    ap.add_argument("-c", "--cleanup", nargs="?", const="", metavar="MATCH",
                     help="redact leftovers · leave · drop aliases · deactivate test accounts (all, o only state files whose name hs MATCH)")
     a = ap.parse_args()
     if a.login:

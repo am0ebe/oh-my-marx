@@ -8,6 +8,8 @@ usage() {
     cat <<EOF
 usage: bin/ship.sh [patch|minor|major|X.Y.Z] [-p|--page] [-h|--help|-?]
 
+  y: 1 cmd = version bump + tag + APK + page + GitHub release ➡ friends' Obtainium sees it, nothing half-shipped
+
   📦 release: build release APK ➡ $WEB/ (page, Obtainium follows it) + GitHub release v<version>
   minor       0.7.0 ➡ 0.8.0 = new features  ┐ bumps fr th last shipped tag ➡ writes appVersion ➡
   patch       0.8.0 ➡ 0.8.1 = only fixes    ├ commits "vX.Y.Z" + pushes ➡ ships

@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """check_langs — ship guard: evy lang i th app's menu (Lang.menu i I18n.kt) must hv its translation files.
 
+y: a menu lang wo its files = half-EN app 4 that reader (0.9.0 · qa_1116) ➡ ship.sh runs this, refuses on exit 1
+
   EN (source text) + DE (Marx's original) need none · evy oth menu lang needs
     assets/content/i18n_<xx>.json (UI + quotes) AND full_<xx>.json (th book, "v" non-empty)
   else exit 1 + list ➡ bin/ship.sh refuses (0.9.0 changelog claimed ur/hi/bn book b4 full_xx.json existed)

@@ -10,11 +10,12 @@
 #
 # examples:
 #   bin/font_subset.sh            # rewrite res/font/literata_*.ttf from the originals
-#   bin/font_subset.sh --check    # only print the sizes, write nothing
+#   bin/font_subset.sh -c, --check    # only print the sizes, write nothing
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then sed -n '2,14p' "$0" | sed 's/^# \{0,1\}//'; exit 0; fi
+if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then sed -n '2,13p' "$0" | sed 's/^# \{0,1\}//'; exit 0; fi
+case "${1:-}" in -c|--check) set -- --check ;; esac   # -c = short o --check (vibe++ D-030)
 
 SRC_REV=e813452
 FONT_DIR=android/app/src/main/res/font

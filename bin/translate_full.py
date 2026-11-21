@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """translate_full — the FULL Kapital text (paragraphs + Marx's footnotes) ➡ it/es/pt/zh/ar, own LLM translation.
 
+y: th app's reader had no book text i it/es/pt/zh/ar ➡ those readers fell back 2 EN ➡ own local-LLM translation
 Experiment (@1104): can a local model give a readable full text, so IT/ES/PT/ZH/AR readers stop falling back to EN?
 Source = the German original (data/verses.jsonl + data/notes.jsonl), Moore/Aveling EN given as a reference only.
 A per-language glossary pins the standard Marxist terms (Mehrwert = plusvalore / plusvalía / mais-valor / 剩余价值 …).
@@ -402,16 +403,16 @@ def stats(langs):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--langs", nargs="*", default=list(LANGS))
-    ap.add_argument("--only", nargs="*", default=["v", "fn"], help="v = book paragraphs · fn = footnotes")
-    ap.add_argument("--limit", type=int, default=0, help="max items per lang (test runs)")
-    ap.add_argument("--show", type=int, default=0, help="print N random samples side by side, translate nothing")
+    ap.add_argument("-l", "--langs", nargs="*", default=list(LANGS))
+    ap.add_argument("-o", "--only", nargs="*", default=["v", "fn"], help="v = book paragraphs · fn = footnotes")
+    ap.add_argument("-n", "--limit", type=int, default=0, help="max items per lang (test runs)")
+    ap.add_argument("-s", "--show", type=int, default=0, help="print N random samples side by side, translate nothing")
     ap.add_argument("--stats", action="store_true")
-    ap.add_argument("--bad", action="store_true", help="list length-warned items")
-    ap.add_argument("--redo-bad", action="store_true", help="retranslate length-warned items 1 by 1")
-    ap.add_argument("--export", action="store_true", help="➡ android assets full_<lang>.json")
+    ap.add_argument("-b", "--bad", action="store_true", help="list length-warned items")
+    ap.add_argument("-r", "--redo-bad", action="store_true", help="retranslate length-warned items 1 by 1")
+    ap.add_argument("-e", "--export", action="store_true", help="➡ android assets full_<lang>.json")
     ap.add_argument("-m", "--model", default="qwen3:30b-a3b-instruct-2507-q4_K_M")
-    ap.add_argument("--url", default="http://localhost:11434/api/generate")
+    ap.add_argument("-u", "--url", default="http://localhost:11434/api/generate")
     a = ap.parse_args()
     OUT.mkdir(parents=True, exist_ok=True)
     if a.stats:

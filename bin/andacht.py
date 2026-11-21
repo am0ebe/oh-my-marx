@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """andacht — 1 short tongue-in-cheek "devotional" per plan day, DE + EN ➡ data/andachten.jsonl (resumable)
 
+y: each plan day in th app ends w a short Andacht ➡ written ahead by a local LLM, not at runtime
 reads data/plans.json (fr build.py) · skips th 1-year plan (too many days, pure reading)
 a cached Andacht is reused only while th day's verse ids stay th same ➡ re-run build.py aftwards
 
-usage: andacht.py [-m MODEL] [--plans 30tage vampir] [--redo]
+usage: andacht.py [-m MODEL] [-p|--plans 30tage vampir] [-r|--redo] [-u|--url URL]
 examples (ollama on tow = GPU):
   bin/andacht.py                         # fill missing Andachten 4 all plans ➡ then bin/build.py
   bin/andacht.py --plans vampir --redo   # regenerate 1 plan's Andachten (hand ones i andachten_hand.jsonl still win)
@@ -41,9 +42,9 @@ def ask(model, prompt, url):
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("-m", "--model", default="qwen3:30b-a3b-instruct-2507-q4_K_M")
-    ap.add_argument("--plans", nargs="*")
-    ap.add_argument("--redo", action="store_true")
-    ap.add_argument("--url", default="http://localhost:11434/api/generate")
+    ap.add_argument("-p", "--plans", nargs="*")
+    ap.add_argument("-r", "--redo", action="store_true")
+    ap.add_argument("-u", "--url", default="http://localhost:11434/api/generate")
     a = ap.parse_args()
     verses = {json.loads(l)["id"]: json.loads(l) for l in open(ROOT / "data" / "verses.jsonl", encoding="utf-8")}
     plans = json.load(open(ROOT / "data" / "plans.json", encoding="utf-8"))

@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 """notes — release notes of one version, read from the in-app changelog (ui/Changelog.kt = the single source).
 
+y: in-app changelog · GitHub release · download page must say th same ➡ 1 source, this prints it per target
+
   bin/notes.py 0.7.0           # markdown bullets (EN) ➡ GitHub release body (bin/ship.sh)
   bin/notes.py 0.7.0 --html    # <li> items ➡ "What's new" on the download page (bin/lib.sh)
-  bin/notes.py 0.7.0 --plain   # w/o th leading emoji (page uses --html --plain)
+  bin/notes.py 0.7.0 -p, --plain   # w/o th leading emoji (page uses --html --plain)
   bin/notes.py 0.7.0-dev.1105  # dev versions ➡ notes of their base version (0.7.0)
   bin/notes.py --versions      # all versions in the changelog, newest first (page: "Older versions")
 Unknown version ➡ prints nothing (exit 0).
@@ -33,7 +35,7 @@ if __name__ == "__main__":
     if sys.argv[1] == "--versions":
         print("\n".join(versions())); sys.exit(0)
     items = notes(sys.argv[1])
-    if "--plain" in sys.argv:  # download page (strix @1106: "drop th icons, 2 much") ➡ cut leading emoji
+    if {"-p", "--plain"} & set(sys.argv[2:]):  # download page (strix @1106: "drop th icons, 2 much") ➡ cut leading emoji
         items = [re.sub(r"^[^\w„“\"(]+", "", i) for i in items]
     if "--html" in sys.argv:
         print("".join(f"<li>{html.escape(i)}</li>" for i in items))

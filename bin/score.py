@@ -3,8 +3,9 @@
 
 per Vers: quote_de/quote_en (best short verbatim line = "Vers des Tages" candidate) · juice · difficulty ·
 standalone · tags · polemic (Marx roasting sb) · bible (biblical/religious ref)
+y: Vers des Tages + plan cuts need a juicy short quote per Vers ➡ 1 LLM pass rates evy Vers, ahead o build.py
 
-usage: score.py [-m MODEL] [-n LIMIT] [--ids 8,9 8,10]
+usage: score.py [-m MODEL] [-n LIMIT] [-i|--ids 8,9 8,10] [-u|--url URL]
 examples (ollama on tow = GPU):
   bin/score.py              # score all unscored Verse ➡ data/scores.jsonl
   bin/score.py -n 20        # try th prompt on 20 Verse 1st
@@ -55,8 +56,8 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("-m", "--model", default="qwen3:30b-a3b-instruct-2507-q4_K_M")
     ap.add_argument("-n", "--limit", type=int, default=0)
-    ap.add_argument("--ids", nargs="*")
-    ap.add_argument("--url", default="http://localhost:11434/api/generate")
+    ap.add_argument("-i", "--ids", nargs="*")
+    ap.add_argument("-u", "--url", default="http://localhost:11434/api/generate")
     a = ap.parse_args()
     verses = [json.loads(l) for l in open(ROOT / "data" / "verses.jsonl", encoding="utf-8")]
     done = {json.loads(l)["id"] for l in open(OUT, encoding="utf-8")} if OUT.exists() else set()
