@@ -1,6 +1,12 @@
 # eos omm — resume log · newest on TOP
 _1 block per /eos · written by /eos § 3 · todo keeps 1 line: `▶ resume ➡ eos.md`_
 
+## 261121 14:50 · M8 auto-finish: Matrix in-app e2e · retag · delete account · /eos
+- **at** · `bin/matrix_e2e.py --app` = real app UI vs live Synapse 12/12 ✔️ (bc2d1b7 · D-070) · `bin/retag.py` + `tw` chip pool built, data pending (ebbb7bf · D-071) · ⚙️ Delete account (9ba6e75 · D-072 Proposed) · 145 unit + 55 py + lint + check_langs green · pushed · DEV unchanged (`0.13.0-dev.1121.0014`, nothing deployed)
+- **▶ NEXT** · aftr 03:00: re `data/translate_night_1122.log` + `data/retag_night_1122.log` ➡ `bin/retag.py --stats` all ✔️ ➡ `bin/build.py` ➡ unit green ➡ commit `data/i18n` + `data/tags.jsonl` + assets ➡ `bin/deploy.sh` (1 DEV = translate + chips + delete account) ➡ tick 🤖 boxes i todo 👀
+- **👤 🦠** · Element look: `#omm-kreis-pqv6wu` (API run) + `#omm-kreis-54t8rk` (app run 1427) ➡ `bin/matrix_e2e.py --cleanup` · Matrix v1 ❓ ×4 i todo 👀 (report/mod · spam token · lost fon · E2E) · D-072 wording/place on nxt DEV
+- **⚠️** · `at` jobs 62 + 63 both 03:00 (same ollama, interleave = ok) · 6 delete-account strings hand-translated (`"by": "hand @1121"` i data/i18n) · a deleted user's Kreis alias stays on Synapse (by design; e2e test drops its own b4) · 2 dangling e2e aliases (7xs3su · 5h6s6h) only admin can drop
+
 ## 261121 13:35 · M8 status brief r1+r2: --show fix · matrix_e2e · night run · /eos
 - **at** · `translate_full --show` = 1 flagged row per lang (96db6e6) · `bin/matrix_e2e.py` 18/18 ✔️ vs live Synapse (a3b0ff6) · `at` job 62 Sun 11/22 03:00 = `bin/gpu_night.sh bin/translate.py --only a` · 50 py green · pushed · DEV unchanged (`0.13.0-dev.1121.0014`)
 - **▶ NEXT** · aftr 03:00: re `data/translate_night_1122.log` ➡ ✔️ + check_langs green ➡ commit `data/i18n` + assets ➡ `bin/deploy.sh` ➡ tick 🤖 box i todo 👀 🌙
