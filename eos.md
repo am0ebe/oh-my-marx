@@ -1,6 +1,12 @@
 # eos omm — resume log · newest on TOP
 _1 block per /eos · written by /eos § 3 · todo keeps 1 line: `▶ resume ➡ eos.md`_
 
+## 261121 16:30 · #292 cli flags · #297 app_lessons (M8)
+- **at** · cli_lint omm 44 ➡ 17 (98d6545, 55 py green) · `app_lessons.md` 4 cali (efe6999) · 🔵 shared-code line i todo
+- **▶ NEXT** · unchanged: block below (aftr 03:00 night runs ck retag log + 3 quotes/chip)
+- **👤 🦠** · M8: SSOT app_lessons.md ⬄ cali/lessons.md ❓ · lint leftovers = 4 skipped shorts (`--qr` `--html` `--versions` `--stats`) + 14 dflt+w (real writes, D-031 💬)
+- **⚠️** · new short flags = additive only · `notes.py -p` only after th version arg
+
 ## 261121 15:40 · 👀 diet #290 (M8)
 - **at** · todo 👀: 🦠 boxes 6 ➡ 3 · ❓/💬 15 ➡ 0 open 4 🦠 (5 closed superseded · 12 ➡ `### 🐙 M8 cd decide` w rec) · 4f2acb8 pushed
 - **▶ NEXT** · aftr 03:00 night runs: same as block below + print 3 quotes/chip i retag log tail (new 🤖 box)

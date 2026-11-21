@@ -82,5 +82,6 @@ bin/translate_full.py --export            # ➡ assets full_<lang>.json (aft any
 |---|---|
 | concept · decisions · research | [🔗 notes.md](notes.md) |
 | raw idea | [🔗 plan.md](plan.md) |
+| lessons 4 th nxt app (reuse · do differently · shared-code candidates) | [🔗 app_lessons.md](app_lessons.md) |
 | chapter map (MEW pages) | [🔗 kapital_toc.md](kapital_toc.md) |
 | server side | [🔗 server/README.md](server/README.md) · [🔗 server/SERVICE.md](server/SERVICE.md) |
