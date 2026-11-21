@@ -72,7 +72,7 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
   - 🖼️ Feast frames (design § 14.2.1) · 🔊 stamp thud sound (D-035).
 - ✂️ 🎨 Fable design pass over the 30 eggs (`bin/eggs.py`) — only if 🦠 wants more polish aftr the gallery ➡ 🐙 M8 cd decide (rec drop)
 - ‼️ ⭐🧪 **QA @1116** ➡ [qa_1116.md](qa_1116.md) — 14 ⚡ i 6 lanes (L3 share 1st) · 3 🎨 (➡ Fable spec aftr) · 2 🔍 · 💬 Qs ✔️ answered @1116 ➡ lanes built (D-039 · D-040) · Q8 revised = no Werkbank (D-041) · left: D3 joker · fon items (#13 cold-start ms · ✔️ #14 lib baseline profiles alr ship i th APK, #299)
-- ‼️ ⭐🧪 **QA sprint 0.9.x** — r1-r3 ✔️ · left ➡ [qa_1112.md](qa_1112.md) (🎨 10 design · 🔍 5 research · 💬 Qs) · ✔️ streak widget "shd show 2 at start" = superseded by D-045 (hero = streak only, stamps ➡ Stempeluhr) #290
+- ‼️ ⭐🧪 **QA sprint 0.9.x** — r1-r3 ✔️ · left ➡ [qa_1112.md](qa_1112.md) (🎨 10 design · ✔️ 🔍 5 research closed @1121 #299 · 💬 Qs) · ✔️ streak widget "shd show 2 at start" = superseded by D-045 (hero = streak only, stamps ➡ Stempeluhr) #290
   - later (needs design): 📖 real book look · ⏰ daily verse off-switch · name entry · 🔮 Marxoskop tiles · 🔓 Lesekreis unlock · 🏷️ quotes off-topic ➡ [notes.md § 🗃️](notes.md)
 - ‼️ 📨⭐ **user feedback** — 1st real users = gold · log (M · M2 · Jan · Mi) ➡ `feedback.md` + [notes.md § 🗃️](notes.md) · phase 1 ✔️ (page mail + GH issue forms + app ⚙️ btn)
   - 🤖🛠️ `/triage` skill (gh issues + Migadu ➡ label · dedupe · draft) · 🔵 phase 2 in-app form ➡ `POST /feedback` aft QA rounds
@@ -89,7 +89,7 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
 - 🦠🔑 keystore: ✔️ symlink @1105 · left: KeePass note (`base64 -w0`, notes.md § 🔑) · 1 offline/restic copy · lap same `ln -s` ✔️ IaC @1117 (sys `lap.yml --tags keystore`, applies on lap catch-up · real file i th way = left + warn)
 - 💬 ops (optional): `/omm/*` ➡ `/oh-my-marx/{path}` (Obtainium URL `scagent.de/omm/`) · `/omm/src` ➡ GitHub 302 · `/omm/dev` redirect = valid again (/dev back @1106) · 🦠 @1117 "alr redirects" ➡ A: bare `/omm` yes · deep paths ➡ 🐙 M8 cd decide (rec no)
 - 🪝⭐ **Hooked/Fogg pass** (aft QA sprint) — raw ➡ `re/boox/hooked/hooked.md` § 📥 @1112
-  - audit: variable rewards · friction removed? · novelty · observable impact (Fogg) · measured impact ➡ A/B · gen txts w persuasion ♟️ · inspire (Sinek) · AI-Luddites hook
+  - audit: variable rewards · friction removed? · novelty · observable impact (Fogg) · measured impact ➡ A/B · gen txts w persuasion ♟️ (4 share-txt drafts ✔️ [qa_1112 § research](qa_1112.md), A/B needs a share counter) · inspire (Sinek) · AI-Luddites hook
 - 📄 **README ⬄ GH ⬄ scagent.de/omm polish** (merged 2 dups) — ✔️ @1116: README mirrors page (Obtainium 1st ➡ APK ➡ build: GH + Forgejo) · badges row (release · license · Android 8+ · Forgejo) · stale `0.8.0` ➡ release badge · lang lists 5 ➡ 11 · iPhone line alr gone
   - left: badges discussion + matrix (✔️ 🦠 @1117: yes Matrix public room · 🦠 1st needs a Matrix 🔍 dive ➡ ops 🌐 personal Matrix item) · lang btn · 😉 fake star-history · stats row · 🔑 T: 1 SSOT ➡ gen both (md + html) = pattern 4 ALL docs (wiki · kb · pr scaffold)
 - **AGPL-3 ⬄ GPL-3** (scrap @1112 · ➡ 🐙 M8 cd decide, rec keep GPL-3) — M8 A: same copyleft + AGPL also triggers on **network use** · ➡ app = GPL fine · 🤔 `server/` (omm_api) ➡ AGPL if u want forks o th server 2 share back · 🦠 @1117 Qs (agpl⬄gpl⬄lgpl⬄MIT · wh is th omm server) ➡ A i [🔗 kb answers](../kb/bl_triage_1117_answers.md) § 7
