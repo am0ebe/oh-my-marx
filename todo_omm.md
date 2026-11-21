@@ -80,9 +80,9 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
 - ‼️ 🌍 **LLM book qy** — 👤 native QA zh/ar/hi/bn/ur · `bin/translate_full.py --show 5 --langs it es` · alt = existing translations (© check) ➡ [notes.md § 🗃️](notes.md)
 - 🦠 ‼️ **P3 habit test 2w** — aft th nxt big version is out, w audio (🦠 @1114) · Hooked ch 8: identify ➡ codify ➡ modify · start = 🦠's 1st day, log it here
 - 🦠📚 ‼️ **Matrix + chat: K + tst** — 🦠 re notes § 🏗️ technical + `server/matrix/README.md` · ✔️ `bin/matrix_e2e.py` smoke vs live 18/18 @1121 (👀 above) · ✔️ `Matrix.kt` JVM tst (fake server) @1116: MatrixTest 8 ➡ 13, all calls covered (+ Lesekreis: create · members · name · leave · redact · setName · code)
-- ‼️ ⭐🧪 **QA @1117** ➡ [qa_1117.md](qa_1117.md) § triage — r1 = qa_1116 again (✔️) · ⚡ L1-L5 built @1117 (🐛 Hooked notes on hero · reader hints · ¶ ref gone · labels) = 👀 ck on DEV · 🎨 D6 streak game · D7 note = comment · D8 holidays · D9 close variants · 🔍 R3 Duolingo · R4 holiday gaps · ⏳ **r4 @1118 untriaged** (page nrs i scroll · award ⬄ ☭ i series · "bookmarx" · more plans + unlock · "Tag geschafft" + rank-up redesign · holidays Xmas/NY/Valentine/Frauentag · drop caps i scroll + holy-book feel)
+- ‼️ ⭐🧪 **QA @1117** ➡ [qa_1117.md](qa_1117.md) § triage — r1 = qa_1116 again (✔️) · ⚡ L1-L5 built @1117 (🐛 Hooked notes on hero · reader hints · ¶ ref gone · labels) = 👀 ck on DEV · 🎨 D6 streak game · D7 note = comment · D8 holidays · D9 close variants · 🔍 R3 Duolingo · R4 holiday gaps · ✔️ r4 @1118 triaged (qa_1117 § triage r4) + ⚡ built @1119 · left = 🎨 Fable: D6 + rank-up level-up · D8 + Xmas/NY/Valentine/Frauentag · D10 Day complete · D11 holy-book look
   - ✔️ Q1-Q7 answered by Ds (#290: Q1-Q3 D-045..047 · Q4-Q5 D-054 · Q6 D-051/052 + eggs · Q7 D-055) · Q8 + Q9 ➡ 🐙 M8 cd decide
-  - ✔️ L1-L5 shipped i **v0.12.0** @1118 (+ DEV `0.12.0-dev.1118.0151`) · r4 ✔️ built @1119 (L6-L8 · plan versioning D-042 · 6 🔒 plans D-043) ➡ ✔️ 🦠 eval @1120 · D-045 to D-047 accepted @1120 (#185) and built (C1) · the qa_1119 leftovers and D-048 to D-054 are now in the qa_1120 round-two check (👀 above)
+  - ✔️ L1-L5 shipped i **v0.12.0** @1118 (+ DEV `0.12.0-dev.1118.0151`) · r4 ✔️ built @1119 (L6-L8 · plan versioning D-042 · 6 🔒 plans D-043) ➡ ✔️ 🦠 eval @1120 · D-045 to D-047 accepted @1120 (#185) and built (C1) · qa_1119 leftovers + D-048..054 ➡ ✔️ qa_1120 r2 passed @1120 (#229, Accepted)
 - 🎨⭐ **design system** — spec ✔️ @1113 ➡ [design_system.md](design_system.md) (tokens · 5 btn kinds · voices · per-screen deltas) · D-029..035 ✔️ @1114 · D-036 = A ✔️ @1116
   - 🤖 lanes: ✔️ L0 · L2 · L3 · L5 @1114 ➡ left L1 Today · L4 Mine/⚙️/Hooked ➡ fan-in ➡ fon QA · L6 later (dark c · font b 🧪 · sounds b)
     - ✔️ @1121 #248 guard `Color(0x` 24 ➡ 18 · `RoundedCornerShape(` 17 ➡ 6 (same-value swaps only, 0 visual change) · rest (`.sp` 80 · 8/10/18dp shapes · M3 btns/chips) = real look changes ➡ need th lanes' b4/aft shots
@@ -95,7 +95,6 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
 - **AGPL-3 ⬄ GPL-3** (scrap @1112 · ➡ 🐙 M8 cd decide, rec keep GPL-3) — M8 A: same copyleft + AGPL also triggers on **network use** · ➡ app = GPL fine · 🤔 `server/` (omm_api) ➡ AGPL if u want forks o th server 2 share back · 🦠 @1117 Qs (agpl⬄gpl⬄lgpl⬄MIT · wh is th omm server) ➡ A i [🔗 kb answers](../kb/bl_triage_1117_answers.md) § 7
 - 💭 small Marx animation (🦠 @1113) — tiny, e.g. Marx reacts 2 Amen / streak · ⬄ halo states i design_system.md § 7 hero · big avatar + xp idea ➡ moved 2 `pr/cali/notes.md` § 🔵
 - 💡 app ideas: zuletzt gelesen/angeguckt · who's online (Matrix · Lesekreis) · events/Termine near u (⚠️ location implications) · personalize (Hooked: user invests data · usage analytics) · notif toggle (Android may alr do it)
-- 🔑 **cross-app insights board**: extract L fr evy app we build (omm · cali · …) ➡ shared ⬄ vibe++/kb
 - 💬 viral: in-app Spruchkarte share ➡ `scagent.de/omm` under th card img? · ✔️ checked @1116: link alw rides i th share txt (`Share.kt` shareCard, appended if missing) · on th img ❌ since QA r4 (no app-name line on th card) ➡ 🦠 only if u want it back on th img · 🦠 @1117 "on wh img?" ➡ A: th Spruchkarte share PNG (quote card) ➡ url printed on th card itself · ➡ 🐙 M8 cd decide (rec no)
 - 📦 **Ask Marx**: everyday problem (boss, rent, overtime) ➡ Marx answers short + punchy w a Kapital quote + ref (tap ➡ chapter)
   - 🔍 persona prompt + RAG over scored verses (must cite 1) · LLM: on-device Gemma 3 1B (~600 MB 👎) ⬄ ollama on tow/vps ⬄ API · ⚠️ no real legal/medical/money advice, crisis ➡ real help · ironic, not cringe
@@ -109,9 +108,9 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
 - 🔍 tags over-applied ("kapitalist" 83 %) ➡ relative re-tag ➡ ⏳ built + night run @1121 (👀 🏷️ above)
   - ✔️ 🔍 @1116: root = score.py `maxItems: 4` ➡ LLM pads evy quote 2 4 tags ➡ chip "chef" 1233/1511 ≈ random (miete only 94)
 - 🤖 aft QA: rm page fotos (boox proc step 8)
-- 🦠🧪 fon update banner on Today · DEV 0.11.0-dev + stable 0.11.0 (fr M8 board #125)
 
 ## ✔️
+- ✔️ @1121 #299 🔵 sweep (closed, not dropped): 🔑 cross-app insights board = done by [app_lessons.md](app_lessons.md) (#297, omm ➡ cali · nxt app adds its own) · 🦠🧪 "fon update banner on Today, 0.11.0" (#125) = superseded by th ⏳ updater fon tst (step 3 = notif + Today banner) · qa_1117 r4 "untriaged" = stale, triaged + built @1119
 - @1121 **Matrix e2e vs live Synapse** (#M8 @1121 · 🦠 ✔️ run) · `bin/matrix_e2e.py` = 18/18 ✔️ (token signup · chapter comment + delete · Lesekreis join/chat/Amen · guards) ➡ [status_1121.md § r2](status_1121.md)
   - [x] 🤖 18/18 ✔️ live @1121 13:27
   - [x] 🤖 **in-app path** (M8 @1121 14:27): `bin/matrix_e2e.py --app` = `MatrixLiveTest` drives th REAL app UI (Robolectric) vs live = 11/11 ✔️ ×3 · 12/12 ×2 (+ ⚙️ delete account) · ch 8 Note + 👥 chip ➡ app signs up + posts ➡ B reads (txt · page 245 · name) ➡ B replies ➡ 💬 sheet shows it ➡ hold = delete ➡ gone 4 B · Circle: found ➡ B joins by code ➡ chat both ways (Refresh) ➡ members both ➡ app joins B's Kreis by code
