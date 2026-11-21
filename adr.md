@@ -13,12 +13,18 @@ _SDD: code says **wh** · th file says **y** · drift = a bug · fmt ➡ `pr/vib
 ## 🧩 arch (current)
 - app `android/` (pkg `de.strix.marxversion`): `logic/` (Daily · Feast · Orden · Voice) · `data/` (Prefs · Content · Update · Community · Matrix) · `ui/` (Compose screens) · `notify/` (Reminder · Widget · KreisWorker)
 - content pipeline `bin/*.py` (fetch ➡ split ➡ align ➡ score ➡ translate) ➡ `assets/content/*.json` · cache `data/i18n/<lang>.jsonl`
-- server (VPS, ops-owned): `server/omm_api.py` counter + Synapse `omm-matrix` (comments · Kreise) · contract `server/SERVICE.md`
+- server (VPS, ops-owned): `server/omm_api.py` counter + Matrix homeserver = continuwuity `matrix` since @1113 (comments · Kreise · was Synapse `omm-matrix`, config SSOT ➡ `pr/ops/matrix.md`) · contract `server/SERVICE.md`
 - release: `bin/deploy.sh` (DEV, Obtainium) · `bin/ship.sh` (bump + tag + page + GH release) · map ➡ [ref.md](ref.md)
 - 🔥 hot files (1 owner at a ti — fan-out lanes nvr split these): `assets/content/i18n_*.json` + `data/i18n/*.jsonl` (translate pass = fan-in only) · `android/app/build.gradle.kts` (version) · `ui/Changelog.kt` · `res/values*/strings.xml` · `TodayScreen.kt` · `MineScreen.kt` · `Share.kt`
 
 ## 🧾 decisions (newest on top)
 _Template v2.1 since 20 Nov (converted via `pr/vibe++/adr_convert.md`). Field names: Y = why · Ctx = what forced it · Scope = what it covers · Ck = how to check._
+
+### D-075 @1122 · 🔁 When the server no longer knows the phone's comment account, the app quietly makes a new one with the same name · Accepted (🤖, bug fix · night #308)
+- **Ctx:** ops swapped the homeserver Synapse ➡ continuwuity @1113 (fresh database, `pr/ops/matrix.md`). Every account made before that still sits on the phone with a token the new server never issued ➡ every comment / circle call got 401 and the app only said "failed", forever. The fix was written @1112 on branch `matrix-reregister` (befc620) and never merged.
+- **Scope:** once per app run the first Matrix call asks `GET /account/whoami` · 200 ➡ go on · 401 ➡ drop user + token + password (name stays) ➡ register again with that name · no answer / other error ➡ keep the session, ask again next call (a proxy blip never deletes an account) · the stored name is used only after a dead token, so a reader who never commented still gets no account by just reading · circles saved on the phone stay listed (their rooms died with the old server; leaving them is a 🔵).
+- **Alt:** branch as written (rejected: it also re-registered from the stored name on a plain read, which would make accounts for people who only typed a name in ⚙️) · tell the user to use ⚙️ Delete account (rejected: not deployed, and nobody would guess it).
+- **Ck:** `MatrixTest.tokenValidTellsDeadFromOffline` (200 / 401 / 502) · full unit green · live proof = next DEV on a phone with an old account: a comment posts again.
 
 ### D-074 @1121 · 🧹 Eight small open questions are settled by keeping what exists or dropping the extra work · Accepted (🦠 @1121 via M8 "ok all", #307)
 - **Ctx:** The 👀 board held 12 reversible questions with a recommendation each (#290). You accepted all of them as written. The four Matrix ones are D-073; the rest are here.

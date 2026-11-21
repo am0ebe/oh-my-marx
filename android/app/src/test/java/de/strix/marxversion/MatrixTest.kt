@@ -248,6 +248,18 @@ class MatrixTest {
         assertFalse("wrong pw", runBlocking { Matrix.deactivate(S, "pw1") })
     }
 
+    /** D-075: 401 = server forgot th token (homeserver replaced @1113) ➡ false = re-register · any oth answer ➡ null = keep th session */
+    @Test fun tokenValidTellsDeadFromOffline() {
+        routes["$P/account/whoami"] = { 200 to JSONObject().put("user_id", S.userId) }
+        assertEquals(true, runBlocking { Matrix.tokenValid(S) })
+        val r = seen.single()
+        assertEquals("GET", r.method); assertEquals("Bearer tok123", r.auth)
+        routes["$P/account/whoami"] = { 401 to JSONObject().put("errcode", "M_UNKNOWN_TOKEN") }
+        assertEquals(false, runBlocking { Matrix.tokenValid(S) })
+        routes["$P/account/whoami"] = { 502 to JSONObject() }
+        assertNull("proxy hiccup ≠ dead token", runBlocking { Matrix.tokenValid(S) })
+    }
+
     @Test fun kreisCodeIsReadableAloud() {
         repeat(200) {
             val c = Matrix.newCode()

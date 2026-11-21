@@ -111,9 +111,20 @@ class AppVm(app: Application) : AndroidViewModel(app) {
     private val rooms = mutableMapOf<String, String>()
 
     /** existing account · o (name given) make one now */
+    private var mxChecked = false
     private suspend fun session(name: String? = null): Matrix.Session? {
-        marx.prefs.mxSession()?.let { return it }
-        val n = name?.trim()?.takeIf { it.isNotEmpty() } ?: return null
+        var dead = false
+        marx.prefs.mxSession()?.let { s ->
+            if (mxChecked) return s
+            // 🔁 once per app run: does th server still K my token? 401 = homeserver replaced (@1113) / wiped ➡ drop + re-register (D-075)
+            when (Matrix.tokenValid(s)) {
+                true -> { mxChecked = true; return s }
+                null -> return s   // offline ➡ ck again nxt call
+                false -> { marx.prefs.dropMxSession(); rooms.clear(); dead = true }
+            }
+        }
+        // stored name only aftr a dead token: an account nvr appears on a mere read
+        val n = (name ?: if (dead) marx.prefs.mxName.first() else null)?.trim()?.takeIf { it.isNotEmpty() } ?: return null
         val (s, pw) = Matrix.register(n, BuildConfig.OMM_REG_TOKEN) ?: return null
         marx.prefs.saveMx(s, pw, n)
         return s

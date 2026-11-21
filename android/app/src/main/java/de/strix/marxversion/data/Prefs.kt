@@ -94,7 +94,9 @@ class Prefs(private val context: Context) {
     /** th random account pw (only kept here) · MatrixLiveTest hands it 2 `bin/matrix_e2e.py --cleanup` (deactivate needs it) */
     suspend fun mxPw(): String? = context.store.data.first()[M.pw]
     /** account deleted ➡ forget it + my Kreise · th name stays (prefill 4 a new account) */
-    suspend fun forgetMx() = context.store.edit { it.remove(M.user); it.remove(M.token); it.remove(M.pw); it.remove(kreiseKey) }
+    /** server forgot me (homeserver replaced @1113 · wiped) ➡ drop th dead session, keep th name 4 a silent re-register (D-075) */
+    suspend fun dropMxSession() = context.store.edit { it.remove(M.user); it.remove(M.token); it.remove(M.pw) }
+    suspend fun forgetMx() =context.store.edit { it.remove(M.user); it.remove(M.token); it.remove(M.pw); it.remove(kreiseKey) }
 
     // 👥 my Kreise: "roomId|code|name" (room ids never contain '|')
     private val kreiseKey = stringSetPreferencesKey("kreise")
