@@ -9,10 +9,16 @@ wh: makes 2 REAL test accounts `e2e-<MMDD-hhmm>-a/-b` + 1 Lesekreis room "e2e Kr
   ➡ table (step · ✔️/❌) · exit 1 if any ❌ · th Kreis + accounts STAY so 🦠 can look i Element ➡ then --cleanup
   state (ids + test pws) ➡ priv/matrix_e2e.json (git-ignored) · token fr android/omm.properties, nvr printed
 
+--app = th same, but th APP side is th real UI (android MatrixLiveTest, Robolectric, gradle -Plive): 📖 ch 8 Note + 👥 chip
+  ➡ B reads it ➡ B replies ➡ 💬 sheet shows it ➡ hold = delete · Circle tab: found ➡ B joins ➡ chat both ways ➡ join B's by code
+  state ➡ priv/matrix_e2e_app_<MMDD-hhmm>.json (1 per run)
+
 examples:
-  bin/matrix_e2e.py                # run all steps ➡ table + how 2 see it i Element
-  bin/matrix_e2e.py --login        # print th e2e-a login (user + pw) 2 sign in i Element
-  bin/matrix_e2e.py --cleanup      # aftr looking: leave + drop alias + deactivate both test accounts
+  bin/matrix_e2e.py                # API-lvl: run all steps ➡ table + how 2 see it i Element
+  bin/matrix_e2e.py --app          # UI-lvl: th app's own taps vs live Synapse (~2 min) ➡ table
+  bin/matrix_e2e.py --login        # print evy test login (user + pw) 2 sign in i Element
+  bin/matrix_e2e.py --cleanup      # aftr looking: redact leftovers + leave + drop aliases + deactivate ALL test accounts
+  bin/matrix_e2e.py --cleanup 1425 # only th run(s) whose state file name hs "1425"
 """
 import argparse, datetime, json, pathlib, secrets, sys, time, urllib.error, urllib.parse, urllib.request
 
@@ -194,30 +200,82 @@ def save(st):
     STATE.chmod(0o600)
 
 
+def state_files():
+    """this script's run + evy MatrixLiveTest run (--app) · each = 1 set o test accounts still live"""
+    return sorted(p for p in [STATE, *STATE.parent.glob("matrix_e2e_app_*.json")] if p.exists())
+
+
 def load_state():
-    if not STATE.exists():
-        sys.exit(f"no {STATE} ➡ nothing 2 do (run bin/matrix_e2e.py 1st)")
-    return json.loads(STATE.read_text())
+    fs = state_files()
+    if not fs:
+        sys.exit(f"no {STATE.parent}/matrix_e2e*.json ➡ nothing 2 do (run bin/matrix_e2e.py [--app] 1st)")
+    return [(f, json.loads(f.read_text())) for f in fs]
 
 
-def cleanup():
-    st = load_state()
-    t = Run()
-    a = st["users"].get("a")
-    if st.get("kreis_alias") and a:
-        c, _ = call("DELETE", f"/directory/room/{enc(st['kreis_alias'])}", None, a["token"])
-        t.step(f"drop alias {st['kreis_alias']}", c == 200, f"HTTP {c}")
-    for who, u in st["users"].items():
+def own_msgs(u, room):
+    """ids o evy msg / Amen this test user sent i room (not yet redacted)"""
+    c, r = call("GET", f"/rooms/{enc(room)}/messages?dir=b&limit=300", None, u["token"])
+    return [e["event_id"] for e in r.get("chunk", []) if c == 200 and e.get("sender") == u["user_id"]
+            and e.get("type") in ("m.room.message", "de.ohmymarx.amen") and e.get("content")]
+
+
+def cleanup_one(st, t):
+    users = st["users"]
+    # old shape: 1 Kreis alias made by a · new (--app): [[alias, who], …]
+    aliases = st.get("aliases") or ([[st["kreis_alias"], "a"]] if st.get("kreis_alias") else [])
+    for alias, who in aliases:
+        if who in users:
+            c, _ = call("DELETE", f"/directory/room/{enc(alias)}", None, users[who]["token"])
+            t.step(f"drop alias {alias}", c in (200, 404), f"HTTP {c}")
+    for who, u in users.items():
         for room in st["rooms"].values():
+            left = own_msgs(u, room)   # a crashed run can leave a comment i a public chapter room ➡ redact it
+            for ev in left:
+                call("PUT", f"/rooms/{enc(room)}/redact/{enc(ev)}/omm{time.time_ns()}", {}, u["token"])
             c, _ = call("POST", f"/rooms/{enc(room)}/leave", {}, u["token"])
-            t.step(f"{who} leaves {room}", c == 200, f"HTTP {c}")
+            t.step(f"{who} leaves {room}", c in (200, 403, 404), f"HTTP {c}" + (f" · {len(left)} msg redacted" if left else ""))
         c, _ = call("POST", "/account/deactivate", {"erase": False, "auth": {
             "type": "m.login.password", "identifier": {"type": "m.id.user", "user": u["user_id"]}, "password": u["pw"]}},
             u["token"])
-        t.step(f"deactivate {u['user_id']}", c == 200, f"HTTP {c}")
+        t.step(f"deactivate {u['user_id']}", c in (200, 401), f"HTTP {c}" + (" (alr gone)" if c == 401 else ""))
+
+
+def cleanup(only=""):
+    bad = 0
+    for f, st in load_state():
+        if only not in f.name:
+            continue
+        print(f"── {f.name}")
+        t = Run()
+        cleanup_one(st, t)
+        b = t.table()
+        if not b:
+            f.unlink()
+        bad += b
+    return bad
+
+
+def app_run():
+    """MatrixLiveTest = th real app UI (Robolectric) vs live Synapse ➡ gradle -Plive ➡ its rows as a table"""
+    import os, subprocess
+    env = dict(os.environ, JAVA_HOME=str(pathlib.Path.home() / ".local/opt/jdk21"), ANDROID_HOME=str(pathlib.Path.home() / "Android/Sdk"))
+    t0 = time.time()
+    print("🤖 gradle MatrixLiveTest -Plive (real app UI ➡ scagent.de, ~2 min) …", flush=True)
+    p = subprocess.run(["./gradlew", "--offline", "-q", "testDebugUnitTest", "--tests", "*MatrixLiveTest*", "-Plive", "--rerun"],
+                       cwd=ROOT / "android", env=env, capture_output=True, text=True)
+    new = [f for f in STATE.parent.glob("matrix_e2e_app_*.json") if f.stat().st_mtime >= t0]
+    if not new:
+        print(p.stdout[-3000:], p.stderr[-3000:], sep="\n")
+        sys.exit("❌ no state written ➡ test skipped o crashed b4 step 1 (see gradle output above)")
+    st = json.loads(max(new, key=lambda f: f.stat().st_mtime).read_text())
+    t = Run()
+    t.rows = [(n, ok, note) for n, ok, note in st["rows"]]
     bad = t.table()
-    if not bad:
-        STATE.unlink()
+    if p.returncode and not bad:   # crash aftr th last row (eg a UI node not found)
+        print(p.stderr[-2000:])
+        bad = 1
+        print("❌ gradle failed aftr th last ✔️ row ➡ app/build/reports/tests/testDebugUnitTest/index.html")
+    print("\n➡ accounts + Kreise stay 4 a look i Element · done ➡ bin/matrix_e2e.py --cleanup")
     return bad
 
 
@@ -225,13 +283,16 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--kap", default="8", help="chapter room 4 th comment step (dflt 8 = #omm-kap-8)")
     ap.add_argument("--login", action="store_true", help="print th e2e-a login 4 Element")
-    ap.add_argument("--cleanup", action="store_true", help="leave · drop alias · deactivate th test accounts")
+    ap.add_argument("--app", action="store_true", help="th REAL app UI (MatrixLiveTest, Robolectric) vs live Synapse")
+    ap.add_argument("--cleanup", nargs="?", const="", metavar="MATCH",
+                    help="redact leftovers · leave · drop aliases · deactivate test accounts (all, o only state files whose name hs MATCH)")
     a = ap.parse_args()
     if a.login:
-        u = load_state()["users"]["a"]
-        print(f"homeserver {SERVER} · user {u['user_id']} · pw {u['pw']}")
+        for f, st in load_state():
+            for who, u in st["users"].items():
+                print(f"{f.name} · {who} · homeserver {SERVER} · user {u['user_id']} · pw {u['pw']}")
         return 0
-    return 1 if (cleanup() if a.cleanup else run(a.kap.lower())) else 0
+    return 1 if (cleanup(a.cleanup) if a.cleanup is not None else app_run() if a.app else run(a.kap.lower())) else 0
 
 
 if __name__ == "__main__":

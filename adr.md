@@ -20,6 +20,12 @@ _SDD: code says **wh** · th file says **y** · drift = a bug · fmt ➡ `pr/vib
 ## 🧾 decisions (newest on top)
 _Template v2.1 since 20 Nov (converted via `pr/vibe++/adr_convert.md`). Field names: Y = why · Ctx = what forced it · Scope = what it covers · Ck = how to check._
 
+### D-070 @1121 · 💬 The in-app Matrix path is tested by driving the real app against the live server, run by hand, not in CI · Accepted (🤖, routine · M8 v1 Matrix)
+- **Y:** You asked for the taps you would do on the phone (comment ➡ shows on the server ➡ circle found/join ➡ chat both ways) to run without you. `MatrixTest` only knew a fake server, `matrix_e2e.py` only the raw API: neither proved the app's own buttons reach Synapse.
+- **Scope:** `MatrixLiveTest` (Robolectric, real `MainActivity`) = app side · the other person = plain HTTP in the test (independent of `Matrix.kt`) · skipped without `-Plive` · `bin/matrix_e2e.py --app` runs it and prints the table · each run's accounts + rooms ➡ `priv/matrix_e2e_app_<stamp>.json` ➡ `--cleanup [MATCH]` (also redacts what a crashed run left in a public chapter room).
+- **Alt:** emulator + Espresso (rejected: no KVM on tow) · in CI (rejected: needs the reg token + makes real accounts on every push) · fake server only (rejected: that's what we had).
+- **Ck:** `bin/matrix_e2e.py --app` = 11/11 ✔️ · `test_bin` `MatrixCleanup` (2 tests, no network).
+
 ### D-069 @1121 · 🧹 Translation junk is fixed by hand in a small fix table, applied when the translations are exported · Accepted (🤖, routine · M8 #248)
 - **Y:** The local model sometimes gives up mid-word ("تrier", "колophonе", "keranے") or says its last question twice. Re-running it needs the GPU and may produce new junk, so a hand fix is faster and stays put.
 - **Scope:** `data/i18n/hand_fix.json` = per-lang substring fixes (lang `*` = all) · `translate.py export()` applies them + cuts a repeated last sentence · the cache stays raw (a re-translation without the junk = the fix no-ops) · `check_langs` refuses a Latin letter glued to Arabic/Cyrillic/Devanagari/Bengali letters (zh skipped: no spaces) · source junk (DE/EN Andachten) is fixed at the source.

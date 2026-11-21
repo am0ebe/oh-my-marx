@@ -461,5 +461,48 @@ class Page(unittest.TestCase):
         self.assertFalse((out / "llms.txt").exists())
 
 
+class MatrixCleanup(unittest.TestCase):
+    """matrix_e2e --cleanup: both state shapes (API run · --app runs) · own leftovers redacted · MATCH filter · no network"""
+    def setUp(self):
+        self.mx = load("matrix_e2e")
+        self.d = tempfile.TemporaryDirectory(); self.addCleanup(self.d.cleanup)
+        self.mx.STATE = pathlib.Path(self.d.name) / "matrix_e2e.json"
+        u = lambda n: {"user_id": f"@{n}:scagent.de", "pw": "pw", "token": f"tok-{n}"}
+        self.mx.STATE.write_text(json.dumps({"users": {"a": u("a"), "b": u("b")}, "rooms": {"kreis": "!k"}, "kreis_alias": "#omm-kreis-aaa:scagent.de"}))
+        self.app = self.mx.STATE.parent / "matrix_e2e_app_1121-1427.json"
+        self.app.write_text(json.dumps({"users": {"app": u("app"), "b": u("b2")}, "rooms": {"kap": "!kap8"},
+                                        "aliases": [["#omm-kreis-x:scagent.de", "app"], ["#omm-kreis-y:scagent.de", "b"]], "rows": []}))
+        self.calls = []
+
+        def call(method, path, body=None, token=None, base=None):
+            self.calls.append((method, path, token))
+            if "/messages" in path:   # 1 own leftover + 1 o someone else's i evy room
+                return 200, {"chunk": [{"event_id": "$mine", "sender": {"tok-app": "@app:scagent.de"}.get(token, "?"), "type": "m.room.message", "content": {"body": "x"}},
+                                       {"event_id": "$other", "sender": "@real:scagent.de", "type": "m.room.message", "content": {"body": "y"}}]}
+            return 200, {}
+        self.mx.call = call
+
+    def run_quiet(self, only=""):
+        with contextlib.redirect_stdout(io.StringIO()):
+            return self.mx.cleanup(only)
+
+    def test_match_filter_keeps_other_runs(self):
+        self.assertEqual(self.run_quiet("1427"), 0)
+        self.assertFalse(self.app.exists())
+        self.assertTrue(self.mx.STATE.exists(), "API run state untouched")
+        self.assertFalse(any(t in ("tok-a", "tok-b") for _, _, t in self.calls))
+
+    def test_aliases_by_creator_and_only_own_msgs_redacted(self):
+        self.run_quiet()
+        drops = {(p, t) for m, p, t in self.calls if m == "DELETE"}
+        self.assertEqual(drops, {("/directory/room/%23omm-kreis-x%3Ascagent.de", "tok-app"), ("/directory/room/%23omm-kreis-y%3Ascagent.de", "tok-b2"),
+                                 ("/directory/room/%23omm-kreis-aaa%3Ascagent.de", "tok-a")})
+        redacts = [(p, t) for m, p, t in self.calls if "/redact/" in p]
+        self.assertEqual(redacts, [("/rooms/%21kap8/redact/%24mine/" + p.rsplit("/", 1)[1], "tok-app") for p, _ in redacts])
+        self.assertEqual(len(redacts), 1, "nvr redacts a real user's msg")
+        self.assertEqual(sum(p == "/account/deactivate" for _, p, _ in self.calls), 4)
+        self.assertEqual(self.mx.state_files(), [], "all green ➡ state files gone")
+
+
 if __name__ == "__main__":
     unittest.main()

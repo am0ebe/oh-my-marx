@@ -89,6 +89,8 @@ class Prefs(private val context: Context) {
         it[M.user] = s.userId; it[M.token] = s.token; it[M.pw] = pw; it[M.name] = name
     }
     suspend fun setMxName(name: String) = context.store.edit { it[M.name] = name }
+    /** th random account pw (only kept here) · MatrixLiveTest hands it 2 `bin/matrix_e2e.py --cleanup` (deactivate needs it) */
+    suspend fun mxPw(): String? = context.store.data.first()[M.pw]
 
     // 👥 my Kreise: "roomId|code|name" (room ids never contain '|')
     private val kreiseKey = stringSetPreferencesKey("kreise")

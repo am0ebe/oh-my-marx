@@ -32,7 +32,18 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
 ### 🏔️ v1
 - **Matrix e2e vs live Synapse** (#M8 @1121 · 🦠 ✔️ run) · `bin/matrix_e2e.py` = 18/18 ✔️ (token signup · chapter comment + delete · Lesekreis join/chat/Amen · guards) ➡ [status_1121.md § r2](status_1121.md)
   - [x] 🤖 18/18 ✔️ live @1121 13:27
-  - [ ] 🦠 Element: join `#omm-kreis-pqv6wu:scagent.de` ➡ 2 chat msgs + 1 Amen there? ➡ then `bin/matrix_e2e.py --cleanup`
+  - [x] 🤖 **in-app path** (M8 @1121 14:27): `bin/matrix_e2e.py --app` = `MatrixLiveTest` drives th REAL app UI (Robolectric) vs live = 11/11 ✔️ ×3 runs · ch 8 Note + 👥 chip ➡ app signs up + posts ➡ B reads (txt · page 245 · name) ➡ B replies ➡ 💬 sheet shows it ➡ hold = delete ➡ gone 4 B · Circle: found ➡ B joins by code ➡ chat both ways (Refresh) ➡ members both ➡ app joins B's Kreis by code
+  - [ ] 🦠 Element (login: `bin/matrix_e2e.py --login`): `#omm-kreis-pqv6wu` (API run) + `#omm-kreis-54t8rk` (app run: Rosa ⬄ Juno) read right? ➡ then `bin/matrix_e2e.py --cleanup`
+  - ⚠️ th app tst counts 1 anonymous read of p. 245 on th live Mitlesen counter (always on, D-020) · not i CI (needs token + live) ➡ run by hand aftr Matrix changes
+- **💬 Matrix v1 — wh's left** (aftr th in-app tst, 1 list · 🤖 = can build · ❓ = 🦠 picks)
+  - ❓ **delete my account** missing: no ⚙️ btn ➡ comments + name stay on scagent.de 4ever (GDPR Art. 17) · fix = ⚙️ "Konto löschen" ➡ Matrix deactivate (`erase: true`, pw is on th fon) + forget Kreise · ~1 h 🤖 · v1 must?
+  - ❓ **report + mod** b4 strangers: comments = public 4 evy app user now · no report btn · no mod tool (only Synapse admin API by hand) · min = "Melden" on a comment ➡ Matrix `/report` ➡ ops reads it · v1 must?
+  - ❓ **spam**: th reg token rides i th public APK (decompile ➡ unlimited signups) · ok 4 friends-scale · bigger ➡ ops rate limit / captcha · accept 4 v1?
+  - ❓ **lost fon = lost account**: pw only on th fon, no login/export ➡ reinstall = new user, Kreise gone (rejoin by code works) · accept 4 v1?
+  - ❓ **no E2E** (Kreise say so i th app) · accept 4 v1? (rust-sdk = big)
+  - 🤖 Kreis = hourly poll, no push (UnifiedPush/ntfy = 🔵 community ideas) · fine 4 v1
+  - 👤 ops: Synapse `user_ips_max_age` shorter (dflt 28d) · signing key i bup (`pr/ops/omm.md` § 3i ck)
+  - 🦠 Element 👀 box above · Mitlesen opt-in prompt (🔵, now dflt on)
 - **Review:** [qa_1121.md § r2](qa_1121.md) on DEV `0.13.0-dev.1120.2220`, 4 checks, about 3 minutes.
   - Look at: launcher icon stays plain · in-app egg · drop cap without box (D-067) · 📜 no ¶ + pinch.
   - [x] 🤖 EggResTest 2/2 · unit 138 + lint + test_bin + check_langs green · DEV deployed

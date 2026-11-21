@@ -161,7 +161,7 @@ Every script answers `--help` (why · what · examples) and does nothing else wh
 | `translate_full.py` | the whole book + footnotes ➡ one language (hours, resumable) |
 | `check_langs.py` | ship guard: every menu language is complete and free of translation junk |
 | `gpu_night.sh` | waits until the shared GPU is free, then runs one LLM job + `check_langs` (for `at` night runs) |
-| `matrix_e2e.py` | end-to-end smoke test against the live Matrix server (test accounts, comments, reading circle) · `--cleanup` |
+| `matrix_e2e.py` | end-to-end smoke test against the live Matrix server (test accounts, comments, reading circle) · `--app` = the real app UI does it · `--cleanup` |
 | `eggs.py` | the 30 holiday icons ➡ Android vectors + preview gallery |
 | `font_subset.sh` | cuts the 5 Literata styles the app uses |
 | `notes.py` | one version's release notes from `ui/Changelog.kt` |

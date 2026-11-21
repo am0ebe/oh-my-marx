@@ -69,6 +69,9 @@ android {
             t.maxParallelForks = 1
             t.systemProperty("shots", if (project.hasProperty("shots")) "1" else "")
             t.systemProperty("shotsDir", layout.buildDirectory.dir("shots").get().asFile.path)
+            // 💬 MatrixLiveTest = th real UI vs LIVE Synapse (real accounts) ➡ only via `bin/matrix_e2e.py --app` (-Plive)
+            t.systemProperty("live", if (project.hasProperty("live")) "1" else "")
+            t.systemProperty("liveDir", rootProject.file("../priv").path)   // state per run: matrix_e2e_app_<MMDD-hhmm>.json
         }
     }
 }
