@@ -193,6 +193,41 @@ class Meter(unittest.TestCase):
         self.assertEqual(tf.METER.wasted, 1000)   # batch of 1: try 1 + try 2 (no split, no single retry)
 
 
+class ShowSamples(unittest.TestCase):
+    """🐛 @1121 🦠: `--show 5 --langs it es` looked like DE + EN only ➡ evy lang gets its own flagged row"""
+
+    def show(self, langs, n=5):
+        de1, de2 = "Die Ware ist ein Ding.", "Das Geld ist Ware."
+        with tempfile.TemporaryDirectory() as t, mock.patch.object(tf, "OUT", pathlib.Path(t)), \
+                mock.patch.object(tf, "items", return_value=[("v", "1,1", de1, "A commodity is a thing."),
+                                                             ("v", "1,2", de2, "Money is a commodity.")]), \
+                contextlib.redirect_stdout(io.StringIO()) as out:
+            rows = {"it": [{"kind": "v", "k": "1,1", "src": tf.sha(de1), "t": "La merce è una cosa."},
+                           {"kind": "v", "k": "1,2", "src": "old", "t": "Il denaro è merce."}],
+                    "es": [{"kind": "v", "k": "1,1", "src": tf.sha(de1), "t": "La mercancía es una cosa."}]}
+            for lang, xs in rows.items():
+                (pathlib.Path(t) / f"{lang}.jsonl").write_text("".join(json.dumps(x) + "\n" for x in xs))
+            tf.show(langs, n, seed=1)
+        return out.getvalue()
+
+    def test_every_lang_has_own_row_per_sample(self):
+        s = self.show(["it", "es"])
+        self.assertEqual(s.count("━━"), 2)                 # same 2 samples 4 both langs, not 1 block per lang
+        self.assertEqual(s.count("🇩🇪 de:"), 2)
+        self.assertIn("🇮🇹 it: La merce è una cosa.", s)
+        self.assertIn("🇪🇸 es: La mercancía es una cosa.", s)
+        self.assertIn("🇪🇸 es: ❌ not translated", s)       # es lacks 1,2 ➡ says so, not silently skipped
+
+    def test_stale_src_is_marked(self):
+        self.assertIn("🇮🇹 it: ⚠️ stale Il denaro", self.show(["it"]))
+
+    def test_no_translations_says_so(self):
+        self.assertIn("no translations yet 4 fr", self.show(["fr"]))
+
+    def test_cut_stops_at_a_word(self):
+        self.assertEqual(tf.cut("eins zwei drei", 8), "eins …")
+
+
 align, build = load("align"), load("build")
 
 

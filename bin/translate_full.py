@@ -362,13 +362,33 @@ def export(langs):
         print(f"{lang}: book {len(out['v'])} · footnotes {len(out['fn'])} · 🩹 refs fixed {fixed} · stale {stale}"
               f" ➡ {f.name} {f.stat().st_size // 1024}k")
 
-def show(lang, n):
-    src, c = source(), load(lang)
-    for key in random.sample(sorted(c), min(n, len(c))):
-        de, en = src.get(key, ("?", "?"))
-        x = c[key]
-        print(f"\n━━ {key[0]} {key[1]}" + (f"  ⚠️ {x['warn']}" if x.get("warn") else ""))
-        print(f"🇩🇪 {de[:600]}\n🇬🇧 {en[:600]}\n➡ {lang}: {x['t'][:600]}")
+FLAG = {"it": "🇮🇹", "es": "🇪🇸", "pt": "🇧🇷", "zh": "🇨🇳", "ar": "🇸🇦", "fr": "🇫🇷", "ru": "🇷🇺",
+        "hi": "🇮🇳", "bn": "🇧🇩", "ur": "🇵🇰", "id": "🇮🇩"}
+
+def cut(s, n=600):
+    """≤ n chars, cut at a word ➡ "…" (was: mid-word slice)"""
+    return s if len(s) <= n else s[:n].rsplit(" ", 1)[0] + " …"
+
+def show(langs, n, seed=None):
+    """🐛 @1121 (🦠: "only DE + EN, no it/es"): was 1 lang per block, its line = an unflagged "➡ it:" under 2×600
+    chars o DE/EN ➡ easy 2 miss · now: th SAME N samples 4 all --langs, evy lang = own flagged row (❌ = missing ·
+    ⚠️ stale = German src changed since)"""
+    src = source()
+    cs = {lang: load(lang) for lang in langs}
+    have = sorted(k for k in src if any(k in c for c in cs.values()))
+    if not have:
+        print(f"no translations yet 4 {' '.join(langs)} ➡ {OUT}"); return
+    for key in random.Random(seed).sample(have, min(n, len(have))):
+        de, en = src[key]
+        print(f"\n━━ {'book' if key[0] == 'v' else 'footnote'} {key[1]}")
+        print(f"🇩🇪 de: {cut(de)}\n🇬🇧 en: {cut(en)}")
+        for lang in langs:
+            x = cs[lang].get(key)
+            tag = f"{FLAG.get(lang, '🏳️')} {lang}:"
+            if not x:
+                print(f"{tag} ❌ not translated"); continue
+            flags = (" ⚠️ stale" if x.get("src") != sha(de) else "") + (f" ⚠️ {x['warn']}" if x.get("warn") else "")
+            print(f"{tag}{flags} {cut(x['t'])}")
 
 def stats(langs):
     src = source()
@@ -407,9 +427,7 @@ def main():
             redo_bad(lang, a.model, a.url)
         return
     if a.show:
-        for lang in a.langs:
-            show(lang, a.show)
-        return
+        return show(a.langs, a.show)
     for lang in a.langs:
         run(lang, a.only, a.model, a.url, a.limit)
 
