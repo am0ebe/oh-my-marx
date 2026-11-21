@@ -567,9 +567,8 @@ _Template v2.1 since 20 Nov (converted via `pr/vibe++/adr_convert.md`). Field na
 - **Ck:** `data/I18n.kt`
 
 ## ❓ open Qs
-- 💬 **streak**: (a) any reading day · (b) plan days only · (c) hybrid chip — Mi: 2nd "done" looks meagre next 2 big streak widget
-- 💬 **Mitlesen toggle**: rm? (QA lane B removed th note only) · 💬 ☭ close btn i MarxDialog: keep/rm? · 💬 "share app" prompt aft streak/medal?
-- ❓ streak widget "shd show 2 at start" = ? (todo ‼️ A)
+- ✔️ closed @1121 (#290 👀 diet): streak a/b/c ➡ D-015 Amen + D-045..047 · Mitlesen toggle ➡ D-020 (always on) · ☭ close btn ➡ D-007 + D-055 (★ V2) · streak widget "2 at start" ➡ D-045 (hero = streak only)
+- "share app" prompt aft streak/medal ➡ todo 🐙 M8 cd decide (rec: park i Hooked pass)
 - later: Read = real book look + page flip · daily verse can't be turned off · Lesekreis progressive disclosure
 
 ## 🔍 drift (checked @1112)
