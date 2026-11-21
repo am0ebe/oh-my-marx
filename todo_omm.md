@@ -25,9 +25,14 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
     - 0.9.0 ➡ 0.10.0 APK users: banner ➡ page ➡ install by hand 1× (then 1-tap / silent fr there)
 
 ## 👀
-### ❓ Decide (#248)
-- **GPU slot aftr audio cloning?** 1 bg `translate.py` run = re-asks th 3 src-fixed Andachten × 11 langs (~5 min, hand_fix covers til then) + tags retag (0-2 tags, weight) · rec: **yes, 1 night run** once tow's GPU is free ❓
+### 🌙 night run (#248 · 🦠 ✔️ @1121)
+- **translate re-ask scheduled** `at` job 62 · Sun 11/22 03:00 · `bin/gpu_night.sh bin/translate.py --only a` (3 src-fixed Andachten × 11 langs, waits if GPU busy, gives up 08:00) ➡ log `data/translate_night_1122.log`
+  - [ ] 🤖 log ✔️ + check_langs green ➡ commit `data/i18n` + assets ➡ deploy DEV
+  - ⚠️ tags retag NOT i it: nvr built (🔵 "tags over-applied" below = script + build + chip logic) · 63 q/lang stale on EN ref only (DE same) ➡ left out, re-ask could undo #248 hand fixes
 ### 🏔️ v1
+- **Matrix e2e vs live Synapse** (#M8 @1121 · 🦠 ✔️ run) · `bin/matrix_e2e.py` = 18/18 ✔️ (token signup · chapter comment + delete · Lesekreis join/chat/Amen · guards) ➡ [status_1121.md § r2](status_1121.md)
+  - [x] 🤖 18/18 ✔️ live @1121 13:27
+  - [ ] 🦠 Element: join `#omm-kreis-pqv6wu:scagent.de` ➡ 2 chat msgs + 1 Amen there? ➡ then `bin/matrix_e2e.py --cleanup`
 - **Review:** [qa_1121.md § r2](qa_1121.md) on DEV `0.13.0-dev.1120.2220`, 4 checks, about 3 minutes.
   - Look at: launcher icon stays plain · in-app egg · drop cap without box (D-067) · 📜 no ¶ + pinch.
   - [x] 🤖 EggResTest 2/2 · unit 138 + lint + test_bin + check_langs green · DEV deployed
@@ -55,7 +60,7 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
 - 🦠📣 ‼️ send **scagent.de/omm** 2 2-3 friends (0.6.0 ppl need 1 manual update, banner only fr ≥0.7.0)
 - ‼️ 🌍 **LLM book qy** — 👤 native QA zh/ar/hi/bn/ur · `bin/translate_full.py --show 5 --langs it es` · alt = existing translations (© check) ➡ [notes.md § 🗃️](notes.md)
 - 🦠 ‼️ **P3 habit test 2w** — aft th nxt big version is out, w audio (🦠 @1114) · Hooked ch 8: identify ➡ codify ➡ modify · start = 🦠's 1st day, log it here
-- 🦠📚 ‼️ **Matrix + chat: K + tst** — 🦠 re notes § 🏗️ technical + `server/matrix/README.md` · 🤖🧪 `bin/matrix_e2e.py` smoke vs live (⚠️ makes real accounts/rooms on th live Synapse ➡ 🦠 ok 1st) · ✔️ `Matrix.kt` JVM tst (fake server) @1116: MatrixTest 8 ➡ 13, all calls covered (+ Lesekreis: create · members · name · leave · redact · setName · code)
+- 🦠📚 ‼️ **Matrix + chat: K + tst** — 🦠 re notes § 🏗️ technical + `server/matrix/README.md` · ✔️ `bin/matrix_e2e.py` smoke vs live 18/18 @1121 (👀 above) · ✔️ `Matrix.kt` JVM tst (fake server) @1116: MatrixTest 8 ➡ 13, all calls covered (+ Lesekreis: create · members · name · leave · redact · setName · code)
 - ‼️ ⭐🧪 **QA @1117** ➡ [qa_1117.md](qa_1117.md) § triage — r1 = qa_1116 again (✔️) · ⚡ L1-L5 built @1117 (🐛 Hooked notes on hero · reader hints · ¶ ref gone · labels) = 👀 ck on DEV · 🎨 D6 streak game · D7 note = comment · D8 holidays · D9 close variants · 🔍 R3 Duolingo · R4 holiday gaps · ⏳ **r4 @1118 untriaged** (page nrs i scroll · award ⬄ ☭ i series · "bookmarx" · more plans + unlock · "Tag geschafft" + rank-up redesign · holidays Xmas/NY/Valentine/Frauentag · drop caps i scroll + holy-book feel)
   - 💬 🦠: Q1-Q9 i th file (Q1 one score + Q2 milestones unlock th streak work)
   - ✔️ L1-L5 shipped i **v0.12.0** @1118 (+ DEV `0.12.0-dev.1118.0151`) · r4 ✔️ built @1119 (L6-L8 · plan versioning D-042 · 6 🔒 plans D-043) ➡ ✔️ 🦠 eval @1120 · D-045 to D-047 accepted @1120 (#185) and built (C1) · the qa_1119 leftovers and D-048 to D-054 are now in the qa_1120 round-two check (👀 above)
