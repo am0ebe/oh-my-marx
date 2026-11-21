@@ -1,6 +1,12 @@
 # eos omm — resume log · newest on TOP
 _1 block per /eos · written by /eos § 3 · todo keeps 1 line: `▶ resume ➡ eos.md`_
 
+## 261122 00:xx · #305 eval card + auto · #307 "ok all" (M8)
+- **at** · `eval.md` card ✔️ · matrix_e2e 1 state file per run (+ tst, 56 py green) · 🔵 owner moji on 21 lines · 12 M8-decide recs applied ➡ D-073 + D-074 Accepted · live e2e `--cleanup` 10/10 (priv/ hs 0 state files) · DEV unchanged
+- **▶ NEXT** · aftr 03:00 night runs: same as block below (retag `--stats` ➡ build ➡ unit ➡ commit data ➡ 1 DEV deploy ➡ tick 🌙 boxes)
+- **👤 🦠** · Q13 (D-015 ➡ Superseded by D-039, 0 code) · D-072 delete-account wording · D-068 egg_arch png · fon updater tst (⏳)
+- **⚠️** · `#omm-kreis-pqv6wu` (1327 API run) = orphan on Synapse, state file lost b4 th fix ➡ only a Synapse admin can drop it · 🔵 = dry 4 🤖 til night data lands
+
 ## 261121 20:30 · #299 auto-finish 🔵 sweep (M8)
 - **at** · 🔵 31 ➡ 29 · ⏳ 1 (fon-only) · qa_1112 R1-R5 + D1-D10 · qa_1116 #14 · qa_1117 R3/R4 closed w proof (8 commits 40c20a4..6e12f96, pushed) · 0 code behaviour change · DEV unchanged
 - **▶ NEXT** · aftr 03:00 night runs: `data/retag_night_1122.log` + `translate_night_1122.log` ➡ `bin/retag.py --stats` ➡ `bin/build.py` ➡ unit green ➡ commit data + assets ➡ `bin/deploy.sh` (1 DEV) ➡ tick 🤖 boxes i todo 👀 🌙

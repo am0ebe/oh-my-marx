@@ -529,6 +529,13 @@ class MatrixCleanup(unittest.TestCase):
         self.assertEqual(sum(p == "/account/deactivate" for _, p, _ in self.calls), 4)
         self.assertEqual(self.mx.state_files(), [], "all green ➡ state files gone")
 
+    def test_api_runs_never_overwrite_each_other(self):
+        """2 API runs ➡ 2 stamped files (+ legacy + app) ➡ an older run keeps its --cleanup handle (#305)"""
+        self.mx.save({"stamp": "1121-1300", "users": {}, "rooms": {}})
+        self.mx.save({"stamp": "1121-1400", "users": {}, "rooms": {}})
+        names = [f.name for f in self.mx.state_files()]
+        self.assertEqual(names, ["matrix_e2e.json", "matrix_e2e_1121-1300.json", "matrix_e2e_1121-1400.json", "matrix_e2e_app_1121-1427.json"])
+
 
 if __name__ == "__main__":
     unittest.main()
