@@ -81,6 +81,8 @@ class Prefs(private val context: Context) {
         val pw = stringPreferencesKey("mx_pw"); val name = stringPreferencesKey("mx_name")
     }
     val mxName: Flow<String?> = context.store.data.map { it[M.name] }
+    /** my Matrix user id · null = no account (yet / deleted) */
+    val mxUser: Flow<String?> = context.store.data.map { it[M.user] }
     suspend fun mxSession(): Matrix.Session? = context.store.data.first().let { p ->
         val u = p[M.user]; val t = p[M.token]
         if (u != null && t != null) Matrix.Session(u, t) else null
@@ -91,6 +93,8 @@ class Prefs(private val context: Context) {
     suspend fun setMxName(name: String) = context.store.edit { it[M.name] = name }
     /** th random account pw (only kept here) · MatrixLiveTest hands it 2 `bin/matrix_e2e.py --cleanup` (deactivate needs it) */
     suspend fun mxPw(): String? = context.store.data.first()[M.pw]
+    /** account deleted ➡ forget it + my Kreise · th name stays (prefill 4 a new account) */
+    suspend fun forgetMx() = context.store.edit { it.remove(M.user); it.remove(M.token); it.remove(M.pw); it.remove(kreiseKey) }
 
     // 👥 my Kreise: "roomId|code|name" (room ids never contain '|')
     private val kreiseKey = stringSetPreferencesKey("kreise")

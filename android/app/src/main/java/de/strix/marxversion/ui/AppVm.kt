@@ -150,6 +150,17 @@ class AppVm(app: Application) : AndroidViewModel(app) {
         marx.prefs.setMxName(n); session()?.let { Matrix.setName(it, n) }
     }
     suspend fun myUserId() = marx.prefs.mxSession()?.userId
+    val mxUser: StateFlow<String?> = marx.prefs.mxUser.stateIn(viewModelScope, SharingStarted.Eagerly, null)
+
+    /** 🗑️ D-072: delete my Matrix account (comments + Kreise) ➡ done(ok) · local notes stay · no account = ok */
+    fun deleteAccount(done: (Boolean) -> Unit) = viewModelScope.launch {
+        val s = marx.prefs.mxSession() ?: return@launch done(true)
+        val pw = marx.prefs.mxPw() ?: return@launch done(false)
+        if (!Matrix.deactivate(s, pw)) return@launch done(false)
+        marx.prefs.forgetMx()
+        rooms.clear(); comments.value = emptyMap(); kreisMembers.value = emptyMap(); kreisTimeline.value = emptyMap()
+        done(true)
+    }
 
     // ── 👥 Kreise (Matrix rooms joined by code, data/Matrix.kt) ──
     /** invite link opened ➡ th code waiting 4 "Beitreten" */

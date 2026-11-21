@@ -51,6 +51,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import de.strix.marxversion.BuildConfig
 import de.strix.marxversion.R
 import de.strix.marxversion.data.f
+import de.strix.marxversion.ui.ds.Ds
+import de.strix.marxversion.ui.ds.TextBtn
 
 /** ⚖️ licence text (Forgejo = th home repo, GitHub = mirror) */
 private const val REPO_URL = "https://git.scagent.de/am0/oh-my-marx"
@@ -222,6 +224,27 @@ fun SettingsScreen(vm: AppVm, askNotifPermission: () -> Unit) {
                 label = { Text(nameLabel()) },
                 keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Words, imeAction = ImeAction.Done),
                 keyboardActions = KeyboardActions(onDone = { focus.clearFocus() }))
+        }
+        // 🗑️ D-072 (GDPR): only once an account exists (made w th 1st comment / Kreis) · danger TextBtn ➡ confirm, like "Leave circle"
+        run {
+            val user by vm.mxUser.collectAsStateWithLifecycle()
+            var ask by remember { mutableStateOf(false) }
+            var busy by remember { mutableStateOf(false) }
+            var msg by remember { mutableStateOf<String?>(null) }
+            val gone = tr("✔️ Konto gelöscht. Dein nächster Kommentar legt ein neues an.", "✔️ Account deleted. Your next comment makes a new one.")
+            val failed = tr("⚠️ Ging nicht — Internet? Nochmal versuchen.", "⚠️ Didn't work — internet? Try again.")
+            if (user != null) TextBtn(tr("Konto löschen", "Delete account"), { ask = true }, danger = true, enabled = !busy)
+            msg?.let { Text(it, style = MaterialTheme.typography.bodyMedium, color = if (it.startsWith("✔️")) Ds.ink else Ds.redDeep) }
+            if (ask) MarxDialog(onDismiss = { ask = false }, title = tr("Konto löschen?", "Delete account?"),
+                primary = DialogAction(tr("Löschen", "Delete")) {
+                    ask = false; busy = true; msg = null
+                    vm.deleteAccount { ok -> busy = false; msg = if (ok) gone else failed }
+                },
+                defer = DialogAction(tr("Behalten", "Keep")) { ask = false }) {
+                Text(tr("Dein Konto auf scagent.de wird gelöscht: neue Leser:innen sehen deine Kommentare nicht mehr, und du verlässt alle Lesekreise. Deine Notizen, Lesezeichen und Stempel auf diesem Handy bleiben.",
+                    "Your account on scagent.de is deleted: new readers no longer see your comments, and you leave all reading circles. Your notes, bookmarks and stamps on this phone stay."),
+                    style = MaterialTheme.typography.bodyMedium, color = Ds.ink)
+            }
         }
         HookNote(Hook.SOCIAL, s.testMode)
         HorizontalDivider()

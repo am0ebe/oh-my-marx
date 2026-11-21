@@ -154,6 +154,19 @@ object Matrix {
         runCatching { call("PUT", "/rooms/${enc(room)}/redact/${enc(eventId)}/omm${System.currentTimeMillis()}", JSONObject(), s.token).first == 200 }.getOrDefault(false)
     }
 
+    /**
+     * 🗑️ delete my account (GDPR Art. 17, D-072): deactivate + erase ➡ Synapse leaves evy room + hides my msgs from new joiners
+     * true = gone (also: token alr unknown = deleted b4) · pw = th random one, only on this fon
+     */
+    suspend fun deactivate(s: Session, pw: String): Boolean = withContext(Dispatchers.IO) {
+        runCatching {
+            val auth = JSONObject().put("type", "m.login.password").put("password", pw)
+                .put("identifier", JSONObject().put("type", "m.id.user").put("user", s.userId))
+            val (code, r) = call("POST", "/account/deactivate", JSONObject().put("erase", true).put("auth", auth), s.token)
+            code == 200 || r.optString("errcode") == "M_UNKNOWN_TOKEN"
+        }.getOrDefault(false)
+    }
+
     private fun call(method: String, path: String, body: JSONObject?, token: String? = null): Pair<Int, JSONObject> {
         val c = (URL(HS + path).openConnection() as HttpURLConnection).apply {
             requestMethod = method; connectTimeout = 6000; readTimeout = 8000

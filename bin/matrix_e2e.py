@@ -226,8 +226,13 @@ def cleanup_one(st, t):
     for alias, who in aliases:
         if who in users:
             c, _ = call("DELETE", f"/directory/room/{enc(alias)}", None, users[who]["token"])
-            t.step(f"drop alias {alias}", c in (200, 404), f"HTTP {c}")
+            # 401 = its creator deleted itself (--app step 12) ➡ only a Synapse admin could drop it now
+            t.step(f"drop alias {alias}", c in (200, 401, 404), f"HTTP {c}" + (" · creator gone, alias stays" if c == 401 else ""))
     for who, u in users.items():
+        c, _ = call("GET", "/account/whoami", None, u["token"])
+        if c == 401:   # deleted itself (--app step 12: ⚙️ Delete account) ➡ Synapse alr left its rooms
+            t.step(f"{u['user_id']} alr deleted", True, "token dead ➡ nothing 2 leave")
+            continue
         for room in st["rooms"].values():
             left = own_msgs(u, room)   # a crashed run can leave a comment i a public chapter room ➡ redact it
             for ev in left:

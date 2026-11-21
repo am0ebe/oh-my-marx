@@ -232,6 +232,22 @@ class MatrixTest {
         runBlocking { assertTrue(!Matrix.leave(S, "!k:scagent.de") && !Matrix.redact(S, "!k:scagent.de", "\$e") && !Matrix.setName(S, "x")) }
     }
 
+    /** 🗑️ D-072: delete account = deactivate + erase, pw auth 4 MY user · unknown token = alr gone = ok · oth errors = false */
+    @Test fun deactivateErasesWithPasswordAuth() {
+        routes["$P/account/deactivate"] = { 200 to JSONObject() }
+        assertTrue(runBlocking { Matrix.deactivate(S, "pw1") })
+        val r = seen.single()
+        assertEquals("POST", r.method); assertEquals("Bearer tok123", r.auth)
+        assertTrue(r.body.getBoolean("erase"))
+        val auth = r.body.getJSONObject("auth")
+        assertEquals("m.login.password", auth.getString("type")); assertEquals("pw1", auth.getString("password"))
+        assertEquals(S.userId, auth.getJSONObject("identifier").getString("user"))
+        routes["$P/account/deactivate"] = { 401 to JSONObject().put("errcode", "M_UNKNOWN_TOKEN") }
+        assertTrue("token alr dead = account gone", runBlocking { Matrix.deactivate(S, "pw1") })
+        routes["$P/account/deactivate"] = { 401 to JSONObject().put("errcode", "M_FORBIDDEN") }
+        assertFalse("wrong pw", runBlocking { Matrix.deactivate(S, "pw1") })
+    }
+
     @Test fun kreisCodeIsReadableAloud() {
         repeat(200) {
             val c = Matrix.newCode()

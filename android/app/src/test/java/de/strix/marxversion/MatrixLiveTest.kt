@@ -10,6 +10,7 @@ import androidx.compose.ui.test.onAllNodesWithContentDescription
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performScrollToNode
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.performTouchInput
@@ -40,6 +41,7 @@ import java.util.Date
  *   ① 📖 ch 8 p. 245 ➡ passage menu ➡ Note ➡ 👥 "also post to th reading room" ➡ tap away = app makes its account + posts
  *   ② server: B (raw HTTP = "Element") reads it (txt + page + name) ➡ B replies ➡ app's 💬 sheet shows it ➡ hold own = delete ➡ gone 4 B
  *   ③ 👥 Circle tab: found a Kreis ➡ B joins by code ➡ app ➡ B chat · B ➡ app (Refresh) ➡ B founds one ➡ app joins it w th code
+ *   ④ ⚙️ Delete account (D-072) ➡ confirm ➡ token dead · app user left th Kreis
  * Mitlesen = always on (D-020, no toggle) ➡ nothing 2 switch.
  * accounts: app = `e2erosa-<hex>` (its own signup path) · B = `e2e-<MMDD-hhmm>-b` · both + th rooms ➡ `priv/matrix_e2e_app.json`
  *   ➡ `bin/matrix_e2e.py --cleanup` deactivates them · th test deletes its comment itself
@@ -225,6 +227,24 @@ class MatrixLiveTest {
         rule.onAllNodesWithText("Join", substring = false).onFirst().performClick()
         step("app joins B's Kreis w code", cc == 200 && until { vm.kreise.value.any { it.code == code2 && it.name == bname } } && until { has(bname) },
             if (cc != 200) "B createRoom HTTP $cc" else code2)
+
+        // ④ 🗑️ D-072: ⚙️ Delete account ➡ confirm ➡ server: app user gone fr th Kreis + its token dead
+        //   test hygiene 1st: a deleted user's Kreis alias stays (right: friends still join by it) but no one can drop it then
+        val myAlias = "#omm-kreis-${k.code.lowercase()}:scagent.de"
+        if (call("DELETE", "/directory/room/${enc(myAlias)}", null, me!!.token).first == 200) {
+            val a = state.getJSONArray("aliases"); (a.length() - 1 downTo 0).filter { a.getJSONArray(it).getString(0) == myAlias }.forEach { a.remove(it) }; save()
+        }
+        tap("My Capital", true); settle()
+        rule.onAllNodesWithContentDescription("Settings").onFirst().performClick(); settle()
+        rule.waitUntil(30_000) { has("Delete account", true) }   // ⚙️ = 1 verticalScroll Column ➡ all composed, just off-screen
+        rule.onAllNodesWithText("Delete account", substring = false).onFirst().performScrollTo(); settle()
+        tap("Delete account", true); settle()
+        tap("Delete", true)
+        val deleted = until { has("Account deleted") } && runBlocking { app.prefs.mxSession() } == null && vm.kreise.value.isEmpty()
+        val meId = me!!.userId
+        val (cw, _) = call("GET", "/account/whoami", null, me.token)
+        val left = until { call("GET", "/rooms/${enc(k.room)}/joined_members", null, bTok).second.optJSONObject("joined")?.has(meId) == false }
+        step("app: ⚙️ Delete account ➡ token dead · left Kreis", deleted && cw == 401 && left, "whoami HTTP $cw")
         finish()
     }
 

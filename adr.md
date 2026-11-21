@@ -20,6 +20,12 @@ _SDD: code says **wh** · th file says **y** · drift = a bug · fmt ➡ `pr/vib
 ## 🧾 decisions (newest on top)
 _Template v2.1 since 20 Nov (converted via `pr/vibe++/adr_convert.md`). Field names: Y = why · Ctx = what forced it · Scope = what it covers · Ck = how to check._
 
+### D-072 @1121 · 🗑️ You can delete your comment account in ⚙️; it is deactivated and erased on the server, your phone data stays · Proposed (🤖 built · 🦠 judges wording + place)
+- **Y:** The app makes a Matrix account with your first comment or circle, but there was no way to remove it: comments and name stayed on scagent.de forever (GDPR Art. 17 right to erasure). Found while listing what Matrix v1 still lacks.
+- **Scope:** ⚙️ under the Name field, only once an account exists · danger text button "Delete account" ➡ confirm dialog (Delete / Keep, like "Leave circle") ➡ `Matrix.deactivate` (`erase: true`, password auth with the random pw kept on the phone) ➡ Synapse leaves every room and hides your messages from new joiners ➡ the app forgets the account + its circles · name, notes, bookmarks, stamps stay · next comment = a new account · a circle you founded keeps its code (friends still use it).
+- **Alt:** delete only comments, keep the account (rejected: the name + circles stay) · ask ops to delete by hand (rejected: needs an email, not GDPR-friendly).
+- **Ck:** `MatrixTest.deactivateErasesWithPasswordAuth` · `bin/matrix_e2e.py --app` step 12 (token dead + left the circle) · 6 UI strings hand-translated into 11 langs (`"by": "hand @1121"` in `data/i18n/*.jsonl`), `check_langs` green.
+
 ### D-071 @1121 · 🏷️ The "What bugs you?" chips draw from a second, narrow tag pass; the old tags keep cutting the plans · Accepted (🤖, routine · M8 🔵 sweep)
 - **Y:** `score.py` let the model pad every quote to 4 tags, so "Boss" matched 1233 of 1511 quotes and the chip felt random (🔍 @1116).
 - **Scope:** `bin/retag.py` = 0-2 topics a paragraph is ABOUT, weight 1-3 ➡ `data/tags.jsonl` (keyed by a hash of the German text) ➡ `build.py` adds `tw` · `marxoskopPool`: weight ≥ 2 · fewer than 30 ➡ weight ≥ 1 · still fewer / no data ➡ the old `t` · `t` itself is untouched, because the plans are cut by it and a re-cut would move days under readers (D-042).
