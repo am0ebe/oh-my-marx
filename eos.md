@@ -1,6 +1,12 @@
 # eos omm — resume log · newest on TOP
 _1 block per /eos · written by /eos § 3 · todo keeps 1 line: `▶ resume ➡ eos.md`_
 
+## 261121 15:40 · 👀 diet #290 (M8)
+- **at** · todo 👀: 🦠 boxes 6 ➡ 3 · ❓/💬 15 ➡ 0 open 4 🦠 (5 closed superseded · 12 ➡ `### 🐙 M8 cd decide` w rec) · 4f2acb8 pushed
+- **▶ NEXT** · aftr 03:00 night runs: same as block below + print 3 quotes/chip i retag log tail (new 🤖 box)
+- **👤 🦠** · egg_arch_de.png (D-068) · delete-account txt inline (D-072) · retag log 1 min · M8: "ok all" on th 12 ❓
+- **⚠️** · Element cleanup waits on M8 dc (not run) · /eos cut short by usage limit: refl not written
+
 ## 261121 14:50 · M8 auto-finish: Matrix in-app e2e · retag · delete account · /eos
 - **at** · `bin/matrix_e2e.py --app` = real app UI vs live Synapse 12/12 ✔️ (bc2d1b7 · D-070) · `bin/retag.py` + `tw` chip pool built, data pending (ebbb7bf · D-071) · ⚙️ Delete account (9ba6e75 · D-072 Proposed) · 145 unit + 55 py + lint + check_langs green · pushed · DEV unchanged (`0.13.0-dev.1121.0014`, nothing deployed)
 - **▶ NEXT** · aftr 03:00: re `data/translate_night_1122.log` + `data/retag_night_1122.log` ➡ `bin/retag.py --stats` all ✔️ ➡ `bin/build.py` ➡ unit green ➡ commit `data/i18n` + `data/tags.jsonl` + assets ➡ `bin/deploy.sh` (1 DEV = translate + chips + delete account) ➡ tick 🤖 boxes i todo 👀
