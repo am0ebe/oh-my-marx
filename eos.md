@@ -1,6 +1,12 @@
 # eos omm — resume log · newest on TOP
 _1 block per /eos · written by /eos § 3 · todo keeps 1 line: `▶ resume ➡ eos.md`_
 
+## 261121 20:30 · #299 auto-finish 🔵 sweep (M8)
+- **at** · 🔵 31 ➡ 29 · ⏳ 1 (fon-only) · qa_1112 R1-R5 + D1-D10 · qa_1116 #14 · qa_1117 R3/R4 closed w proof (8 commits 40c20a4..6e12f96, pushed) · 0 code behaviour change · DEV unchanged
+- **▶ NEXT** · aftr 03:00 night runs: `data/retag_night_1122.log` + `translate_night_1122.log` ➡ `bin/retag.py --stats` ➡ `bin/build.py` ➡ unit green ➡ commit data + assets ➡ `bin/deploy.sh` (1 DEV) ➡ tick 🤖 boxes i todo 👀 🌙
+- **👤 🦠** · M8 cd decide now 13 Qs (new Q13: D-015 ➡ Superseded by D-039, 0 code)
+- **⚠️** · 🔵 rest = 🦠 taste / Fable design / gated (launcherReset aftr nxt stable · shared code on cali's 2nd copy) ➡ more auto rounds = low yield til night data lands
+
 ## 261121 16:30 · #292 cli flags · #297 app_lessons (M8)
 - **at** · cli_lint omm 44 ➡ 17 (98d6545, 55 py green) · `app_lessons.md` 4 cali (efe6999) · 🔵 shared-code line i todo
 - **▶ NEXT** · unchanged: block below (aftr 03:00 night runs ck retag log + 3 quotes/chip)
