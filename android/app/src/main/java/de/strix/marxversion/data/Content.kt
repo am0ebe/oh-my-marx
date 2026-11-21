@@ -24,6 +24,7 @@ data class Verse(
     @SerialName("d") val difficulty: Int = 3,
     @SerialName("s") val standalone: Int = 3,
     @SerialName("t") val tags: List<String> = emptyList(),
+    @SerialName("tw") val topics: Map<String, Int> = emptyMap(),   // bin/retag.py: 0-2 topics it's ABOUT, weight 1-3 ➡ "Was nervt?" only
     @SerialName("pol") val polemic: Boolean = false,  // Marx roasts a named person/group
     @SerialName("bib") val bible: Boolean = false,
     val star: Boolean = false,                       // ⭐ top ~1/6 o its section ➡ Vers-des-Tages pool

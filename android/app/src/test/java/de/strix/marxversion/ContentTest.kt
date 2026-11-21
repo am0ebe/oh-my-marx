@@ -65,6 +65,19 @@ class ContentTest {
         assertNotNull(marxoskop(verses, "ueberstunden"))
     }
 
+    /** 🔍 "Chef" = 1233/1511 quotes ≈ random (padded `t`) ➡ retag `tw` weight ≥ 2 · < 30 ➡ ≥ 1 · none ➡ old `t` */
+    @Test fun marxoskopPoolPrefersAboutTopicsWithGuard() {
+        fun v(i: Int, tw: Map<String, Int>, t: List<String> = listOf("kapitalist")) =
+            Verse("9,$i", "9", de = "x", quoteDe = "q$i", juice = 3, tags = t, topics = tw)
+        val strong = (1..30).map { v(it, mapOf("ausbeutung" to 2)) }
+        val weak = (31..60).map { v(it, mapOf("kapitalist" to 1)) }
+        val none = (61..90).map { v(it, emptyMap()) }
+        assertEquals("30 w weight ≥ 2 = th pool", strong, de.strix.marxversion.logic.marxoskopPool(strong + weak + none, "chef"))
+        assertEquals("29 strong < guard ➡ weight ≥ 1", 59, de.strix.marxversion.logic.marxoskopPool(strong.drop(1) + weak + none, "chef").size)
+        assertEquals("no retag data ➡ old tags (today's behaviour)", 30, de.strix.marxversion.logic.marxoskopPool(none, "chef").size)
+        assertEquals("unknown chip", 0, de.strix.marxversion.logic.marxoskopPool(strong, "nope").size)
+    }
+
     @Test fun streakAndChain() {
         val now = LocalDate.parse("2026-10-28")
         val d = { s: String -> DayLog(s, "p", 0) }

@@ -461,6 +461,32 @@ class Page(unittest.TestCase):
         self.assertFalse((out / "llms.txt").exists())
 
 
+class Retag(unittest.TestCase):
+    """retag.py: LLM answer cleaned · chip pools at weight ≥ 2 · its NERVT = th app's (logic/Daily.kt)"""
+    rt = load("retag")
+
+    def test_clean(self):
+        c = self.rt.clean
+        self.assertEqual(c({"topics": [{"tag": "lohn", "weight": 3}, {"tag": "geld", "weight": 1}, {"tag": "wert", "weight": 2}]}),
+                         {"lohn": 3, "geld": 1}, "max 2")
+        self.assertEqual(c({"topics": [{"tag": "nope", "weight": 3}, {"tag": "lohn", "weight": 9}]}), {}, "unknown tag / bad weight dropped")
+        self.assertEqual(c({"topics": [{"tag": "lohn", "weight": 1}, {"tag": "lohn", "weight": 2}]}), {"lohn": 2})
+        self.assertEqual(c({}), {})
+
+    def test_pools(self):
+        rows = [{"de_sha": "a", "tw": {"ausbeutung": 2}}, {"de_sha": "b", "tw": {"kapitalist": 1}}, {"de_sha": "c", "tw": {"arbeitszeit": 3}}]
+        p = self.rt.pools(rows)
+        self.assertEqual((p["chef"], p["ueberstunden"], p["lohn"]), (1, 1, 0))
+        self.assertEqual(self.rt.pools(rows, quoted={"c"})["chef"], 0)
+
+    def test_nervt_matches_app(self):
+        kt = (BIN.parent / "android/app/src/main/java/de/strix/marxversion/logic/Daily.kt").read_text()
+        block = kt.split("val NERVT = linkedMapOf(", 1)[1].split("\n)", 1)[0]
+        app = {k: re.findall(r'"(\w+)"', v) for k, v in re.findall(r'"(\w+)" to listOf\(([^)]*)\)', block)}
+        self.assertEqual(app, self.rt.NERVT)
+        self.assertTrue(all(t in self.rt.TAGS for ts in app.values() for t in ts))
+
+
 class MatrixCleanup(unittest.TestCase):
     """matrix_e2e --cleanup: both state shapes (API run · --app runs) · own leftovers redacted · MATCH filter · no network"""
     def setUp(self):

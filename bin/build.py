@@ -11,7 +11,7 @@ examples:
   bin/build.py                                  # rebuild all assets (~10 s, overwrites assets/content + data/plans.json)
   bin/build.py && bin/translate.py --export-only  # aftr a data fix: rebuild + re-export th 11 i18n files (no LLM)
 """
-import difflib, json, pathlib, re, sys
+import difflib, hashlib, json, pathlib, re, sys
 if __name__ == "__main__" and {"-h", "--help"} & set(sys.argv[1:]):
     print(__doc__); sys.exit(0)
 
@@ -260,6 +260,8 @@ def main():
     # rank.py: relative picks per section (absolute juice/polemic were inflated)
     stars = {i for r in jl("rank.jsonl") for i in r["star"]}
     roasts = {i for r in jl("rank.jsonl") for i in r["roast"]}
+    # retag.py: 0-2 weighted topics per Vers (by German-text hash) ➡ `tw` = "Was nervt?" chips only · `t` stays (plans cut by it, D-042)
+    tw_by = {r["de_sha"]: r["tw"] for r in jl("tags.jsonl")}
     out, n_scored = [], 0
     ste = en_sec_titles(V)
     for i, v in enumerate(V):
@@ -273,6 +275,8 @@ def main():
             o |= {"qd": q, "qe": qe, "j": s["juice"], "d": s["difficulty"],
                   "s": s["standalone"], "t": s["tags"], "pol": v["id"] in roasts, "bib": s["bible"],
                   "star": v["id"] in stars and bool(q)}
+            tw = tw_by.get(hashlib.sha1(v["de"].encode()).hexdigest()[:12])
+            if tw: o["tw"] = tw
         out.append(o)
 
     P = plans(out)

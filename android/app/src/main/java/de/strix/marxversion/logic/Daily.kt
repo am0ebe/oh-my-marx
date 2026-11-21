@@ -163,10 +163,23 @@ val NERVT = linkedMapOf(
     "krise" to listOf("krise", "arbeitslosigkeit"),
 )
 
-/** truly random each tap = hunt reward */
-fun marxoskop(all: List<Verse>, key: String): Verse? {
-    val tags = NERVT[key] ?: return null
-    return all.filter { v -> v.juice >= 3 && v.quoteDe.isNotBlank() && v.tags.any { it in tags } }.randomOrNull()
+/** a chip needs ≥ this many quotes, else it repeats itself ➡ loosen 1 step */
+const val MARXOSKOP_MIN = 30
+
+/**
+ * truly random each tap = hunt reward · pool = quotes ABOUT th chip (retag `tw` weight ≥ 2) · < 30 ➡ weight ≥ 1 ·
+ * still < 30 o no retag data yet ➡ th old padded `t` tags (score.py: ~4 per quote, "kapitalist" on 83 %)
+ */
+fun marxoskop(all: List<Verse>, key: String): Verse? = marxoskopPool(all, key).randomOrNull()
+
+fun marxoskopPool(all: List<Verse>, key: String): List<Verse> {
+    val tags = NERVT[key] ?: return emptyList()
+    val quoted = all.filter { it.juice >= 3 && it.quoteDe.isNotBlank() }
+    for (min in 2 downTo 1) {
+        val pool = quoted.filter { v -> tags.any { (v.topics[it] ?: 0) >= min } }
+        if (pool.size >= MARXOSKOP_MIN) return pool
+    }
+    return quoted.filter { v -> v.tags.any { it in tags } }
 }
 
 /**

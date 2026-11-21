@@ -20,6 +20,12 @@ _SDD: code says **wh** · th file says **y** · drift = a bug · fmt ➡ `pr/vib
 ## 🧾 decisions (newest on top)
 _Template v2.1 since 20 Nov (converted via `pr/vibe++/adr_convert.md`). Field names: Y = why · Ctx = what forced it · Scope = what it covers · Ck = how to check._
 
+### D-071 @1121 · 🏷️ The "What bugs you?" chips draw from a second, narrow tag pass; the old tags keep cutting the plans · Accepted (🤖, routine · M8 🔵 sweep)
+- **Y:** `score.py` let the model pad every quote to 4 tags, so "Boss" matched 1233 of 1511 quotes and the chip felt random (🔍 @1116).
+- **Scope:** `bin/retag.py` = 0-2 topics a paragraph is ABOUT, weight 1-3 ➡ `data/tags.jsonl` (keyed by a hash of the German text) ➡ `build.py` adds `tw` · `marxoskopPool`: weight ≥ 2 · fewer than 30 ➡ weight ≥ 1 · still fewer / no data ➡ the old `t` · `t` itself is untouched, because the plans are cut by it and a re-cut would move days under readers (D-042).
+- **Alt:** re-run `score.py` with `maxItems: 2` (rejected: rewrites quotes + juice too and re-cuts plans) · hide chips below 30 (rejected: a chip vanishing reads as a bug).
+- **Ck:** `test_bin` `Retag` (3) · `ContentTest.marxoskopPoolPrefersAboutTopicsWithGuard` · after the night run `bin/retag.py --stats` all ✔️.
+
 ### D-070 @1121 · 💬 The in-app Matrix path is tested by driving the real app against the live server, run by hand, not in CI · Accepted (🤖, routine · M8 v1 Matrix)
 - **Y:** You asked for the taps you would do on the phone (comment ➡ shows on the server ➡ circle found/join ➡ chat both ways) to run without you. `MatrixTest` only knew a fake server, `matrix_e2e.py` only the raw API: neither proved the app's own buttons reach Synapse.
 - **Scope:** `MatrixLiveTest` (Robolectric, real `MainActivity`) = app side · the other person = plain HTTP in the test (independent of `Matrix.kt`) · skipped without `-Plive` · `bin/matrix_e2e.py --app` runs it and prints the table · each run's accounts + rooms ➡ `priv/matrix_e2e_app_<stamp>.json` ➡ `--cleanup [MATCH]` (also redacts what a crashed run left in a public chapter room).
