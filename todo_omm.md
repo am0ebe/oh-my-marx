@@ -66,6 +66,7 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
 - 🛍️ Fr 11/27 Black Friday: home-screen widget shows th 🛍️ egg left o "Marx verse" · only if it looks off ➡ screenshot (no box · render = `EggResTest`)
 
 ## 🔵
+- 🤖🧩 **shared app code** (#297): extract th 6 candidates i [app_lessons.md § 🧩](app_lessons.md) (`apptool` · `:selfupdate` · `app-version.gradle.kts` · `:testrig` · i18n kit · release notes) ➡ only when cali P1 copies them (2nd copy = extract)
 - 🤖🎨 **C-lane gaps** (done @1120: rank perks, feast emblems, 11 heads, initials, ¶, rtl / zh shots, gold swoosh · @1120 #229: 🥚 eggs replace heads in top bar, hero, quote card, D-066 · launcher egg dropped #241):
   - 🤖 ✂️ `launcherReset` (notify/UpdateWorker.kt) = DEV 1911 cleanup ➡ rm aftr th nxt stable
   - 🖼️ Feast frames (design § 14.2.1) · 🔊 stamp thud sound (D-035).
