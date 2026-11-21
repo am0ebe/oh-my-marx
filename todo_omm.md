@@ -36,7 +36,7 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
   - [ ] 🤖 print 3 quotes per chip (Chef · Miete · …) i th log tail ➡ 🦠 reads there, no fon
   - [ ] 🦠 1 min: `tail -40 data/retag_night_1122.log` ➡ quotes about their chip? (rec ✔️ if ≥ 2/3 fit · was ≈ random)
 ### 🐙 M8 cd decide
-- **12 Qs w rec 1st** (#290 · reversible · inside omm) · M8 o 🦠: "ok all" o name th ❌ ones
+- **13 Qs w rec 1st** (#290 · +1 #299 · reversible · inside omm) · M8 o 🦠: "ok all" o name th ❌ ones
   - Element look: skip it (`--app` alr asserts B reads txt · page 245 · name) ➡ 🤖 runs `bin/matrix_e2e.py --cleanup` ❓
   - Matrix v1 spam (reg token i public APK): accept 4 v1, friends-scale · rate limit / captcha = ops, b4 public push ❓
   - Matrix v1 lost fon = lost account: accept 4 v1 (rejoin Kreis by code works) ❓
@@ -49,6 +49,7 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
   - qa_1117 Q8 gesture line under evy page (D-065 hints since): keep as is ❓
   - qa_1117 Q9 licence icon: keep gavel ❓
   - ✂️ Fable polish pass over th 30 eggs: drop (gallery passed · egg_arch all fit) ❓
+  - D-015 "Amen only under th snippet" nvr built + D-039 @1116 kept th quote-card Amen (✓ pop) ➡ mark D-015 Superseded by D-039, 0 code (#299) ❓
 ### 🏔️ v1
 - **💬 Matrix v1 — wh's left** (aftr th in-app tst, 1 list · 🤖 = can build · ❓ = 🦠 picks)
   - ✔️ 🤖 **delete my account** built @1121 (D-072 Proposed): ⚙️ under Name ➡ "Delete account" ➡ confirm ➡ Matrix deactivate + erase ➡ app forgets account + Kreise · live step 12 ✔️ · 6 strings hand-translated ×11 · ❌ not deployed
