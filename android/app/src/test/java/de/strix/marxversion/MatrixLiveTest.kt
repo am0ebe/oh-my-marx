@@ -133,15 +133,15 @@ class MatrixLiveTest {
     @Test fun inAppPathVsLiveSynapse() {
         val vm = ViewModelProvider(rule.activity)[AppVm::class.java]
         val app = rule.activity.application as MarxApp
-        val myName = "e2e Rosa"
+        val myName = "e2e Alice"
         rule.waitUntil(30_000) { has("Today") }
 
         // B 1st (= a friend alr on Element)
         val bPw = hex(16)
-        val b = register("e2e-$stamp-b", bPw, "e2e Juno")
+        val b = register("e2e-$stamp-b", bPw, "e2e Bob")
         if (!step("B signs up w th app token", b != null, b?.optString("user_id") ?: "")) return finish()
         val bTok = b!!.getString("access_token")
-        state.getJSONObject("users").put("b", JSONObject().put("user_id", b.getString("user_id")).put("pw", bPw).put("token", bTok).put("name", "e2e Juno"))
+        state.getJSONObject("users").put("b", JSONObject().put("user_id", b.getString("user_id")).put("pw", bPw).put("token", bTok).put("name", "e2e Bob"))
         save()
 
         // ① 📖 ch 8 ➡ Note ➡ 👥 chip ➡ tap away
@@ -173,8 +173,8 @@ class MatrixLiveTest {
         val seen = msgs(bTok, room).firstOrNull { it.getJSONObject("content").getString("body").endsWith(txt) }?.getJSONObject("content")
         step("server: B reads it (txt · page · name)", cj == 200 && seen != null && seen.optInt("de.ohmymarx.page") == 245 &&
             seen.optString("de.ohmymarx.name") == myName, seen?.optString("body")?.take(40) ?: "HTTP $cj")
-        val reply = "e2e Juno replies $stamp"
-        val replyId = send(bTok, room, JSONObject().put("msgtype", "m.text").put("body", reply).put("de.ohmymarx.page", 245).put("de.ohmymarx.name", "e2e Juno"))
+        val reply = "e2e Bob replies $stamp"
+        val replyId = send(bTok, room, JSONObject().put("msgtype", "m.text").put("body", reply).put("de.ohmymarx.page", 245).put("de.ohmymarx.name", "e2e Bob"))
         rule.onAllNodesWithText("💬", substring = true).onFirst().performClick(); settle()   // slim head 💬 N ➡ sheet (reloads)
         step("app 💬 sheet shows B's reply", until { has(reply) }, if (replyId == null) "B send failed" else "")
         // th private margin note (same txt) sits under th sheet ➡ target th comment = "¶ 8,1 — txt"
@@ -202,21 +202,21 @@ class MatrixLiveTest {
         val (_, nm) = call("GET", "/rooms/${enc(k.room)}/state/m.room.name", null, bTok)
         step("B joins by code · sees name", cb == 200 && rb.optString("room_id") == k.room && nm.optString("name") == kname, "code ${k.code}")
         tap(kname, true); settle()
-        val hi = "Hallo Juno, hier Rosa aus der App ($stamp)"
+        val hi = "Hallo Bob, hier Alice aus der App ($stamp)"
         field(0).performTextInput(hi); settle()
         tap("Send", true)
         step("app ➡ B chat", until { bodies(bTok, k.room).contains(hi) })
-        val back2 = "Hallo Rosa, Juno aus Element ($stamp)"
-        send(bTok, k.room, JSONObject().put("msgtype", "m.text").put("body", back2).put("de.ohmymarx.name", "e2e Juno"))
+        val back2 = "Hallo Alice, Bob aus Element ($stamp)"
+        send(bTok, k.room, JSONObject().put("msgtype", "m.text").put("body", back2).put("de.ohmymarx.name", "e2e Bob"))
         tap("Refresh", true)
         step("B ➡ app chat (Refresh)", until { has(back2) })
-        step("app: members = both", until { vm.kreisMembers.value[k.room].orEmpty().values.toSet().containsAll(setOf(myName, "e2e Juno")) },
+        step("app: members = both", until { vm.kreisMembers.value[k.room].orEmpty().values.toSet().containsAll(setOf(myName, "e2e Bob")) },
             vm.kreisMembers.value[k.room].orEmpty().values.joinToString(" · "))
         back(); settle()
 
         // ③b B founds ➡ app joins w th code
         val code2 = (1..6).map { "ABCDEFGHJKMNPQRSTUVWXYZ23456789"[SecureRandom().nextInt(31)] }.joinToString("")
-        val bname = "e2e Juno Kreis $stamp"
+        val bname = "e2e Bob Kreis $stamp"
         val (cc, rc) = call("POST", "/createRoom", JSONObject().put("name", bname).put("room_alias_name", "omm-kreis-${code2.lowercase()}")
             .put("visibility", "private").put("preset", "public_chat").put("topic", "👥 Oh My Marx Lesekreis · Code $code2 · e2e tst"), bTok)
         if (cc == 200) {

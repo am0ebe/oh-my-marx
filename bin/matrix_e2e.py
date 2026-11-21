@@ -119,7 +119,7 @@ def run(kap):
     t.step("signup w wrong token refused", cw in (401, 403), f"HTTP {cw}")
 
     users = {}
-    for who, name in (("a", "e2e Rosa"), ("b", "e2e Juno")):
+    for who, name in (("a", "e2e Alice"), ("b", "e2e Bob")):
         uid, pw = f"e2e-{stamp}-{who}", secrets.token_hex(16)
         c, r = register(uid, pw, token, name)
         if t.step(f"register {who} w app token", c == 200, r.get("user_id", f"HTTP {c} {r.get('errcode', '')}")):
@@ -131,7 +131,7 @@ def run(kap):
     A, B = users["a"]["token"], users["b"]["token"]
 
     c, r = call("GET", f"/profile/{enc(users['a']['user_id'])}/displayname", None, A)
-    t.step("display name set", r.get("displayname") == "e2e Rosa", r.get("displayname", f"HTTP {c}"))
+    t.step("display name set", r.get("displayname") == "e2e Alice", r.get("displayname", f"HTTP {c}"))
 
     # ① chapter comments
     alias = f"#omm-kap-{kap}:{SERVER}"
@@ -141,12 +141,12 @@ def run(kap):
     if room:
         st["rooms"]["kap"] = room
         txt = f"e2e test comment {stamp} (deleted by th test)"
-        ev = send(A, room, {"msgtype": "m.text", "body": txt, "de.ohmymarx.name": "e2e Rosa", "de.ohmymarx.page": 49})
+        ev = send(A, room, {"msgtype": "m.text", "body": txt, "de.ohmymarx.name": "e2e Alice", "de.ohmymarx.page": 49})
         t.step("A comments w MEW page 49", ev, ev or "")
         cb, _ = call("POST", f"/join/{enc(alias)}", {}, B)
         seen = [e for e in messages(B, room) if e["content"].get("body") == txt]
         t.step("B reads it (txt + page + name)", cb == 200 and seen and seen[0]["content"].get("de.ohmymarx.page") == 49
-               and seen[0]["content"].get("de.ohmymarx.name") == "e2e Rosa")
+               and seen[0]["content"].get("de.ohmymarx.name") == "e2e Alice")
         if ev:
             cr, _ = call("PUT", f"/rooms/{enc(room)}/redact/{enc(ev)}/omm{time.time_ns()}", {}, A)
             gone = not any(e["content"].get("body") == txt for e in messages(B, room))
@@ -169,16 +169,16 @@ def run(kap):
         t.step("B joins by code", c == 200 and r.get("room_id") == kroom, f"code {code_}")
         c, r = call("GET", f"/rooms/{enc(kroom)}/joined_members", None, A)
         names = {v.get("display_name") for v in r.get("joined", {}).values()}
-        t.step("members = both, w names", {"e2e Rosa", "e2e Juno"} <= names, " · ".join(sorted(n for n in names if n)))
+        t.step("members = both, w names", {"e2e Alice", "e2e Bob"} <= names, " · ".join(sorted(n for n in names if n)))
         c, r = call("GET", f"/rooms/{enc(kroom)}/state/m.room.name", None, B)
         t.step("B sees Kreis name", r.get("name") == kname, r.get("name", f"HTTP {c}"))
-        ma, mb = f"Hallo Juno, hier Rosa ({stamp})", f"Hallo Rosa, Juno liest mit ({stamp})"
-        send(A, kroom, {"msgtype": "m.text", "body": ma, "de.ohmymarx.name": "e2e Rosa"})
+        ma, mb = f"Hallo Bob, hier Alice ({stamp})", f"Hallo Alice, Bob liest mit ({stamp})"
+        send(A, kroom, {"msgtype": "m.text", "body": ma, "de.ohmymarx.name": "e2e Alice"})
         t.step("A ➡ B chat", any(e["content"].get("body") == ma for e in messages(B, kroom)))
-        send(B, kroom, {"msgtype": "m.text", "body": mb, "de.ohmymarx.name": "e2e Juno"})
+        send(B, kroom, {"msgtype": "m.text", "body": mb, "de.ohmymarx.name": "e2e Bob"})
         t.step("B ➡ A chat", any(e["content"].get("body") == mb for e in messages(A, kroom)))
         day = datetime.date.today().isoformat()
-        send(B, kroom, {"day": day, "de.ohmymarx.name": "e2e Juno"}, "de.ohmymarx.amen")
+        send(B, kroom, {"day": day, "de.ohmymarx.name": "e2e Bob"}, "de.ohmymarx.amen")
         t.step("B Amen ➡ A sees it", any(e["type"] == "de.ohmymarx.amen" and e["content"].get("day") == day
                                           for e in messages(A, kroom)), day)
 
