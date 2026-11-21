@@ -1,6 +1,12 @@
 # eos omm — resume log · newest on TOP
 _1 block per /eos · written by /eos § 3 · todo keeps 1 line: `▶ resume ➡ eos.md`_
 
+## 261121 13:35 · M8 status brief r1+r2: --show fix · matrix_e2e · night run · /eos
+- **at** · `translate_full --show` = 1 flagged row per lang (96db6e6) · `bin/matrix_e2e.py` 18/18 ✔️ vs live Synapse (a3b0ff6) · `at` job 62 Sun 11/22 03:00 = `bin/gpu_night.sh bin/translate.py --only a` · 50 py green · pushed · DEV unchanged (`0.13.0-dev.1121.0014`)
+- **▶ NEXT** · aftr 03:00: re `data/translate_night_1122.log` ➡ ✔️ + check_langs green ➡ commit `data/i18n` + assets ➡ `bin/deploy.sh` ➡ tick 🤖 box i todo 👀 🌙
+- **👤 🦠** · Element look at `#omm-kreis-pqv6wu:scagent.de` (login: `bin/matrix_e2e.py --login`) ➡ then `--cleanup` · tags retag = unbuilt feat ❓ (todo 🔵 "tags over-applied")
+- **⚠️** · e2e test accounts `@e2e-1121-1327-a/-b` + Kreis LIVE til `--cleanup` (state `priv/matrix_e2e.json`) · 63 q/lang stale on EN ref only ➡ deliberately not re-asked (could undo #248 hand fixes)
+
 ## 261121 · #260 rm dead Head enum (M8) · /eos
 - **at** · `Head` enum + `Feast.head` gone (f48aa08) · D-066 amended · unit + lint green · not deployed (0 behaviour change)
 - **▶ NEXT** · 🦠 👀 GPU slot Decide + qa_1121 r2 + D-068 box ➡ widget egg box on Black Friday 11/27
