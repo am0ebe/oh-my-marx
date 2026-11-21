@@ -67,7 +67,6 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
 - 🛍️ Fr 11/27 Black Friday: home-screen widget shows th 🛍️ egg left o "Marx verse" · only if it looks off ➡ screenshot (no box · render = `EggResTest`)
 
 ## 🔵
-- 🤖🩹 **matrix_e2e state per run**: API run overwrites `priv/matrix_e2e.json` ➡ an older uncleaned run loses its `--cleanup` handle ➡ `matrix_e2e_<stamp>.json` like `--app` (kb @1121 #151)
 - 🤖🧩 **shared app code** (#297): extract th 6 candidates i [app_lessons.md § 🧩](app_lessons.md) (`apptool` · `:selfupdate` · `app-version.gradle.kts` · `:testrig` · i18n kit · release notes) ➡ only when cali P1 copies them (2nd copy = extract)
 - 🤖🎨 **C-lane gaps** (done @1120: rank perks, feast emblems, 11 heads, initials, ¶, rtl / zh shots, gold swoosh · @1120 #229: 🥚 eggs replace heads in top bar, hero, quote card, D-066 · launcher egg dropped #241):
   - 🤖 ✂️ `launcherReset` (notify/UpdateWorker.kt) = DEV 1911 cleanup ➡ rm aftr th nxt stable
@@ -112,6 +111,7 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
 - 🤖 aft QA: rm page fotos (boox proc step 8)
 
 ## ✔️
+- ✔️ @1121 #305 🩹 matrix_e2e state per run: API run ➡ `priv/matrix_e2e_<stamp>.json` (no overwrite) · `--cleanup` / `--login` read all `matrix_e2e*.json` (legacy incl) · 55 py green
 - ✔️ @1121 #299 🔵 sweep (closed, not dropped): 🔑 cross-app insights board = done by [app_lessons.md](app_lessons.md) (#297, omm ➡ cali · nxt app adds its own) · 🦠🧪 "fon update banner on Today, 0.11.0" (#125) = superseded by th ⏳ updater fon tst (step 3 = notif + Today banner) · qa_1117 r4 "untriaged" = stale, triaged + built @1119
 - @1121 **Matrix e2e vs live Synapse** (#M8 @1121 · 🦠 ✔️ run) · `bin/matrix_e2e.py` = 18/18 ✔️ (token signup · chapter comment + delete · Lesekreis join/chat/Amen · guards) ➡ [status_1121.md § r2](status_1121.md)
   - [x] 🤖 18/18 ✔️ live @1121 13:27

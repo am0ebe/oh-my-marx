@@ -7,7 +7,7 @@ wh: makes 2 REAL test accounts `e2e-<MMDD-hhmm>-a/-b` + 1 Lesekreis room "e2e Kr
   ② Lesekreis: A creates (code) ➡ B joins by code ➡ members · name · chat both ways · B sends an Amen ➡ A sees it
   ③ guards: signup wo token / w a wrong token = refused · unknown room = soft fail
   ➡ table (step · ✔️/❌) · exit 1 if any ❌ · th Kreis + accounts STAY so 🦠 can look i Element ➡ then --cleanup
-  state (ids + test pws) ➡ priv/matrix_e2e.json (git-ignored) · token fr android/omm.properties, nvr printed
+  state (ids + test pws) ➡ priv/matrix_e2e_<MMDD-hhmm>.json (1 per run, git-ignored) · token fr android/omm.properties, nvr printed
 
 --app = th same, but th APP side is th real UI (android MatrixLiveTest, Robolectric, gradle -Plive): 📖 ch 8 Note + 👥 chip
   ➡ B reads it ➡ B replies ➡ 💬 sheet shows it ➡ hold = delete · Circle tab: found ➡ B joins ➡ chat both ways ➡ join B's by code
@@ -195,14 +195,16 @@ def run(kap):
 
 
 def save(st):
-    STATE.parent.mkdir(exist_ok=True)
-    STATE.write_text(json.dumps(st, indent=1))
-    STATE.chmod(0o600)
+    """1 file per run (matrix_e2e_<stamp>.json) ➡ a newer run nvr overwrites an older run's --cleanup handle"""
+    f = STATE.parent / f"matrix_e2e_{st['stamp']}.json"
+    f.parent.mkdir(exist_ok=True)
+    f.write_text(json.dumps(st, indent=1))
+    f.chmod(0o600)
 
 
 def state_files():
-    """this script's run + evy MatrixLiveTest run (--app) · each = 1 set o test accounts still live"""
-    return sorted(p for p in [STATE, *STATE.parent.glob("matrix_e2e_app_*.json")] if p.exists())
+    """evy API run + evy MatrixLiveTest run (--app) + legacy matrix_e2e.json · each = 1 set o test accounts still live"""
+    return sorted(STATE.parent.glob("matrix_e2e*.json"))
 
 
 def load_state():
