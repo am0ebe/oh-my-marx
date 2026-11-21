@@ -71,7 +71,7 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
   - 🤖 ✂️ `launcherReset` (notify/UpdateWorker.kt) = DEV 1911 cleanup ➡ rm aftr th nxt stable
   - 🖼️ Feast frames (design § 14.2.1) · 🔊 stamp thud sound (D-035).
 - ✂️ 🎨 Fable design pass over the 30 eggs (`bin/eggs.py`) — only if 🦠 wants more polish aftr the gallery ➡ 🐙 M8 cd decide (rec drop)
-- ‼️ ⭐🧪 **QA @1116** ➡ [qa_1116.md](qa_1116.md) — 14 ⚡ i 6 lanes (L3 share 1st) · 3 🎨 (➡ Fable spec aftr) · 2 🔍 · 💬 Qs ✔️ answered @1116 ➡ lanes built (D-039 · D-040) · Q8 revised = no Werkbank (D-041) · left: D3 joker · fon items
+- ‼️ ⭐🧪 **QA @1116** ➡ [qa_1116.md](qa_1116.md) — 14 ⚡ i 6 lanes (L3 share 1st) · 3 🎨 (➡ Fable spec aftr) · 2 🔍 · 💬 Qs ✔️ answered @1116 ➡ lanes built (D-039 · D-040) · Q8 revised = no Werkbank (D-041) · left: D3 joker · fon items (#13 cold-start ms · ✔️ #14 lib baseline profiles alr ship i th APK, #299)
 - ‼️ ⭐🧪 **QA sprint 0.9.x** — r1-r3 ✔️ · left ➡ [qa_1112.md](qa_1112.md) (🎨 10 design · 🔍 5 research · 💬 Qs) · ✔️ streak widget "shd show 2 at start" = superseded by D-045 (hero = streak only, stamps ➡ Stempeluhr) #290
   - later (needs design): 📖 real book look · ⏰ daily verse off-switch · name entry · 🔮 Marxoskop tiles · 🔓 Lesekreis unlock · 🏷️ quotes off-topic ➡ [notes.md § 🗃️](notes.md)
 - ‼️ 📨⭐ **user feedback** — 1st real users = gold · log (M · M2 · Jan · Mi) ➡ `feedback.md` + [notes.md § 🗃️](notes.md) · phase 1 ✔️ (page mail + GH issue forms + app ⚙️ btn)
