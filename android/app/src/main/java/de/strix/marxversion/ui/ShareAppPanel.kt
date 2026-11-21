@@ -103,7 +103,7 @@ private fun openTarget(ctx: Context, url: String) {
 /**
  * 📤 app share panel (QA @1112 #16) = web-style: social targets + copy link + system sheet + QR.
  * Use from any "share th app" btn: `if (show) ShareAppPanel(msg) { show = false }`
- * ⚠️ call sites (Cards.kt · MineScreen.kt) still use shareApp() ➡ switch i fan-in (other lanes' files)
+ * call sites: Cards.kt (card pill) · MineScreen.kt (⚙️ share) · plain shareApp() = only th "More apps" sheet below
  * look (qa_1116 L3 #5, 🦠 "bland ➡ more color, hover/click states", web ref): 3×2 tiles (brand logo i brand colour on a
  * 12 % tint · label) w ripple + press-shrink · Tonal "Copy link" (📳 + inline ✓ 1.2 s) + Tonal "More apps" (system sheet) · QR
  */
