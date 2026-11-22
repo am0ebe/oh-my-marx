@@ -35,3 +35,6 @@ _🔄 grows like refl ➡ distill: new lesson ➡ 1 line i § 📥 inbox w src �
 - 🔧 inside `android { defaultConfig {} }` a bare `extra` = th config's extras, not th project's ➡ `project.extra` `omm #327`
 - 🐚 bash: `trap 'rm -rf "$out"' EXIT` + `local out` i a fn + `set -u` = "unbound variable" at exit (locals gone) ➡ tmp dir leaks, exit ≠ 0 aftr a good deploy ➡ trap vars = globals `omm #327 apptool`
 - 📱 cable-free fon debug ➡ [fon_debug.md](fon_debug.md) `cali @1122`
+- 🐚 bash: a hook fn under `set -e` must end 0 on evy path · `x="…$([ -n "$dirty" ] && echo ' + uncommitted')"` = 1 on a clean tree ➡ deploy + ship died wo a word, found on th 1st clean-tree deploy (alw tstd dirty b4) ➡ write `[ -z … ] || echo` · apptool: `ERR` trap names fn + line · `tool/test_apptool.sh` runs clean + dirty tree `cali #334 · appkit D-003`
+- 🧪 tst th ship tool like code: fake `gradlew` + local folders + `file://` web = full deploy / ship i 8 s, no server ➡ dry-run on a clean tree b4 th 1st real deploy `cali #335`
+- 🐚 `rsync -t` skips a file w th same size + same second ➡ 2 uploads i 1 s keep th old `version.json` (only bites tsts, real deploys r ≥ 1 min apart) `cali #335`
