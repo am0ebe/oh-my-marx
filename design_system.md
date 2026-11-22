@@ -1,5 +1,5 @@
 # design system — omm ☭ 🎨
-_spec @1113 · docs only, ❌ code yet · SSOT 4 look + feel: rules ➡ tokens ➡ components ➡ per-screen deltas ➡ build lanes · § 14 addendum @1119 (celebrations · holidays · holy book · note · close, D-045..055)_
+_spec @1113 · built: L0 `ui/ds/` @1114 · § 14 C1-C7 @1120 · SSOT 4 look + feel: rules ➡ tokens ➡ components ➡ per-screen deltas ➡ build lanes · § 14 addendum @1119 (celebrations · holidays · holy book · note · close, D-045..055)_
 _y lives i [adr.md](adr.md) D-029..036 (💬 = open, 🤖 pick marked) · base = app @ `eb033ae` (`ui/Theme.kt` + 20 `ui/*.kt` + headless shots) · [qa_1112.md](qa_1112.md) § 🎨 qa-D1..D10 + r4 sweep #7_
 _contrast = WCAG 2.x, computed (text ≥ 4.5 · large txt / icon / border ≥ 3) · sizes = dp / sp_
 
@@ -13,7 +13,7 @@ _contrast = WCAG 2.x, computed (text ≥ 4.5 · large txt / icon / border ≥ 3)
 | D-033 | book font | a) system serif · b) bundle 1 (Literata / EB Garamond, +0.3-1 MB) | ✔️ **b 🧪** 🦠 @1114 (cmp shots, L6) · ✔️ built @1120 = **Literata** + justify + hyphens (arch D-058) |
 | D-034 | daily Amen fx | a) sickle swoosh evy day (now) · b) CheckPop daily, swoosh = rank-up / full card | ✔️ **b** + Hooked note 🦠 @1114 |
 | D-035 | sounds (qa-R1) | a) none · b) 3 tiny (page · stamp · badge) + ⚙️ switch, dflt off | ✔️ **b** 🦠 @1114 (L6) |
-| D-036 | Today above th fold (qa-D1) | a) compact hero + stamp tag · b) keep hero, shrink card · c) hero collapses on scroll | 💬 **a** · mockups ➡ `d036_all.png` |
+| D-036 | Today above th fold (qa-D1) | a) compact hero + stamp tag · b) keep hero, shrink card · c) hero collapses on scroll | ✔️ **A** (🦠 @1116, pre-ds hero · then D-045 hero = streak only) · mockups ➡ `d036_all.png` |
 - 👀 mockups 4 th 2 unsure picks (`DsChoicesTest`, test-only): `android/app/build/shots/d031_all.png` · `d036_all.png`
 - 🆕 **D-045..055** (celebrations · holidays · holy book · note · close) ➡ own table i § 14.0 (bottom)
 
@@ -207,7 +207,7 @@ _now 7 looks: `Button` · `OutlinedButton` · `TextButton` · `AssistChip` · `F
 - copy / saved feedback = 📳 + inline ✓ on th control 1.2 s — ❌ Toast
 
 ### notes (D-017 · D-020 stay)
-- `NoteBubble` = th "me" voice: ruler 3dp blue · blueTint · ✍ 16 · body-m · sits under its verse, indent 12
+- ⚠️ @1122: notes now = `NoteCard` margin-comment card (§ 14.4, D-054) · old spec: `NoteBubble` = th "me" voice: ruler 3dp blue · blueTint · ✍ 16 · body-m · sits under its verse, indent 12
 - editor: same bubble + cursor, tap outside = save · ★ = discard · Chip Choice "also post 2 reading room — as X"
 - marked verse = goldTint bg + 1.5dp gold frame r6 (kept) · open verse = 1dp `outline` frame · flash = 2 pulses then fade
 - oth ppl's notes on a page = CountChip "💬 N" i th running head ➡ comments sheet
@@ -232,7 +232,7 @@ _now 7 looks: `Button` · `OutlinedButton` · `TextButton` · `AssistChip` · `F
 - loader = 3 ink dots · error = Callout blue "offline — th book is on ur fon, keep reading"
 
 ### hero + streak (qa-D1 · D8 · D9 · D-004)
-- compact (D-036 a): row A = star 48 w number (display) + greeting / headline title-m · row B = 7 day dots 28 + Tag "☭ 3/10" (tap ➡ stamp card i My Capital)
+- ⚠️ @1122: not built — D-036 went A (pre-ds hero) + D-045 hero = streak only · old option (D-036 a): row A = star 48 w number (display) + greeting / headline title-m · row B = 7 day dots 28 + Tag "☭ 3/10" (tap ➡ stamp card i My Capital)
 - today's dot by time (qa-D8), no words, no "!":
   - morning = white 30 % + white ring · fr 14:00 = gold fill + ink letter · fr 19:00 = white disc + red inner ring + 2 pulses on enter, then still
   - done = gold ☭ stamp (any hour)
@@ -273,7 +273,7 @@ _now 7 looks: `Button` · `OutlinedButton` · `TextButton` · `AssistChip` · `F
 ## 10 · 📱 per-screen deltas (now ➡ spec)
 ### Today (`TodayScreen.kt` 🔥 · `Cards.kt` · `Feed.kt` · `Hooks.kt`)
 - budget 412×915 ➡ ~730 usable: hero 120 + 12 + card ~395 + action row 72 = ~599 ➡ ~130 left = plan entry row 56 ✔ · 360×760 ➡ 592 usable: 120 + 12 + 338 + 72 = 542 ✔
-- hero ➡ compact (§ 7) · stamp row + rank line move 2 My Capital (Tag stays)
+- hero ➡ ~~compact (§ 7)~~ streak only (D-045) · stamp row + rank line move 2 My Capital (Tag stays)
 - Amen btn leaves th card ➡ streak tap under th reading snippet (D-015, still unbuilt) = Primary-L w press edge
 - 5 CardActions ➡ ActionItem Circle (labels 11 ➡ 12sp) · hint line 11sp ➡ gone (o body-m, 1×)
 - plan block: white card + 3 nested boxes ➡ AccentPanel: head (disc · title ink · Tag "Day x / N") · Callout accent = Andacht · verses bare · Callout blue = "And today?" · Primary-L "Day done"
@@ -307,12 +307,12 @@ _now 7 looks: `Button` · `OutlinedButton` · `TextButton` · `AssistChip` · `F
 - legal 10-11sp ➡ ⓘ ➡ dialog
 
 ### My Capital (`MineScreen.kt` 🔥 · `OrdenView.kt`)
-- order: stats row (streak · days · chapters = display numbers + label-m) ➡ stamp card (full, moved fr Today) ➡ badges ➡ bookmarks + notes
+- order: stats row (streak · days · chapters = display numbers + label-m) ➡ ~~stamp card (full, moved fr Today)~~ LEVEL + bar (D-061, stamps i th Stempeluhr) ➡ badges ➡ bookmarks + notes
 - badges per § 7 · bookmarks / notes = rows w ref + 1-line snippet (serif) + my note bubble
 - About row = ActionItem Circle ×3 (as now, new tokens)
 
 ### ⚙️ Settings (`MineScreen.kt` 🔥 · `WheelPicker.kt` · `Changelog.kt` 🔥 = fan-in only)
-- 1 scroll o small print ➡ 4 Panels w title-s: Reading (size · voice · persona chips) · Reminders (time · switch) · Community (name · Mitlesen switch) · App (lang · Hooked 🔒 row · what's new · about)
+- 1 scroll o small print ➡ 4 Panels w title-s: Reading (size · voice · persona chips) · Reminders (time · switch) · Community (name · ~~Mitlesen switch~~ always on, D-020) · App (lang · Hooked 🔒 row · what's new · about)
 - evy row 56, hint = body-m under label, nvr 11sp · 🔒 Hooked row: progress ring + "3 more days" (D-026)
 - time wheel: Primary-S "OK" · selected line = redTint band
 
@@ -330,7 +330,7 @@ _now 7 looks: `Button` · `OutlinedButton` · `TextButton` · `AssistChip` · `F
 - page `scagent.de/oh-my-marx` = same paper / ink / red + serif heads ➡ own step at fan-in (page gen = `bin/ship.sh`, VPS = ops)
 
 ## 11 · 🛡️ guard (how it stays 1 system)
-- `ui/ds/` = th only place w raw `Color(0x` · `.sp` · `RoundedCornerShape(` · M3 `Button(` / `OutlinedButton(` / `AssistChip(` / `FilterChip(`
+- `ui/ds/` = th only place w raw `Color(0x` · `.sp` · `RoundedCornerShape(` · M3 `Button(` / `OutlinedButton(` / `TextButton(` / `AssistChip(` / `FilterChip(`
 - `DesignGuardTest` (JVM): greps `src/main/java` outside `ui/ds/` ➡ counts per pattern ⬄ baseline file · count may only go **down** (ratchet) ➡ evy lane lowers it, 0 at th end
 - exempt (listed i th tst): `Share.kt` cardBitmap · `Fx.kt` canvas · `notify/` RemoteViews · `Feast.kt` gradients
 - `ShotsTest` + `ds_gallery` shot (all 5 btn kinds × states · surfaces · voices · type scale) ➡ 1 img 2 eyeball th whole system (D-019)
@@ -365,7 +365,7 @@ _rules 4 evy lane: look only, ❌ behaviour change (except where a delta says so
 ---
 
 ## 14 · 🎉 addendum @1119 — celebrations · holidays · holy book · note · close
-_src: [qa_1117.md](qa_1117.md) 🎨 D6-D11 + r4 raw · 💬 Q1-Q4 · Q6 · Q7 · Q11 (all still blank ➡ folded into Ds below) · base = app @ `9751195` (L6-L8 + D-042/043 built) · docs only, ❌ code_
+_src: [qa_1117.md](qa_1117.md) 🎨 D6-D11 + r4 raw · 💬 Q1-Q4 · Q6 · Q7 · Q11 (all still blank ➡ folded into Ds below) · base = app @ `9751195` (L6-L8 + D-042/043 built) · built @1120 (C1-C7)_
 _🔑 1 idea: **th app is a print shop + a time clock** — u clock out (stamp), get promoted (seal), th calendar prints special editions (holidays), th book looks hand-set (holy book). Evy new piece uses th § 1-8 tokens, nothing new except named fx + assets_
 
 ### 14.0 · 💬 open choices (addendum) — "picks ok" = enough
@@ -377,8 +377,8 @@ _ordered by wh they unlock · D-042/043 (plan versioning · unlocks) + D-044 (db
 | D-047 | **star tier aftr a break** | a) back 2 0 (Duolingo, loss aversion) · b) best ever, nvr lost · c) **"Abschreibung"** — 1 tier down per missed day (fixed capital depreciates, doesn't vanish) | **c** (kind but still stakes · D-004) | C1 · C2 |
 | D-048 | **Day complete pane** (D10 · Q11) | a) stamp thumps onto th card + star counts N-1 ➡ N · b) 1 punchy line fr a pool (no quote nobody gets) · c) tomorrow = a teasing Q, drop "Verse arrives 07:30" · d) Marx head reacts | **a + b + c now · d = 🧪** aftr C3's head asset | C2 · C7 |
 | D-049 | **1 celebration system** (§ 14.1 ladder + queue) | ✔️ as written · change X | ✔️ **as written** | C2 |
-| D-050 | **rank-up = Beförderung** | a) **fullscreen RPG promotion** (badge flies in · Marx seals it "GENEHMIGT" · rays · perk line · share) · b) bigger dialog only · + perks: cosmetic table § 14.1.4 ✔️ / ❌ · rank as a D-043 unlock source y/n | **a + perks ✔️ + rank 3 opens 1 locked plan** | C2 |
-| D-051 | **holiday Marx head** (D8 · Q6) | a) **1 base head + accessory overlays** (hat · beard tint · prop) · b) full redraw per feast · c) emoji next 2 th head (now = "half-baked") | **a**, b only 4 3 tentpoles (🎄 · 🎃 · 🎂) | C3 |
+| D-050 | **rank-up = Beförderung** | a) **fullscreen RPG promotion** (badge flies in · Marx seals it "GENEHMIGT" · rays · perk line · share) · b) bigger dialog only · + perks: cosmetic table § 14.1.4 ✔️ / ❌ · rank as a D-043 unlock source y/n | **a + perks ✔️ + rank 3 opens 1 locked plan** · GENEHMIGT seal ➡ LEVEL N ▲ (D-060) | C2 |
+| D-051 | **holiday Marx head** (D8 · Q6) | a) **1 base head + accessory overlays** (hat · beard tint · prop) · b) full redraw per feast · c) emoji next 2 th head (now = "half-baked") | **a**, b only 4 3 tentpoles (🎄 · 🎃 · 🎂) · ❌ superseded ➡ 30 eggs (D-066) | C3 |
 | D-052 | **feast calendar** (R4 gaps) | a) **all 18 new** (§ 14.2.3) · b) labour history only, no fun days · c) 🦠 picks fr th sheet | **a** (gaps ≤ ~4 w) · c stays possible on th sheet | C3 |
 | D-053 | **holy-book devices** (D11) | a) ⚡ set only · b) **⚡ + 🟡** · c) all incl 🧪 (grain · margin glosses) | **b** · ❌ margin ¶ numbers (r3: "metadata, usr no need") | C4 |
 | D-054 | **note look** (D7 · Q4) | a) yellow sticky + 📌 (⚠️ = Hooked's yellow ➡ voice clash) · b) **margin-comment card** (tail · initial disc · name + time · ✎) · c) keep ruler, only new bg | **b** | C5 ➡ C4 |
@@ -519,7 +519,7 @@ _now: `Feast.kt` 12 feasts = gradient + emoji next 2 th greeting + verse · Marx
 #### 14.2.1 4 slots per feast — evy feast fills ≥ 2
 | slot | wh | rule |
 |------|----|------|
-| 🧔 **head** | top bar · share card · widget head | 1 base head + overlay layers (D-051 a) · same line weight + palette as `ic_launcher_fg` |
+| 🧔 **head** | top bar · share card · widget head | ~~1 base head + overlay layers (D-051 a)~~ ➡ 30 feast eggs (D-066, `bin/eggs.py`) · same line weight + palette as `ic_launcher_fg` |
 | ⭐ **emblem** | hero star slot (92) | stays ★ unless th feast owns a symbol (♀ · 🎄 · 🎃) · number alw inside |
 | 🖼️ **frame** | hero border + corners | 1 ornament band (garland · bunting · cobweb · fuse) · ≤ 12dp, outside th txt |
 | 🎨 **gradient + greet + verse** | hero | exists, keep |
@@ -584,14 +584,14 @@ was: 5.5 ➡ 14.9 = 4 months empty · now: longest gap ~4 w (5.5 ➡ 1.6 · 15.1
 _alr: drop cap 📖 + 📜 (L6) · red rubric heads · folio "— 50 —" · page break hairline · ❦ betw sections (§ 7) · spine shadow_
 | # | device | wh | where | cost |
 |---|--------|----|-------|------|
-| 1 | **illuminated initial** | chapter's 1st letter: 4 lines, red letter on a goldTint square, ink hairline frame, tiny vine | 📖 📜 | 🟡 (draw, no asset) |
+| 1 | **illuminated initial** | ~~4 lines, red letter on a goldTint square, ink hairline frame, tiny vine~~ ➡ built as a bare red letter, 3 lines (chapter) / 2 (section), no box (D-067 · 🦠 #241) | 📖 📜 | ✔️ |
 | 2 | **section initial** | evy section's 1st letter: 2-line red drop cap, no box | 📖 📜 | ⚡ (DropCapText alr) |
-| 3 | **red pilcrow ¶** | small red ¶ starts each paragraph instead o an indent | 📜 | ⚡ |
+| 3 | ~~**red pilcrow ¶**~~ | ❌ removed (D-053 · #241: no ¶ i 📜) | 📜 | — |
 | 4 | **incipit** | above th chapter title, book-meta red: "HIER BEGINNT DAS ERSTE KAPITEL" · number i Roman (Kapitel I) | 📖 📜 | ⚡ |
 | 5 | **headpiece** | printer's band ❦ ✥ ❦ ✥ ❦ over th chapter title | 📖 📜 | ⚡ |
 | 6 | **tailpiece + seal** | ☙ vignette at chapter end · chapter fully read ➡ red wax ☭ seal presses onto it (T2b) | 📖 📜 | 🟡 |
 | 7 | **running head** | small caps: verso "DAS KAPITAL" · recto chapter title (alternates by page) | 📖 | ⚡ |
-| 8 | **catchword** (Kustode) | 1st word o th nxt page, bottom end ➡ old-book device + a free page-turn teaser | 📖 | ⚡ |
+| 8 | ~~**catchword** (Kustode)~~ | ❌ removed (`ReadScreen.kt` "catchword rm'd") | 📖 | — |
 | 9 | **ribbon bookmark** | 🔖 page = red silk ribbon hangs fr th top edge, swallowtail end (replaces th icon on th page) | 📖 | 🟡 |
 | 10 | **gilt edge** | 2dp gold gradient on th page's outer edge | 📖 | 🟡 |
 | 11 | **explicit + colophon** | book end: "HIER ENDET DER ERSTE BAND" + colophon (typeface · "gesetzt auf der Pseudopod" · rank-6 names, § 14.1.4) | 📖 📜 | ⚡ |
@@ -617,7 +617,7 @@ _alr: drop cap 📖 + 📜 (L6) · red rubric heads · folio "— 50 —" · pag
 │               — 49 —                 │▒  folio (alr)
 └──────────────────────────────────────┘▒
 ```
-- 13 langs: Roman numerals + incipit = DE/EN/… via tr() · ar · ur = mirrored (ribbon + gilt edge on th oth side) · zh · hi · bn = no drop cap (script has no caps) ➡ initial box w 1st glyph, 2 lines
+- 13 langs: Roman numerals + incipit = DE/EN/… via tr() · ar · ur = mirrored (ribbon + gilt edge on th oth side) · ar · ur · hi · bn = no drop cap, plain ¶ (D-064: joined / stacked letters break when split) · zh = same bare red drop cap (a glyph stands alone)
 
 ### 14.4 · ✍️ note = comment card (D-054 · D7 · r2)
 _r2: "change bg + icon + small ruler so we see it's a note · look how other apps do comments" · "drop th star there" · tap away = save only, verse menu stays_
@@ -649,7 +649,7 @@ _now (V1): ★ red, 64 % o a 36 circle (red 10 % + 30 % hairline), optically lif
 | V7 | red wax-seal blob w embossed ★ | ties 2 stamps + seals | busy at 36 |
 | V8 | V1 + ★ spins 72° on press (spring) | playful, 0 cost at rest | motion only, same static look |
 - sheet = 8 variants × 3 ctx (MarxDialog on paperHi · sheet · hero gradient) + 1 dark row ➡ `close_sheet.png` · 🦠 picks ➡ `CloseStar` dflt changes, 1 line
-- ✔️ C6 built @1120: `CloseStar(variant = CloseVariant.Vn)` (dflt V1, app look unchanged) · all off ic_star (tint · DstOut hole · Clear ✕) · V5 + V7 stay red on light tints (hero) · sheet ➡ [img/close_sheet.png](img/close_sheet.png) · `CloseSheetTest` (click smoke + `-Pshots` sheet)
+- ✔️ C6 built @1120: `CloseStar(variant = CloseVariant.Vn)` (dflt V1 @1120 ➡ V2 since D-055) · all off ic_star (tint · DstOut hole · Clear ✕) · V5 + V7 stay red on light tints (hero) · sheet ➡ [img/close_sheet.png](img/close_sheet.png) · `CloseSheetTest` (click smoke + `-Pshots` sheet)
 
 ### 14.6 · 🏗️ lanes 4 Opus — disjoint files (§ 12 rules apply: look only unless th lane says · tr() · b4 + aft shots · tsts green · guard ratchet down · ❌ bump / deploy)
 _lane ids = **C1-C7** (§ 12 uses L0-L6, qa uses L1-L8 ➡ no clash)_
