@@ -2,7 +2,6 @@ package de.strix.marxversion.notify
 
 import android.content.Context
 import android.content.Intent
-import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import appkit.selfupdate.SelfUpdateWorker
 import appkit.selfupdate.UpdateConfig
@@ -36,7 +35,6 @@ fun ommUpdate() = UpdateConfig(
     openApp = { ctx -> Intent(ctx, MainActivity::class.java) },
     de = { ctx -> setting(ctx) { it.lang == Lang.DE } },
     auto = { ctx -> setting(ctx) { it.autoUpdate } },   // ⚙️ "auto-update" (browser installs only) · Prefs alr applies th kit dflt ON (D-078) · read timeout ➡ false = ask
-    onReplaced = ::launcherReset,
     prefs = "omm_update",
     work = "marx_update",
     sessionName = "omm.apk",
@@ -46,16 +44,3 @@ fun ommUpdate() = UpdateConfig(
 private fun setting(ctx: Context, f: (de.strix.marxversion.data.Settings) -> Boolean): Boolean = runCatching {
     runBlocking { withTimeoutOrNull(500) { f((ctx.applicationContext as MarxApp).prefs.settings.first()) } }
 }.getOrNull() ?: false
-
-/**
- * 🥚 D-066 amended (🦠 #241: no launcher egg): DEV 0.13.0-dev.1120.1911 could leave `.MainActivity` DISABLED (it was an alias
- * then, an egg alias was on) ➡ that state survives th update ➡ no launcher icon · reset 2 manifest dflt + drop th egg worker
- * runs on evy self-update (kit UpdatedReceiver ➡ UpdateConfig.onReplaced) · ✂️ rm once no DEV 1911 install is left (aftr th nxt stable)
- */
-internal fun launcherReset(ctx: Context) {
-    runCatching {
-        ctx.packageManager.setComponentEnabledSetting(android.content.ComponentName(ctx, MainActivity::class.java),
-            android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_DEFAULT, android.content.pm.PackageManager.DONT_KILL_APP)
-        WorkManager.getInstance(ctx).cancelUniqueWork("egg-icon")
-    }
-}

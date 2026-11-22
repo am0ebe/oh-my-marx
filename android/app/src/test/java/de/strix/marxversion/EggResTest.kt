@@ -1,11 +1,8 @@
 package de.strix.marxversion
 
-import android.content.ComponentName
-import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
 import androidx.test.core.app.ApplicationProvider
 import de.strix.marxversion.logic.Feast
-import de.strix.marxversion.notify.launcherReset
 import de.strix.marxversion.notify.widgetHead
 import de.strix.marxversion.ui.ds.EggRes
 import de.strix.marxversion.ui.ds.eggBitmap
@@ -16,7 +13,7 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
-/** 🥚 D-066 (amended #241: in-app only, launcher icon stays plain) · all 30 eggs inflate · DEV 1911 leftover reset */
+/** 🥚 D-066 (amended #241: in-app only, launcher icon stays plain) · all 30 eggs inflate */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [35], application = android.app.Application::class)
 class EggResTest {
@@ -38,13 +35,5 @@ class EggResTest {
         }
         assertEquals("☭ Marx verse  ·  🔥 3", widgetHead(null, "Marx verse", 3))
         assertEquals("Marx verse", widgetHead(Feast.GEBURTSTAG, "Marx verse", 0))
-    }
-
-    /** DEV 1911 could leave th launcher activity disabled ➡ th update receiver puts it back */
-    @Test fun updateReEnablesTheLauncher() {
-        val c = ComponentName(ctx, MainActivity::class.java)
-        ctx.packageManager.setComponentEnabledSetting(c, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP)
-        launcherReset(ctx)
-        assertEquals(PackageManager.COMPONENT_ENABLED_STATE_DEFAULT, ctx.packageManager.getComponentEnabledSetting(c))
     }
 }

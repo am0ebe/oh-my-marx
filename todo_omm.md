@@ -60,8 +60,8 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
 
 ## 🔵
 - 🤖🧪 **apptool bash tst** (kit, 2 apps hit live-only `set -e/-u` bugs @1122: cali page hook · omm EXIT trap) ➡ `PUBLISH_HOST=""` + `-n` dry-run deploy/ship i a tmp repo, exit 0 + files there · lives i pr/appkit (cali 🔵 hs th same) ➡ 1 owner
-- 🤖🎨 **C-lane gaps** (done @1120: rank perks, feast emblems, 11 heads, initials, ¶, rtl / zh shots, gold swoosh · @1120 #229: 🥚 eggs replace heads in top bar, hero, quote card, D-066 · launcher egg dropped #241):
-  - 🤖 ✂️ `launcherReset` (notify/UpdateWorker.kt) = DEV 1911 cleanup ➡ rm aftr th nxt stable
+  - ⏳ @1122 22:20 oth crew (cali) writing `pr/appkit/tool/test_apptool.sh` (untracked, live) ➡ owner = cali · omm: aftr it lands ➡ subtree pull + run it once
+- 🤖🎨 **C-lane gaps** (done @1120: rank perks, feast emblems, 11 heads, initials, ¶, rtl / zh shots, gold swoosh · @1120 #229: 🥚 eggs replace heads in top bar, hero, quote card, D-066 · launcher egg dropped #241 · `launcherReset` rm @1122 #335, D-066 amended):
   - 🖼️ Feast frames (design § 14.2.1) · 🔊 stamp thud sound (D-035).
 - 🦠 ‼️ ⭐🧪 **QA @1116** ➡ [qa_1116.md](qa_1116.md) — 14 ⚡ i 6 lanes (L3 share 1st) · 3 🎨 (➡ Fable spec aftr) · 2 🔍 · 💬 Qs ✔️ answered @1116 ➡ lanes built (D-039 · D-040) · Q8 revised = no Werkbank (D-041) · left: D3 joker · fon items (#13 cold-start ms · ✔️ #14 lib baseline profiles alr ship i th APK, #299)
 - 🦠 ‼️ ⭐🧪 **QA sprint 0.9.x** — r1-r3 ✔️ · left ➡ [qa_1112.md](qa_1112.md) (🎨 10 design · ✔️ 🔍 5 research closed @1121 #299 · 💬 Qs) · ✔️ streak widget "shd show 2 at start" = superseded by D-045 (hero = streak only, stamps ➡ Stempeluhr) #290
