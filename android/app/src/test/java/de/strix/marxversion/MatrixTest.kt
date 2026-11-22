@@ -152,6 +152,38 @@ class MatrixTest {
         assertTrue(seen.single().path.endsWith("/messages?dir=b&limit=300"))
     }
 
+    /** night F5: a flooder's 300 msgs can't hide older real comments ➡ page back via `end` til th room's start */
+    @Test fun commentPageFollowsEndTokenToTheStart() {
+        routes["$P/rooms/"] = { r ->
+            when {
+                "from=t1" in r.path -> 200 to JSONObject().put("chunk", JSONArray(listOf(msg("e1", "@a:scagent.de", "real", page = 9)))).put("end", "t2")
+                "from=t2" in r.path -> 200 to JSONObject().put("chunk", JSONArray()).put("end", "t2")   // empty ➡ start reached (some servers echo `end`)
+                else -> 200 to JSONObject().put("chunk", JSONArray(listOf(msg("e3", "@spam:x.org", "spam"), msg("e2", "@spam:x.org", "spam")))).put("end", "t1")
+            }
+        }
+        val p0 = runBlocking { Matrix.commentPage(S, "!r:scagent.de") }
+        assertEquals(listOf("e2", "e3"), p0.list.map { it.id }); assertEquals("t1", p0.older)
+        val p1 = runBlocking { Matrix.commentPage(S, "!r:scagent.de", p0.older) }
+        assertEquals(listOf("e1"), p1.list.map { it.id }); assertEquals("t2", p1.older)
+        assertTrue(seen.last().path.endsWith("/messages?dir=b&limit=300&from=t1"))
+        val p2 = runBlocking { Matrix.commentPage(S, "!r:scagent.de", p1.older) }
+        assertTrue(p2.list.isEmpty()); assertNull(p2.older)                                  // no more ➡ sheet hides th btn
+        routes["$P/rooms/"] = { 200 to JSONObject().put("chunk", JSONArray(listOf(msg("e9", "@a:scagent.de", "x")))) }
+        assertNull(runBlocking { Matrix.commentPage(S, "!r:scagent.de") }.older)            // no `end` at all = start o th room
+        routes["$P/rooms/"] = { 500 to JSONObject() }
+        assertEquals("t1", runBlocking { Matrix.commentPage(S, "!r:scagent.de", "t1") }.older)  // blip keeps th token
+    }
+
+    /** refresh aftr post / delete: newest page wins, older pages stay, just-redacted id goes */
+    @Test fun mergeKeepsOlderPagesDropsGone() {
+        fun c(id: String, ts: Long) = Matrix.Comment(id, "@a:scagent.de", "a", id, ts, 1)
+        val old = listOf(c("o1", 10), c("o2", 20), c("n1", 30), c("n2", 40))
+        val fresh = listOf(c("n1", 30), c("n3", 50))                  // n2 redacted on th server
+        assertEquals(listOf("o1", "o2", "n1", "n3"), Matrix.mergeComments(old, fresh).map { it.id })
+        assertEquals(listOf("o1", "n1", "n3"), Matrix.mergeComments(old, fresh, gone = setOf("o2")).map { it.id })
+        assertEquals(old, Matrix.mergeComments(old, emptyList()))      // failed refresh ➡ keep wh we had
+    }
+
     @Test fun timelineKeepsChatAndAmensDropsRest() {
         messages(
             msg("e4", "@b:scagent.de", "hi"),

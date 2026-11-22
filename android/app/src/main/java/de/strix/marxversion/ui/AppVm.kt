@@ -108,7 +108,30 @@ class AppVm(app: Application) : AndroidViewModel(app) {
     val mxName: StateFlow<String?> = marx.prefs.mxName.stateIn(viewModelScope, SharingStarted.Eagerly, null)
     /** chapter ➡ its comments (oldest 1st) */
     val comments = MutableStateFlow<Map<String, List<Matrix.Comment>>>(emptyMap())
+    /** chapter ➡ token 4 th nxt page back (null = all loaded) · night F5: sheet's "older" btn */
+    val commentsOlder = MutableStateFlow<Map<String, String?>>(emptyMap())
+    private val paged = mutableSetOf<String>()   // chapters th user paged back i ➡ a refresh keeps th deepest token
     private val rooms = mutableMapOf<String, String>()
+
+    /** newest page ➡ merged w older pages alr loaded · `gone` = just redacted */
+    private suspend fun refreshComments(s: Matrix.Session, r: String, kap: String, gone: Set<String> = emptySet()) {
+        val p = Matrix.commentPage(s, r)
+        comments.value = comments.value + (kap to Matrix.mergeComments(comments.value[kap].orEmpty(), p.list, gone))
+        if (kap !in paged) commentsOlder.value = commentsOlder.value + (kap to p.older)
+    }
+
+    /** 📜 1 page further back (300 msgs) · prepended, dupes dropped */
+    fun loadOlderComments(kap: String) = viewModelScope.launch {
+        val from = commentsOlder.value[kap] ?: return@launch
+        val s = session() ?: return@launch
+        val r = room(s, kap) ?: return@launch
+        val p = Matrix.commentPage(s, r, from)
+        val have = comments.value[kap].orEmpty()
+        val ids = have.mapTo(HashSet()) { it.id }
+        paged += kap
+        comments.value = comments.value + (kap to p.list.filter { it.id !in ids } + have)
+        commentsOlder.value = commentsOlder.value + (kap to p.older)
+    }
 
     /** existing account · o (name given) make one now */
     private var mxChecked = false
@@ -135,7 +158,7 @@ class AppVm(app: Application) : AndroidViewModel(app) {
         if (!on || !commentsAvailable) return@launch
         val s = session() ?: return@launch
         val r = room(s, kap) ?: return@launch
-        comments.value = comments.value + (kap to Matrix.comments(s, r))
+        refreshComments(s, r, kap)
     }
 
     /** post ➡ done(ok) · 1st post w a name ➡ makes th account */
@@ -143,14 +166,14 @@ class AppVm(app: Application) : AndroidViewModel(app) {
         val s = session(name)
         val r = s?.let { room(it, kap) }
         val ok = s != null && r != null && Matrix.send(s, r, text.trim(), page, mxName.value ?: name ?: "")
-        if (ok) comments.value = comments.value + (kap to Matrix.comments(s!!, r!!))
+        if (ok) refreshComments(s!!, r!!, kap)
         done(ok)
     }
 
     fun deleteComment(kap: String, id: String) = viewModelScope.launch {
         val s = session() ?: return@launch
         val r = room(s, kap) ?: return@launch
-        if (Matrix.redact(s, r, id)) comments.value = comments.value + (kap to Matrix.comments(s, r))
+        if (Matrix.redact(s, r, id)) refreshComments(s, r, kap, gone = setOf(id))
     }
 
     /** 1 random comrade name per app run = th prefill evywhere a name is asked (⚙️ · comments · Kreise) */
@@ -177,7 +200,7 @@ class AppVm(app: Application) : AndroidViewModel(app) {
         Matrix.setName(s, "")   // best effort: blank th profile name i evy room b4 leaving
         if (!Matrix.deactivate(s, pw)) return@launch done(false)
         marx.prefs.forgetMx()
-        rooms.clear(); comments.value = emptyMap(); kreisMembers.value = emptyMap(); kreisTimeline.value = emptyMap()
+        rooms.clear(); comments.value = emptyMap(); commentsOlder.value = emptyMap(); paged.clear(); kreisMembers.value = emptyMap(); kreisTimeline.value = emptyMap()
         done(true)
     }
 

@@ -50,6 +50,7 @@ import de.strix.marxversion.ui.ds.NoteCard
 import de.strix.marxversion.ui.ds.OtherBubble
 import de.strix.marxversion.ui.ds.Primary
 import de.strix.marxversion.ui.ds.Space
+import de.strix.marxversion.ui.ds.TextBtn
 
 /**
  * 💬 comments on 1 book page (bottom sheet) · Matrix room o th chapter, filtered 2 this MEW page.
@@ -74,6 +75,7 @@ fun comradeName(rnd: kotlin.random.Random = kotlin.random.Random): String =
 @Composable
 fun CommentsSheet(vm: AppVm, kap: String, page: Int?, onDismiss: () -> Unit) {
     val all by vm.comments.collectAsStateWithLifecycle()
+    val older by vm.commentsOlder.collectAsStateWithLifecycle()
     val name by vm.mxName.collectAsStateWithLifecycle()
     val me by produceState<String?>(null, name) { value = vm.myUserId() }
     val list = all[kap].orEmpty().filter { it.page == page }
@@ -94,6 +96,7 @@ fun CommentsSheet(vm: AppVm, kap: String, page: Int?, onDismiss: () -> Unit) {
                 vm.postComment(kap, page, draft, name ?: newName) { ok -> busy = false; if (ok) draft = "" else failed = true }
             },
             onDelete = { vm.deleteComment(kap, it) }, onClose = onDismiss,
+            onOlder = if (older[kap] != null) ({ vm.loadOlderComments(kap) }) else null,
         )
     }
 }
@@ -108,6 +111,7 @@ fun CommentsSheet(vm: AppVm, kap: String, page: Int?, onDismiss: () -> Unit) {
 fun CommentsPanel(
     page: Int?, list: List<Matrix.Comment>, me: String?, writer: String, draft: String, onDraft: (String) -> Unit,
     canSend: Boolean, busy: Boolean, failed: Boolean, onSend: () -> Unit, onDelete: (String) -> Unit, onClose: () -> Unit,
+    onOlder: (() -> Unit)? = null,   // night F5: room hs more back ➡ "older comments" on top · null = all loaded
 ) {
     val typo = MaterialTheme.typography
     var legal by remember { mutableStateOf(false) }
@@ -122,6 +126,10 @@ fun CommentsPanel(
         if (list.isEmpty()) Text(tr("Was denkst du? Frag, widersprich, erzähl aus deinem Alltag.", "What do you think? Ask, disagree, tell from your own life."),
             style = typo.bodyMedium, color = Ds.inkMuted, modifier = Modifier.padding(top = Space.xs))
         LazyColumn(Modifier.fillMaxWidth().heightIn(max = 420.dp).padding(vertical = Space.m), verticalArrangement = Arrangement.spacedBy(Space.s)) {
+            // oldest on top ➡ th btn sits above it · loads 1 chapter page back (300 msgs) · this page's older ones land above th list
+            if (onOlder != null) item(key = "older") {
+                TextBtn(tr("↑ Ältere Kommentare laden", "↑ Load older comments"), onOlder, Modifier.fillMaxWidth())
+            }
             items(list, key = { it.id }) { c ->
                 val mine = c.sender == me
                 val time = DateUtils.getRelativeTimeSpanString(c.ts).toString()

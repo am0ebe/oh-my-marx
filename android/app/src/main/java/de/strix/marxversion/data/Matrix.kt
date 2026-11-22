@@ -83,13 +83,22 @@ object Matrix {
         }.getOrDefault(false)
     }
 
-    /** last ~300 msgs o a chapter room, oldest 1st · redacted ones (empty content) dropped */
-    suspend fun comments(s: Session, room: String): List<Comment> = withContext(Dispatchers.IO) {
+    /** 1 page o a chapter room: comments oldest 1st + `older` = token 4 th nxt page back (null = start o th room reached) */
+    data class CommentPage(val list: List<Comment>, val older: String?)
+
+    /** latest ~300 msgs o a chapter room, oldest 1st · redacted ones (empty content) dropped */
+    suspend fun comments(s: Session, room: String): List<Comment> = commentPage(s, room).list
+
+    /**
+     * 📜 night F5: 1 page back fr `from` (null = newest) · a flooder can't hide older real comments 4ever: th sheet pages on
+     * `older` = /messages `end` · absent o an empty chunk = no more (spec: `end` omitted at th start o th room)
+     */
+    suspend fun commentPage(s: Session, room: String, from: String? = null, limit: Int = 300): CommentPage = withContext(Dispatchers.IO) {
         runCatching {
-            val (code, r) = call("GET", "/rooms/${enc(room)}/messages?dir=b&limit=300", null, s.token)
-            if (code != 200) return@runCatching emptyList()
+            val (code, r) = call("GET", "/rooms/${enc(room)}/messages?dir=b&limit=$limit" + (from?.let { "&from=${enc(it)}" } ?: ""), null, s.token)
+            if (code != 200) return@runCatching CommentPage(emptyList(), from)   // blip ➡ keep th token, try again later
             val chunk = r.getJSONArray("chunk")
-            (0 until chunk.length()).map { chunk.getJSONObject(it) }
+            val list = (0 until chunk.length()).map { chunk.getJSONObject(it) }
                 .filter { it.optString("type") == "m.room.message" && it.optJSONObject("content")?.has("body") == true }
                 .map { e ->
                     val c = e.getJSONObject("content")
@@ -98,7 +107,18 @@ object Matrix {
                         c.getString("body"), e.optLong("origin_server_ts"), if (c.has("de.ohmymarx.page")) c.optInt("de.ohmymarx.page") else null)
                 }
                 .reversed()
-        }.getOrDefault(emptyList())
+            CommentPage(list, r.optString("end").takeIf { it.isNotEmpty() && chunk.length() > 0 && it != from })
+        }.getOrDefault(CommentPage(emptyList(), from))
+    }
+
+    /**
+     * fresh newest page + wh was alr loaded further back (older pages stay aftr a post / delete refresh) · fresh wins by id
+     * `gone` = ids 2 drop (just redacted, may sit i an older page th refresh didn't re-read)
+     */
+    fun mergeComments(old: List<Comment>, fresh: List<Comment>, gone: Set<String> = emptySet()): List<Comment> {
+        val cut = fresh.minOfOrNull { it.ts } ?: Long.MAX_VALUE
+        val ids = fresh.mapTo(HashSet()) { it.id }
+        return (old.filter { it.ts < cut && it.id !in ids } + fresh).filter { it.id !in gone }
     }
 
     // ── 👥 Kreise = 1 Matrix room each, joined by a 6-char code (= th room alias #omm-kreis-<code>) ──
