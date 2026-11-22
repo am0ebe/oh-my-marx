@@ -1,6 +1,12 @@
 # eos omm — resume log · newest on TOP
 _1 block per /eos · written by /eos § 3 · todo keeps 1 line: `▶ resume ➡ eos.md`_
 
+## 261122 16:20 · #311 Matrix fixes + #325 stable v0.13.0 (M8)
+- **at** · stable **v0.13.0** live (page · version.json · GH + Forgejo, 90a54e3) · DEV `0.14.0-dev.1122.1615` · D-076 delete acct = redact evy own msg b4 deactivate · D-077 real id aftr oth ppl's names · live `--app` 13/13 vs continuwuity · 148 unit + lint + py green · deploylog row ✔️
+- **▶ NEXT** · 🦠 updater tst on fon (0.12.0 browser APK ➡ Today banner ➡ Install) ➡ then Mo 11/23 Matrix sesh = todo 📆 (primer + agenda)
+- **👤 🦠** · D-076 dialog wording · D-077 grey id look (both 👀, Proposed but shipped) · F7 `allowBackup` ❓ · F16 chip fit ❓ · ur Changelog line odd ("Marx presented hidden", ollama)
+- **⚠️** · Element sign-up w reg token on continuwuity = untstd (fallback `!admin users create-user`) · rollback can't downgrade fons that alr updated · F5/F6/F8 still open (night_1122.md)
+
 ## 261122 04:xx · night #308 (M8): review + night data
 - **at** · F1 dead-token re-register (D-075) · gpu_night `.py` fix + 2 tsts · retag + translate + build `tw` all committed · 22 drift 🔧 (adr · design_system · SERVICE.md) · 146 unit + 59 py + lint green · pushed · **DEV unchanged** (no deploy rule tonight)
 - **▶ NEXT** · 1 DEV deploy (`bin/deploy.sh`) = F1 + i18n + `tw` chips + delete account ➡ tick th 2 🌙 🤖 boxes i todo 👀

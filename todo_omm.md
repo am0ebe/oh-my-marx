@@ -27,9 +27,6 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
 
 ## 👀
 ### 🌙 night run (#248 · 🦠 ✔️ @1121)
-- **translate re-ask scheduled** `at` job 62 · Sun 11/22 03:00 · `bin/gpu_night.sh bin/translate.py --only a` (3 src-fixed Andachten × 11 langs, waits if GPU busy, gives up 08:00) ➡ log `data/translate_night_1122.log`
-  - [x] 🤖 log ✔️ + check_langs green ➡ commit `data/i18n` + assets ➡ deploy DEV (#311: DEV `0.13.0-dev.1122.1353`)
-  - ⚠️ 63 q/lang stale on EN ref only (DE same) ➡ left out, re-ask could undo #248 hand fixes
 - **🏷️ tags retag scheduled** (M8 @1121 · D-071) `at` job 63 · Sun 11/22 03:00 · `bin/gpu_night.sh bin/retag.py` (1867 Verse, ~1 h) ➡ log `data/retag_night_1122.log` ➡ `data/tags.jsonl`
   - built: `bin/retag.py` (0-2 topics ABOUT, weight 1-3) ➡ build.py `tw` ➡ Marxoskop chip pool = weight ≥ 2 · < 30 ➡ ≥ 1 · no data ➡ old `t` (= today) · `t` + plans untouched (D-042) · tsts: `Retag` 3 py · `marxoskopPoolPrefersAboutTopicsWithGuard`
   - [x] 🤖 `bin/retag.py --stats` all ✔️ (≥ 30/chip) ➡ `bin/build.py` (only `tw` added i verses.json) ➡ unit green ➡ commit `data/tags.jsonl` + assets ➡ deploy DEV (w th translate box above = 1 deploy)
@@ -37,8 +34,6 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
   - 🌙 #308: retag ✔️ (af467a1) · translate died 644 ➡ wrapper fixed (69ad337) ➡ re-run ✔️ (5825b09) · build `tw` ✔️ (9dab3b6) · 146 unit green · both boxes: only th DEV deploy left
   - [ ] 🦠 1 min: `tail -40 data/retag_night_1122.log` ➡ quotes about their chip? (rec ✔️ if ≥ 2/3 fit · was ≈ random · #308 read ≈ ½, F16)
 ### 🐙 M8 cd decide
-- ✔️ 12 Qs applied @1121 (#307, 🦠 via M8 "ok all") ➡ D-073 + D-074 · ✔️ below · left = 1 Q added aftr th batch he saw (#299 19:19):
-  - D-015 "Amen only under th snippet" nvr built + D-039 @1116 kept th quote-card Amen (✓ pop) ➡ mark D-015 Superseded by D-039, 0 code (#299) ❓
 ### 🏔️ v1
 - **💬 Matrix v1 — wh's left** (aftr th in-app tst, 1 list · 🤖 = can build · ❓ = 🦠 picks)
   - ✔️ 🤖 **delete my account** built @1121 (D-072 Proposed): ⚙️ under Name ➡ "Delete account" ➡ confirm ➡ **redact evy own msg (D-076)** ➡ Matrix deactivate ➡ app forgets account + Kreise · DEV `0.13.0-dev.1122.1353`
@@ -109,6 +104,11 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
 - 🤖 aft QA: rm page fotos (boox proc step 8)
 
 ## ✔️
+- @1122 12 Qs applied @1121 (#307, 🦠 via M8 "ok all") ➡ D-073 + D-074 · ✔️ below · left = 1 Q added aftr th batch he saw (#299 19:19):
+  - D-015 "Amen only under th snippet" nvr built + D-039 @1116 kept th quote-card Amen (✓ pop) ➡ mark D-015 Superseded by D-039, 0 code (#299) ❓
+- @1122 **translate re-ask scheduled** `at` job 62 · Sun 11/22 03:00 · `bin/gpu_night.sh bin/translate.py --only a` (3 src-fixed Andachten × 11 langs, waits if GPU busy, gives up 08:00) ➡ log `data/translate_night_1122.log`
+  - [x] 🤖 log ✔️ + check_langs green ➡ commit `data/i18n` + assets ➡ deploy DEV (#311: DEV `0.13.0-dev.1122.1353`)
+  - ⚠️ 63 q/lang stale on EN ref only (DE same) ➡ left out, re-ask could undo #248 hand fixes
 - ✔️ @1121 #307 M8 cd decide (🦠 via M8 "ok all"): 12 recs applied ➡ D-073 (Matrix v1 risks accepted · report/mod = gate b4 strangers) + D-074 (8 small keeps/drops) · closed: Fable egg pass (drop) · AGPL (keep GPL-3, D-006) · `/omm` deep paths (no) · url on Spruchkarte PNG (no) · share-app prompt ➡ Hooked pass · qa_1117 Q8 + Q9 keep · Element look ➡ cleanup 10/10
 - ✔️ @1121 #305 🩹 matrix_e2e state per run: API run ➡ `priv/matrix_e2e_<stamp>.json` (no overwrite) · `--cleanup` / `--login` read all `matrix_e2e*.json` (legacy incl) · 55 py green
 - ✔️ @1121 #299 🔵 sweep (closed, not dropped): 🔑 cross-app insights board = done by [app_lessons.md](app_lessons.md) (#297, omm ➡ cali · nxt app adds its own) · 🦠🧪 "fon update banner on Today, 0.11.0" (#125) = superseded by th ⏳ updater fon tst (step 3 = notif + Today banner) · qa_1117 r4 "untriaged" = stale, triaged + built @1119
