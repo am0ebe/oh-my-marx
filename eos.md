@@ -1,6 +1,11 @@
 # eos omm — resume log · newest on TOP
 _1 block per /eos · written by /eos § 3 · todo keeps 1 line: `▶ resume ➡ eos.md`_
 
+## 261122 22:35 · #335 BL sweep (M8)
+- **at** · `launcherReset` rm (cb37b25, D-066 amended) · night F8 omm_api keys `p:1-9999` only (ff0c68f, 6 server tsts) · appkit 0.2.1 subtree pull (c8d8cf7) ➡ `test_apptool.sh` 118 ✔️ + `deploy.sh -n` ✔️ · todo: apptool ✔️ · tags ✔️ · /triage ⏸️ (0 issues) · kit todo ✔️ (c32610e) · 133 app unit + lint green · DEV unchanged (0 visible change)
+- **▶ NEXT** · same as block below (🦠 fon step 5 ➡ Mo Matrix sesh) · 👤 ops: rebuild omm-api (F8 live)
+- **⚠️** · gradle needs `JAVA_HOME=~/.local/opt/jdk21 ANDROID_HOME=~/Android/Sdk` i a fresh shell (apptool sets it, raw `./gradlew` doesn't) · task names = `testDebugUnitTest` `lintDebug` (no flavor) · 🔵 left = 🦠 taste / design / gated
+
 ## 261122 22:20 · #327-333 in-app updater = main · appkit · v0.13.1 (M8)
 - **at** · stable **v0.13.1** live (auto-update dflt ON D-078 · page APK 1st / Obtainium 2nd · updater fr kit) · DEV `0.14.0-dev.1122.2212` · kit = own repo `pr/appkit/` (793b5e7), omm vendors it at `appkit/` (git subtree --squash, D-079) · 151 unit (134 app + 17 kit) + lint + 59 py green · deploylog ×5 rows
 - **▶ NEXT** · 🦠 fon: open stable 0.13.0 ➡ 0.13.1 = 1 tap ➡ nxt stable must land silent (todo ⏳ step 5) · then Mo 11/23 Matrix sesh (todo 📆)
