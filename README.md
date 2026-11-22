@@ -155,7 +155,7 @@ Every script answers `--help` (why · what · examples) and does nothing else wh
 | `split.py` | MEW html ➡ one numbered paragraph ("verse") per line in `data/de.jsonl` |
 | `align.py` | pairs each German paragraph with its English one(s) ➡ `data/verses.jsonl` |
 | `score.py` · `rank.py` | local LLM rates every verse, then picks the best quotes per section |
-| `retag.py` | second, narrow LLM pass: the 0-2 topics a verse is really about (weighted) ➡ the "What bugs you?" chips · `--stats` |
+| `retag.py` | second, narrow LLM pass: the 0-2 topics a verse is really about (weighted) ➡ the "What bugs you?" chips · `--stats` · `--peek N` (N quotes per chip: do they fit?) |
 | `build.py` | all of `data/` ➡ the app's `assets/content/*.json` + reading plans |
 | `andacht.py` · `tease.py` | local LLM writes the daily devotional and the "tomorrow?" question per plan day |
 | `translate.py` | app texts ➡ 11 languages (local LLM, cached) · `--export-only` rebuilds the files without the LLM |

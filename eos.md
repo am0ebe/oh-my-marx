@@ -1,6 +1,12 @@
 # eos omm — resume log · newest on TOP
 _1 block per /eos · written by /eos § 3 · todo keeps 1 line: `▶ resume ➡ eos.md`_
 
+## 261122 04:xx · night #308 (M8): review + night data
+- **at** · F1 dead-token re-register (D-075) · gpu_night `.py` fix + 2 tsts · retag + translate + build `tw` all committed · 22 drift 🔧 (adr · design_system · SERVICE.md) · 146 unit + 59 py + lint green · pushed · **DEV unchanged** (no deploy rule tonight)
+- **▶ NEXT** · 1 DEV deploy (`bin/deploy.sh`) = F1 + i18n + `tw` chips + delete account ➡ tick th 2 🌙 🤖 boxes i todo 👀
+- **👤 🦠** · F3 delete-account txt false on continuwuity (fix txt o redact b4 deactivate) · F16 chip quote fit ≈ ½ · F7 `allowBackup` ships mx pw · F2 rm `server/matrix/` ➡ all ❓ i [night_1122.md](night_1122.md) top
+- **⚠️** · F3 = don't flip D-072 Accepted on th old rec · ops findings F6 (D-073 worst case) · F15 README privacy line still Synapse-era · night file also on a private artifact (unasked, harmless)
+
 ## 261122 00:xx · #305 eval card + auto · #307 "ok all" (M8)
 - **at** · `eval.md` card ✔️ · matrix_e2e 1 state file per run (+ tst, 56 py green) · 🔵 owner moji on 21 lines · 12 M8-decide recs applied ➡ D-073 + D-074 Accepted · live e2e `--cleanup` 10/10 (priv/ hs 0 state files) · DEV unchanged
 - **▶ NEXT** · aftr 03:00 night runs: same as block below (retag `--stats` ➡ build ➡ unit ➡ commit data ➡ 1 DEV deploy ➡ tick 🌙 boxes)
