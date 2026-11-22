@@ -1,6 +1,11 @@
 # eos omm — resume log · newest on TOP
 _1 block per /eos · written by /eos § 3 · todo keeps 1 line: `▶ resume ➡ eos.md`_
 
+## 261122 23:00 · #339 F7 D-081 · #341 F15 · F12 lockfile D-082 (M8)
+- **at** · README privacy line = continuwuity facts (4e39dc4) · `android/app/gradle.lockfile` (a0dd241, CI cmd green locally fr clean) · F9 ✔️ ops-proven · night list: only F6 (ops D-065 💬 🦠) + F13 (fine) left
+- **🚧 CI red since run 1108** (b4 #335): Robolectric `MavenArtifactFetcher` ➡ ConnectException = runner can't fetch `android-all` jars ➡ 15 Robolectric classes fail, rest green · 👤 ops runner (net o cache) · local = 135 green
+- **▶ NEXT** · same as below · 👤 ops: osv on `android/app/gradle.lockfile` · fix runner Robolectric download
+
 ## 261122 22:45 · #336 F2 · F5 · F9 (M8)
 - **at** · `server/matrix/` rm (8460bcf, SERVICE.md § 2 generic) · comment paging D-080 (ea8c2af) ➡ **DEV `0.14.0-dev.1122.2238`** (deploylog ✔️) · F9 XFF doc (5c1188a) · 135 unit + lint + langs + 6 server green · pushed
 - **▶ NEXT** · same as block below · 👤 ops: SERVICE.md changed (§ 1 proxy must replace XFF · § 2 no Synapse) + omm-api rebuild (F8)
