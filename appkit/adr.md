@@ -16,6 +16,13 @@ _Code says **what**, this file says **why**. If code and a decision disagree, th
 ## 🧾 Decisions
 _Newest on top. Append only: never delete, supersede instead. Rules below the examples._
 
+### D-003 @1122 · apptool has its own test and never dies without a word · Accepted (cali crew @1122, M8 #335)
+- **Y:** apptool ships every app, yet it was only tested by hand. Its first deploy from a clean tree exited 1 with no output, because a page hook ended non-zero under `set -e`. A test with a fake build catches that class in 8 seconds, and an `ERR` trap names the function, line and command of any other silent death.
+- **Scope:** `tool/test_apptool.sh` runs the real apptool against a throw-away app: fake `gradlew`, local folders (`PUBLISH_HOST=""`, `WEB=file://…`), no network, no phone. Not covered: the real Gradle build, `ssh vps`, the GitHub release step, `ship -k` (needs a JDK).
+- **Cost:** A hook that relied on a failing command being ignored now prints a 🐛 line; the exit code is unchanged.
+- **Alt:** Wrap `page` in `|| { … }` (rejected: that switches `set -e` off inside the hook, so a half-rendered page would upload) · test through each app's wrapper (rejected: needs a 1-minute build per case).
+- **Ck:** `tool/test_apptool.sh` green (118 checks) · case "a hook th dies says where" is red without the trap.
+
 ### D-002 @1122 · 🏛️ The kit lives in this repo and every app vendors it at <app>/appkit/ with git subtree · Accepted (omm crew @1122, 🦠 order via M8 #327 + #329)
 - **Y:** Same path in every app, so app code never changes when the kit moves; a vendored copy lets public clones and CI build from one checkout. Full record (alternatives, no-behavior-change proof): [omm D-079](../omm/adr.md#d-079).
 - **Ck:** `git -C ../omm log --oneline -- appkit` shows the subtree add · omm 149 unit + lint + py green on the vendored copy.

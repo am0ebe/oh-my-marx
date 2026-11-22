@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 # 🧰 apptool — ship + deploy any appkit Android app · run fr th app's repo root · config + hooks = th app's bin/lib.sh
-set -euo pipefail
+set -Eeuo pipefail
+# 🐛 a cmd th fails under set -e (a page hook · a guard · a missing tool) says where, nvr a silent exit 1 (lessons § 📥)
+trap 'echo "🐛 apptool died i ${FUNCNAME[0]:-main}() line $LINENO: $BASH_COMMAND (exit $?) ➡ a hook must end 0 on evy path" >&2' ERR
 . "$(cd "$(dirname "$0")" && pwd)/apptool.sh"
-VERSION=0.2.0
+VERSION=0.2.1
 
 usage() {
     cat <<EOF

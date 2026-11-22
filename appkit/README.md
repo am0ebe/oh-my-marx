@@ -28,7 +28,8 @@ Reference app: omm (`bin/lib.sh` · `android/…/notify/UpdateWorker.kt` = its w
 - **optional, dflt = off** (apptool 0.2.0, fr cali #328): `RELEASE_KEY` (.properties outside th repo ➡ `ship -k` makes key + file · ship refuses a debug-signed apk · th app's gradle `signingConfig` reads th same file) · `PUBLIC_GATE=1` (a web dir th is not there yet needs `-y`, ckd b4 th build) · `LOCAL_DIR` + `LOCAL_WEB` (`deploy -p` = a page on this box, tailnet only) · `PUBLISH_HOST` (dflt `vps` · empty = `DIRS` r local folders, 4 tsts) · no git remote `$GH_REMOTE` ➡ ship ends aftr page + tag (no GitHub release)
 - **flags** (both cmds): `-n, --dry-run` build + render + list, nothing leaves th box · `-y, --yes-public` · deploy: `-p, --publish` · `-w, --web` · `-s, --status` (= `apptool status`) · `-r -p` = QR o th local page · ship: `-k, --key`
 - **page hook gets** `$PAGE_URL` = where th page being rendered will live (`$WEB/` · `$WEB/dev/` · `$LOCAL_WEB/`) ➡ links + Obtainium link (plain http ➡ `allowInsecure` set by `oblink`)
-- **hooks** (optional fns): `page OUT VER APK [dev]` (must call `version_json`, apptool checks) · `publish_dir OUT SUB DIR` · `publish_done OUT SUB` · `tools` (help footer)
+- **hooks** (optional fns): `page OUT VER APK [dev]` (must call `version_json`, apptool checks) · `publish_dir OUT SUB DIR` · `publish_done OUT SUB` · `tools` (help footer) · a hook must end 0 on evy path (`set -e`) ➡ a cmd th fails prints `🐛 apptool died i <fn>() line N` (0.2.1, D-003)
+- **tst:** `tool/test_apptool.sh` (`-v` · `-o WORD` · `-k`) = th real apptool against a throw-away app (fake gradlew · local folders · no network, ~8 s): deploy · ship · page · gate · guards · clean + dirty tree · no tmp leak ➡ run b4 evy commit th touches `tool/`
 
 ## 📄 templates
 - [page.sh](templates/page.sh) = dflt download page (`page()`): APK + in-app update 1st · Obtainium 2nd "also works" · build it yourself · what's new · DEV page
@@ -75,7 +76,7 @@ _🎯 1 copy o evy general thing · an extra nvr changes wh oth apps do unless t
   | tow page (tailnet, no adb) | `apptool deploy` | `-p, --publish` ➡ `LOCAL_DIRS` / `LOCAL_WEB` (unset = flag errors) |
   | status | new subcmd `apptool status` (`-s` alias i deploy) | read-only: fon · live versions · local build |
   | public gate (1st upload) | `publish()` | `PUBLIC_GATE=1` ➡ a new web dir needs `-y, --yes-public` once · unset = omm today |
-- 🧪 evy kit change: kit tsts (`./gradlew :selfupdate:testDebugUnitTest` fr an app) + th changing app's full tsts green ➡ push kit ➡ oth apps catch up on their nxt `subtree pull`
+- 🧪 evy kit change: kit tsts (`tool/test_apptool.sh` · `./gradlew :selfupdate:testDebugUnitTest` fr an app) + th changing app's full tsts green ➡ push kit ➡ oth apps catch up on their nxt `subtree pull`
 
 ## 🔄 kit ⬄ apps (git subtree, src = `~/gopro/go/pr/appkit` til th Forgejo remote exists)
 ```sh
