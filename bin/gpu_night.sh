@@ -40,8 +40,10 @@ done
 
 log "▶ GPU free (${free} MiB) ➡ running"
 t0=$(date +%s)
-"$@"; rc=$?
+# *.py via python3: a lost +x bit (git mode 644) killed th 1122 translate run w exit 126 i 0 min
+if [[ "$1" == *.py ]]; then python3 "$@"; else "$@"; fi; rc=$?
 log "$( ((rc == 0)) && echo ✔️ || echo ❌ ) job exit ${rc} after $(( ($(date +%s) - t0) / 60 )) min"
 python3 bin/check_langs.py; ck=$?
-log "$( ((ck == 0)) && echo ✔️ check_langs green || echo ❌ check_langs failed ) · next: git diff --stat data/i18n android/app/src/main/assets ➡ commit + deploy"
+if ((rc)); then next="❌ job failed ➡ nothing new 2 commit · fix + re-run"; else next="next: git diff --stat data/i18n android/app/src/main/assets ➡ commit + deploy"; fi
+log "$( ((ck == 0)) && echo ✔️ check_langs green || echo ❌ check_langs failed ) · ${next}"
 exit $(( rc || ck ))

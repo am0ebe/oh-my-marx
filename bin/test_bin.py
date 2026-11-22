@@ -537,5 +537,30 @@ class MatrixCleanup(unittest.TestCase):
         self.assertEqual(names, ["matrix_e2e.json", "matrix_e2e_1121-1300.json", "matrix_e2e_1121-1400.json", "matrix_e2e_app_1121-1427.json"])
 
 
+class GpuNight(unittest.TestCase):
+    """bin/gpu_night.sh w a stub nvidia-smi (24 GB free) · 1122: translate.py hd git mode 644 ➡ exit 126 i 0 min, log still said 'commit'"""
+
+    def run_job(self, body):
+        with tempfile.TemporaryDirectory() as d:
+            stub = pathlib.Path(d) / "nvidia-smi"
+            stub.write_text('#!/bin/sh\ncase "$*" in *memory.total*) echo 24564;; esac\n'); stub.chmod(0o755)
+            job = pathlib.Path(d) / "job.py"; job.write_text(body); job.chmod(0o644)  # no +x, like 1122
+            env = {"PATH": f"{d}:/usr/bin:/bin", "GPU_NEED_MB": "1", "HOME": d}
+            p = subprocess.run(["bash", str(BIN / "gpu_night.sh"), str(job)], env=env, capture_output=True, text=True, timeout=120)
+            return p.returncode, p.stdout
+
+    def test_py_job_wo_exec_bit_runs(self):
+        rc, out = self.run_job("print('hello fr job')\n")
+        self.assertIn("hello fr job", out)
+        self.assertIn("✔️ job exit 0", out)
+
+    def test_failed_job_says_nothing_2_commit(self):
+        rc, out = self.run_job("raise SystemExit(3)\n")
+        self.assertNotEqual(rc, 0)
+        self.assertIn("❌ job exit 3", out)
+        self.assertNotIn("commit + deploy", out)
+        self.assertIn("nothing new 2 commit", out)
+
+
 if __name__ == "__main__":
     unittest.main()
