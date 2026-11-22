@@ -9,9 +9,10 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
   - 🚦 rule: no version bump / ship / big new feat til th current one had ≥1 QA round on th fon · big side-quests (voice, chat infra) ➡ own pr
 
 ## ⏳
-- 🦠📱 **fon tst 2nd half: silent self-update** (D-038 · steps 1-4 ✔️ @1122, ✔️ below) — needs 1 more stable release (0.13.0 ➡ 0.13.x), ~2 min
-  5. stable 0.13.0 (ur fon, we r installer since th 0.12 ➡ 0.13 update): ⚙️ "Update automatically" ON now ➡ nxt stable ships ➡ open app ➡ ✔️ no dialog, quiet "✔️ installed" notification (Android 12+)
-     - toggle left untouched instead: 0.13.0's code = dflt OFF ➡ 0.13.1 asks once (D-078 dflt ON lives i 0.13.1) ➡ th release aftr = silent
+- 🦠📱 **fon tst 2nd half: silent self-update** (D-038 + D-078 · steps 1-4 ✔️ @1122) — **0.13.1 live @1122 22:17** · ~2 min
+  5. stable 0.13.0 on ur fon (toggle untouched) ➡ open app ➡ 0.13.1 = notif / banner ➡ **Install** (1 tap: 0.13.0's code = dflt OFF · we r installer since 0.12 ➡ 0.13 = likely no Android confirm) ➡ ⚙️ shows 0.13.1 + "Update automatically" ON
+     - then th nxt stable (0.13.2 / 0.14.0) ➡ open app ➡ ✔️ no dialog, quiet "✔️ installed" notification (Android 12+) = silent proven
+     - had u set ⚙️ ON on 0.13.0 b4 opening ➡ 0.13.1 itself goes silent already
   6. (+30 s, fr qa_1121 r2 ck 4) any chapter ➡ 📜 Scroll ➡ pinch = txt grows / shrinks · back 2 📖 Pages = same size as b4
   - ❌ any step ➡ screenshot (auto-lands i `/opt/pix_fon`) + step nr ➡ 🤖
   - 🧮 **updater matrix** (@1116 · @1122: normal APK ✔️ fon) (same code both channels, only th URL differs: `/` ⬄ `/dev/`)
