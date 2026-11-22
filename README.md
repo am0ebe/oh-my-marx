@@ -85,7 +85,9 @@ once you use them, comments and reading circles (a [Matrix](https://matrix.org) 
 
 - The comment server's registration token is compiled into the APK. It only keeps drive-by bots out.
 - Circle chats are not end-to-end encrypted.
-- Synapse keeps its default client-IP records (~28 days) for comment accounts.
+- The comment server (continuwuity) keeps one IP address per device of a comment account: the last one it saw,
+  overwritten on each use, no history. It has no time limit: the IP goes only when that device is removed on the server.
+  The web server in front logs an IP only when a comment account is registered, for at most 48 hours.
 - Releases are signed with a debug key so far.
 - *Read along* cannot be switched off (anonymous daily token, no IPs).
 

@@ -42,7 +42,7 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
     - [ ] 🦠 i th Matrix sesh (📆 @1123): someone else's comment ➡ grey id aftr th name reads ok? (D-077 ➡ Accepted)
   - ✔️ spam · lost fon · no E2E = accepted 4 v1 · report + mod = gate b4 strangers (D-073 · #307)
   - 🤖 Kreis = hourly poll, no push (UnifiedPush/ntfy = 🔵 community ideas) · fine 4 v1
-  - 👤 ops: client-IP retention on continuwuity (live since @1113 · th Synapse knob `user_ips_max_age` went w it) ➡ README § privacy "~28 days" line = Synapse-era, re-ck · signing key i bup (`pr/ops/matrix.md`) · night #308 ➡ [night_1122.md](night_1122.md) F2/F3/F6
+  - ✔️ client-IP retention (#341, ops src-read): 1 IP per device, overwritten, no purge ➡ README § Known gaps fixed (F15) · 👤 ops: signing key i bup (`pr/ops/matrix.md`) · night #308 ➡ [night_1122.md](night_1122.md) F2/F3/F6
 - **🥚 eggs + drop cap** (merged #290: qa_1121 r2 · #246 D-068 · #248 widget) · DEV `0.13.0-dev.1121.0014`
   - [x] 🤖 qa_1121 r2 ck 1 icon stays plain: manifest hs 0 `activity-alias` = 1 fixed icon · ck 2 in-app egg = r1 ✔️ (🦠) + EggResTest · ck 3 drop cap = shot `07_chapter.png` matches (red T, no box, top = line 1, foot = line 3) · 📜 no ¶ = shot `03_chapter_scroll.png` · pinch ➡ ⏳ fon tst step 6
   - [x] 🤖 `EggArchShotTest` 30 eggs × 13 langs fit · `EggResTest.widgetShowsTheDaysEgg` · unit + lint green · DEV deployed
