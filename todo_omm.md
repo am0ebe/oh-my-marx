@@ -59,15 +59,13 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
 - 🛍️ Fr 11/27 Black Friday: home-screen widget shows th 🛍️ egg left o "Marx verse" · only if it looks off ➡ screenshot (no box · render = `EggResTest`)
 
 ## 🔵
-- 🤖🧪 **apptool bash tst** (kit, 2 apps hit live-only `set -e/-u` bugs @1122: cali page hook · omm EXIT trap) ➡ `PUBLISH_HOST=""` + `-n` dry-run deploy/ship i a tmp repo, exit 0 + files there · lives i pr/appkit (cali 🔵 hs th same) ➡ 1 owner
-  - ⏳ @1122 22:20 oth crew (cali) writing `pr/appkit/tool/test_apptool.sh` (untracked, live) ➡ owner = cali · omm: aftr it lands ➡ subtree pull + run it once
 - 🤖🎨 **C-lane gaps** (done @1120: rank perks, feast emblems, 11 heads, initials, ¶, rtl / zh shots, gold swoosh · @1120 #229: 🥚 eggs replace heads in top bar, hero, quote card, D-066 · launcher egg dropped #241 · `launcherReset` rm @1122 #335, D-066 amended):
   - 🖼️ Feast frames (design § 14.2.1) · 🔊 stamp thud sound (D-035).
 - 🦠 ‼️ ⭐🧪 **QA @1116** ➡ [qa_1116.md](qa_1116.md) — 14 ⚡ i 6 lanes (L3 share 1st) · 3 🎨 (➡ Fable spec aftr) · 2 🔍 · 💬 Qs ✔️ answered @1116 ➡ lanes built (D-039 · D-040) · Q8 revised = no Werkbank (D-041) · left: D3 joker · fon items (#13 cold-start ms · ✔️ #14 lib baseline profiles alr ship i th APK, #299)
 - 🦠 ‼️ ⭐🧪 **QA sprint 0.9.x** — r1-r3 ✔️ · left ➡ [qa_1112.md](qa_1112.md) (🎨 10 design · ✔️ 🔍 5 research closed @1121 #299 · 💬 Qs) · ✔️ streak widget "shd show 2 at start" = superseded by D-045 (hero = streak only, stamps ➡ Stempeluhr) #290
   - later (needs design): 📖 real book look · ⏰ daily verse off-switch · name entry · 🔮 Marxoskop tiles · 🔓 Lesekreis unlock · 🏷️ quotes off-topic ➡ [notes.md § 🗃️](notes.md)
 - 🦠 ‼️ 📨⭐ **user feedback** — 1st real users = gold · log (M · M2 · Jan · Mi) ➡ `feedback.md` + [notes.md § 🗃️](notes.md) · phase 1 ✔️ (page mail + GH issue forms + app ⚙️ btn)
-  - 🤖🛠️ `/triage` skill (gh issues + Migadu ➡ label · dedupe · draft) · 🔵 phase 2 in-app form ➡ `POST /feedback` aft QA rounds
+  - 🤖🛠️ `/triage` skill (gh issues + Migadu ➡ label · dedupe · draft) · ⏸️ @1122 #335: 0 GH issues ever (labels `needs-triage` + `from-app` ready) ➡ build when issues pile up (≥ ~5), not b4 · 🔵 phase 2 in-app form ➡ `POST /feedback` aft QA rounds
 - 🦠📣 ‼️ send **scagent.de/omm** 2 2-3 friends (0.6.0 ppl need 1 manual update, banner only fr ≥0.7.0)
   - 🚧 gate (D-073): beyond friends ➡ 1st 🤖 min "Melden" on a comment (Matrix `/report`) + 👤 ops rate limit / captcha on signup
 - 👤 ‼️ 🌍 **LLM book qy** — 👤 native QA zh/ar/hi/bn/ur · `bin/translate_full.py --show 5 --langs it es` · alt = existing translations (© check) ➡ [notes.md § 🗃️](notes.md)
@@ -96,11 +94,12 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
   - 💡 @1119 ([omm D-056 plan re-eval](adr.md)): 11 hand-written ones (bibel + montag) i `data/andachten_hand.jsonl` = sample 4 th tone · win over th LLM cache
 - 🦠📦 gestures left: "Morgen"-teaser blurred + locked · shortcut "Weiterlesen" (last-read pref) · 🪝 Hooked notes 4 th new gestures (pull = slot machine · stories · shake = variable reward)
 - 🦠📦 "Was nervt?" free-txt + embeddings · Mehrwert-Rechner · Fußnoten-Burns plan (Dunning "300 %" = fn 24:250) · Feiertage 2 (✔️ political + remembrance days = D-052, 30 feasts · left: Marx as Santa · own notif txt · Black Friday ➡ Fetisch-Detox · widget colours) · export "Mein Kapital" (md/json)
-- 🤖🔍 tags over-applied ("kapitalist" 83 %) ➡ relative re-tag ➡ ⏳ built + night run @1121 (👀 🏷️ above)
-  - ✔️ 🔍 @1116: root = score.py `maxItems: 4` ➡ LLM pads evy quote 2 4 tags ➡ chip "chef" 1233/1511 ≈ random (miete only 94)
 - 🤖 aft QA: rm page fotos (boox proc step 8)
 
 ## ✔️
+- ✔️ @1122 #335 🧪 **apptool bash tst** (kit): cali built `tool/test_apptool.sh` (118 cks, e8836e8) + ERR trap ➡ omm subtree pull (c8d8cf7) ➡ 118 ✔️ + omm `bin/deploy.sh -n` exit 0 (nothing uploaded)
+- ✔️ @1122 #335 🤖🔍 **tags over-applied** ("kapitalist" 83 %, root = score.py `maxItems: 4`) ➡ `bin/retag.py` + night run + `tw` chip pool built + deployed · only 🦠 1-min read left (👀 🏷️)
+- ✔️ @1122 #335 ✂️ **`launcherReset` rm** (DEV 1911 cleanup, cb37b25) · 🛡️ night F8 omm_api keys = `p:1-9999` only (ff0c68f) · live = 👤 ops rebuild omm-api
 - ✔️ @1122 #332 🆕 **D-078 A** (🦠 "A dflt on ok"): ⚙️ "Update automatically" dflt ON, toggle = opt-out · dflt lives i th kit (`UpdateConfig.autoDefault`, pr/appkit 793b5e7) · nvr touched ➡ ON · set OFF ➡ stays OFF · 151 unit (134 + 17) + lint + 59 py green · DEV deployed · stable ➡ nxt release
 - ✔️ @1122 #332 🦠📱 **fon ck: kit updater updated itself** (D-079 · 🦠 "Yes omm updater updated itself"): DEV kit build ➡ nxt kit build via th in-app updater
 - ✔️ @1122 #329 🧩 **appkit lifted** ➡ own repo `pr/appkit/` (history kept) · omm vendors it at `appkit/` (`git subtree add --squash`, src = `~/gopro/go/pr/appkit` til Forgejo) · update: `git subtree pull --prefix appkit ~/gopro/go/pr/appkit main --squash` · 149 unit + lint + 59 py green · DEV 2149 · later items + extras rule ➡ [appkit/README.md](appkit/README.md)
