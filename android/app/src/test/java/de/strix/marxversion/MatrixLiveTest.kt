@@ -245,6 +245,8 @@ class MatrixLiveTest {
         val (cw, _) = call("GET", "/account/whoami", null, me.token)
         val left = until { call("GET", "/rooms/${enc(k.room)}/joined_members", null, bTok).second.optJSONObject("joined")?.has(meId) == false }
         step("app: ⚙️ Delete account ➡ token dead · left Kreis", deleted && cw == 401 && left, "whoami HTTP $cw")
+        // D-076: continuwuity ignores `erase` ➡ th app redacts 1st · B must no longer read th app's Kreis msg
+        step("server: app's Kreis msg redacted 4 B (D-076)", bodies(bTok, k.room).none { it == hi })
         finish()
     }
 

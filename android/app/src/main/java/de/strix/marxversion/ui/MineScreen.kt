@@ -241,8 +241,9 @@ fun SettingsScreen(vm: AppVm, askNotifPermission: () -> Unit) {
                     vm.deleteAccount { ok -> busy = false; msg = if (ok) gone else failed }
                 },
                 defer = DialogAction(tr("Behalten", "Keep")) { ask = false }) {
-                Text(tr("Dein Konto auf scagent.de wird gelöscht: neue Leser:innen sehen deine Kommentare nicht mehr, und du verlässt alle Lesekreise. Deine Notizen, Lesezeichen und Stempel auf diesem Handy bleiben.",
-                    "Your account on scagent.de is deleted: new readers no longer see your comments, and you leave all reading circles. Your notes, bookmarks and stamps on this phone stay."),
+                // D-076: say only wh th app itself does (redact + deactivate) · copies + left Kreise = honest limits
+                Text(tr("Löscht deine Kommentare und Kreis-Nachrichten, dann dein Konto auf scagent.de, und du verlässt alle Lesekreise. Wer sie schon geladen hat, kann eine Kopie haben; in Kreisen, die du früher verlassen hast, bleiben sie. Deine Notizen, Lesezeichen und Stempel auf diesem Handy bleiben.",
+                    "Deletes your comments and circle messages, then your account on scagent.de, and you leave all reading circles. Anyone who already loaded them may have a copy; in circles you left earlier they stay. Your notes, bookmarks and stamps on this phone stay."),
                     style = MaterialTheme.typography.bodyMedium, color = Ds.ink)
             }
         }

@@ -167,6 +167,14 @@ class AppVm(app: Application) : AndroidViewModel(app) {
     fun deleteAccount(done: (Boolean) -> Unit) = viewModelScope.launch {
         val s = marx.prefs.mxSession() ?: return@launch done(true)
         val pw = marx.prefs.mxPw() ?: return@launch done(false)
+        // D-076: continuwuity ignores `erase` ➡ redact evy own msg 1st · any fail ➡ stop (account kept, "try again" redacts th rest)
+        // token alr dead (401 on joined_rooms) ➡ nothing left 2 redact w it ➡ deactivate says M_UNKNOWN_TOKEN = gone
+        when (Matrix.tokenValid(s)) {
+            true -> if (!Matrix.redactAllMine(s)) return@launch done(false)
+            false -> {}
+            null -> return@launch done(false)   // offline: nvr deactivate wo th redact pass
+        }
+        Matrix.setName(s, "")   // best effort: blank th profile name i evy room b4 leaving
         if (!Matrix.deactivate(s, pw)) return@launch done(false)
         marx.prefs.forgetMx()
         rooms.clear(); comments.value = emptyMap(); kreisMembers.value = emptyMap(); kreisTimeline.value = emptyMap()

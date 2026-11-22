@@ -2,6 +2,7 @@ package de.strix.marxversion.data
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.json.JSONArray
 import org.json.JSONObject
 import java.net.HttpURLConnection
 import java.net.URL
@@ -154,13 +155,55 @@ object Matrix {
     /** 6 chars, no look-alikes (0/O, 1/I/L) ➡ easy 2 read out loud */
     fun newCode(): String { val a = "ABCDEFGHJKMNPQRSTUVWXYZ23456789"; val r = SecureRandom(); return (1..6).map { a[r.nextInt(a.length)] }.joinToString("") }
 
-    /** delete my own comment (Matrix redact) */
-    suspend fun redact(s: Session, room: String, eventId: String): Boolean = withContext(Dispatchers.IO) {
-        runCatching { call("PUT", "/rooms/${enc(room)}/redact/${enc(eventId)}/omm${System.currentTimeMillis()}", JSONObject(), s.token).first == 200 }.getOrDefault(false)
+    /** delete my own comment (Matrix redact) · txn id = nanoTime + counter: 2 redacts i th same ms must not collapse into 1 (idempotent txn) */
+    suspend fun redact(s: Session, room: String, eventId: String): Boolean = withContext(Dispatchers.IO) { redactNow(s, room, eventId) }
+
+    private val txn = java.util.concurrent.atomic.AtomicInteger()
+    /** blocking redact · 429 ➡ wait `retry_after_ms` (≤ 10 s) + retry, 3 tries */
+    private fun redactNow(s: Session, room: String, eventId: String): Boolean = runCatching {
+        repeat(3) {
+            val (code, r) = call("PUT", "/rooms/${enc(room)}/redact/${enc(eventId)}/omm${System.nanoTime()}-${txn.incrementAndGet()}", JSONObject(), s.token)
+            if (code == 200) return@runCatching true
+            if (code != 429) return@runCatching false
+            Thread.sleep(r.optLong("retry_after_ms", 1000).coerceIn(200, 10_000))
+        }
+        false
+    }.getOrDefault(false)
+
+    /**
+     * 🧹 D-076: redact evy own msg (comments · Kreis chat · Amens) i evy room I'm still in · continuwuity ignores `erase` (night F3)
+     * pages /messages backwards (filter = me, sender re-checked here) · alr redacted (empty content) skipped
+     * true = all gone ➡ safe 2 deactivate · false = sth failed ➡ DON'T deactivate (aftr that th token is gone + th rest stays 4ever)
+     */
+    suspend fun redactAllMine(s: Session): Boolean = withContext(Dispatchers.IO) {
+        runCatching {
+            val (c0, j) = call("GET", "/joined_rooms", null, s.token)
+            if (c0 != 200) return@runCatching false
+            val rooms = j.getJSONArray("joined_rooms").let { a -> List(a.length()) { a.getString(it) } }
+            val types = setOf("m.room.message", AMEN)
+            val filter = enc(JSONObject().put("senders", JSONArray().put(s.userId)).put("types", JSONArray(types.toList())).toString())
+            rooms.all { room ->
+                var from: String? = null
+                var pages = 0
+                do {
+                    val (c, r) = call("GET", "/rooms/${enc(room)}/messages?dir=b&limit=100&filter=$filter" + (from?.let { "&from=${enc(it)}" } ?: ""), null, s.token)
+                    if (c != 200) return@all false
+                    val chunk = r.optJSONArray("chunk") ?: JSONArray()
+                    for (i in 0 until chunk.length()) {
+                        val e = chunk.getJSONObject(i)
+                        if (e.optString("sender") != s.userId || e.optString("type") !in types || (e.optJSONObject("content")?.length() ?: 0) == 0) continue
+                        if (!redactNow(s, room, e.getString("event_id"))) return@all false
+                    }
+                    from = r.optString("end").ifBlank { null }
+                    pages++
+                } while (chunk.length() > 0 && from != null && pages < 200)
+                true
+            }
+        }.getOrDefault(false)
     }
 
     /**
-     * 🗑️ delete my account (GDPR Art. 17, D-072): deactivate + erase ➡ Synapse leaves evy room + hides my msgs from new joiners
+     * 🗑️ delete my account (GDPR Art. 17, D-072): deactivate (+ `erase`, which Synapse honours, continuwuity ignores ➡ redactAllMine 1st, D-076)
      * true = gone (also: token alr unknown = deleted b4) · pw = th random one, only on this fon
      */
     suspend fun deactivate(s: Session, pw: String): Boolean = withContext(Dispatchers.IO) {
