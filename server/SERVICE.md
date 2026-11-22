@@ -16,6 +16,7 @@
 | build | `server/Dockerfile` (python:3.12-alpine, stdlib only, pip removed from the image) · context `server/` w `.dockerignore` |
 | listens | :8000 HTTP inside the container · no TLS of its own |
 | route needed | `https://<host>/omm/api/*` ➡ strip prefix ➡ `:8000` · app hard-codes `https://scagent.de/omm/api/v1` |
+| proxy must | **replace** any client-sent `X-Forwarded-For` (Caddy ≥ 2.5 default) · the rate limit keys on its 1st hop ➡ `:8000` never reachable without the proxy |
 | state | `/data/omm.db` (SQLite) — totals + today's tokens · loss = counters restart at 0 (not critical) |
 | health | `GET /v1/health` ➡ `{"ok":true}` |
 | privacy promise | no access log, no IPs on disk — **don't add proxy access logs for this route** |

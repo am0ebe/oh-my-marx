@@ -139,6 +139,8 @@ def make_handler(store: Store, limiter: Limiter):
 
         def _ip(self) -> str:
             # behind Caddy: th real client = X-Forwarded-For's 1st hop
+            # ⚠️ night F9: trusts XFF blindly ➡ only safe behind a proxy th REPLACES a client-sent XFF (Caddy ≥ 2.5 does,
+            #    untrusted XFF dropped) · port reachable wo th proxy ➡ anyone picks their own rate-limit key (SERVICE.md § 1)
             return (self.headers.get("X-Forwarded-For") or self.client_address[0]).split(",")[0].strip()
 
         def do_GET(self):
