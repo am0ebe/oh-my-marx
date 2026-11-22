@@ -13,16 +13,16 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
   5. ⚙️ "Update automatically" ON (stable 0.13.0, browser-APK install) ➡ nxt stable ships ➡ open app ➡ ✔️ no dialog, quiet "✔️ installed" notification (we're installer now = silent, Android 12+)
   6. (+30 s, fr qa_1121 r2 ck 4) any chapter ➡ 📜 Scroll ➡ pinch = txt grows / shrinks · back 2 📖 Pages = same size as b4
   - ❌ any step ➡ screenshot (auto-lands i `/opt/pix_fon`) + step nr ➡ 🤖
-- 🦠📱 **fon ck: kit updater updates itself** (D-079 · #329) — DEV app, ~2 min · live now: DEV `0.14.0-dev.1122.2149` (vendored kit) · kit builds = `2139` + `2149`
-  1. open DEV ➡ ⚙️ shows version: `…2139` ➡ step 2 · older (pre-kit) ➡ notif / Today banner ➡ Install ➡ = `…2149` ➡ tell 🤖 "deploy" (1 more kit build) ➡ step 2
-  2. open DEV ≤ 1 min ➡ notif "🆕 … is out" / Today banner ➡ **Install** ➡ confirm ➡ ⚙️ shows th newer version · notes + streak still there = ✔️ kit's updater installed a kit build
-  - ❌ ➡ screenshot (`/opt/pix_fon`) + step nr ➡ 🤖 · fallback install: Chrome ➡ `scagent.de/oh-my-marx/dev/`
   - 🧮 **updater matrix** (@1116 · @1122: normal APK ✔️ fon) (same code both channels, only th URL differs: `/` ⬄ `/dev/`)
     | | APK (browser) = main (#327) | Obtainium = 2nd |
     |--|--|--|
     | DEV | ✔️ unit tsts · same code as normal (fon ran on stable) | ✔️ fon: Obtainium 1h ck auto-updated (🦠) · app's own notif ➡ obtainium://refresh = unit tst only |
     | normal | ✔️ fon @1122 (🦠): 0.12.0 browser APK ➡ 0.13.0 via in-app updater (notif/banner ➡ Install ➡ confirm) · ⏳ silent (step 5) | ✔️ Obtainium follows th page (same as DEV) |
     - 0.9.0 ➡ 0.10.0 APK users: banner ➡ page ➡ install by hand 1× (then 1-tap / silent fr there)
+- 🦠📱 **fon ck: kit updater updates itself** (D-079 · #329) — DEV app, ~2 min · live now: DEV `0.14.0-dev.1122.2149` (vendored kit) · kit builds = `2139` + `2149`
+  1. open DEV ➡ ⚙️ shows version: `…2139` ➡ step 2 · older (pre-kit) ➡ notif / Today banner ➡ Install ➡ = `…2149` ➡ tell 🤖 "deploy" (1 more kit build) ➡ step 2
+  2. open DEV ≤ 1 min ➡ notif "🆕 … is out" / Today banner ➡ **Install** ➡ confirm ➡ ⚙️ shows th newer version · notes + streak still there = ✔️ kit's updater installed a kit build
+  - ❌ ➡ screenshot (`/opt/pix_fon`) + step nr ➡ 🤖 · fallback install: Chrome ➡ `scagent.de/oh-my-marx/dev/`
 
 ## 👀
 ### 🌙 night run (#248 · 🦠 ✔️ @1121)
