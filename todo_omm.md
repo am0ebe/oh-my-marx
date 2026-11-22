@@ -13,6 +13,7 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
   5. ⚙️ "Update automatically" ON (stable 0.13.0, browser-APK install) ➡ nxt stable ships ➡ open app ➡ ✔️ no dialog, quiet "✔️ installed" notification (we're installer now = silent, Android 12+)
   6. (+30 s, fr qa_1121 r2 ck 4) any chapter ➡ 📜 Scroll ➡ pinch = txt grows / shrinks · back 2 📖 Pages = same size as b4
   - ❌ any step ➡ screenshot (auto-lands i `/opt/pix_fon`) + step nr ➡ 🤖
+  - 🧩 **appkit ck (D-079, any DEV install)**: DEV `0.14.0-dev.1122.2139` = 1st build on th kit updater ➡ arrives as usual · then th NEXT DEV deploy must arrive too (= th kit's own updater works on th fon)
   - 🧮 **updater matrix** (@1116 · @1122: normal APK ✔️ fon) (same code both channels, only th URL differs: `/` ⬄ `/dev/`)
     | | APK (browser) = main (#327) | Obtainium = 2nd |
     |--|--|--|
