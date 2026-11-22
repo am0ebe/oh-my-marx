@@ -25,6 +25,9 @@ Reference app: omm (`bin/lib.sh` · `android/…/notify/UpdateWorker.kt` = its w
 ## 🔧 tool — `apptool` (ship · deploy · page · oblink · version)
 - `tool/apptool` = CLI (run fr th app root, `-h` evy cmd) · `tool/apptool.sh` = lib (`version_json` · `oblink` · `publish` · `app_version` · `enc` · JAVA_HOME/ANDROID_HOME dflts) · `tool/app-version.gradle.kts` = version scheme (last-shipped `appVersion` · minutes `versionCode` · `-Pdev -PdevBase` names · 1st-entry stamp 4 Obtainium's 1 KiB hash)
 - **app's `bin/lib.sh`** (sourced): must `APP FILE PKG WEB DIRS SRC` · optional `AUTHOR` · `NOTES` (cmd: notes 4 a version, dflt `bin/notes.py`) · `SHIP_GUARD` (cmd run b4 a bump) · `GH_REPO` (dflt fr SRC) · `GH_REMOTE` (gh) · `MAIN_ACTIVITY` · `ANDROID_DIR` (android) · `MODULE` (app) · `FAVICON` · `TAGLINE FGJ MAIL` (tpl page)
+- **optional, dflt = off** (apptool 0.2.0, fr cali #328): `RELEASE_KEY` (.properties outside th repo ➡ `ship -k` makes key + file · ship refuses a debug-signed apk · th app's gradle `signingConfig` reads th same file) · `PUBLIC_GATE=1` (a web dir th is not there yet needs `-y`, ckd b4 th build) · `LOCAL_DIR` + `LOCAL_WEB` (`deploy -p` = a page on this box, tailnet only) · `PUBLISH_HOST` (dflt `vps` · empty = `DIRS` r local folders, 4 tsts) · no git remote `$GH_REMOTE` ➡ ship ends aftr page + tag (no GitHub release)
+- **flags** (both cmds): `-n, --dry-run` build + render + list, nothing leaves th box · `-y, --yes-public` · deploy: `-p, --publish` · `-w, --web` · `-s, --status` (= `apptool status`) · `-r -p` = QR o th local page · ship: `-k, --key`
+- **page hook gets** `$PAGE_URL` = where th page being rendered will live (`$WEB/` · `$WEB/dev/` · `$LOCAL_WEB/`) ➡ links + Obtainium link (plain http ➡ `allowInsecure` set by `oblink`)
 - **hooks** (optional fns): `page OUT VER APK [dev]` (must call `version_json`, apptool checks) · `publish_dir OUT SUB DIR` · `publish_done OUT SUB` · `tools` (help footer)
 
 ## 📄 templates
@@ -49,7 +52,7 @@ Reference app: omm (`bin/lib.sh` · `android/…/notify/UpdateWorker.kt` = its w
 | `:testrig` (Robolectric shots harness · prefs reset · design-guard ratchet) | 🧩 | ⏳ later | cali hs its own ShotTest ➡ extract on th 2nd real copy |
 | i18n kit (`tr()` + translate `--only ui` + check_langs + hand_fix) | 🧩🔧 | ⏳ later | cali = DE + EN only v1 ➡ no 2nd user yet |
 | release notes (`Changelog` `Release(…)` + `notes.py`) | 🔧 | ⏳ later | apptool takes any `NOTES` cmd now · fmt shared when cali ships notes |
-| cali's apptool extras: `-n` dry-run · release key (`-k`) · tow page (`deploy -p`) · `-s` status · `-w -y` 1st-public gate | 🔧 | ⏳ when cali adopts | cali's copy grew them @1122 ➡ fold into apptool i cali's adopt order (#328), omm gains them too |
+| cali's apptool extras: `-n` dry-run · release key (`-k`) · tow page (`deploy -p`) · `-s` status · `-w -y` 1st-public gate | 🔧 | ✔️ in (apptool 0.2.0 @1122, #328) | folded in fr cali · all behind config vars / flags w dflt = off ➡ omm unchanged til it sets them |
 | CI (`am0/ci` `app.yml`) | — | ✔️ alr shared | lives i ops |
 | matrix_e2e live tst · content pipeline (fetch/split/align/score) · Hooked mode | — | ❌ no | omm-only |
 
@@ -96,7 +99,7 @@ cd ~/gopro/go/pr/appkit && git merge from-<app> && git branch -d from-<app>   # 
 | `todo_appkit.md` | status board |
 | `notes.md` · `ref.md` | working notes · lookup |
 | `core/` `tool/` `templates/` `lessons/` | th 4 shelves |
-| apps | omm `pr/omm/appkit/` (ref app) · cali (#328) |
+| apps | omm `pr/omm/appkit/` (ref app) · cali `pr/cali/appkit/` (✔️ #328: updater + apptool wrappers, own page hook + own update card) |
 
 ## Maintenance
 - nothing runs by itself · on us: evy kit change ➡ `subtree pull` i each app + its tsts · lessons inbox ➡ promote when an item shows up i a 2nd app

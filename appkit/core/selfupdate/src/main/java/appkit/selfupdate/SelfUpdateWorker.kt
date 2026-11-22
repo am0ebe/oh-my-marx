@@ -56,7 +56,7 @@ suspend fun checkAndNotify(
     sdk: Int = Build.VERSION.SDK_INT,
     now: Long = System.currentTimeMillis(),
     silent: suspend (Update.Latest) -> Unit = { l -> Update.installSession(ctx, Update.download(ctx, l), bg = true) },
-    auto: Boolean = runCatching { cfg.auto(ctx) }.getOrDefault(false),
+    auto: Boolean = runCatching { Update.autoOn(cfg.auto(ctx)) }.getOrDefault(false),   // read fails ➡ ask (safe)
 ): Outcome {
     val via = Update.via(installer)
     if (via == Update.Via.STORE) return Outcome.NONE
