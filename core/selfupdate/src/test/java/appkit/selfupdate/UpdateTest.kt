@@ -17,6 +17,17 @@ class UpdateTest {
     @org.junit.Before fun cfg() = Update.init(UpdateConfig(web = "https://example.org/app/", versionCode = 1, versionName = "1.0.0",
         dev = false, appName = "App", icon = 0, worker = SelfUpdateWorker::class.java, openUpdate = { Intent() }, openApp = { Intent() }))
 
+    /** omm D-078: toggle dflt ON · nvr touched (null) ➡ ON · set OFF ➡ stays OFF · an app may pick OFF */
+    @Test fun autoDefaultIsOnButAnOffChoiceStays() {
+        assertTrue(Update.AUTO_DEFAULT)
+        assertTrue(Update.autoOn(null))
+        assertFalse(Update.autoOn(false))
+        assertTrue(Update.autoOn(true))
+        Update.init(UpdateConfig(web = "https://example.org/app/", versionCode = 1, versionName = "1.0.0", dev = false, appName = "App",
+            icon = 0, worker = SelfUpdateWorker::class.java, openUpdate = { Intent() }, openApp = { Intent() }, autoDefault = false))
+        assertFalse(Update.autoOn(null))
+    }
+
     @Test fun newerIsReported() =
         assertEquals(Update.Latest("0.9.5", 95), Update.newer(90) { json("0.9.5", 95) })
 

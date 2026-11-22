@@ -30,6 +30,8 @@ import java.security.MessageDigest
  *  worker     th app's `class UpdateWorker(c, p) : SelfUpdateWorker(c, p)` · own class name = WorkManager keeps finding it
  *  openUpdate notification tap ➡ th app's update dialog (an Intent 2 its activity) · openApp = aftr a silent update
  *  de / auto  app lang = German? · ⚙️ "update automatically" on? (both: read th app's settings, ≤ 0.5 s)
+ *             auto = th STORED toggle, null = usr nvr touched it ➡ autoDefault · app's ⚙️ row: `Update.autoOn(stored)`
+ *  autoDefault th toggle's dflt (omm D-078 @1122: ON) · a usr who set it OFF stays OFF
  *  onReplaced extra work aftr evy self-update (MY_PACKAGE_REPLACED), b4 th "installed ✔️" notification
  *  prefs/work/sessionName = storage names · keep them once shipped (renaming = lost nag state + a 2nd periodic job)
  */
@@ -44,11 +46,12 @@ class UpdateConfig(
     val openUpdate: (Context) -> Intent,
     val openApp: (Context) -> Intent,
     val de: (Context) -> Boolean = { false },
-    val auto: (Context) -> Boolean = { false },
+    val auto: (Context) -> Boolean? = { null },
     val onReplaced: (Context) -> Unit = {},
     val prefs: String = "selfupdate",
     val work: String = "selfupdate",
     val sessionName: String = "update.apk",
+    val autoDefault: Boolean = Update.AUTO_DEFAULT,
 )
 
 /**
@@ -66,6 +69,11 @@ object Update {
     private lateinit var cfg: UpdateConfig
     fun init(c: UpdateConfig) { cfg = c }
     val config: UpdateConfig get() = cfg
+
+    /** ⚙️ "update automatically" dflt 4 evy app (omm D-078 @1122: ON · th 1st in-app update still asks once, then silent on 12+) */
+    const val AUTO_DEFAULT = true
+    /** stored toggle ➡ effective · null = nvr touched ➡ th app's autoDefault (o AUTO_DEFAULT b4 init) */
+    fun autoOn(stored: Boolean?): Boolean = stored ?: if (::cfg.isInitialized) cfg.autoDefault else AUTO_DEFAULT
 
     val page get() = cfg.web
 

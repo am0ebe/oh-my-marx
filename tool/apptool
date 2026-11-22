@@ -2,7 +2,7 @@
 # 🧰 apptool — ship + deploy any appkit Android app · run fr th app's repo root · config + hooks = th app's bin/lib.sh
 set -euo pipefail
 . "$(cd "$(dirname "$0")" && pwd)/apptool.sh"
-VERSION=0.1.0
+VERSION=0.2.0
 
 usage() {
     cat <<EOF
@@ -13,6 +13,7 @@ usage: apptool <cmd> [args]   (run fr th app's repo root · reads bin/lib.sh = c
   deploy [-a] [-q] [-r]       🧪 DEV build ➡ <web>/dev/ (th DEV app updates itself, o Obtainium)
   ship [patch|minor|major|X.Y.Z] [-p]   📦 release ➡ <web>/ + git tag + GitHub release
   page                        re-render + upload th stable page only (= ship -p)
+  status                      read-only: wh is live (local · web dev · web release) · last tag · fon on adb
   oblink [dev]                print th "➕ Add to Obtainium" link
   version                     print appVersion (last shipped)
   -h, --help                  this · <cmd> -h = that cmd's help
@@ -44,10 +45,31 @@ render() {
     [ -s "$1/version.json" ] || { echo "🐛 page() wrote no version.json ➡ call version_json (README.md § tool)"; exit 1; }
 }
 
+# 🧪 dry run: wh wd b uploaded · nothing leaves th box
+dry_list() {
+    echo "🧪 dry run · nothing uploaded · wd go 2 $2"
+    ( cd "$1" && for f in *.apk index.html version.json; do printf '   %9s  %s\n' "$(stat -c %s "$f")" "$f"; done )
+    echo "   version.json: $(cat "$1/version.json")"
+}
+
+# 🔎 status: read-only · wh is live where · is a fon on adb
+status() {
+    local j
+    if [ -n "${LOCAL_WEB:-}" ]; then
+        if curl -sf --max-time 3 -o /dev/null "${LOCAL_WEB%/}/"; then echo "✔️ local page served ➡ ${LOCAL_WEB%/}/"; else echo "❌ local page not served (${LOCAL_WEB%/}/)"; fi
+        if [ -f "${LOCAL_DIR:-}/version.json" ]; then echo "📦 local dev: $(cat "$LOCAL_DIR/version.json")"; else echo "📦 local dev: nothing yet ➡ deploy -p"; fi
+    fi
+    if j=$(curl -sf --max-time 8 "$WEB/dev/version.json"); then echo "🌐 web dev: $j ➡ $WEB/dev/"; else echo "🌐 web dev: nothing at $WEB/dev/ ➡ deploy"; fi
+    if j=$(curl -sf --max-time 8 "$WEB/version.json"); then echo "📦 web release: $j ➡ $WEB/"; else echo "📦 web release: nothing at $WEB/ ➡ ship"; fi
+    echo "🔢 appVersion (last shipped): $(app_version) · last tag: $(git tag -l 'v*' --sort=-v:refname | head -1)"
+    if "$ADB" devices 2>/dev/null | grep -qE '\sdevice$'; then echo "✔️ fon on adb: $("$ADB" devices | awk '/\sdevice$/ {print $1}' | head -1)"
+    else echo "📱 no fon on adb (only needed 4 deploy -a · lessons/fon_debug.md)"; fi
+}
+
 # ── 🧪 deploy ────────────────────────────────────────────────────────────────────────────────────────
 deploy_usage() {
     cat <<EOF
-usage: apptool deploy [-a|--adb] [-q|--quiet] [-r|--qr] [-h|--help]
+usage: apptool deploy [-a|--adb] [-q|--quiet] [-r|--qr] [-p|--publish] [-w|--web] [-n|--dry-run] [-y|--yes-public] [-s|--status] [-h|--help]
 
   y: tst a change on ur own fon i ~1 min, wo a release, a tag o touching th friends' stable app
 
@@ -57,7 +79,12 @@ usage: apptool deploy [-a|--adb] [-q|--quiet] [-r|--qr] [-h|--help]
   (default)   ➡ $WEB/dev/  ➡ th DEV app: notification / banner ➡ Install (o Obtainium: pull 2 refresh ➡ Update)
   -a --adb    + install th same apk over wireless adb right now (home wifi, opens th app)
   -q --quiet  w -a: install only, don't open th app (u r using th fon)
-  -r --qr     only print a QR o $WEB/dev/ (fon camera ➡ page) + th raw obtainium:// link, no build
+  -r --qr     only print a QR o $WEB/dev/ (fon camera ➡ page) + th raw obtainium:// link, no build · -r -p = th local page
+  -p --publish     build ➡ th local page only (LOCAL_DIR · LOCAL_WEB i bin/lib.sh: tailnet / home wifi, nothing public) · -p -w = both
+  -w --web         th web page (= th default wo -p)
+  -n --dry-run     build + render, list wh wd b uploaded · nothing leaves th box
+  -y --yes-public  apps w PUBLIC_GATE=1: th owner said ok ➡ create th web dir (1st upload = public)
+  -s --status      no build: wh is live (local · web dev · web release) · fon on adb (= apptool status)
 
   wireless adb once: fon ➡ Developer options ➡ Wireless debugging ➡ "Pair w code"
                      ➡ adb pair IP:PORT  (then it reconnects by itself via mDNS) · lessons/fon_debug.md
@@ -68,17 +95,31 @@ EOF
 }
 
 deploy() {
-    local adb=0 launch=1 a
+    local adb=0 launch=1 a web=0 loc=0 dry=0 qr=0
     for a in "$@"; do
         case "$a" in
             -h|--help|-\?) deploy_usage; exit 0 ;;
             -a|--adb) adb=1 ;;
             -q|--quiet) launch=0 ;;
-            -r|--qr) qrencode -t ansiutf8 -m 2 "$WEB/dev/"; echo "$WEB/dev/"; echo; oblink "$PKG.dev" "$WEB/dev/" "$APP DEV"; exit 0 ;;
+            -r|--qr) qr=1 ;;
+            -w|--web) web=1 ;;
+            -p|--publish) loc=1 ;;
+            -n|--dry-run) dry=1 ;;
+            -y|--yes-public) YES_PUBLIC=1 ;;
+            -s|--status) status; exit 0 ;;
             *) deploy_usage; exit 1 ;;
         esac
     done
+    # targets: no -p = th web page (as alw) · -p = th local page only · -p -w = both
+    if [ "$loc" = 1 ]; then
+        [ -n "${LOCAL_DIR:-}" ] && [ -n "${LOCAL_WEB:-}" ] || { echo "❌ -p needs LOCAL_DIR + LOCAL_WEB i bin/lib.sh (README.md § tool)"; exit 1; }
+    else web=1; fi
+    if [ "$qr" = 1 ]; then
+        local u="$WEB/dev/"; [ "$loc" = 1 ] && [ "$web" = 0 ] && u="${LOCAL_WEB%/}/"
+        qrencode -t ansiutf8 -m 2 "$u"; echo "$u"; echo; oblink "$PKG.dev" "$u" "$APP DEV"; exit 0
+    fi
 
+    [ "$web" = 1 ] && [ "$dry" = 0 ] && gate_check dev   # cheap cks 1st ➡ fail b4 a 1-min build
     if [ "$adb" = 1 ]; then   # check th fon 1st ➡ fail b4 a 1-min build
         have_fon() { "$ADB" devices | grep -qE '\sdevice$'; }
         if ! have_fon; then
@@ -104,17 +145,37 @@ deploy() {
     apk="$FILE-$ver.apk"
     cp "$built/$MODULE-debug.apk" "$out/$apk"
     # 🔢 guard: an Obtainium entry on defaults only sees th hash o th 1st 1 KiB (tool/app-version.gradle.kts stamp) ➡ same as live = fon nvr updates
-    live=$(curl -sf --max-time 10 "$WEB/dev/version.json" | sed -nE 's/.*"apk":"([^"]+)".*/\1/p') || true
+    live=""; [ "$web" = 1 ] && { live=$(curl -sf --max-time 10 "$WEB/dev/version.json" | sed -nE 's/.*"apk":"([^"]+)".*/\1/p') || true; }
     if [ -n "$live" ] && [ "$live" != "$apk" ]; then
         if [ "$(curl -sf --max-time 20 -r 0-1023 "$WEB/dev/$live" | sha256sum)" = "$(head -c 1024 "$out/$apk" | sha256sum)" ]; then
             echo "🐛 1st 1 KiB = same as live $live ➡ Obtainium (defaults) won't see an update · stamp broke? (appkit tool/app-version.gradle.kts)"; exit 1
         fi
     fi
-    render "$out" "$ver" "$apk" dev
-    publish "$out" dev
-    echo "✔️ $ver ➡ $WEB/dev/ · fon: DEV app ➡ Install (o Obtainium ➡ pull 2 refresh)"
+    if [ "$loc" = 1 ]; then
+        # 🏠 local page (tailnet / home wifi, nothing public): apk 1st, page 2nd · tmp + mv = no half-written file is served
+        local l; l=$(mktemp -d)
+        cp "$out/$apk" "$l/"
+        PAGE_URL="${LOCAL_WEB%/}/" render "$l" "$ver" "$apk" dev
+        if [ "$dry" = 1 ]; then echo "🧪 dry · local page wd get: $apk · index.html · version.json ➡ $LOCAL_DIR"
+        else
+            mkdir -p "$LOCAL_DIR"
+            cp "$l/$apk" "$LOCAL_DIR/.$apk.tmp" && mv "$LOCAL_DIR/.$apk.tmp" "$LOCAL_DIR/$apk"
+            for a in version.json index.html; do cp "$l/$a" "$LOCAL_DIR/.$a.tmp" && mv "$LOCAL_DIR/.$a.tmp" "$LOCAL_DIR/$a"; done
+            ( cd "$LOCAL_DIR" && ls -t -- *.apk | tail -n +4 | xargs -r rm -- )
+            echo "✔️ $ver ➡ ${LOCAL_WEB%/}/ (local page)"
+        fi
+        rm -rf "$l"
+    fi
+    if [ "$web" = 1 ]; then
+        PAGE_URL="$WEB/dev/" render "$out" "$ver" "$apk" dev
+        if [ "$dry" = 1 ]; then dry_list "$out" "$WEB/dev/"
+        else
+            publish "$out" dev
+            echo "✔️ $ver ➡ $WEB/dev/ · fon: DEV app ➡ Install (o Obtainium ➡ pull 2 refresh)"
+        fi
+    fi
 
-    if [ "$adb" = 1 ]; then
+    if [ "$adb" = 1 ] && [ "$dry" = 0 ]; then
         "$ADB" install -r "$out/$apk" >/dev/null
         [ "$launch" = 1 ] && "$ADB" shell am start -n "$PKG.dev/$MAIN_ACTIVITY" >/dev/null
         echo "✔️ + installed over adb$([ "$launch" = 1 ] && echo ' + launched')"
@@ -124,7 +185,7 @@ deploy() {
 # ── 📦 ship ──────────────────────────────────────────────────────────────────────────────────────────
 ship_usage() {
     cat <<EOF
-usage: apptool ship [patch|minor|major|X.Y.Z] [-p|--page] [-h|--help]
+usage: apptool ship [patch|minor|major|X.Y.Z] [-p|--page] [-n|--dry-run] [-k|--key] [-y|--yes-public] [-h|--help]
 
   y: 1 cmd = version bump + tag + APK + page + GitHub release ➡ evy install sees it, nothing half-shipped
 
@@ -136,11 +197,14 @@ usage: apptool ship [patch|minor|major|X.Y.Z] [-p|--page] [-h|--help]
   (none)      ship appVersion as it is (must not be shipped yet)
   ⚠️ appVersion = th LAST SHIPPED version · DEV builds show th NEXT one (0.10.0-dev…) ➡ that gap is normal
   -p --page   only re-render + upload th page (page tpl changed) 4 th last shipped version · no build, no tag
+  -n --dry-run     guard + build + sign ck + render, list wh wd ship · no bump, no upload, no tag
+  -k --key         RELEASE_KEY set i bin/lib.sh: make th release key if missing · say where it lives (bup it)
+  -y --yes-public  apps w PUBLIC_GATE=1: th owner said ok ➡ create th web dir (1st upload = public)
 
   before:
     1. release notes 4 th NEW version ($NOTES X.Y.Z must print them = in-app + GitHub notes)
     2. commit + push evythg else (th tag = exactly th shipped code; script refuses otherwise)
-  signed w ~/.android/debug.keystore ➡ ⚠️ lose it = evy install must uninstall
+  signed w ${RELEASE_KEY:-~/.android/debug.keystore} ➡ ⚠️ lose it = evy install must uninstall
   dev builds (no commit needed, version = last ship + "-dev.MMDD.HHMM"): apptool deploy
 
 EOF
@@ -148,12 +212,15 @@ EOF
 }
 
 ship() {
-    local level="" want="" only_page=""
-    case "${1:-}" in
-        -h|--help|-\?) ship_usage; exit 0 ;; -p|--page) only_page=1 ;; patch|minor|major) level=$1 ;;
-        [0-9]*.[0-9]*.[0-9]*) [[ $1 =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || { ship_usage; exit 1; }; level=exact; want=$1 ;;
-        "") ;; *) ship_usage; exit 1 ;;
-    esac
+    local level="" want="" only_page="" dry=0 a
+    for a in "$@"; do
+        case "$a" in
+            -h|--help|-\?) ship_usage; exit 0 ;; -p|--page) only_page=1 ;; patch|minor|major) level=$a ;;
+            -n|--dry-run) dry=1 ;; -y|--yes-public) YES_PUBLIC=1 ;; -k|--key) key_make; exit 0 ;;
+            [0-9]*.[0-9]*.[0-9]*) [[ $a =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || { ship_usage; exit 1; }; level=exact; want=$a ;;
+            *) ship_usage; exit 1 ;;
+        esac
+    done
     local ver apk   # out = global (EXIT trap, see deploy)
     if [ -n "$only_page" ]; then
         # last shipped = newest v* tag · apk comes fr th server (size + sha + versionCode = exactly what ppl download)
@@ -171,8 +238,11 @@ ship() {
 
     ver=$(app_version)
     [ -n "$ver" ] || { echo "❌ no appVersion i $GRADLE_APP"; exit 1; }
-    [ -z "$(git status --porcelain)" ] || { echo "❌ uncommitted changes ➡ commit 1st"; exit 1; }
-    git fetch -q origin && [ "$(git rev-parse HEAD)" = "$(git rev-parse origin/main)" ] || { echo "❌ HEAD ≠ origin/main ➡ push 1st"; exit 1; }
+    if [ -n "${RELEASE_KEY:-}" ] && [ ! -f "$RELEASE_KEY" ]; then echo "❌ no release key at $RELEASE_KEY ➡ apptool ship -k"; exit 1; fi
+    if [ "$dry" = 0 ]; then
+        [ -z "$(git status --porcelain)" ] || { echo "❌ uncommitted changes ➡ commit 1st"; exit 1; }
+        git fetch -q origin && [ "$(git rev-parse HEAD)" = "$(git rev-parse origin/main)" ] || { echo "❌ HEAD ≠ origin/main ➡ push 1st"; exit 1; }
+    fi
     # 🛡️ app's own ship guard (eg langs claimed wo files) ➡ b4 bump/commit/tag
     if [ -n "${SHIP_GUARD:-}" ]; then $SHIP_GUARD || exit 1; fi
 
@@ -185,7 +255,8 @@ ship() {
         # X.Y.Z must be newer than th last tag (sort -V: 0.10.0 > 0.9.0, not string order)
         newest=$(printf '%s\n%s\n' "${last:-0.0.0}" "$next" | sort -V | tail -1)
         if [ "$next" = "${last:-}" ] || [ "$newest" != "$next" ]; then echo "❌ $next ≤ last shipped v${last:-–} ➡ pick a newer version"; exit 1; fi
-        if [ "$next" != "$ver" ]; then
+        if [ "$next" != "$ver" ] && [ "$dry" = 1 ]; then echo "🧪 dry: wd bump $ver ➡ $next (th apk below still says $ver)"
+        elif [ "$next" != "$ver" ]; then
             [ -n "$($NOTES "$next")" ] || { echo "❌ no release notes 4 $next ($NOTES $next prints nothing) ➡ write th notes 1st"; exit 1; }
             sed -i -E "s/^val appVersion = \"[^\"]+\"/val appVersion = \"$next\"/" "$GRADLE_APP"
             git commit -qm "v$next" "$GRADLE_APP" && git push -q origin main
@@ -193,14 +264,18 @@ ship() {
             ver=$next
         fi
     fi
-    git rev-parse -q --verify "refs/tags/v$ver" >/dev/null && { echo "❌ v$ver alr shipped ➡ apptool ship patch|minor|major"; exit 1; }
-    [ -n "$($NOTES "$ver")" ] || { echo "❌ no release notes 4 $ver ($NOTES $ver prints nothing) ➡ write th notes 1st"; exit 1; }
+    if [ "$dry" = 0 ]; then
+        git rev-parse -q --verify "refs/tags/v$ver" >/dev/null && { echo "❌ v$ver alr shipped ➡ apptool ship patch|minor|major"; exit 1; }
+        [ -n "$($NOTES "$ver")" ] || { echo "❌ no release notes 4 $ver ($NOTES $ver prints nothing) ➡ write th notes 1st"; exit 1; }
+    fi
 
     (cd "$ANDROID_DIR" && ./gradlew --offline -q ":$MODULE:assembleRelease")
     out=$(mktemp -d); trap 'rm -rf "$out"' EXIT
     apk="$FILE-$ver.apk"
     cp "$ANDROID_DIR/$MODULE/build/outputs/apk/release/$MODULE-release.apk" "$out/$apk"
-    render "$out" "$ver" "$apk"
+    key_check "$out/$apk" || exit 1        # 🔑 RELEASE_KEY set ➡ nvr ship a debug-signed o unsigned apk
+    PAGE_URL="$WEB/" render "$out" "$ver" "$apk"
+    if [ "$dry" = 1 ]; then dry_list "$out" "$WEB/"; echo "   no bump · no tag"; exit 0; fi
     publish "$out"
 
     # 🏷️ annotated tag on th shipped commit (notes inside ➡ `git show vX.Y.Z`) · local + pushed
@@ -208,6 +283,8 @@ ship() {
     #   GitHub gets code + tags via th Forgejo push-mirror (on evy push) ➡ wait til th tag lands there, `--verify-tag` needs it
     git tag -a "v$ver" -m "$APP $ver"$'\n\n'"$($NOTES "$ver")"
     git push -q origin "v$ver"
+    # an app wo a GitHub remote ($GH_REMOTE) = no GitHub release: page + tag r th release
+    if ! git remote get-url "$GH_REMOTE" >/dev/null 2>&1; then echo "✔️ shipped v$ver ➡ $WEB/ (no git remote '$GH_REMOTE' ➡ no GitHub release)"; return 0; fi
     echo "⏳ waiting 4 th Forgejo ➡ GitHub mirror 2 carry v$ver (≤120 s)"
     local deadline=$((SECONDS + 120))
     until git ls-remote --exit-code "$GH_REMOTE" "refs/tags/v$ver" >/dev/null 2>&1; do
@@ -226,6 +303,7 @@ case "$cmd" in
     deploy) deploy "$@" ;;
     ship) ship "$@" ;;
     page) ship -p ;;
+    status) status ;;
     oblink) if [ "${1:-}" = dev ]; then oblink "$PKG.dev" "$WEB/dev/" "$APP DEV"; else oblink "$PKG" "$WEB/" "$APP"; fi ;;
     version) app_version ;;
     -V|--version) echo "apptool $VERSION" ;;

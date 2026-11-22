@@ -1,8 +1,10 @@
 # todo appkit
 
+## 🏔️
+
 ## ⏳
 
-## ‼️
+## 👀
 
 ## 🔵
 - 🤖 Forgejo repo `am0/appkit` (ops order, private til 🦠 says public) ➡ `git remote add origin …` + push · then apps' subtree src = th url (README § 🔄)
