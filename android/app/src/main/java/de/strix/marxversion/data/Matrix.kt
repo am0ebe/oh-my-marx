@@ -25,6 +25,16 @@ object Matrix {
 
     fun alias(kap: String) = "#omm-kap-${kap.lowercase()}:$SERVER"
 
+    /**
+     * 🪪 D-077 (night F4): th shown name = sender-set per msg ➡ anyone can post as "strix" · th server-set user id can't be faked
+     * ➡ show it muted next 2 th name: `rosa-ab12` (our server) · `@x:matrix.org` (Element fr elsewhere) · null = name alr IS th id
+     */
+    fun handle(sender: String, name: String): String? {
+        val local = sender.substringAfter('@').substringBefore(':')
+        val h = if (sender.endsWith(":$SERVER")) local else sender
+        return h.takeIf { name.trim() != h }   // ⚠️ not `!= local`: "strix" fr @strix:matrix.org = th spoof itself
+    }
+
     /** new account: username fr th display name + 4 random hex · pw random (kept on th fon only) */
     suspend fun register(name: String, regToken: String): Pair<Session, String>? = withContext(Dispatchers.IO) {
         runCatching {

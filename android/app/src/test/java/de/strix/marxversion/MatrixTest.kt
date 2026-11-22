@@ -248,6 +248,38 @@ class MatrixTest {
         assertFalse("wrong pw", runBlocking { Matrix.deactivate(S, "pw1") })
     }
 
+    /** D-076: continuwuity ignores `erase` ➡ evy own msg + Amen i evy joined room redacted (paged, 429 retried) · oth ppl's + alr redacted left alone · 1 fail = false */
+    @Test fun redactAllMineWalksEveryRoomAndPage() {
+        fun ev(id: String, sender: String, type: String = "m.room.message", body: String? = "hi") = JSONObject().put("event_id", id).put("sender", sender)
+            .put("type", type).put("content", if (body == null) JSONObject() else JSONObject().put("body", body))
+        routes["$P/joined_rooms"] = { 200 to JSONObject().put("joined_rooms", JSONArray().put("!a:scagent.de").put("!b:scagent.de")) }
+        var limited = false
+        var redactCode = 200
+        routes["$P/rooms/"] = { r ->
+            when {
+                "/redact/" in r.path -> if (!limited && "%24e5" in r.path) { limited = true; 429 to JSONObject().put("retry_after_ms", 200) } else redactCode to JSONObject()
+                "%21a" in r.path && "from=t1" !in r.path -> 200 to JSONObject().put("end", "t1").put("chunk", JSONArray()
+                    .put(ev("\$e1", S.userId)).put(ev("\$e2", "@b:scagent.de")).put(ev("\$e3", S.userId, body = null)).put(ev("\$e4", S.userId, Matrix.AMEN, null).put("content", JSONObject().put("day", "2026-11-22"))))
+                "%21a" in r.path -> 200 to JSONObject().put("chunk", JSONArray())
+                else -> 200 to JSONObject().put("chunk", JSONArray().put(ev("\$e5", S.userId)).put(ev("\$e6", S.userId, "m.room.member")))
+            }
+        }
+        assertTrue(runBlocking { Matrix.redactAllMine(S) })
+        val red = seen.filter { "/redact/" in it.path }
+        assertEquals(listOf("e1", "e4", "e5", "e5"), red.map { it.path.substringAfter("/redact/%24").substringBefore('/') })  // e5: 429 ➡ retried
+        assertEquals("txn ids unique", red.size, red.map { it.path.substringAfterLast('/') }.toSet().size)
+        assertTrue("filter = me", seen.first { "/messages" in it.path }.path.contains("senders"))
+        seen.clear(); redactCode = 403
+        assertFalse("1 redact refused ➡ don't deactivate", runBlocking { Matrix.redactAllMine(S) })
+    }
+
+    /** D-077: shown handle = server-set id (localpart on ours, full id elsewhere) · hidden only when th name alr IS it */
+    @Test fun handleShowsTheUnspoofableId() {
+        assertEquals("strix-cd34", Matrix.handle("@strix-cd34:scagent.de", "strix"))
+        assertEquals("@strix:matrix.org", Matrix.handle("@strix:matrix.org", "strix"))
+        assertNull(Matrix.handle("@leo-ab12:scagent.de", "leo-ab12"))   // fallback name = localpart ➡ no dup
+    }
+
     /** D-075: 401 = server forgot th token (homeserver replaced @1113) ➡ false = re-register · any oth answer ➡ null = keep th session */
     @Test fun tokenValidTellsDeadFromOffline() {
         routes["$P/account/whoami"] = { 200 to JSONObject().put("user_id", S.userId) }

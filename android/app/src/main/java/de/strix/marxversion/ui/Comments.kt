@@ -125,6 +125,7 @@ fun CommentsPanel(
             items(list, key = { it.id }) { c ->
                 val mine = c.sender == me
                 val time = DateUtils.getRelativeTimeSpanString(c.ts).toString()
+                    .let { t -> if (mine) t else Matrix.handle(c.sender, c.name)?.let { "$it · $t" } ?: t }   // D-077: real id, can't be spoofed
                 // hold ur own = delete · own = end-aligned blue ("me" voice, same as margin notes) · others = paperDeep bubble
                 val hold = Modifier.combinedClickable(onClick = {}, onLongClick = { if (mine) onDelete(c.id) })
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = if (mine) Arrangement.End else Arrangement.Start) {

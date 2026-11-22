@@ -287,7 +287,7 @@ fun KreisDetail(vm: AppVm, i: Int, back: () -> Unit) {
                     val title = if (myLevel >= 4) " · " + tr(rank(myLevel - 1)) else ""
                     Text(tr("du", "you") + title + "  " + time, style = MaterialTheme.typography.labelSmall, color = Ds.inkMuted)
                     Text(c.text)
-                } else OtherBubble(c.name, time) { Text(c.text) }
+                } else OtherBubble(c.name, Matrix.handle(c.sender, c.name)?.let { "$it · $time" } ?: time) { Text(c.text) }   // D-077
             }
         }
         item {
