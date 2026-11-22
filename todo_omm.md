@@ -9,20 +9,15 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
   - 🚦 rule: no version bump / ship / big new feat til th current one had ≥1 QA round on th fon · big side-quests (voice, chat infra) ➡ own pr
 
 ## ⏳
-- 🦠📱 **fon tst: updater on a browser-APK install** (D-038 · @1115) — DEV app, ~5 min
-  1. Chrome ➡ `scagent.de/oh-my-marx/dev/` ➡ tap th apk ➡ install OVER ur DEV (same key = data stays · now th installer o record = browser, not Obtainium)
-  2. tell 🤖 "deploy" ➡ newer DEV goes live (= th 6 qa_1116 lanes + th 🩹 below)
-  3. open DEV ➡ ≤1 min: notification "🆕 … is out" + Today banner ➡ tap ➡ "Install"
-  4. 1st ti: Android "allow fr this source" ➡ toggle ➡ back = goes on by itself ➡ Android confirm ➡ Update ➡ ✔️ ⚙️ shows new version · streak + notes still there
-     - 🩹 bonus: tap Install, then Home mid-download ➡ expect notification "🆕 Update ready" (was: nothing)
-  5. ⚙️ "Update automatically" ON ➡ 🤖 deploy again ➡ open app ➡ ✔️ no dialog, quiet "✔️ installed" notification (we're installer now = silent, Android 12+)
+- 🦠📱 **fon tst 2nd half: silent self-update** (D-038 · steps 1-4 ✔️ @1122, ✔️ below) — needs 1 more stable release (0.13.0 ➡ 0.13.x), ~2 min
+  5. ⚙️ "Update automatically" ON (stable 0.13.0, browser-APK install) ➡ nxt stable ships ➡ open app ➡ ✔️ no dialog, quiet "✔️ installed" notification (we're installer now = silent, Android 12+)
   6. (+30 s, fr qa_1121 r2 ck 4) any chapter ➡ 📜 Scroll ➡ pinch = txt grows / shrinks · back 2 📖 Pages = same size as b4
   - ❌ any step ➡ screenshot (auto-lands i `/opt/pix_fon`) + step nr ➡ 🤖
-  - 🧮 **updater matrix @1116** (same code both channels, only th URL differs: `/` ⬄ `/dev/`)
-    | | Obtainium | APK (browser) |
+  - 🧮 **updater matrix** (@1116 · @1122: normal APK ✔️ fon) (same code both channels, only th URL differs: `/` ⬄ `/dev/`)
+    | | APK (browser) = main (#327) | Obtainium = 2nd |
     |--|--|--|
-    | DEV | ✔️ fon: Obtainium 1h ck auto-updated (🦠) · app's own notif ➡ obtainium://refresh = unit tst only | ⏳ unit tsts ✔️ · fon = 5 steps above |
-    | normal | ✔️ Obtainium follows th page (same as DEV) | ❌ untestable yet: 0.9.0 has th OLD banner (➡ web page, no 1-tap) · 1st real self-update = 0.10.0 ➡ 0.10.1 |
+    | DEV | ✔️ unit tsts · same code as normal (fon ran on stable) | ✔️ fon: Obtainium 1h ck auto-updated (🦠) · app's own notif ➡ obtainium://refresh = unit tst only |
+    | normal | ✔️ fon @1122 (🦠): 0.12.0 browser APK ➡ 0.13.0 via in-app updater (notif/banner ➡ Install ➡ confirm) · ⏳ silent (step 5) | ✔️ Obtainium follows th page (same as DEV) |
     - 0.9.0 ➡ 0.10.0 APK users: banner ➡ page ➡ install by hand 1× (then 1-tap / silent fr there)
 
 ## 👀
@@ -104,6 +99,7 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
 - 🤖 aft QA: rm page fotos (boox proc step 8)
 
 ## ✔️
+- ✔️ @1122 #327 🦠 fon tst **updater on a browser-APK install**, steps 1-4 (D-038): stable 0.12.0 browser APK ➡ 0.13.0 via th in-app updater ("Now omm update worked") ➡ matrix normal · APK ✔️ · silent half = ⏳ (needs nxt release)
 - @1122 12 Qs applied @1121 (#307, 🦠 via M8 "ok all") ➡ D-073 + D-074 · ✔️ below · left = 1 Q added aftr th batch he saw (#299 19:19):
   - D-015 "Amen only under th snippet" nvr built + D-039 @1116 kept th quote-card Amen (✓ pop) ➡ mark D-015 Superseded by D-039, 0 code (#299) ❓
 - @1122 **translate re-ask scheduled** `at` job 62 · Sun 11/22 03:00 · `bin/gpu_night.sh bin/translate.py --only a` (3 src-fixed Andachten × 11 langs, waits if GPU busy, gives up 08:00) ➡ log `data/translate_night_1122.log`
