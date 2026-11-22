@@ -1,6 +1,11 @@
 # eos omm — resume log · newest on TOP
 _1 block per /eos · written by /eos § 3 · todo keeps 1 line: `▶ resume ➡ eos.md`_
 
+## 261122 22:45 · #336 F2 · F5 · F9 (M8)
+- **at** · `server/matrix/` rm (8460bcf, SERVICE.md § 2 generic) · comment paging D-080 (ea8c2af) ➡ **DEV `0.14.0-dev.1122.2238`** (deploylog ✔️) · F9 XFF doc (5c1188a) · 135 unit + lint + langs + 6 server green · pushed
+- **▶ NEXT** · same as block below · 👤 ops: SERVICE.md changed (§ 1 proxy must replace XFF · § 2 no Synapse) + omm-api rebuild (F8)
+- **⚠️** · Kreis timelines still newest 300 only (D-080 scope) · night left: F6 F12 F15 = ops · F7 = 🦠
+
 ## 261122 22:35 · #335 BL sweep (M8)
 - **at** · `launcherReset` rm (cb37b25, D-066 amended) · night F8 omm_api keys `p:1-9999` only (ff0c68f, 6 server tsts) · appkit 0.2.1 subtree pull (c8d8cf7) ➡ `test_apptool.sh` 118 ✔️ + `deploy.sh -n` ✔️ · todo: apptool ✔️ · tags ✔️ · /triage ⏸️ (0 issues) · kit todo ✔️ (c32610e) · 133 app unit + lint green · DEV unchanged (0 visible change)
 - **▶ NEXT** · same as block below (🦠 fon step 5 ➡ Mo Matrix sesh) · 👤 ops: rebuild omm-api (F8 live)
