@@ -34,6 +34,17 @@ import de.strix.marxversion.data.f
 data class Release(val version: String, val date: String, val items: List<Pair<String, String>>)
 
 val RELEASES = listOf(
+    // 0.13.0 = C-lanes (C1-C7) · eggs · Matrix fixes (D-075/076/077) · #325 stable 4 th updater tst
+    Release("0.13.0", "2026-11-22", listOf(
+        T("🥚 30 Feiertage: Marx verkleidet sich — in der Leiste oben, auf „Heute“, auf der Zitatkarte und im Widget", "🥚 30 feast days: Marx dresses up — in the top bar, on “Today”, on the quote card and in the widget"),
+        T("🧮 Serien-Spiel: Meilensteine, ✊ Streiktag, Stempeluhr und Beförderungen · Level mit Rang-Vorteilen", "🧮 Streak game: milestones, ✊ strike day, time clock and promotions · levels with rank perks"),
+        T("📜 Wie ein heiliges Buch: rote Initialen, Kolumnentitel, Siegel am Kapitelende", "📜 Like a holy book: red initials, running heads, a seal at the end of each chapter"),
+        T("✋ Lange drücken = Menü in beiden Lesearten · Antippen blättert um", "✋ Hold = menu in both reading modes · a tap turns the page"),
+        T("❓ Jeder Plantag endet mit einer Frage für morgen", "❓ Every plan day ends with a question for tomorrow"),
+        T("🏷️ „Was nervt dich?“: die Zitate passen jetzt besser zum Thema", "🏷️ “What bugs you?”: the quotes now fit the topic better"),
+        T("💬 Kommentare und Lesekreise gehen wieder · neben fremden Namen steht die echte Konto-ID", "💬 Comments and reading circles work again · the real account id sits next to other people's names"),
+        T("🗑️ ⚙️ Konto löschen: löscht deine Kommentare und Kreis-Nachrichten, dann das Konto", "🗑️ ⚙️ Delete account: deletes your comments and circle messages, then the account"),
+    )),
     // 0.12.0 = qa_1117 ⚡ lanes (L1-L5)
     Release("0.12.0", "2026-11-18", listOf(
         T("📖 Ruhigere Seiten: keine Quellenzeile mehr über jedem Absatz", "📖 Calmer pages: no more reference line above every paragraph"),
