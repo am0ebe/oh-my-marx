@@ -1,5 +1,5 @@
 # 🌙 night 1122 — omm (#308 · Rosa 🔥)
-- **did** · fresh-eyes review: Matrix (D-073) · app secu · docs drift (31 rows, 22 🔧 fixed) · ✔️ F1 dead-token fix (D-075) · ✔️ night data: retag ✔️ · translate died (F14, fixed) ➡ re-run ✔️ · build.py `tw` ⏳ · 146 unit green · 0 deploy
+- **did** · fresh-eyes review: Matrix (D-073) · app secu · docs drift (31 rows, 22 🔧 fixed) · ✔️ F1 dead-token fix (D-075) · ✔️ night data: retag ✔️ · translate died (F14, fixed) ➡ re-run ✔️ · build.py `tw` ✔️ (9dab3b6) · 146 unit green · 0 deploy
 - **top 3** · 🔴 F1 Synapse-era fon accounts = dead token ➡ comments + Kreise failed 4ever (✔️ fixed, not deployed) · 🔴 F3 Delete account (D-072) promises "new readers no longer see ur comments" = **false** on live continuwuity (`erase` ignored) · 🔴 F4 comment name = sender-set per msg ➡ anyone posts as "strix"
 - **🦠** · F3: fix th dialog txt o redact own comments b4 deactivate ❓ · `tail -30 data/retag_night_1122.log` = 3 quotes/chip: fit? (my read ≈ ½: paragraph on topic, quote snippet often not) ❓ · F7 `allowBackup` ships Matrix pw 2 Google backup: keep o exclude ❓
 
