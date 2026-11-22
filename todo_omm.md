@@ -51,11 +51,11 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
 ## 📆
 - 🦠 💬 **Mo 11/23 Matrix sesh w crew** (🦠 #311: "wanna finally mv fwd") · ~45 min · 🔑 primer 1st (5 lines):
   - 🔑 account = `@name:scagent.de` + pw · login ➡ server hands th device an **access token** (random string) ➡ evy call sends `Authorization: Bearer <token>` · 1 device = 1 token · logout / deactivate / server swap kills it ➡ 401
-  - 📱 omm app = no login screen: 1st comment o Kreis ➡ app registers w th **reg token** baked i th APK (gate vs open signup, 3 UIA steps: token ➡ dummy) ➡ keeps token + random pw on th fon only · lost fon = lost account (D-073) · dead token ➡ quietly re-registers (D-075, F1)
+  - 📱 omm app = no login screen: 1st comment o Kreis ➡ app registers w th **reg token** baked i th APK (gate vs open signup, 3 UIA steps: token ➡ dummy) ➡ keeps token + random pw on th fon only · lost fon = lost account (D-073) unless Google bup restores it (D-081) · dead token ➡ quietly re-registers (D-075, F1)
   - 💻 ur priv account on tow: Element Desktop / app.element.io ➡ homeserver `scagent.de` ➡ Sign up w th reg token (`android/omm.properties` `omm.regToken`) 🧪 nvr tstd on continuwuity · fallback = ops admin room `!admin users create-user <name>` ➡ pw printed
   - 📱 same account on fon: Element X ➡ **log in** (Element X can't sign up, only log in ⬅ `pr/ops/matrix.md`) ➡ own token per device, same msgs
   - 🛡️ then ops: `!admin users make-admin @<u>:scagent.de` ➡ u can redact / kick i th 31 chapter rooms (= th "Melden" path b4 strangers, D-073)
-  - agenda: ① account on tow + fon (above) ② join `#omm-kap-1:scagent.de` i Element ⬄ comment i omm DEV 1353 ➡ both sides see it · F4 grey id (D-077 box 👀) ③ F1 proof: old omm account posts again (D-075 Ck) ④ Delete account txt (D-076 box 👀) ⑤ pick nxt: ✔️ F5 paging (D-080, DEV 2238) · F6 send rate limit (ops) · F7 `allowBackup` ❓
+  - agenda: ① account on tow + fon (above) ② join `#omm-kap-1:scagent.de` i Element ⬄ comment i omm DEV 1353 ➡ both sides see it · F4 grey id (D-077 box 👀) ③ F1 proof: old omm account posts again (D-075 Ck) ④ Delete account txt (D-076 box 👀) ⑤ pick nxt: ✔️ F5 paging (D-080, DEV 2238) · F6 send rate limit (ops) · ✔️ F7 `allowBackup` = keep (D-081)
 - 🛍️ Fr 11/27 Black Friday: home-screen widget shows th 🛍️ egg left o "Marx verse" · only if it looks off ➡ screenshot (no box · render = `EggResTest`)
 
 ## 🔵

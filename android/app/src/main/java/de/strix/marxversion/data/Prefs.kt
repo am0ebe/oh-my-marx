@@ -75,7 +75,7 @@ class Prefs(private val context: Context) {
     }
     suspend fun setCommunity(on: Boolean) = context.store.edit { it[K.community] = on }
 
-    // 💬 Matrix account (made on 1st comment, data/Matrix.kt) · lives only on this fon
+    // 💬 Matrix account (made on 1st comment, data/Matrix.kt) · on this fon + its Google bup (allowBackup, D-081 keep)
     private object M {
         val user = stringPreferencesKey("mx_user"); val token = stringPreferencesKey("mx_token")
         val pw = stringPreferencesKey("mx_pw"); val name = stringPreferencesKey("mx_name")

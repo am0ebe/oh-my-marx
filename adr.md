@@ -20,6 +20,13 @@ _SDD: code says **wh** · th file says **y** · drift = a bug · fmt ➡ `pr/vib
 ## 🧾 decisions (newest on top)
 _Template v2.1 since 20 Nov (converted via `pr/vibe++/adr_convert.md`). Field names: Y = why · Ctx = what forced it · Scope = what it covers · Ck = how to check._
 
+### D-081 @1122 · ☁️ The comment login stays in Android's backup, so a new phone keeps your account · Accepted (🦠 @1122 via M8 #339, "keep")
+- **Ctx:** night F7: `android:allowBackup="true"` with no extraction rules ➡ Android's Google backup and device-to-device transfer also copy the DataStore prefs, including `mx_user` · `mx_token` · `mx_pw`.
+- **Scope:** keep as is, 0 code change · on a restore the app finds the old login: the token may be dead (new device) ➡ D-075 re-registers, or the password logs back in later · amends D-073's "lost phone = lost account": that is now true only without a Google backup.
+- **Cost:** the comment login (random password + token) sits off the device in the user's Google backup (encrypted with the screen lock on Android 9+). Someone holding that backup can post as that reader. The account carries only comments and circles, no real name or mail.
+- **Alt:** exclude `mx_*` via `dataExtractionRules` / `fullBackupContent` (rejected for now: a new phone = a new account, old comments can't be deleted from it any more) · `allowBackup="false"` (rejected: also drops notes, bookmarks and streak from the backup).
+- **Ck:** `AndroidManifest.xml` `allowBackup="true"`, no extraction rules · `data/Prefs.kt` comment matches.
+
 ### D-080 @1122 · 📜 The comment sheet can load older comments, so a flood of new messages can't hide the real ones · Accepted (🦠 @1122 via M8 #336 "sure" on night F5 · 🤖 built)
 - **Ctx:** night F5: the app read only the newest 300 messages of a chapter room. One account posting 300 times buried every older comment in that chapter, on every page.
 - **Scope:** `Matrix.commentPage(from)` pages `/messages` backwards with the `end` token (no `end`, or an empty page = start of the room) · the sheet shows "↑ Load older comments" on top while the room has more · each tap = 300 messages further back, added above · a refresh after posting or deleting keeps the older pages already loaded (newest page wins, the deleted id is dropped) · Kreis timelines still read the newest 300 (private rooms, small).
