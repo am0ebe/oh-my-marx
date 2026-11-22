@@ -1,0 +1,4 @@
+# build output (kit modules build inside each app's gradle)
+core/**/build/
+.gradle/
+.kotlin/
