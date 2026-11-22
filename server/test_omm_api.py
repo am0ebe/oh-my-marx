@@ -38,11 +38,11 @@ class Api(unittest.TestCase):
     B = "b" * 20
 
     def test_counts_each_reader_once_per_day(self):
-        self.post("/v1/read", {"token": self.A, "keys": ["p:247", "v:8,9"]})
+        self.post("/v1/read", {"token": self.A, "keys": ["p:247", "p:248"]})
         self.post("/v1/read", {"token": self.A, "keys": ["p:247"]})      # same reader again: no +1
         self.post("/v1/read", {"token": self.B, "keys": ["p:247"]})
-        s = self.get("/v1/stats?keys=p:247|v:8,9|p:1")
-        self.assertEqual(s["reads"], {"p:247": 2, "v:8,9": 1})
+        s = self.get("/v1/stats?keys=p:247|p:248|p:1")
+        self.assertEqual(s["reads"], {"p:247": 2, "p:248": 1})
         self.assertEqual(s["readers_today"], 2)
 
     def test_amen_once(self):
@@ -66,8 +66,14 @@ class Api(unittest.TestCase):
     def test_rejects_junk(self):
         self.assertEqual(self.post("/v1/read", {"token": "short", "keys": ["p:1"]})[0], 400)
         self.assertEqual(self.post("/v1/read", {"token": self.A, "keys": ["DROP TABLE"]})[0], 400)
-        self.assertEqual(self.post("/v1/read", {"token": self.A, "keys": [f"p:{i}" for i in range(30)]})[0], 400)
+        self.assertEqual(self.post("/v1/read", {"token": self.A, "keys": [f"p:{i}" for i in range(1, 31)]})[0], 400)
         self.assertEqual(self.post("/v1/nope", {"token": self.A})[0], 404)
+
+    def test_only_page_keys_so_reads_stays_small(self):
+        # night F8: any `x:anything` key = a new row 4ever ➡ only th shape th app sends (p:<MEW page>)
+        for bad in ["v:8,9", "d:2026-11-22", "p:0", "p:12345", "p:1a", "q:1"]:
+            self.assertEqual(self.post("/v1/read", {"token": self.A, "keys": [bad]})[0], 400, bad)
+        self.assertEqual(self.post("/v1/read", {"token": self.A, "keys": ["p:1", "p:9999"]})[0], 200)
 
     def test_rate_limit(self):
         codes = [self.post("/v1/amen", {"token": self.A})[0] for _ in range(omm_api.RATE + 5)]

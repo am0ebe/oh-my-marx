@@ -33,7 +33,7 @@ from zoneinfo import ZoneInfo
 
 TZ = ZoneInfo("Europe/Berlin")          # "today" = th server's day, th client can't fake it
 TOKEN = re.compile(r"^[A-Za-z0-9_-]{16,64}$")
-KEY = re.compile(r"^[a-z]:[A-Za-z0-9.,_-]{1,40}$")   # p:247 = MEW page · v:8,9 = verse · d:… = day card
+KEY = re.compile(r"^p:[1-9][0-9]{0,3}$")   # p:247 = MEW page = th only key th app sends · ≤ 9999 rows i `reads` 4ever (night F8: free keys ≈ 3.4 M rows/day/IP) · new key kind ➡ add its exact shape here
 MAX_KEYS = 20
 MAX_BODY = 4096
 RATE = 120                               # writes per IP per minute
