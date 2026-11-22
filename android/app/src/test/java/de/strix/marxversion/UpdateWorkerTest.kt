@@ -7,6 +7,7 @@ import appkit.selfupdate.NOTIF_UPDATE
 import appkit.selfupdate.Outcome
 import appkit.selfupdate.Update
 import appkit.selfupdate.checkAndNotify
+import de.strix.marxversion.data.Settings
 import de.strix.marxversion.notify.UpdateWorker
 import de.strix.marxversion.notify.ommUpdate
 import kotlinx.coroutines.runBlocking
@@ -101,6 +102,20 @@ class UpdateWorkerTest {
 
     @Test fun offlineIsSilent() = runBlocking {
         assertEquals(Outcome.NONE, checkAndNotify(app, { throw java.io.IOException("offline") }, null, 35, 0L, noSilent))
+    }
+
+    /** D-078: dflt ON (kit) · a usr who set ⚙️ OFF stays OFF ➡ asked · back ON ➡ silent (worker reads omm's Prefs, no auto override) */
+    @Test fun autoDefaultOnAndOffChoiceStays() = runBlocking {
+        assertEquals(true, ommUpdate().autoDefault)
+        assertEquals(true, Settings().autoUpdate)                       // fresh Settings = kit dflt
+        val prefs = app.prefs
+        try {
+            prefs.setAutoUpdate(false)
+            assertEquals(Outcome.NOTIFIED, checkAndNotify(app, fake(newer), me, 35, 0L, noSilent))
+            app.getSharedPreferences("omm_update", 0).edit().clear().commit(); nm.cancelAll()
+            prefs.setAutoUpdate(true)
+            assertEquals(Outcome.SILENT, checkAndNotify(app, fake(newer), me, 35, 0L, noSilent))
+        } finally { prefs.setAutoUpdate(true) }                          // DataStore = process-wide ➡ leave it at th dflt
     }
 
     /** 🧩 appkit (D-079): omm's channel URLs + th pre-kit storage names (renamed = lost nag state + a 2nd periodic job) */

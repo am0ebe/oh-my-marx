@@ -10,7 +10,8 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
 
 ## ⏳
 - 🦠📱 **fon tst 2nd half: silent self-update** (D-038 · steps 1-4 ✔️ @1122, ✔️ below) — needs 1 more stable release (0.13.0 ➡ 0.13.x), ~2 min
-  5. ⚙️ "Update automatically" ON (stable 0.13.0, browser-APK install) ➡ nxt stable ships ➡ open app ➡ ✔️ no dialog, quiet "✔️ installed" notification (we're installer now = silent, Android 12+)
+  5. stable 0.13.0 (ur fon, we r installer since th 0.12 ➡ 0.13 update): ⚙️ "Update automatically" ON now ➡ nxt stable ships ➡ open app ➡ ✔️ no dialog, quiet "✔️ installed" notification (Android 12+)
+     - toggle left untouched instead: 0.13.0's code = dflt OFF ➡ 0.13.1 asks once (D-078 dflt ON lives i 0.13.1) ➡ th release aftr = silent
   6. (+30 s, fr qa_1121 r2 ck 4) any chapter ➡ 📜 Scroll ➡ pinch = txt grows / shrinks · back 2 📖 Pages = same size as b4
   - ❌ any step ➡ screenshot (auto-lands i `/opt/pix_fon`) + step nr ➡ 🤖
   - 🧮 **updater matrix** (@1116 · @1122: normal APK ✔️ fon) (same code both channels, only th URL differs: `/` ⬄ `/dev/`)
@@ -19,10 +20,6 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
     | DEV | ✔️ unit tsts · same code as normal (fon ran on stable) | ✔️ fon: Obtainium 1h ck auto-updated (🦠) · app's own notif ➡ obtainium://refresh = unit tst only |
     | normal | ✔️ fon @1122 (🦠): 0.12.0 browser APK ➡ 0.13.0 via in-app updater (notif/banner ➡ Install ➡ confirm) · ⏳ silent (step 5) | ✔️ Obtainium follows th page (same as DEV) |
     - 0.9.0 ➡ 0.10.0 APK users: banner ➡ page ➡ install by hand 1× (then 1-tap / silent fr there)
-- 🦠📱 **fon ck: kit updater updates itself** (D-079 · #329) — DEV app, ~2 min · live now: DEV `0.14.0-dev.1122.2149` (vendored kit) · kit builds = `2139` + `2149`
-  1. open DEV ➡ ⚙️ shows version: `…2139` ➡ step 2 · older (pre-kit) ➡ notif / Today banner ➡ Install ➡ = `…2149` ➡ tell 🤖 "deploy" (1 more kit build) ➡ step 2
-  2. open DEV ≤ 1 min ➡ notif "🆕 … is out" / Today banner ➡ **Install** ➡ confirm ➡ ⚙️ shows th newer version · notes + streak still there = ✔️ kit's updater installed a kit build
-  - ❌ ➡ screenshot (`/opt/pix_fon`) + step nr ➡ 🤖 · fallback install: Chrome ➡ `scagent.de/oh-my-marx/dev/`
 
 ## 👀
 ### 🌙 night run (#248 · 🦠 ✔️ @1121)
@@ -33,7 +30,6 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
   - 🌙 #308: retag ✔️ (af467a1) · translate died 644 ➡ wrapper fixed (69ad337) ➡ re-run ✔️ (5825b09) · build `tw` ✔️ (9dab3b6) · 146 unit green · both boxes: only th DEV deploy left
   - [ ] 🦠 1 min: `tail -40 data/retag_night_1122.log` ➡ quotes about their chip? (rec ✔️ if ≥ 2/3 fit · was ≈ random · #308 read ≈ ½, F16)
 ### 🐙 M8 cd decide
-- 💬 **D-078 auto-update dflt** (#327, 🦠 "not an option"): A toggle stays, dflt ON (rec) · B no toggle, alw auto · C as is (OFF) ➡ [adr.md D-078](adr.md) · Android: 1st install + 1st in-app update alw 1 tap each ❓
 ### 🏔️ v1
 - **💬 Matrix v1 — wh's left** (aftr th in-app tst, 1 list · 🤖 = can build · ❓ = 🦠 picks)
   - ✔️ 🤖 **delete my account** built @1121 (D-072 Proposed): ⚙️ under Name ➡ "Delete account" ➡ confirm ➡ **redact evy own msg (D-076)** ➡ Matrix deactivate ➡ app forgets account + Kreise · DEV `0.13.0-dev.1122.1353`
@@ -103,6 +99,8 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
 - 🤖 aft QA: rm page fotos (boox proc step 8)
 
 ## ✔️
+- ✔️ @1122 #332 🆕 **D-078 A** (🦠 "A dflt on ok"): ⚙️ "Update automatically" dflt ON, toggle = opt-out · dflt lives i th kit (`UpdateConfig.autoDefault`, pr/appkit 793b5e7) · nvr touched ➡ ON · set OFF ➡ stays OFF · 151 unit (134 + 17) + lint + 59 py green · DEV deployed · stable ➡ nxt release
+- ✔️ @1122 #332 🦠📱 **fon ck: kit updater updated itself** (D-079 · 🦠 "Yes omm updater updated itself"): DEV kit build ➡ nxt kit build via th in-app updater
 - ✔️ @1122 #329 🧩 **appkit lifted** ➡ own repo `pr/appkit/` (history kept) · omm vendors it at `appkit/` (`git subtree add --squash`, src = `~/gopro/go/pr/appkit` til Forgejo) · update: `git subtree pull --prefix appkit ~/gopro/go/pr/appkit main --squash` · 149 unit + lint + 59 py green · DEV 2149 · later items + extras rule ➡ [appkit/README.md](appkit/README.md)
 - ✔️ @1122 #327 🧩 **appkit** (D-079 · was 🔵 #297 shared app code): `appkit/` = 4 shelves (core/selfupdate · tool/apptool + app-version · templates page + README · lessons) · omm consumes it, 0 behavior change (storage names kept, page byte-same) · 149 unit (133 app + 16 kit) + lint + 59 py green · adopt recipe ➡ [appkit/README.md](appkit/README.md)
 - ✔️ @1122 #327 📄 install docs: APK + in-app update = 1st path, Obtainium = 2nd "also works" (README · page Release + Dev tab · llms.txt · DEV line) · page live (deploylog) · 💬 D-078 auto-update dflt ➡ 🦠

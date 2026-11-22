@@ -35,7 +35,7 @@ data class Settings(
     val readScroll: Boolean = false,    // 📜 reader mode: false = 📖 book pages · true = endless scroll (qa_1116 Q4/Q7, remembers last)
     val readPos: String? = null,        // 📍 qa_1120: last passage on screen i th reader (📖 page's 1st o 📜 top) ➡ "Continue reading"
     val community: Boolean = true,      // 👥 Mitlesen: anonymous daily-token counts + comments · always on since QA r5 (D-020, no ⚙️ toggle)
-    val autoUpdate: Boolean = false,    // 🆕 browser installs: install updates wo asking (Android 12+) · dflt = ask (🦠 @1114)
+    val autoUpdate: Boolean = appkit.selfupdate.Update.AUTO_DEFAULT,   // 🆕 browser installs: install updates wo asking (Android 12+) · dflt ON (D-078 @1122, was ask D-038) · set OFF = stays OFF
 )
 
 /** 👥 a Lesekreis = 1 Matrix room, found by its code */
@@ -137,7 +137,7 @@ class Prefs(private val context: Context) {
             readScroll = p[K.readScroll] ?: false,
             readPos = p[K.readPos],
             community = true,   // QA r5 (D-020): Mitlesen always on, toggle gone ➡ an old stored "off" no longer counts
-            autoUpdate = p[K.autoUpdate] ?: false,
+            autoUpdate = appkit.selfupdate.Update.autoOn(p[K.autoUpdate]),   // D-078: key absent (nvr touched) ➡ kit dflt ON · stored OFF stays OFF
         )
     }
 

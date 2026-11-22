@@ -30,7 +30,7 @@ _Template v2.1 since 20 Nov (converted via `pr/vibe++/adr_convert.md`). Field na
 - **Lift:** @1122 #329 the kit moved to its own repo `pr/appkit/` (history via `git subtree split`, its D-002 points here); omm vendors it back at `appkit/` with `git subtree add --squash`. Kit fixes go there first, then `git subtree pull` (`appkit/README.md` § 🔄).
 - **Ck:** kit `UpdateTest` 16 + app 133 = 149 unit green (148 + 1 new guard) · lint green · `bin/test_bin.py` 59 · `appkit/tool/apptool -h` · `grep -ri "marx\|omm" appkit/core appkit/tool appkit/templates` = 0.
 
-### D-078 @1122 · 🆕 Should browser installs update themselves by default? · 💬 open (🦠 picks A / B / C, #327 · not built)
+### D-078 @1122 · 🆕 Browser installs update themselves by default; the ⚙️ toggle stays as an opt-out · Accepted (🦠 @1122 via M8 #332, "A dflt on ok")
 - **Ctx:** You @1122 (via M8, #327): "omm had always ship with auto-updater. Its not an option. lets shift to this update mechanism as default and main instead of obtainium". The in-app updater is now the main install path (README + page: APK first, Obtainium second). D-038 (@1114, your words then: "should ask user … or they select autoupdate in settings") set ⚙️ "Update automatically" to **OFF** by default. "Not an option" can mean two things: (1) the updater always ships: already true since D-021, every build has it, nothing to change · (2) silent install is not opt-in any more: that is this D.
 - **What Android allows (any option):** the **first install** from the browser always needs "allow from this source" + 1 Install tap, no app can skip it. Silent updates need Android 12+ **and** our app as installer of record: after a browser install the installer is Chrome, so the **first in-app update** needs 1 confirm tap, then we are the installer and later ones can go silent. Android 8-11: every update = 1 tap, always. Obtainium / store installs: their job, unchanged.
 - **Options:**
@@ -38,9 +38,13 @@ _Template v2.1 since 20 Nov (converted via `pr/vibe++/adr_convert.md`). Field na
   - **B) no toggle, always auto:** same behaviour as A, minus the ⚙️ row · simplest UI · con: no way out for a user who doesn't want 21 MB on mobile data or a surprise new version (only uninstall), and a bad release reaches everyone at once with no one holding back
   - **C) as is (D-038):** OFF = every update asks (notification ➡ tap ➡ confirm) · con: contradicts "not an option"; most friends never open ⚙️, so they stay on manual
 - **Y (rec A):** your "default and main" = the default is what matters, and A gives it; the opt-out costs nothing (already built + tested) and keeps one brake for a bad release.
-- **Scope if A:** `Settings.autoUpdate` default true + migration · Settings row text unchanged · `UpdateWorkerTest` flips (`autoOffAsksEvenIfWeCouldGoSilent` keeps the OFF path) · ships with the next stable (the default lives in the app; 0.13.0 phones flip on that update) · step 5 of the ⏳ fon test then needs no ⚙️ tap.
-- **Prev:** D-038 (would be amended) · D-023 (silent path) · D-021 (updater).
-- **Ck:** after the pick: `UpdateWorkerTest` default case · fon: 0.13.0 browser install ➡ next stable ➡ quiet "✔️ installed" with ⚙️ untouched.
+- **Scope (built @1122, #332):** the default lives in the kit so every app gets it: `appkit` `UpdateConfig.autoDefault` (= `Update.AUTO_DEFAULT` = true) · the app passes the **stored** toggle, `null` = never touched ➡ default (`Update.autoOn`) · omm `Prefs`: key `auto_update` absent ➡ ON · Settings row text unchanged.
+- **Existing installs** (the default is app code, so a phone flips on the update that carries it: DEV now, stable with the next release):
+  - **never touched the toggle** (no `auto_update` key stored): counts as ON from that build on · that update itself still asks (notification ➡ Install ➡ confirm; after a browser install Chrome is the installer) · from the next one: silent on Android 12+ with a quiet "✔️ installed" notification · Android 8-11: still 1 tap each
+  - **set it OFF by hand** (key stored `false`): stays OFF, every update asks as before · ⚙️ ON any time
+  - set it ON by hand: unchanged · Obtainium / store installs: no toggle, their job, unchanged
+- **Prev:** D-038 (default amended: OFF ➡ ON) · D-023 (silent path) · D-021 (updater).
+- **Ck:** kit `UpdateTest.autoDefaultIsOnButAnOffChoiceStays` · `UpdateWorkerTest.autoDefaultOnAndOffChoiceStays` (OFF ➡ NOTIFIED, ON ➡ SILENT via omm Prefs) · fon: next stable on a 0.13.0 browser install ➡ the update after it is quiet with ⚙️ untouched (⏳ todo step 5).
 
 ### D-077 @1122 · 🪪 Next to someone's name the app shows their real account id, so a copied name can't pass as another reader · Proposed (🤖 built · 🦠 judges the look, #311)
 - **Y:** The name above a comment or circle message travels inside the message (`de.ohmymarx.name`), set by whoever sends it. Anyone with the app's token, or with Element, could post as "strix" and readers could not tell (night F4). The account id is set by the server and cannot be faked.
@@ -347,7 +351,7 @@ _Template v2.1 since 20 Nov (converted via `pr/vibe++/adr_convert.md`). Field na
 - **Prev:** D-034 (amended).
 - **Ck:** `TodayScreen.kt` `amen` + plan Button
 
-### D-038 @1114 · 🆕 Updates are announced at once; browser installs ask first, with an opt-in to auto-install · Accepted (🦠 @1114), phone test pending
+### D-038 @1114 · 🆕 Updates are announced at once; browser installs ask first, with an opt-in to auto-install · Accepted (🦠 @1114); default OFF superseded by D-078 (ON, @1122)
 - **Y:** You see the update and decide (consent). Obtainium users: their own background update may still win, and then our ping is moot (same version, no re-nag).
 - **Ctx:** You deployed 1114 and DEV (1113, Obtainium) showed nothing ("app doesnt show UPDATE popup"). The Obtainium path waited 8 h (GRACE_H) and the worker ran about daily, so nothing was visible for hours.
 - **Scope:** Your words "do notification immediately": GRACE_H dropped, plus one OneTime check on every app start (WorkManager, network) next to the daily one. Your words "browser apk selfupdate should ask user … or they select autoupdate in settings": `Settings.autoUpdate` default OFF = notification, tap = UpdateDialog (1 confirm) · ON (Settings row, browser installs only) + Android 12+ + we are the installer = silent (D-023 path).
