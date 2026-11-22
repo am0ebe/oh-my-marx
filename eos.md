@@ -1,6 +1,12 @@
 # eos omm — resume log · newest on TOP
 _1 block per /eos · written by /eos § 3 · todo keeps 1 line: `▶ resume ➡ eos.md`_
 
+## 261122 23:10 · /eos · #335-341 BL sweep (M8)
+- **at** · night list closed exc F6 (ops D-065 💬 🦠) · D-080 paging DEV 2238 · D-081 · D-082 lockfile · 135 unit + lint + 6 server green locally · all pushed
+- **▶ NEXT** · 🦠 fon step 5 (silent update, todo ⏳) ➡ Mo 11/23 Matrix sesh (📆) · 🤖 aftr ops fixes runner: `cilog` ➡ green ck
+- **👤 🦠** · D-076/077/068 👀 boxes · retag log read (unchanged)
+- **⚠️** · CI red = runner (todo 🔵 top) · dep bump ➡ re-write lock w full CI cmd + `--write-locks` (D-082) · raw gradle needs `JAVA_HOME=~/.local/opt/jdk21`
+
 ## 261122 23:00 · #339 F7 D-081 · #341 F15 · F12 lockfile D-082 (M8)
 - **at** · README privacy line = continuwuity facts (4e39dc4) · `android/app/gradle.lockfile` (a0dd241, CI cmd green locally fr clean) · F9 ✔️ ops-proven · night list: only F6 (ops D-065 💬 🦠) + F13 (fine) left
 - **🚧 CI red since run 1108** (b4 #335): Robolectric `MavenArtifactFetcher` ➡ ConnectException = runner can't fetch `android-all` jars ➡ 15 Robolectric classes fail, rest green · 👤 ops runner (net o cache) · local = 135 green
