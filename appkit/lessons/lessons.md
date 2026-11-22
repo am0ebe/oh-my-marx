@@ -33,4 +33,5 @@ _🔄 grows like refl ➡ distill: new lesson ➡ 1 line i § 📥 inbox w src �
 - 🧩 kit extraction: WorkManager stores th worker's **class name** ➡ moving a worker 2 a lib = keep a thin subclass w th old name (else th periodic job dies silently) · keep prefs / work names too `omm #327 D-079`
 - 📦 a lib module needs its own `POST_NOTIFICATIONS` i its manifest 4 lint, even if th app declares it `omm #327`
 - 🔧 inside `android { defaultConfig {} }` a bare `extra` = th config's extras, not th project's ➡ `project.extra` `omm #327`
+- 🐚 bash: `trap 'rm -rf "$out"' EXIT` + `local out` i a fn + `set -u` = "unbound variable" at exit (locals gone) ➡ tmp dir leaks, exit ≠ 0 aftr a good deploy ➡ trap vars = globals `omm #327 apptool`
 - 📱 cable-free fon debug ➡ [fon_debug.md](fon_debug.md) `cali @1122`

@@ -36,6 +36,7 @@ ANDROID_DIR=${ANDROID_DIR:-android}; MODULE=${MODULE:-app}; GRADLE_APP=${GRADLE_
 NOTES=${NOTES:-bin/notes.py}; GH_REMOTE=${GH_REMOTE:-gh}; GH_REPO=${GH_REPO:-${SRC#https://github.com/}}
 MAIN_ACTIVITY=${MAIN_ACTIVITY:-$PKG.MainActivity}
 footer() { declare -F tools >/dev/null && tools || true; }
+out=""   # tmp build dir (deploy · ship) · global 4 th EXIT trap
 
 # 🆕 page hook + guard: th updater reads version.json ➡ a page hook th forgot it = fons nvr update
 render() {
@@ -91,7 +92,7 @@ deploy() {
 
     # -Pdev ➡ versionName gets -dev.MMDD.HHMM (tool/app-version.gradle.kts) ➡ updater + Obtainium see a new version
     # dev = test build o th NEXT release: appVersion alr shipped (tag exists) ➡ label as next minor (0.8.0 ➡ 0.9.0-dev…)
-    local base ver out apk live
+    local base ver apk live   # out = global: th EXIT trap runs aftr this fn's locals r gone (set -u)
     base=$(app_version)
     if git rev-parse -q --verify "refs/tags/v$base" >/dev/null; then
         IFS=. read -r ma mi _ <<<"$base"; base="$ma.$((mi + 1)).0"
@@ -153,7 +154,7 @@ ship() {
         [0-9]*.[0-9]*.[0-9]*) [[ $1 =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || { ship_usage; exit 1; }; level=exact; want=$1 ;;
         "") ;; *) ship_usage; exit 1 ;;
     esac
-    local ver out apk
+    local ver apk   # out = global (EXIT trap, see deploy)
     if [ -n "$only_page" ]; then
         # last shipped = newest v* tag · apk comes fr th server (size + sha + versionCode = exactly what ppl download)
         ver=$(git tag -l 'v*' --sort=-v:refname | head -1); ver=${ver#v}
