@@ -479,6 +479,16 @@ class Retag(unittest.TestCase):
         self.assertEqual((p["chef"], p["ueberstunden"], p["lohn"]), (1, 1, 0))
         self.assertEqual(self.rt.pools(rows, quoted={"c"})["chef"], 0)
 
+    def test_peek_spreads_quoted_and_skips_moved_text(self):
+        verses = [{"id": f"8,{i}", "de": f"t{i}"} for i in range(6)]
+        rows = [{"id": v["id"], "de_sha": self.rt.de_sha(v["de"]), "tw": {"arbeitszeit": 2}} for v in verses]
+        rows[5]["de_sha"] = "moved"                                  # text changed since retag ➡ skip
+        scores = [{"id": v["id"], "quote_de": f"q{i}"} for i, v in enumerate(verses)]
+        scores[1]["quote_de"] = " "                                  # no quote ➡ app can't show it
+        p = self.rt.peek(rows, verses, scores, 2)
+        self.assertEqual([vid for vid, _ in p["ueberstunden"]], ["8,0", "8,3"], "pool 0 2 3 4 ➡ spread")
+        self.assertEqual(p["chef"], [])
+
     def test_nervt_matches_app(self):
         kt = (BIN.parent / "android/app/src/main/java/de/strix/marxversion/logic/Daily.kt").read_text()
         block = kt.split("val NERVT = linkedMapOf(", 1)[1].split("\n)", 1)[0]

@@ -11,6 +11,7 @@ examples (ollama on tow = GPU · night: echo 'bin/gpu_night.sh bin/retag.py' | a
   bin/retag.py -n 20          # try th prompt on 20 Verse 1st
   bin/retag.py                # all not yet re-tagged ➡ data/tags.jsonl (~1-2 h on th GPU)
   bin/retag.py --stats        # quotes per "Was nervt?" chip at weight ≥ 2 (guard: ≥ 30 each)
+  bin/retag.py --peek 3       # 3 quotes per chip ➡ do they fit th chip?
 """
 import argparse, hashlib, json, pathlib, sys, time, urllib.request
 
@@ -65,6 +66,17 @@ def pools(rows, quoted=None):
             for chip, tags in NERVT.items()}
 
 
+def peek(rows, verses, scores, n=3):
+    """chip ➡ n (id, quote) th chip can show, spread over th book (weight ≥ 2 + a quote) ➡ 🦠 judges fit i th log, no fon"""
+    sha = {v["id"]: de_sha(v["de"]) for v in verses}
+    quote = {s["id"]: s["quote_de"].strip() for s in scores if (s.get("quote_de") or "").strip()}
+    out = {}
+    for chip, tags in NERVT.items():
+        pool = [r["id"] for r in rows if r["id"] in quote and sha.get(r["id"]) == r["de_sha"] and any(r["tw"].get(t, 0) >= 2 for t in tags)]
+        out[chip] = [(pool[i * len(pool) // n], quote[pool[i * len(pool) // n]]) for i in range(min(n, len(pool)))]
+    return out
+
+
 def load_rows():
     return [json.loads(l) for l in open(OUT, encoding="utf-8")] if OUT.exists() else []
 
@@ -75,7 +87,16 @@ def main():
     ap.add_argument("-n", "--limit", type=int, default=0)
     ap.add_argument("-u", "--url", default="http://localhost:11434/api/generate")
     ap.add_argument("-s", "--stats", action="store_true", help="pool size per chip (weight ≥ 2) · exit 1 if one < 30")
+    ap.add_argument("-p", "--peek", type=int, default=0, metavar="N", help="N quotes per chip, spread over th book (does th chip fit?)")
     a = ap.parse_args()
+    if a.peek:
+        verses = [json.loads(l) for l in open(ROOT / "data" / "verses.jsonl", encoding="utf-8")]
+        scores = [json.loads(l) for l in open(ROOT / "data" / "scores.jsonl", encoding="utf-8")]
+        for chip, qs in peek(load_rows(), verses, scores, a.peek).items():
+            print(f"── {chip}")
+            for vid, q in qs:
+                print(f"   {vid:8} {q[:140]}")
+        return 0
     if a.stats:
         p = pools(load_rows())
         for chip, n in p.items():
