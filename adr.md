@@ -27,6 +27,7 @@ _Template v2.1 since 20 Nov (converted via `pr/vibe++/adr_convert.md`). Field na
 - **Cost:** a kit bug breaks every app; a kit change needs each app's tests green. The kit code becomes public through omm's repo even if `pr/appkit` stays private.
 - **Alt:** git submodule (rejected: every clone and CI needs `--recursive`) · sibling path `../../appkit` (rejected: the public omm clone would not build) · publish to a maven repo (rejected: infra for 2 apps) · keep copying per app (rejected: pr/appkit D-001).
 - **Prev:** #297 (extract on the 2nd copy: cali copied apptool + app-version @1122, #326).
+- **Lift:** @1122 #329 the kit moved to its own repo `pr/appkit/` (history via `git subtree split`, its D-002 points here); omm vendors it back at `appkit/` with `git subtree add --squash`. Kit fixes go there first, then `git subtree pull` (`appkit/README.md` § 🔄).
 - **Ck:** kit `UpdateTest` 16 + app 133 = 149 unit green (148 + 1 new guard) · lint green · `bin/test_bin.py` 59 · `appkit/tool/apptool -h` · `grep -ri "marx\|omm" appkit/core appkit/tool appkit/templates` = 0.
 
 ### D-078 @1122 · 🆕 Should browser installs update themselves by default? · 💬 open (🦠 picks A / B / C, #327 · not built)
