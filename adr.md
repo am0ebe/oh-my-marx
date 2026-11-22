@@ -11,7 +11,7 @@ _SDD: code says **wh** · th file says **y** · drift = a bug · fmt ➡ `pr/vib
 - limits: APK ~30 MB · local LLM 4 translation (ollama) · lone dev + AI crew
 
 ## 🧩 arch (current)
-- app `android/` (pkg `de.strix.marxversion`): `logic/` (Daily · Feast · Orden · Voice) · `data/` (Prefs · Content · Update · Community · Matrix) · `ui/` (Compose screens) · `notify/` (Reminder · Widget · KreisWorker)
+- app `android/` (pkg `de.strix.marxversion`): `logic/` (Daily · Feast · Feed · Orden · PlanUnlock · Voice) · `data/` (Prefs · Content · Db · I18n · IdMoves · Update · Community · Matrix) · `ui/` (Compose screens) · `notify/` (Reminder · Widget · KreisWorker · UpdateWorker · LosungTile)
 - content pipeline `bin/*.py` (fetch ➡ split ➡ align ➡ score ➡ translate) ➡ `assets/content/*.json` · cache `data/i18n/<lang>.jsonl`
 - server (VPS, ops-owned): `server/omm_api.py` counter + Matrix homeserver = continuwuity `matrix` since @1113 (comments · Kreise · was Synapse `omm-matrix`, config SSOT ➡ `pr/ops/matrix.md`) · contract `server/SERVICE.md`
 - release: `bin/deploy.sh` (DEV, Obtainium) · `bin/ship.sh` (bump + tag + page + GH release) · map ➡ [ref.md](ref.md)
@@ -54,7 +54,7 @@ _Template v2.1 since 20 Nov (converted via `pr/vibe++/adr_convert.md`). Field na
 - **Y:** You asked for the taps you would do on the phone (comment ➡ shows on the server ➡ circle found/join ➡ chat both ways) to run without you. `MatrixTest` only knew a fake server, `matrix_e2e.py` only the raw API: neither proved the app's own buttons reach Synapse.
 - **Scope:** `MatrixLiveTest` (Robolectric, real `MainActivity`) = app side · the other person = plain HTTP in the test (independent of `Matrix.kt`) · skipped without `-Plive` · `bin/matrix_e2e.py --app` runs it and prints the table · each run's accounts + rooms ➡ `priv/matrix_e2e_app_<stamp>.json` ➡ `--cleanup [MATCH]` (also redacts what a crashed run left in a public chapter room).
 - **Alt:** emulator + Espresso (rejected: no KVM on tow) · in CI (rejected: needs the reg token + makes real accounts on every push) · fake server only (rejected: that's what we had).
-- **Ck:** `bin/matrix_e2e.py --app` = 11/11 ✔️ · `test_bin` `MatrixCleanup` (2 tests, no network).
+- **Ck:** `bin/matrix_e2e.py --app` = 11/11 ✔️ (12/12 since D-072 step 12) · `test_bin` `MatrixCleanup` (2 tests, no network · 3 since #305).
 
 ### D-069 @1121 · 🧹 Translation junk is fixed by hand in a small fix table, applied when the translations are exported · Accepted (🤖, routine · M8 #248)
 - **Y:** The local model sometimes gives up mid-word ("تrier", "колophonе", "keranے") or says its last question twice. Re-running it needs the GPU and may produce new junk, so a hand fix is faster and stays put.
@@ -165,7 +165,7 @@ _Template v2.1 since 20 Nov (converted via `pr/vibe++/adr_convert.md`). Field na
 - **Ctx:** You asked in r1 "do the plans build on each other?". The re-evaluation found: bibel used the score.py `bib` flag, so 7 of 10 days had no Bible at all · 30tage had chapter 13 before 10-12 and 23 before 22 (Marx's ladder backwards) · montag day 1 was 1,27 (coat and linen, not Monday).
 - **Scope:** bibel v2 = 10 hand-picked references (Lamb of God, Revelation, Bible for linen, Paradise, Eden, Jehovah, Moses, original sin, Holy Ghost) · 30tage v2 and montag v2 (no chapters 1-3) · all via D-042 · Andacht lookup = (plan, verse ids), not the day index · `data/andachten_hand.jsonl` beats andacht.py's LLM cache.
 - **Alt:** Tune the `bib` regex (rejected: "Gott" and "heilig" hit everywhere) · LLM Andachten for new bibel days (rejected: quality, todo "Heute lädt uns Marx ein").
-- **Ck:** `test_bin.py PlanContent` (5) · translate `--only a` re-run (Andacht translations are keyed plan:idx)
+- **Ck:** `test_bin.py PlanContent` (5 · 6 @1122) · translate `--only a` re-run (Andacht translations are keyed plan:idx)
 
 ### D-055 @1119 · ★ The close button is a bare star (V2) · Accepted (🦠 @1120 via M8)
 - **Y:** You said in r1 "many versions, different contexts", so the crew rendered the options instead of arguing, and you picked by eye.
@@ -236,7 +236,7 @@ _Template v2.1 since 20 Nov (converted via `pr/vibe++/adr_convert.md`). Field na
   - **b) 1 punchy line from a pool** (rec)
   - **c) a teasing question for tomorrow (new `qd`/`qe`)** (rec; a + b + c built by crew in C2 + C7)
   - d) Marx head reacts (🧪 after C3)
-- **Ck:** shots `moment_shift` `moment_shift_full` (C2) · all plans have `qd` + `qe` (C7)
+- **Ck:** shots `moment_shift` `moment_shift_full` (C2) · all plans exc. `jahr` have `qd` + `qe` (C7 · `test_bin` skips jahr)
 
 ### D-047 @1119 · 📉 After a break the star tier falls one step per missed day ("Abschreibung") · Accepted (🦠 @1120 via M8 #185)
 - **Y:** Fixed capital depreciates, it doesn't vanish: kind, but there are still stakes.
@@ -263,7 +263,7 @@ _Template v2.1 since 20 Nov (converted via `pr/vibe++/adr_convert.md`). Field na
   - b) caption each counter (tried @1116, still confusing in r3)
   - **c) hero = streak only (star + week + next-milestone bar), stamps + rank go to the Stempeluhr pane and My Capital** (picked)
 - **Prev:** D-036 A (amended).
-- **Ck:** shot `hero_tiers` · stamp card in `mine` (C2)
+- **Ck:** shot `hero_tiers` · stamp card in `mine` (C2 · amended by D-061: mine = LEVEL + bar, stamps i th Stempeluhr)
 
 ### D-044 @1119 · 📖 Double-tap turned the page by side (left back, right forward) · Superseded by D-057
 - **Y:** It matched the one-tap edge zones (left back, right forward), so one mental model. No always-on peek (the D-022 pill was removed @1116 as distracting).
@@ -339,7 +339,7 @@ _Template v2.1 since 20 Nov (converted via `pr/vibe++/adr_convert.md`). Field na
 - **Ck:** `ShotsTest.hero` (hero_a + hero_b, removed after the pick) · Prefs key `hero_ab` (old abc picks don't leak)
 - **Note:** D-029 to D-036 (@1113) are the design system (you decide, crew pick = first option). Spec: [design_system.md](design_system.md) § 0 has the same list as a table. @1114: D-029 + D-030 accepted, so L0 was built (`ui/ds/`) · D-031 to D-035 accepted by you @1114 · D-036 = A by you @1116.
 
-### D-035 @1113 · 🔊 Three tiny sounds exist, off by default · Accepted (🦠 @1114, b, "sure lez try", lane L6)
+### D-035 @1113 · 🔊 Three tiny sounds exist, off by default · Accepted (🦠 @1114, b, "sure lez try", lane L6) · not built yet (L6, no `res/raw` @1122)
 - **Y:** Haptics come first: 90 % of the feel for zero assets. Sound is opt-in (reading in bed or on a train); a surprise noise means an uninstall.
 - **Ctx:** qa R1: "Duolingo-satisfying".
 - **Options:**
@@ -365,7 +365,7 @@ _Template v2.1 since 20 Nov (converted via `pr/vibe++/adr_convert.md`). Field na
 - **Scope:** Your words @1114: "try b! maybe ab-test / compare". Plan: L6 bundles one face (Literata vs EB Garamond), side-by-side shots `chapter` ×3 (system · Literata · Garamond) for you to pick, then maybe a Settings toggle as a self A/B; non-Latin languages keep the system serif. Accepted as b 🧪 @1114; built as Literata in D-058.
 - **Ck:** (at the time) no `res/font` · `OmmType.book*` = `FontFamily.Serif`
 
-### D-032 @1113 · 🌙 A dark theme "Nachtschicht" exists as tokens, follows the system, with a Settings toggle · Accepted (🦠 @1114, c "C!")
+### D-032 @1113 · 🌙 A dark theme "Nachtschicht" exists as tokens, follows the system, with a Settings toggle · Accepted (🦠 @1114, c "C!") · wiring not built yet (L6: `MarxDarkScheme` unused @1122)
 - **Y:** Night readers are real (a NIGHT hero already exists). Tokens cost nothing now and keep hard-coded colours out (guard). Wiring needs its own QA round (shots ×2), so not in the first pass.
 - **Options:**
   - a) light only
@@ -407,7 +407,7 @@ _Template v2.1 since 20 Nov (converted via `pr/vibe++/adr_convert.md`). Field na
 - **Alt:** Keep the wrong ids forever (rejected: chapter 15 would start at "15,40…", wrong footnotes) · an alias table in the app only (rejected: two id systems).
 - **Effects:** Re-splitting the book is safe; marks and reading progress follow the text.
 - **Lock-in:** Shipped apps migrate from `id_moves.json`; the file must stay cumulative forever, or older installs lose their marks.
-- **Ck:** `IdMovesTest` (Robolectric + in-memory Room + the real asset map: 4 tests: map dead to live ids · marks/reads follow · merge · runs once) · `bin/test_bin.py` · 1868 verses, 92 Andachten + ⭐288 kept
+- **Ck:** `IdMovesTest` (Robolectric + in-memory Room + the real asset map: 4 tests: map dead to live ids · marks/reads follow · merge · runs once) · `bin/test_bin.py` · 1868 verses, 92 Andachten + ⭐288 kept (@1113 · 1867 / 93 @1122)
 - **Note:** (about D-024) v1 `drop_toc` cut "toc to next heading", which ate chapter 17's 3-paragraph intro; now only contiguous toc/index lines are dropped. align: name anchors (EN mid-sentence capitals vs. DE text + cited footnotes) + length may match text+footnotes (Moore/Aveling inline long footnotes), so 13,120-125 are exact. Churn: 34 verses, sampled = fixes (V3 · 8 · 14 · 22 · 23).
 
 ### D-027 @1113 · 🤖 Curated plans live in data/plans_extra.json; "Ludditen & KI" pairs chapter 13 with new "Und heute?" bridge texts · Accepted (@1113)
@@ -446,7 +446,7 @@ _Template v2.1 since 20 Nov (converted via `pr/vibe++/adr_convert.md`). Field na
 - **Scope:** `Update.Via` from the installer of record: OBTAINIUM = notify only after `GRACE_H` 8 h on the same version, tap = `obtainium://refresh?id=<pkg>` (Obtainium wiki deep link; no link can INSTALL) · SELF = PackageInstaller session (not ACTION_VIEW), so WE become the installer of record, then Android 12+ + `UPDATE_PACKAGES_WITHOUT_USER_ACTION` lets the worker install silently and `UpdatedReceiver` posts "✔️ X installed" · the first self-update or < 12 = 1 confirm · STORE = nothing.
 - **Alt:** Install over Obtainium installs ourselves (rejected: ownership prompt + 2 updaters fighting) · Shizuku (rejected: setup for friends) · a daily nag for Obtainium too (rejected: noise, its background update mostly wins).
 - **Prev:** D-021 (amended). D-038 later dropped the grace period.
-- **Ck:** `UpdateWorkerTest` 8 (per installer · grace · silent · fallback) · `UpdateTest` via/silentRule · DEV Settings "🧪 bg update check now · installer: X"
+- **Ck:** `UpdateWorkerTest` 8 (9 since D-038 · per installer · grace · silent · fallback) · `UpdateTest` via/silentRule · DEV Settings "🧪 bg update check now · installer: X"
 
 ### D-022 @1113 · 📖 Double-tap turned the page, the dog-ear turns it, and the first chapters showed a hint · Superseded by D-044
 - **Y:** Three cues (motion · object · words) without a tutorial screen. Outside the book (Today) there is no double-tap, so a tap reacts at once.
@@ -468,7 +468,7 @@ _Template v2.1 since 20 Nov (converted via `pr/vibe++/adr_convert.md`). Field na
 - **Scope:** `Settings.community = true` (an old stored "off" is ignored) · Settings Name field (D-016 prefill + save on blur stay) · Kreis + comments: `WritesAs` line "you write as X · change: ⚙️".
 - **Alt:** Keep the switch (rejected by you) · a name field everywhere (rejected: 3 fields drift).
 - **Prev:** D-005 (the switch) · D-016 (the label).
-- **Ck:** grep `setCommunity` in ui/ = 0 · `nameLabel()` = "Name"
+- **Ck:** no `vm.setCommunity(` caller in ui/ (th VM fn `AppVm.setCommunity` itself is left, dead) · `nameLabel()` = "Name"
 - **Note:** (about D-017) QA r5 amended the note editor: no ★ (only the app-wide close elsewhere) · ANY short tap while open = close (save if changed, blank = gone), and the tap is eaten (it can't toggle the action row) · the 👥 chip is exempt · look = `NoteBubble` (side ruler · ✍️ icon · blue tint · sans), later replaced by the D-054 card.
 
 ### D-019 @1113 · 📸 Screenshots are made headless with Robolectric native graphics · Accepted (@1113)
@@ -586,8 +586,8 @@ _Template v2.1 since 20 Nov (converted via `pr/vibe++/adr_convert.md`). Field na
 
 ## ❓ open Qs
 - ✔️ closed @1121 (#290 👀 diet): streak a/b/c ➡ D-015 Amen + D-045..047 · Mitlesen toggle ➡ D-020 (always on) · ☭ close btn ➡ D-007 + D-055 (★ V2) · streak widget "2 at start" ➡ D-045 (hero = streak only)
-- "share app" prompt aft streak/medal ➡ todo 🐙 M8 cd decide (rec: park i Hooked pass)
+- ✔️ "share app" prompt aft streak/medal ➡ parked i th Hooked pass (D-074)
 - later: Read = real book look + page flip · daily verse can't be turned off · Lesekreis progressive disclosure
 
-## 🔍 drift (checked @1112)
-- none vs ✔️ Ds · note: Changelog.kt old release lines still say "Heilige Stimmen"/"Orden" = history, ok
+## 🔍 drift (checked @1122, night #308 ➡ [night_1122.md](night_1122.md) § drift)
+- @1122: Ck counts + spec § 14.3 fixed · open = 🦠 rows i night_1122 (D-025 status · D-053 shots · § 5 chips/btns · widget colors.xml) · @1112: none vs ✔️ Ds · note: Changelog.kt old release lines still say "Heilige Stimmen"/"Orden" = history, ok
