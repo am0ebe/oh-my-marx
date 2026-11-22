@@ -1,6 +1,3 @@
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -12,6 +9,10 @@ plugins {
 // ⭐ th 1 version number = th last shipped (o about-to-ship) release · `bin/ship.sh minor|patch|major` bumps it
 // dev builds (bin/deploy.sh) show th NEXT one: 0.8.0 shipped ➡ 0.9.0-dev.MMDD.HHMM (-PdevBase) · bin/lib.sh reads this line
 val appVersion = "0.13.0"
+// 🔢 versionCode (minutes) · DEV name (-Pdev -PdevBase) · 1st-entry APK stamp ➡ appkit (../appkit/README.md · D-079)
+extra["appVersion"] = appVersion
+extra["appStampKey"] = "ommBuild"
+apply(from = rootProject.file("../appkit/tool/app-version.gradle.kts"))
 
 // 💬 Matrix registration token (git-ignored file, see .gitignore) ➡ BuildConfig · missing ➡ comments off
 val ommRegToken: String = rootProject.file("omm.properties").takeIf { it.exists() }
@@ -26,13 +27,8 @@ android {
         buildConfigField("String", "OMM_REG_TOKEN", "\"$ommRegToken\"")
         minSdk = 26
         targetSdk = 36
-        // versionCode = minutes since 2026-01-01 ➡ evy build is "newer" than th last (dev + ship share 1 counter:
-        // no downgrade error when th fon jumps between th dev channel and a release)
-        versionCode = (System.currentTimeMillis() / 60_000L - 29_453_760L).toInt()
-        // -Pdev (bin/deploy.sh) ➡ 0.5.1-dev.1103.0215 = a new version 4 Obtainium evy minute
-        versionName = if (project.hasProperty("dev"))
-            (project.findProperty("devBase") as String? ?: appVersion) + "-dev." + LocalDateTime.now().format(DateTimeFormatter.ofPattern("MMdd.HHmm"))
-        else appVersion
+        versionCode = project.extra["appVersionCode"] as Int        // appkit: minutes since 2026-01-01, only goes up
+        versionName = project.extra["appVersionName"] as String     // appkit: appVersion · -Pdev ➡ <devBase>-dev.MMDD.HHMM
     }
 
     buildTypes {
@@ -76,19 +72,7 @@ android {
     }
 }
 
-// 🔢 Obtainium trap fix (@1107): an Obtainium entry on DEFAULTS (URL pasted by hand, no version regex) "versions" th
-//   APK by a hash o its 1st 1024 bytes only (Obtainium lib/providers/apps_provider.dart checkPartialDownloadHash) =
-//   1st zip entry META-INF/…/app-metadata.properties + start o th library dex ➡ identical evy build ➡ nvr an update.
-//   stamp versionName + versionCode into that 1st entry ➡ its CRC i th zip header changes per build ➡ new hash ➡
-//   any entry updates (➕ link w regex o not) · check: bin/deploy.sh compares th 1st 1 KiB vs th live APK
-val ommStamp = "${android.defaultConfig.versionName} ${android.defaultConfig.versionCode}"
-tasks.matching { it.name.matches(Regex("write.+AppMetadata")) }.configureEach {
-    inputs.property("ommStamp", ommStamp)   // new stamp ➡ task reruns (not UP-TO-DATE / fr cache)
-    doLast {
-        outputs.files.asFileTree.filter { it.name == "app-metadata.properties" }
-            .forEach { it.appendText("ommBuild=$ommStamp\n") }
-    }
-}
+// 🔢 Obtainium trap fix (@1107, 1st-entry stamp "ommBuild=…") = appkit app-version.gradle.kts (applied ⬆)
 
 kotlin {
     // must match compileOptions ⬆ (Java + Kotlin bytecode target)
@@ -100,6 +84,7 @@ ksp {
 }
 
 dependencies {
+    implementation(project(":selfupdate"))   // 🧩 appkit
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.lifecycle.viewmodel.compose)

@@ -1,189 +1,61 @@
 package de.strix.marxversion.notify
 
-import android.Manifest
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageInstaller
-import android.content.pm.PackageManager
-import android.os.Build
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
-import androidx.core.content.ContextCompat
-import androidx.core.content.edit
-import androidx.work.Constraints
-import androidx.work.CoroutineWorker
-import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.NetworkType
-import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
+import appkit.selfupdate.SelfUpdateWorker
+import appkit.selfupdate.UpdateConfig
 import de.strix.marxversion.BuildConfig
 import de.strix.marxversion.MainActivity
 import de.strix.marxversion.MarxApp
 import de.strix.marxversion.R
 import de.strix.marxversion.data.Lang
-import de.strix.marxversion.data.Update
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeoutOrNull
-import java.time.LocalDate
-import java.util.concurrent.TimeUnit
 
-// 🆕 "new version" i th background (QA r5 + am0 @1113 "Obtainium if it's there, else th website apk, as few taps as possible"):
-//   WorkManager ~daily (network) + once on evy app start (🦠 @1114 "do notification immediately") ➡ own channel's version.json ➡ by installer (Update.Via):
-//     OBTAINIUM ➡ notification at once (was: 8 h grace, D-023 amended @1114), tap = obtainium://refresh
-//     SELF + ⚙️ "auto-update" ON + we r installer o record (Android 12+) ➡ download + install SILENTLY · UpdatedReceiver says "updated ✔️"
-//     SELF otherwise (dflt: ask, 🦠 @1114) ➡ notification ➡ tap = UpdateDialog (download + 1 confirm ➡ we become installer)
-//     STORE ➡ nothing
-//   nag: new version ➡ at once · same one still not installed ➡ again evy Update.RENAG days
+// 🆕 self-update = appkit :selfupdate (../appkit/README.md · D-079) · this file = omm's config only
+//   rules (D-021 · D-023 · D-038): Obtainium ➡ notif at once, tap = obtainium://refresh · browser/adb ➡ notif ➡ UpdateDialog
+//   (dflt: ask, 🦠 @1114) · ⚙️ auto ON + we r installer (12+) ➡ silent · store ➡ nothing
 
-private const val CHANNEL = "update"
-private const val WORK = "marx_update"
-const val NOTIF_UPDATE = 30
-private const val SP = "omm_update"
+/** class name = WorkManager's stored job (since D-021) ➡ keep it, even though th work lives i th kit */
+class UpdateWorker(ctx: Context, params: WorkerParameters) : SelfUpdateWorker(ctx, params)
 
-class UpdateWorker(ctx: Context, params: WorkerParameters) : CoroutineWorker(ctx, params) {
-    override suspend fun doWork(): Result {
-        checkAndNotify(applicationContext)
-        return Result.success()   // offline / garbage = just try again tomorrow (no retry storm)
-    }
-}
+/** omm's updater config · storage names = th pre-kit ones (omm_update · marx_update · omm.apk) ➡ no state lost */
+fun ommUpdate() = UpdateConfig(
+    web = "https://scagent.de/oh-my-marx/",
+    versionCode = BuildConfig.VERSION_CODE,
+    versionName = BuildConfig.VERSION_NAME,
+    dev = BuildConfig.APPLICATION_ID.endsWith(".dev"),
+    appName = "Oh My Marx",
+    icon = R.drawable.ic_update,
+    worker = UpdateWorker::class.java,
+    openUpdate = { ctx -> Intent(ctx, MainActivity::class.java)
+        .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP).putExtra(MainActivity.EXTRA_POP, "update") },
+    openApp = { ctx -> Intent(ctx, MainActivity::class.java) },
+    de = { ctx -> setting(ctx) { it.lang == Lang.DE } },
+    auto = { ctx -> setting(ctx) { it.autoUpdate } },   // ⚙️ "auto-update" (browser installs only) · dflt off = ask (🦠 @1114)
+    onReplaced = ::launcherReset,
+    prefs = "omm_update",
+    work = "marx_update",
+    sessionName = "omm.apk",
+)
 
-enum class Outcome { NONE, NOTIFIED, SILENT }
-
-/** 🧪 seam (UpdateWorkerTest): fake version.json · installer · sdk · clock · silent installer */
-suspend fun checkAndNotify(
-    ctx: Context,
-    get: ((String) -> String)? = null,
-    installer: String? = Update.installer(ctx),
-    sdk: Int = Build.VERSION.SDK_INT,
-    now: Long = System.currentTimeMillis(),
-    silent: suspend (Update.Latest) -> Unit = { l -> Update.installSession(ctx, Update.download(ctx, l), bg = true) },
-    auto: Boolean = autoOn(ctx),
-): Outcome {
-    val via = Update.via(installer)
-    if (via == Update.Via.STORE) return Outcome.NONE
-    val fetch = get ?: Update::fetchText
-    val l = Update.newer(BuildConfig.VERSION_CODE) { fetch(Update.base() + "version.json") } ?: return Outcome.NONE
-    val sp = ctx.getSharedPreferences(SP, Context.MODE_PRIVATE)
-    if (sp.getInt("seen_code", 0) != l.code) sp.edit { putInt("seen_code", l.code).putLong("seen_at", now) }
-    val de = isDe(ctx)
-
-    if (auto && via == Update.Via.SELF && l.apk != null && Update.silentOk(installer, ctx.packageName, sdk)) {
-        sp.edit { putString("silent", l.version) }   // ➡ UpdatedReceiver aft th swap
-        if (runCatching { silent(l) }.isSuccess) return Outcome.SILENT
-        sp.edit { remove("silent") }                 // download/install failed ➡ fall back 2 asking
-    }
-    val today = LocalDate.now().toEpochDay()
-    if (!Update.shouldNotify(l.code, sp.getInt("code", 0), sp.getLong("day", Long.MIN_VALUE / 2), today)) return Outcome.NONE
-    val tap = if (via == Update.Via.OBTAINIUM) Update.obtainiumRefresh(ctx) else appUpdateIntent(ctx)
-    val text = when {
-        via == Update.Via.OBTAINIUM -> if (de) "Antippen = in Obtainium aktualisieren" else "Tap = update in Obtainium"
-        else -> if (de) "Antippen = laden + installieren · deine Daten bleiben" else "Tap = download + install · your data stays"
-    }
-    val title = if (de) "🆕 Oh My Marx %s ist da".format(l.version) else "🆕 Oh My Marx %s is out".format(l.version)
-    if (!post(ctx, title, text, tap, de)) return Outcome.NONE
-    sp.edit { putInt("code", l.code).putLong("day", today) }
-    return Outcome.NOTIFIED
-}
-
-private fun appUpdateIntent(ctx: Context) = Intent(ctx, MainActivity::class.java)
-    .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP).putExtra(MainActivity.EXTRA_POP, "update")
-
-/** ⚙️ "auto-update" (browser installs only) · dflt off = ask (🦠 @1114) */
-private fun autoOn(ctx: Context): Boolean = runCatching {
-    runBlocking { withTimeoutOrNull(500) { (ctx.applicationContext as MarxApp).prefs.settings.first().autoUpdate } }
+/** worker + receivers: DataStore read, ≤ 0.5 s, false on timeout */
+private fun setting(ctx: Context, f: (de.strix.marxversion.data.Settings) -> Boolean): Boolean = runCatching {
+    runBlocking { withTimeoutOrNull(500) { f((ctx.applicationContext as MarxApp).prefs.settings.first()) } }
 }.getOrNull() ?: false
 
-/** app lang DE? (receivers + worker: DataStore read, ≤ 0.5 s) */
-private fun isDe(ctx: Context): Boolean = runCatching {
-    runBlocking { withTimeoutOrNull(500) { (ctx.applicationContext as MarxApp).prefs.settings.first().lang == Lang.DE } }
-}.getOrNull() ?: false
-
-private fun post(ctx: Context, title: String, text: String, tap: Intent, de: Boolean, quiet: Boolean = false): Boolean {
-    if (ContextCompat.checkSelfPermission(ctx, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) return false
-    val ch = NotificationChannel(CHANNEL, if (de) "App-Updates" else "App updates", NotificationManager.IMPORTANCE_DEFAULT)
-        .apply { description = if (de) "Neue Version von Oh My Marx" else "New version of Oh My Marx" }
-    ctx.getSystemService(NotificationManager::class.java).createNotificationChannel(ch)
-    val open = PendingIntent.getActivity(ctx, 4, tap, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
-    val n = NotificationCompat.Builder(ctx, CHANNEL).setSmallIcon(R.drawable.ic_update).setSilent(quiet)
-        .setContentTitle(title).setContentText(text).setContentIntent(open).setAutoCancel(true).build()
-    NotificationManagerCompat.from(ctx).notify(NOTIF_UPDATE, n)
-    return true
-}
-
-/** ~daily, only w network · KEEP = don't reset th timer on evy app start */
-fun scheduleUpdate(ctx: Context) {
-    val req = PeriodicWorkRequestBuilder<UpdateWorker>(1, TimeUnit.DAYS)
-        .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()).build()
-    WorkManager.getInstance(ctx).enqueueUniquePeriodicWork(WORK, ExistingPeriodicWorkPolicy.KEEP, req)
-    // + 1 check now (app start) ➡ a new version shows up at once, not up 2 a day later · same version = no re-nag (RENAG)
-    val now = androidx.work.OneTimeWorkRequestBuilder<UpdateWorker>()
-        .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()).build()
-    WorkManager.getInstance(ctx).enqueueUniqueWork("$WORK-now", androidx.work.ExistingWorkPolicy.REPLACE, now)
-}
-
-/**
- * 📦 PackageInstaller session result (Update.installSession) · needs th usr ➡ app on screen: Android's confirm dialog ·
- * bg: a notification (no screen 2 pop up on) · failure ➡ Update.installError (UpdateDialog shows it + th web fallback)
- */
-class InstallReceiver : BroadcastReceiver() {
-    override fun onReceive(ctx: Context, i: Intent) {
-        val bg = i.getBooleanExtra(Update.EXTRA_BG, false)
-        when (val st = i.getIntExtra(PackageInstaller.EXTRA_STATUS, PackageInstaller.STATUS_FAILURE)) {
-            PackageInstaller.STATUS_PENDING_USER_ACTION -> {
-                val confirm = if (Build.VERSION.SDK_INT >= 33) i.getParcelableExtra(Intent.EXTRA_INTENT, Intent::class.java)
-                    else @Suppress("DEPRECATION") i.getParcelableExtra(Intent.EXTRA_INTENT)
-                // 🩹 @1115: usr left th app mid-download ➡ Android 10+ drops a bg activity start SILENTLY (no throw) ➡ only
-                //   pop th confirm while we're on screen, else th notification below (was: nothing at all)
-                if (!bg && confirm != null && onScreen() &&
-                    runCatching { ctx.startActivity(confirm.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) }.isSuccess) return
-                val de = isDe(ctx)
-                ctx.getSharedPreferences(SP, Context.MODE_PRIVATE).edit { remove("silent") }
-                post(ctx, if (de) "🆕 Update bereit" else "🆕 Update ready",
-                    if (de) "Antippen = installieren" else "Tap = install", appUpdateIntent(ctx), de)
-            }
-            PackageInstaller.STATUS_SUCCESS -> {}   // we r being replaced ➡ UpdatedReceiver takes over
-            else -> {
-                ctx.getSharedPreferences(SP, Context.MODE_PRIVATE).edit { remove("silent") }
-                Update.installError.value = (i.getStringExtra(PackageInstaller.EXTRA_STATUS_MESSAGE) ?: "") + " ($st)"
-            }
-        }
-    }
-}
-
-/** an activity o ours is visible (= Android lets us start th install confirm) */
-private fun onScreen(): Boolean = runCatching {
-    android.app.ActivityManager.RunningAppProcessInfo().also { android.app.ActivityManager.getMyMemoryState(it) }.importance <=
-        android.app.ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND
-}.getOrDefault(true)
-
-/** ✔️ aft a SILENT update th new version starts here (MY_PACKAGE_REPLACED) ➡ quiet "updated 2 X" so it's not a mystery */
 /**
  * 🥚 D-066 amended (🦠 #241: no launcher egg): DEV 0.13.0-dev.1120.1911 could leave `.MainActivity` DISABLED (it was an alias
  * then, an egg alias was on) ➡ that state survives th update ➡ no launcher icon · reset 2 manifest dflt + drop th egg worker
- * ✂️ rm once no DEV 1911 install is left (aftr th nxt stable)
+ * runs on evy self-update (kit UpdatedReceiver ➡ UpdateConfig.onReplaced) · ✂️ rm once no DEV 1911 install is left (aftr th nxt stable)
  */
-internal fun launcherReset(ctx: Context) = runCatching {
-    ctx.packageManager.setComponentEnabledSetting(android.content.ComponentName(ctx, MainActivity::class.java),
-        android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_DEFAULT, android.content.pm.PackageManager.DONT_KILL_APP)
-    WorkManager.getInstance(ctx).cancelUniqueWork("egg-icon")
-}
-
-class UpdatedReceiver : BroadcastReceiver() {
-    override fun onReceive(ctx: Context, i: Intent) {
-        if (i.action != Intent.ACTION_MY_PACKAGE_REPLACED) return
-        launcherReset(ctx)
-        val sp = ctx.getSharedPreferences(SP, Context.MODE_PRIVATE)
-        sp.getString("silent", null) ?: return
-        sp.edit { remove("silent") }
-        val de = isDe(ctx)
-        post(ctx, if (de) "✔️ Oh My Marx %s installiert".format(BuildConfig.VERSION_NAME) else "✔️ Oh My Marx %s installed".format(BuildConfig.VERSION_NAME),
-            if (de) "Von selbst aktualisiert — deine Daten sind noch da" else "Updated by itself — your data is still there",
-            Intent(ctx, MainActivity::class.java), de, quiet = true)
+internal fun launcherReset(ctx: Context) {
+    runCatching {
+        ctx.packageManager.setComponentEnabledSetting(android.content.ComponentName(ctx, MainActivity::class.java),
+            android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_DEFAULT, android.content.pm.PackageManager.DONT_KILL_APP)
+        WorkManager.getInstance(ctx).cancelUniqueWork("egg-icon")
     }
 }

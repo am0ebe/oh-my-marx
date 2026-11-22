@@ -1,10 +1,15 @@
-# shared bits 4 bin/deploy.sh + bin/ship.sh (sourced, not run)
+# omm's appkit app file (sourced by appkit/tool/apptool + tsts, not run): config + hooks · contract ➡ appkit/README.md § tool
+#   kit fns used here (appkit/tool/apptool.sh): version_json · oblink · enc · app_version · publish
 # shellcheck shell=bash
+. "$(dirname "${BASH_SOURCE[0]}")/../appkit/tool/apptool.sh"
 
 APP="Oh My Marx"
 FILE="OhMyMarx"                       # apk name: OhMyMarx-<version>.apk ➡ Obtainium reads th version fr it
-export JAVA_HOME=~/.local/opt/jdk21 ANDROID_HOME=~/Android/Sdk
-ADB=$ANDROID_HOME/platform-tools/adb
+PKG=de.strix.marxversion              # DEV app = $PKG.dev
+AUTHOR=am0ebe                         # public name (Obtainium entry)
+NOTES=bin/notes.py                    # release notes 4 a version ⬅ ui/Changelog.kt
+SHIP_GUARD=bin/check_langs.py         # 🌐 evy Lang.menu lang needs i18n_xx.json + full_xx.json (0.9.0 claimed ur/hi/bn b4 th book existed)
+GH_REPO=am0ebe/oh-my-marx
 
 # 🌐 where th download pages live (@1103: /bible dropped, too new 2 need a redirect)
 # short link 4 ppl: scagent.de/omm = 302 by ops' Caddy · Obtainium keeps th full URL
@@ -15,15 +20,12 @@ MAIL=omm@scagent.de                                 # feedback addr (Migadu alia
 SRC=https://github.com/am0ebe/oh-my-marx
 FGJ=https://git.scagent.de/am0/oh-my-marx           # Forgejo mirror (self-hosted, no public sign-up ➡ issues stay on GitHub)
 
-# th 1 version number lives i android/app/build.gradle.kts: val appVersion = "x.y.z"
-app_version() { sed -nE 's/^val appVersion = "([^"]+)".*/\1/p' android/app/build.gradle.kts; }
-
 # all tools i bin/, 1 line each (shown by evy -h)
 tools() {
     cat <<'EOF'
 tools i bin/ (run fr th repo root, -h on any for help):
-  deploy.sh    🧪 dev build (app "Oh My Marx DEV", own icon slot) ➡ <web>/dev/ (Obtainium) · -a = + wireless adb
-  ship.sh      📦 release ➡ <web>/ + GitHub release · patch|minor|major = bump 1st · -p = page only
+  deploy.sh    🧪 dev build (app "Oh My Marx DEV", own icon slot) ➡ <web>/dev/ (updates itself) · -a = + wireless adb · = appkit apptool deploy
+  ship.sh      📦 release ➡ <web>/ + GitHub release · patch|minor|major = bump 1st · -p = page only · = appkit apptool ship
   fetch.py     1️⃣ download Kapital html (DE + EN)
   split.py     2️⃣ html ➡ verses + footnotes
   align.py     3️⃣ DE ⬄ EN paragraph alignment
@@ -40,26 +42,7 @@ EOF
 
 # brand icon (bin/icons = Simple Icons, CC0) inline ➡ no CDN = no 3rd-party request fr th page
 ico() { sed -e 's/<title>[^<]*<\/title>//' -e 's/<svg /<svg class="ic" aria-hidden="true" /' "bin/icons/$1.svg"; }
-enc() { python3 -c 'import sys, urllib.parse; print(urllib.parse.quote(sys.argv[1], safe=""))' "$1"; }
-
-# ➕ Obtainium "add app" link WITH settings (@1107): plain obtainium://add/URL ➡ HTML source w/o a version regex =
-#   no version detection, only an APK hash ➡ breaks once th app was installed by hand/adb ("shows new version, can't
-#   install"). th regex reads th version fr th file name (OhMyMarx-0.9.0-dev.1107.0415.apk) = exactly th installed
-#   versionName ➡ Obtainium compares real versions. Format = Obtainium's own export (lib/pages/apps.dart).
-#   oblink PKG URL NAME
-oblink() {
-    python3 - "$@" <<'PY'
-import json, sys, urllib.parse
-pkg, url, name = sys.argv[1:4]
-# fallback if th regex ever misses: hash th LINK (has th version i it), not th 1st bytes o th APK (identical across
-# our builds ➡ Obtainium's dflt "partial APK hash" nvr changes = "no update", proven @1107)
-settings = {"versionExtractionRegEx": r"OhMyMarx-(.+)\.apk", "matchGroupToUse": "$1", "versionDetection": True,
-            "defaultPseudoVersioningMethod": "APKLinkHash"}
-app = {"id": pkg, "url": url, "author": "am0ebe", "name": name, "preferredApkIndex": 0,
-       "additionalSettings": json.dumps(settings), "overrideSource": None}
-print("obtainium://app/" + urllib.parse.quote(json.dumps(app), safe=""))
-PY
-}
+# enc · oblink (➕ Obtainium link w version regex, @1107) = appkit tool/apptool.sh
 
 # shared look (stable page + /dev/) · tabs = CSS-only (radio + :checked), no JS
 CSS='body{font:17px/1.5 system-ui,sans-serif;max-width:34em;margin:2em auto;padding:0 16px;background:#1d1230;color:#f4ead8}
@@ -97,11 +80,10 @@ svg.qr{width:10em;height:10em;margin:1em auto .3em;display:block;border-radius:1
 #   page OUTDIR VERSION APKNAME [dev]
 page() {
     local out=$1 ver=$2 apk=$3 chan=${4:-stable}
-    local mb sha code li news="" md=""
+    local mb sha li news="" md=""
     mb=$(command du -m "$out/$apk" | cut -f1); sha=$(sha256sum "$out/$apk" | cut -d' ' -f1)
-    code=$("$ANDROID_HOME"/build-tools/*/aapt2 dump badging "$out/$apk" 2>/dev/null | sed -nE "1s/.*versionCode='([0-9]+)'.*/\1/p")
-    # 🆕 th app's update check (data/Update.kt) + th Dev tab on th stable page read this
-    printf '{"version":"%s","code":%s,"apk":"%s","sha256":"%s","mb":%s}\n' "$ver" "${code:-0}" "$apk" "$sha" "$mb" > "$out/version.json"
+    # 🆕 th in-app updater (appkit core/selfupdate) + th Dev tab on th stable page read this
+    version_json "$out" "$ver" "$apk"
     if [ "$chan" = dev ]; then
         cat > "$out/index.html" <<EOF
 <!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
@@ -255,19 +237,12 @@ fetch('dev/version.json', { cache: 'no-cache' }).then(function (r) { return r.js
 EOF
 }
 
-# upload 2 evy page dir (+ SUBDIR): apk 1st (if any), page 2nd (page nvr points at a missing file) · keep newest 3 apks
-#   publish OUTDIR [dev]
-publish() {
-    local out=$1 sub=${2:-} d
-    for d in $DIRS; do
-        d="$d${sub:+/$sub}"
-        ssh vps "mkdir -p $d"
-        ls "$out"/*.apk >/dev/null 2>&1 && rsync -t --chmod=F644 "$out"/*.apk "vps:$d/"
-        rsync -t --chmod=F644 "$out/index.html" "$out/version.json" bin/favicon.png "vps:$d/"
-        [ -z "$sub" ] && rsync -t --chmod=F644 bin/og.png "$out/llms.txt" "vps:$d/"   # stable only: preview card + agent txt
-        ssh vps "cd $d && ls -t *.apk | tail -n +4 | xargs -r rm --"
-    done
-    # 👥 Kreis invite landing page (bin/kreis.html) ➡ <web>/k/ · refreshed on evy publish
+# ⬆️ appkit publish() hooks: apk + index.html + version.json + favicon = th kit · omm extras here
+#   stable only: preview card + agent txt
+publish_dir() { if [ -z "$2" ]; then rsync -t --chmod=F644 bin/og.png "$1/llms.txt" "vps:$3/"; fi; }
+#   👥 Kreis invite landing page (bin/kreis.html) ➡ <web>/k/ · refreshed on evy publish
+publish_done() {
+    local d
     for d in $DIRS; do
         ssh vps "mkdir -p $d/k"
         rsync -t --chmod=F644 bin/kreis.html "vps:$d/k/index.html"

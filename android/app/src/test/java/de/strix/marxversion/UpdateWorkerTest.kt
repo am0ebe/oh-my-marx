@@ -3,9 +3,12 @@ package de.strix.marxversion
 import android.Manifest
 import android.app.NotificationManager
 import androidx.test.core.app.ApplicationProvider
-import de.strix.marxversion.notify.NOTIF_UPDATE
-import de.strix.marxversion.notify.Outcome
-import de.strix.marxversion.notify.checkAndNotify
+import appkit.selfupdate.NOTIF_UPDATE
+import appkit.selfupdate.Outcome
+import appkit.selfupdate.Update
+import appkit.selfupdate.checkAndNotify
+import de.strix.marxversion.notify.UpdateWorker
+import de.strix.marxversion.notify.ommUpdate
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
@@ -32,7 +35,7 @@ class UpdateWorkerTest {
     private val newer = BuildConfig.VERSION_CODE + 1
     private fun fake(code: Int) = { url: String -> asked += url; """{"version":"9.9.9","code":$code,"apk":"OhMyMarx-9.9.9.apk","sha256":"00"}""" }
     private var silentRuns = 0
-    private val noSilent: suspend (de.strix.marxversion.data.Update.Latest) -> Unit = { silentRuns++ }
+    private val noSilent: suspend (Update.Latest) -> Unit = { silentRuns++ }
     private val notif get() = shadowOf(nm).getNotification(NOTIF_UPDATE)
     private fun run(code: Int, installer: String? = null, sdk: Int = 35, now: Long = 0L, auto: Boolean = true) = runBlocking {
         checkAndNotify(app, fake(code), installer, sdk, now, noSilent, auto)
@@ -98,5 +101,15 @@ class UpdateWorkerTest {
 
     @Test fun offlineIsSilent() = runBlocking {
         assertEquals(Outcome.NONE, checkAndNotify(app, { throw java.io.IOException("offline") }, null, 35, 0L, noSilent))
+    }
+
+    /** 🧩 appkit (D-079): omm's channel URLs + th pre-kit storage names (renamed = lost nag state + a 2nd periodic job) */
+    @Test fun ommConfigKeepsUrlsAndStorageNames() {
+        val c = ommUpdate()
+        assertEquals(listOf("omm_update", "marx_update", "omm.apk", UpdateWorker::class.java.name),
+            listOf(c.prefs, c.work, c.sessionName, c.worker.name))
+        assertEquals("de.strix.marxversion.notify.UpdateWorker", c.worker.name)   // WorkManager's stored job class
+        assertEquals("https://scagent.de/oh-my-marx/", Update.base(false))
+        assertEquals("https://scagent.de/oh-my-marx/dev/", Update.base(true))
     }
 }

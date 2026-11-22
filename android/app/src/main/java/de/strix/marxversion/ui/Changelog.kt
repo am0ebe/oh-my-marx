@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import de.strix.marxversion.BuildConfig
 import de.strix.marxversion.data.T
-import de.strix.marxversion.data.Update
+import appkit.selfupdate.Update
 import de.strix.marxversion.data.f
 
 /**

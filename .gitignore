@@ -1,5 +1,6 @@
 # android build output + caches (regenerable)
 android/**/build/
+appkit/**/build/
 android/.gradle/
 android/.kotlin/
 android/local.properties

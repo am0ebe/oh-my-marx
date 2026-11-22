@@ -29,6 +29,7 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
   - 🌙 #308: retag ✔️ (af467a1) · translate died 644 ➡ wrapper fixed (69ad337) ➡ re-run ✔️ (5825b09) · build `tw` ✔️ (9dab3b6) · 146 unit green · both boxes: only th DEV deploy left
   - [ ] 🦠 1 min: `tail -40 data/retag_night_1122.log` ➡ quotes about their chip? (rec ✔️ if ≥ 2/3 fit · was ≈ random · #308 read ≈ ½, F16)
 ### 🐙 M8 cd decide
+- 💬 **D-078 auto-update dflt** (#327, 🦠 "not an option"): A toggle stays, dflt ON (rec) · B no toggle, alw auto · C as is (OFF) ➡ [adr.md D-078](adr.md) · Android: 1st install + 1st in-app update alw 1 tap each ❓
 ### 🏔️ v1
 - **💬 Matrix v1 — wh's left** (aftr th in-app tst, 1 list · 🤖 = can build · ❓ = 🦠 picks)
   - ✔️ 🤖 **delete my account** built @1121 (D-072 Proposed): ⚙️ under Name ➡ "Delete account" ➡ confirm ➡ **redact evy own msg (D-076)** ➡ Matrix deactivate ➡ app forgets account + Kreise · DEV `0.13.0-dev.1122.1353`
@@ -57,7 +58,7 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
 - 🛍️ Fr 11/27 Black Friday: home-screen widget shows th 🛍️ egg left o "Marx verse" · only if it looks off ➡ screenshot (no box · render = `EggResTest`)
 
 ## 🔵
-- 🤖🧩 **shared app code** (#297): extract th 6 candidates i [app_lessons.md § 🧩](app_lessons.md) (`apptool` · `:selfupdate` · `app-version.gradle.kts` · `:testrig` · i18n kit · release notes) ➡ only when cali P1 copies them (2nd copy = extract)
+- 🤖🧩 **appkit lift-over** (#327 · D-079): `appkit/` ➡ `pr/appkit/` = ready cmd list i [appkit/README.md § 🚚](appkit/README.md) · run by M8 / appkit crew (not omm's repo) · then omm = `git subtree add` · ⏳ later items (dialog UI · chat · testrig · i18n kit · notes fmt · cali's apptool extras) = same file § 📋
 - 🤖🎨 **C-lane gaps** (done @1120: rank perks, feast emblems, 11 heads, initials, ¶, rtl / zh shots, gold swoosh · @1120 #229: 🥚 eggs replace heads in top bar, hero, quote card, D-066 · launcher egg dropped #241):
   - 🤖 ✂️ `launcherReset` (notify/UpdateWorker.kt) = DEV 1911 cleanup ➡ rm aftr th nxt stable
   - 🖼️ Feast frames (design § 14.2.1) · 🔊 stamp thud sound (D-035).
@@ -99,6 +100,8 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
 - 🤖 aft QA: rm page fotos (boox proc step 8)
 
 ## ✔️
+- ✔️ @1122 #327 🧩 **appkit** (D-079 · was 🔵 #297 shared app code): `appkit/` = 4 shelves (core/selfupdate · tool/apptool + app-version · templates page + README · lessons) · omm consumes it, 0 behavior change (storage names kept, page byte-same) · 149 unit (133 app + 16 kit) + lint + 59 py green · adopt recipe ➡ [appkit/README.md](appkit/README.md)
+- ✔️ @1122 #327 📄 install docs: APK + in-app update = 1st path, Obtainium = 2nd "also works" (README · page Release + Dev tab · llms.txt · DEV line) · page live (deploylog) · 💬 D-078 auto-update dflt ➡ 🦠
 - ✔️ @1122 #327 🦠 fon tst **updater on a browser-APK install**, steps 1-4 (D-038): stable 0.12.0 browser APK ➡ 0.13.0 via th in-app updater ("Now omm update worked") ➡ matrix normal · APK ✔️ · silent half = ⏳ (needs nxt release)
 - @1122 12 Qs applied @1121 (#307, 🦠 via M8 "ok all") ➡ D-073 + D-074 · ✔️ below · left = 1 Q added aftr th batch he saw (#299 19:19):
   - D-015 "Amen only under th snippet" nvr built + D-039 @1116 kept th quote-card Amen (✓ pop) ➡ mark D-015 Superseded by D-039, 0 code (#299) ❓

@@ -114,9 +114,11 @@ class ShipGuard(unittest.TestCase):
         self.assertEqual(check_langs.problems(BIN.parent), [])
 
     def test_ship_sh_calls_guard_b4_bump(self):
-        s = (BIN / "ship.sh").read_text()
-        self.assertIn("bin/check_langs.py", s)
-        self.assertLess(s.index("bin/check_langs.py"), s.index('sed -i -E "s/^val appVersion'))
+        # ship = appkit apptool (D-079): omm names th guard i bin/lib.sh · apptool runs SHIP_GUARD b4 th bump
+        self.assertIn("SHIP_GUARD=bin/check_langs.py", (BIN / "lib.sh").read_text())
+        self.assertIn("appkit/tool/apptool ship", (BIN / "ship.sh").read_text())
+        s = (BIN.parent / "appkit/tool/apptool").read_text()
+        self.assertLess(s.index("$SHIP_GUARD || exit 1"), s.index('sed -i -E "s/^val appVersion'))
 
 
 class Placeholders(unittest.TestCase):

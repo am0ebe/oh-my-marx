@@ -1,4 +1,4 @@
-package de.strix.marxversion.data
+package appkit.selfupdate
 
 import android.app.PendingIntent
 import android.content.Context
@@ -8,7 +8,7 @@ import android.os.Build
 import android.provider.Settings
 import androidx.core.content.FileProvider
 import androidx.core.net.toUri
-import de.strix.marxversion.BuildConfig
+import androidx.work.ListenableWorker
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
@@ -22,25 +22,58 @@ import java.net.URL
 import java.security.MessageDigest
 
 /**
- * 🆕 self-update 4 friends who installed th APK by hand (QA r5 @1113: "must nvr sit on a stale version").
- *  1) version.json next 2 th download page (bin/lib.sh writes it on evy deploy/ship: version · code · apk · sha256)
+ * ⚙️ evy app-specific bit o th updater · set once i Application.onCreate: `Update.init(UpdateConfig(…))` (b4 schedule())
+ *  web        stable channel = `<web>version.json` + th apk next 2 it · DEV app = `<web>dev/` (ends w "/")
+ *  dev        this build = th DEV app (applicationId ends ".dev") ➡ own channel
+ *  appName    i notifications ("🆕 <appName> 1.2.0 is out")
+ *  icon       small notification icon (drawable res of th app)
+ *  worker     th app's `class UpdateWorker(c, p) : SelfUpdateWorker(c, p)` · own class name = WorkManager keeps finding it
+ *  openUpdate notification tap ➡ th app's update dialog (an Intent 2 its activity) · openApp = aftr a silent update
+ *  de / auto  app lang = German? · ⚙️ "update automatically" on? (both: read th app's settings, ≤ 0.5 s)
+ *  onReplaced extra work aftr evy self-update (MY_PACKAGE_REPLACED), b4 th "installed ✔️" notification
+ *  prefs/work/sessionName = storage names · keep them once shipped (renaming = lost nag state + a 2nd periodic job)
+ */
+class UpdateConfig(
+    val web: String,
+    val versionCode: Int,
+    val versionName: String,
+    val dev: Boolean,
+    val appName: String,
+    val icon: Int,
+    val worker: Class<out ListenableWorker>,
+    val openUpdate: (Context) -> Intent,
+    val openApp: (Context) -> Intent,
+    val de: (Context) -> Boolean = { false },
+    val auto: (Context) -> Boolean = { false },
+    val onReplaced: (Context) -> Unit = {},
+    val prefs: String = "selfupdate",
+    val work: String = "selfupdate",
+    val sessionName: String = "update.apk",
+)
+
+/**
+ * 🆕 self-update 4 ppl who installed th APK by hand (outside a store).
+ *  1) version.json next 2 th download page (apptool writes it on evy deploy/ship: version · code · apk · sha256)
  *     stable app ➡ <web>/version.json · DEV app (.dev) ➡ <web>/dev/version.json = th channel it came from
- *  2) checked on app start (Today banner) + ~daily i th background (notify/UpdateWorker.kt)
+ *  2) checked on app start (th app's banner) + ~daily i th background (SelfUpdateWorker)
  *  3) by installer (Via): Obtainium ➡ poke it (obtainium://refresh) · self ➡ download (sha256 checked) + PackageInstaller
- *     session: 1st ti 1 confirm, then WE r installer o record ➡ Android 12+ installs silently (D-023)
+ *     session: 1st ti 1 confirm, then WE r installer o record ➡ Android 12+ installs silently
  *     same signing key ➡ installs over th old app, data stays
  * Skipped when an app store installed us (it updates th app itself).
  * Fails soft evywhere: offline / garbage / 404 = no update, nvr a crash.
  */
 object Update {
-    private const val WEB = "https://scagent.de/oh-my-marx/"
-    const val page = WEB
+    private lateinit var cfg: UpdateConfig
+    fun init(c: UpdateConfig) { cfg = c }
+    val config: UpdateConfig get() = cfg
+
+    val page get() = cfg.web
 
     /** 🧪 DEV app = own channel (dev builds on <web>/dev/) */
-    val DEV = BuildConfig.APPLICATION_ID.endsWith(".dev")
+    val DEV get() = cfg.dev
 
     /** where this app's channel lives (version.json + th apk) */
-    fun base(dev: Boolean = DEV) = if (dev) WEB + "dev/" else WEB
+    fun base(dev: Boolean = DEV) = if (dev) cfg.web + "dev/" else cfg.web
 
     data class Latest(val version: String, val code: Int, val apk: String? = null, val sha256: String? = null)
 
@@ -49,7 +82,7 @@ object Update {
     private const val OBTAINIUM = "dev.imranr.obtainium"   // + its ".fdroid" flavour
 
     /**
-     * who brings th next version (am0 @1113: "use Obtainium if it's there, else th website apk"):
+     * who brings th next version:
      *  OBTAINIUM = it installed us ➡ we only poke it (`obtainium://refresh?id=…`) · its own bg updates (6 h) usually win
      *  SELF = browser / file manager / adb / our own earlier self-update ➡ we download + install (silent once we're installer)
      *  STORE = a store ➡ nothing
@@ -57,7 +90,7 @@ object Update {
     enum class Via { OBTAINIUM, SELF, STORE }
 
     /** 🧪 seam */
-    internal fun via(installer: String?): Via = when {
+    fun via(installer: String?): Via = when {
         installer == null -> Via.SELF
         installer.startsWith(OBTAINIUM) -> Via.OBTAINIUM
         STORES.any { installer.startsWith(it) } -> Via.STORE
@@ -76,16 +109,14 @@ object Update {
     fun wanted(ctx: Context): Boolean = via(ctx) != Via.STORE
 
     /** 🤫 Android 12+ installs w/o asking only if WE r th installer o record (= aft our 1st, confirmed self-update) */
-    internal fun silentOk(installer: String?, me: String, sdk: Int) = sdk >= 31 && installer == me
+    fun silentOk(installer: String?, me: String, sdk: Int) = sdk >= 31 && installer == me
     fun silentOk(ctx: Context) = silentOk(installer(ctx), ctx.packageName, Build.VERSION.SDK_INT)
 
     /** 🔄 Obtainium: check this 1 app now (wiki "Deep Links": obtainium://refresh?id=<app id>, id = package) */
     fun obtainiumRefresh(ctx: Context): Intent =
         Intent(Intent.ACTION_VIEW, ("obtainium://refresh?id=" + ctx.packageName).toUri()).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 
-    // (GRACE_H 8 h head start 4 Obtainium dropped @1114: 🦠 "do notification immediately")
-
-    /** 🧪 DEV app only: newest build on <web>/dev/ (null = offline / not DEV) · th app says honestly if it's stale (@1107) */
+    /** 🧪 DEV app only: newest build on <web>/dev/ (null = offline / not DEV) · th app can say honestly if it's stale */
     suspend fun devLatest(): Latest? = withContext(Dispatchers.IO) {
         if (!DEV) return@withContext null
         runCatching { parse(fetchText(base(true) + "version.json")) }.getOrNull()
@@ -96,13 +127,13 @@ object Update {
         setRequestProperty("Cache-Control", "no-cache")
     }
 
-    internal fun fetchText(url: String): String = open(url).inputStream.bufferedReader().use { it.readText() }
+    fun fetchText(url: String): String = open(url).inputStream.bufferedReader().use { it.readText() }
 
-    /** ❌ last install failure (notify/InstallReceiver) ➡ UpdateDialog shows it + th web fallback */
+    /** ❌ last install failure (InstallReceiver) ➡ th app's update dialog shows it + th web fallback */
     val installError = kotlinx.coroutines.flow.MutableStateFlow<String?>(null)
 
     /** 🧪 seam (JVM-testable, kotlinx json: org.json is stubbed in unit tests) · throws on garbage / missing version */
-    internal fun parse(text: String): Latest {
+    fun parse(text: String): Latest {
         val o = Json.parseToJsonElement(text).jsonObject
         fun str(k: String) = o[k]?.jsonPrimitive?.content?.takeIf { it.isNotBlank() }
         return Latest(o.getValue("version").jsonPrimitive.content, o["code"]?.jsonPrimitive?.intOrNull ?: 0,
@@ -110,27 +141,27 @@ object Update {
     }
 
     /** apk = a plain file name next 2 version.json (no path, no scheme) ➡ a tampered json can't point us elsewhere */
-    internal fun safeName(apk: String) = Regex("[A-Za-z0-9._+-]+\\.apk").matches(apk)
+    fun safeName(apk: String) = Regex("[A-Za-z0-9._+-]+\\.apk").matches(apk)
 
     /** 🧪 seam: newer than `installed` ➡ Latest · older / equal / garbage / fetch throws (offline) ➡ null */
-    internal fun newer(installed: Int, get: () -> String): Latest? =
+    fun newer(installed: Int, get: () -> String): Latest? =
         runCatching { parse(get()).takeIf { it.code > installed } }.getOrNull()
 
     /** newer than what's installed ➡ Latest, else null · `get` = 🧪 fake version.json i tests */
     suspend fun check(ctx: Context, get: (String) -> String = ::fetchText): Latest? = withContext(Dispatchers.IO) {
         if (!wanted(ctx)) return@withContext null
-        newer(BuildConfig.VERSION_CODE) { get(base() + "version.json") }
+        newer(cfg.versionCode) { get(base() + "version.json") }
     }
 
     /** 🔔 bg nag rule: a NEW version ➡ notify now · same version still not installed ➡ again evy RENAG days (not daily spam) */
     const val RENAG = 2
-    internal fun shouldNotify(code: Int, lastCode: Int, lastDay: Long, today: Long) = code != lastCode || today - lastDay >= RENAG
+    fun shouldNotify(code: Int, lastCode: Int, lastDay: Long, today: Long) = code != lastCode || today - lastDay >= RENAG
 
     // ── download + install ──
 
     fun hex(b: ByteArray) = b.joinToString("") { "%02x".format(it) }
 
-    internal fun sha256(f: File): String = MessageDigest.getInstance("SHA-256").let { md ->
+    fun sha256(f: File): String = MessageDigest.getInstance("SHA-256").let { md ->
         f.inputStream().use { s -> val buf = ByteArray(1 shl 16); while (true) { val n = s.read(buf); if (n < 0) break; md.update(buf, 0, n) } }
         hex(md.digest())
     }
@@ -162,7 +193,10 @@ object Update {
     /** ⚙️ th system page where th usr allows it (comes back 2 th app aft) */
     fun allowIntent(ctx: Context) = Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, ("package:" + ctx.packageName).toUri())
 
-    /** 📦 Android's install dialog 4 th downloaded apk (FileProvider ➡ res/xml/file_paths.xml "update") · fallback only */
+    /**
+     * 📦 Android's install dialog 4 th downloaded apk · fallback only · needs th app's FileProvider
+     * `${applicationId}.files` w `<cache-path name="update" path="update/" />` (README § adopt)
+     */
     fun installIntent(ctx: Context, apk: File): Intent = Intent(Intent.ACTION_VIEW)
         .setDataAndType(FileProvider.getUriForFile(ctx, ctx.packageName + ".files", apk), "application/vnd.android.package-archive")
         .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -170,7 +204,7 @@ object Update {
     /**
      * 📦 install via a PackageInstaller session = WE become th installer o record ➡ nxt update can be silent (Android 12+).
      * always asks 4 USER_ACTION_NOT_REQUIRED: not eligible (1st ti, < 12) ➡ Android asks th usr anyway (InstallReceiver
-     * shows its dialog) · result ➡ notify/InstallReceiver.kt · `bg` = no screen 2 show a dialog on ➡ notification instead
+     * shows its dialog) · result ➡ InstallReceiver · `bg` = no screen 2 show a dialog on ➡ notification instead
      */
     fun installSession(ctx: Context, apk: File, bg: Boolean) {
         val pi = ctx.packageManager.packageInstaller
@@ -180,8 +214,8 @@ object Update {
         }
         val id = pi.createSession(p)
         pi.openSession(id).use { s ->
-            s.openWrite("omm.apk", 0, apk.length()).use { o -> apk.inputStream().use { it.copyTo(o) }; s.fsync(o) }
-            val i = Intent(ctx, de.strix.marxversion.notify.InstallReceiver::class.java).putExtra(EXTRA_BG, bg)
+            s.openWrite(cfg.sessionName, 0, apk.length()).use { o -> apk.inputStream().use { it.copyTo(o) }; s.fsync(o) }
+            val i = Intent(ctx, InstallReceiver::class.java).putExtra(EXTRA_BG, bg)
             // MUTABLE: th system adds status + th confirm intent 2 it (explicit intent ➡ safe)
             s.commit(PendingIntent.getBroadcast(ctx, id, i, PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_UPDATE_CURRENT).intentSender)
         }

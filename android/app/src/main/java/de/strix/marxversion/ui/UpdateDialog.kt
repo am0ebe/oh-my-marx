@@ -20,7 +20,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import de.strix.marxversion.BuildConfig
-import de.strix.marxversion.data.Update
+import appkit.selfupdate.Update
 import de.strix.marxversion.data.f
 import de.strix.marxversion.ui.ds.Ds
 import de.strix.marxversion.ui.ds.Space

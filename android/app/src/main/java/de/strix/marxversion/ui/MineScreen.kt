@@ -195,8 +195,8 @@ fun SettingsScreen(vm: AppVm, askNotifPermission: () -> Unit) {
         // ── 🆕 updates (🦠 @1114): browser install = ask by dflt, opt-in auto · Obtainium/store = their job ──
         run {
             val ctx = androidx.compose.ui.platform.LocalContext.current
-            val via = remember { de.strix.marxversion.data.Update.via(ctx) }
-            if (via == de.strix.marxversion.data.Update.Via.SELF) Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(vertical = 8.dp)) {
+            val via = remember { appkit.selfupdate.Update.via(ctx) }
+            if (via == appkit.selfupdate.Update.Via.SELF) Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(vertical = 8.dp)) {
                 Column(Modifier.weight(1f)) {
                     Text(tr("🆕 Automatisch aktualisieren", "🆕 Update automatically"))
                     Text(tr("Neue Versionen installieren sich ohne Nachfrage (Android 12+). Aus = du bekommst eine Nachricht und tippst.",
@@ -305,7 +305,7 @@ fun SettingsScreen(vm: AppVm, askNotifPermission: () -> Unit) {
             "🤖 Proudly vibe-coded with Claude Opus + Sonnet. Alienated labour, fully automated. The means of production are still ours."), fontSize = 13.sp)
         val ctx = androidx.compose.ui.platform.LocalContext.current
         // 🔘 QA r5: 3 bare emoji = unclear ➡ labelled pills, same CardAction system as Today (🌐 page · 📤 share · 💬 feedback mail)
-        val pageUrl = de.strix.marxversion.data.Update.page
+        val pageUrl = appkit.selfupdate.Update.page
         val shareTxt = tr("Marx lesen wie die Bibel — Oh My Marx ☭", "Read Marx like the Bible — Oh My Marx ☭")   // ShareAppPanel adds APP_LINK
         var sharePanel by remember { mutableStateOf(false) }
         if (sharePanel) ShareAppPanel(shareTxt) { sharePanel = false }

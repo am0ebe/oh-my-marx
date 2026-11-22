@@ -131,7 +131,7 @@ class ShotsTest {
         rule.onAllNodesWithContentDescription("Close").onFirst().performClick()
         // 🆕 update dialog (L5): fake "newer version out" ➡ Primary-L Install + Text Later
         val vm = androidx.lifecycle.ViewModelProvider(rule.activity)[de.strix.marxversion.ui.AppVm::class.java]
-        rule.runOnUiThread { vm.update.value = de.strix.marxversion.data.Update.Latest("9.9.9", 999_999, apk = "omm.apk"); vm.showUpdate.value = true }
+        rule.runOnUiThread { vm.update.value = appkit.selfupdate.Update.Latest("9.9.9", 999_999, apk = "omm.apk"); vm.showUpdate.value = true }
         dialogShot("update")
         rule.runOnUiThread { vm.showUpdate.value = false; vm.update.value = null }
         // L3 @1114: plan detail · kreis_detail needs a server ➡ ❌ shot

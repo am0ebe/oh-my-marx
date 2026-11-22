@@ -24,7 +24,7 @@ import de.strix.marxversion.logic.today
 import de.strix.marxversion.logic.verseOfDay
 import de.strix.marxversion.notify.LosungWorker
 import de.strix.marxversion.notify.schedule
-import de.strix.marxversion.data.Update
+import appkit.selfupdate.Update
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
