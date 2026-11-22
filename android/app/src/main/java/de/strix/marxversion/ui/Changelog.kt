@@ -34,6 +34,12 @@ import de.strix.marxversion.data.f
 data class Release(val version: String, val date: String, val items: List<Pair<String, String>>)
 
 val RELEASES = listOf(
+    // 0.13.1 = #327-#333: auto-update dflt ON (D-078) · install order APK 1st (page) · updater fr th shared kit (D-079)
+    Release("0.13.1", "2026-11-22", listOf(
+        T("🆕 Updates installieren sich jetzt von selbst (Android 12+) · ⚙️ „Automatisch aktualisieren“ ausgeschaltet? Bleibt aus", "🆕 Updates now install by themselves (Android 12+) · turned ⚙️ “Update automatically” off? It stays off"),
+        T("⬇️ Download-Seite: zuerst die APK mit eingebautem Update, Obtainium als zweiter Weg", "⬇️ Download page: the APK with built-in updates comes first, Obtainium second"),
+        T("🧰 Unter der Haube: das Update kommt jetzt aus unserem App-Baukasten, gleiches Verhalten", "🧰 Under the hood: the updater now comes from our shared app kit, same behaviour"),
+    )),
     // 0.13.0 = C-lanes (C1-C7) · eggs · Matrix fixes (D-075/076/077) · #325 stable 4 th updater tst
     Release("0.13.0", "2026-11-22", listOf(
         T("🥚 30 Feiertage: Marx verkleidet sich — in der Leiste oben, auf „Heute“, auf der Zitatkarte und im Widget", "🥚 30 feast days: Marx dresses up — in the top bar, on “Today”, on the quote card and in the widget"),
