@@ -83,6 +83,15 @@ ksp {
     arg("room.schemaLocation", "$projectDir/schemas")
 }
 
+// 🔒 night F12: exact resolved versions ➡ app/gradle.lockfile (ops' osv-scanner reads it, can't read libs.versions.toml)
+//   holds :selfupdate's deps too (app's classpaths include them) ➡ no lockfile i th vendored kit
+//   dep bump ➡ `./gradlew :app:dependencies --write-locks` + commit th lockfile (a drifted lock = build fails)
+dependencyLocking {
+    lockAllConfigurations()
+    // Kotlin 2.x: stdlib-common = empty compat jar, resolved i/out o runtime classpaths by task order ➡ flaky lock (kotlin-stdlib stays locked)
+    ignoredDependencies.add("org.jetbrains.kotlin:kotlin-stdlib-common")
+}
+
 dependencies {
     implementation(project(":selfupdate"))   // 🧩 appkit
     implementation(libs.androidx.core.ktx)

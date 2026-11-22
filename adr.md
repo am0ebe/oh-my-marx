@@ -20,6 +20,12 @@ _SDD: code says **wh** · th file says **y** · drift = a bug · fmt ➡ `pr/vib
 ## 🧾 decisions (newest on top)
 _Template v2.1 since 20 Nov (converted via `pr/vibe++/adr_convert.md`). Field names: Y = why · Ctx = what forced it · Scope = what it covers · Ck = how to check._
 
+### D-082 @1122 · 🔒 The app's exact dependency versions sit in a Gradle lockfile, so ops' scanner can check them · Accepted (crew @1122, M8 #341 · night F12)
+- **Ctx:** ops' nightly osv-scanner reads lockfiles, not `gradle/libs.versions.toml` (ranges + no transitive deps) ➡ the app's ~380 resolved libraries were never scanned.
+- **Scope:** `:app` only: `dependencyLocking { lockAllConfigurations() }` ➡ `android/app/gradle.lockfile` (+ an empty `settings-gradle.lockfile`) · `:selfupdate`'s deps are inside the app's classpaths ➡ no file in the vendored kit · `kotlin-stdlib-common` ignored (Kotlin 2.x resolves this empty compat jar in or out depending on task order ➡ flaky lock; `kotlin-stdlib` stays locked) · a dependency bump must re-write the lock: `./gradlew :app:dependencies lintDebug testDebugUnitTest assembleRelease --write-locks` (the plain `dependencies` task misses configurations the build resolves).
+- **Alt:** lock only `releaseRuntimeClasspath` (what ships; rejected: test + lint deps would go unscanned) · a scanner that reads the version catalog (ops' pick, not ours) · lock the kit module too (rejected: a file in the vendored subtree = merge noise on every pull).
+- **Ck:** CI cmd from `.forgejo/workflows/ci.yml` green from `clean` without `--write-locks` · `bin/deploy.sh -n` green (DEV = `assembleDebug -Pdev`).
+
 ### D-081 @1122 · ☁️ The comment login stays in Android's backup, so a new phone keeps your account · Accepted (🦠 @1122 via M8 #339, "keep")
 - **Ctx:** night F7: `android:allowBackup="true"` with no extraction rules ➡ Android's Google backup and device-to-device transfer also copy the DataStore prefs, including `mx_user` · `mx_token` · `mx_pw`.
 - **Scope:** keep as is, 0 code change · on a restore the app finds the old login: the token may be dead (new device) ➡ D-075 re-registers, or the password logs back in later · amends D-073's "lost phone = lost account": that is now true only without a Google backup.
