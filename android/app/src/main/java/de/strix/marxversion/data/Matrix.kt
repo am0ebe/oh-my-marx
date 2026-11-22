@@ -10,7 +10,7 @@ import java.net.URLEncoder
 import java.security.SecureRandom
 
 /**
- * 💬 comments = Matrix (own homeserver on th VPS, server/matrix/) · tiny client-server API subset, no SDK:
+ * 💬 comments = Matrix (own homeserver on th VPS, contract = server/SERVICE.md § 2) · tiny client-server API subset, no SDK:
  *   register (registration token ➡ dummy) · join #omm-kap-<kap> · send m.text w th MEW page · read /messages
  * 1 room per chapter, comments carry `de.ohmymarx.page` ➡ th app groups them by page.
  * Bonus: any Matrix app (Element …) can join th same rooms 4 long discussions.

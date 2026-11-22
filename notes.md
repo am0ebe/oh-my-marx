@@ -354,7 +354,7 @@ _per concept 2-3 lines_
 - 🌍 **LLM book qy** (all 11 i th app since 0.8/0.9 · notes.md § 🌍): 👤 native QA zh/ar/hi/bn/ur · samples `bin/translate_full.py --show 5 --langs it es`
   - 🔍 alt = existing translations: © per translator (life + 70 y, ZH 50 y) · ES Juan B. Justo 1898 (†1928 ➡ prob PD) · ZH 郭大力/王亚南 1938 (CN PD ~2027) · IT Cantimori (© til 2036) · marxists.org hosting ≠ PD · 🦠 decide aft comparing
 - 🦠📚 **Matrix + chat: K + tst**
-  - 🦠 re: notes.md § 🏗️ technical: Matrix (10 min) + `server/matrix/README.md`
+  - 🦠 re: notes.md § 🏗️ technical: Matrix (10 min) + `server/SERVICE.md` § 2 + `pr/ops/matrix.md` (old `server/matrix/README.md` rm @1122)
   - 🤖🧪 `bin/matrix_e2e.py`: 2 throwaway users ➡ Kreis gründen · beitreten · chat · Amen ➡ repeatable smoke tst vs live (th @1104 run wasn't saved) · + a bot user 🦠 can chat w fr th fon = tst chat alone
   - 🤖🧪 `data/Matrix.kt` JVM tst vs a tiny fake HTTP server (register UIA 3 steps · join · timeline parse · redacted dropped) · needs `testImplementation("org.json:json:…")`
 

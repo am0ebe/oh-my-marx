@@ -78,8 +78,8 @@ reading circles need a server token that isn't in the repo; everything else work
 Bookmarks, notes, streak and settings stay on the phone. Three things talk to `scagent.de` (a small server in
 Germany): the update check (reads `version.json`), the anonymous *read along* counter
 ([`server/omm_api.py`](server/omm_api.py), ~200 lines of Python stdlib: page keys + a daily random token, no IPs) and,
-once you use them, comments and reading circles (a [Matrix](https://matrix.org) homeserver, config in
-[`server/matrix/`](server/matrix/)). *Read along* is always on since 0.10.0 (no switch).
+once you use them, comments and reading circles (a [Matrix](https://matrix.org) homeserver, what it needs:
+[`server/SERVICE.md`](server/SERVICE.md)). *Read along* is always on since 0.10.0 (no switch).
 
 ### Known gaps
 

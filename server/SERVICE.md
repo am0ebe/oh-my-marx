@@ -22,22 +22,23 @@
 | resources | ~20 MB RAM · 64 MB cap is plenty |
 | updates | rebuild when the base image moves · no migrations |
 
-## 2 · Matrix homeserver — comments (any client-server v3 homeserver · ours = continuwuity `matrix` since @1113, ops-owned ➡ `pr/ops/matrix.md` · `server/matrix/` = old Synapse template, history)
+## 2 · Matrix homeserver — comments (any client-server v3 homeserver · ours = continuwuity `matrix` since @1113, ops-owned ➡ `pr/ops/matrix.md` · old Synapse template `server/matrix/` removed @1122, in git history)
 | | |
 |--|--|
-| image | `matrixdotorg/synapse` (any current 1.x) · config = generated `homeserver.yaml` + `server/matrix/overrides.yaml` appended |
-| listens | :8008 client API only (no federation listener) |
-| routes needed | `https://<host>/_matrix/*` ➡ `:8008` · `/.well-known/matrix/client` ➡ `{"m.homeserver":{"base_url":"https://<host>"}}` · **not** `/_synapse/admin` |
+| image | any client-server v3 homeserver · ours = continuwuity (config + compose = ops) |
+| listens | client API only (no federation needed) |
+| routes needed | `https://<host>/_matrix/*` ➡ the homeserver · `/.well-known/matrix/client` ➡ `{"m.homeserver":{"base_url":"https://<host>"}}` · **no** admin API on the public route |
 | server_name | `scagent.de` — baked into every user id + room alias, **can't change later** |
-| state | `/data/` = `homeserver.db` (all comments + accounts) · `*.signing.key` · `homeserver.yaml` · `omm_reg_token` · + `admin.secret` next to it ➡ **must be backed up** · loss = all comments + accounts gone |
-| one-time setup | `server/matrix/setup.py` (admin login ➡ registration token ➡ 31 chapter rooms) · safe to rerun |
-| user rooms (@1104) | 👥 **Lesekreise** = rooms users create themselves: alias `#omm-kreis-<6-char code>`, join rule public but not in the directory, history `shared`, custom timeline event `de.ohmymarx.amen` (`{"day":"YYYY-MM-DD"}`) · ⇒ room count + db grow with users (small text only) · needs: normal users may create rooms (Synapse default) |
+| signup | registration **token** required (no open signup) · UIA flow: `m.login.registration_token` ➡ `m.login.dummy` (the app does exactly this) |
+| state | the homeserver's DB (all comments + accounts) · signing key · reg token · admin secret ➡ **must be backed up** · loss = all comments + accounts gone |
+| one-time setup | 31 public chapter rooms `#omm-kap-<V1..V6 \| 1..25>:scagent.de`: `public_chat`, history `world_readable`, power levels `events_default 0 · state_default 100 · users_default 0 · redact 50 · kick 50 · ban 50 · invite 0` (everyone posts + redacts own, only the admin touches state) · ours = ops `bin/matrix_setup.py` (safe to rerun) |
+| user rooms (@1104) | 👥 **Lesekreise** = rooms users create themselves: alias `#omm-kreis-<6-char code>`, join rule public but not in the directory, history `shared`, custom timeline event `de.ohmymarx.amen` (`{"day":"YYYY-MM-DD"}`) · ⇒ room count + db grow with users (small text only) · needs: normal users may create rooms (default) |
 | health | `GET /_matrix/client/versions` |
 | resources | ~105 MB RAM idle · 512 MB cap |
 | updates | homeserver security releases are frequent ➡ bump often · DB backup before each bump (continuwuity = RocksDB dir copy, `pr/ops/matrix.md`) |
 
 ## 3 · secrets crossing the seam
-- **registration token**: made on the server by `setup.py` (`/data/omm_reg_token`) ➡ the app build needs it in git-ignored `android/omm.properties` (`omm.regToken=…`) ➡ ships inside the APK (by design)
+- **registration token**: set on the homeserver (ours: ops, `pr/ops/matrix.md`) ➡ the app build needs it in git-ignored `android/omm.properties` (`omm.regToken=…`) ➡ ships inside the APK (by design)
 - `admin.secret` (@ommadmin pw): stays on the server, never in this repo
 
 ## 4 · the 1 thing omm does on the box
