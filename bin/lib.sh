@@ -137,7 +137,8 @@ EOF
 - Version: $ver · ${mb} MB · Android 8.0+
 - APK: $WEB/$apk (sha256 $sha)
 - Latest version as JSON: $WEB/version.json
-- Install + auto-update with Obtainium: add the URL $WEB/
+- Install: download the APK on an Android phone; the app updates itself (notification + one tap, or silent with Settings ➡ Update automatically, Android 12+)
+- Also works: Obtainium, add the URL $WEB/
 - Languages: English (Moore/Aveling 1887, default), German (original), Italian, Spanish, Portuguese, Chinese, Arabic, French, Russian, Hindi, Bengali, Urdu, Indonesian (whole book translated from German by a local LLM)
 - Source: $SRC · mirror: $FGJ
 - Release notes + older versions: $SRC/releases
@@ -150,7 +151,7 @@ EOF
     # 📣 share: native sheet 1st (phone) · then 1-tap links · prefilled txt = th hook · OG card = th preview evy messenger shows
     local u t
     u=$(enc "$SHORT"); t=$(enc "Read Das Kapital like the Bible ☭ a daily verse, the whole book, free & open source: $SHORT")
-    # order (strix @1105/06): Obtainium 1st · APK 2nd (Stable | 🧪 Dev) · build-it-urself 3rd (GitHub | Forgejo) · what's new · footer = share + feedback
+    # order (strix @1105/06 · #327 @1122): APK + in-app update 1st · Obtainium 2nd "also works" (Stable | 🧪 Dev) · build-it-urself 3rd (GitHub | Forgejo) · what's new · footer = share + feedback
     cat > "$out/index.html" <<EOF
 <!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>$APP ☭</title>
@@ -172,32 +173,33 @@ EOF
 <h1>☭ $APP</h1>
 <p>Read Marx like the Bible: a daily verse from <i>Das Kapital</i>, the whole book, reading plans, streaks —
 and a Hooked mode that confesses every habit trick the app plays on you. In English, German (Marx's original), Italiano · Español · Português · 中文 · عربي.</p>
-<!-- 1 tab box 4 both ways in (strix @1106): Release (dflt) | dev (quiet, 4 testers) · each: 1. Obtainium 2. APK -->
+<!-- 1 tab box 4 both ways in (strix @1106): Release (dflt) | dev (quiet, 4 testers) · each: 1. APK (updates itself) 2. Obtainium (#327) -->
 <div class="tb big">
 <input type="radio" name="a" id="as" checked><label for="as">Release $ver</label><input type="radio" name="a" id="ad"><label for="ad">Dev</label>
 <div class="tp" id="ps">
-<h2>1. Install with Obtainium <small>(recommended: updates itself)</small></h2>
-<ol><li>Get <a href="https://github.com/ImranR98/Obtainium/releases/latest">Obtainium</a> (free, open source app updater)</li>
-<li>Tap <b>➕ Add to Obtainium</b> below ➡ <b>Add</b> ➡ <b>Install</b></li></ol>
-<a class="o" href="$(oblink de.strix.marxversion "$WEB/" "$APP")">➕ Add to Obtainium</a>
-<p><small>Button does nothing? In Obtainium tap ＋ and paste <code>$WEB/</code>, and under <i>Version string extraction regular expression</i> enter <code>OhMyMarx-(.+)\.apk</code></small></p>
-<h2>2. Or download the APK</h2>
+<h2>1. Download the APK <small>(recommended: the app updates itself)</small></h2>
 <a class="b" href="$apk">⬇️ Download $APP $ver · ${mb} MB</a>
 <ol><li>Tap the download ➡ allow installing from this source (once) ➡ <b>Install</b></li>
 <li>Play Protect may warn about an "unknown app" — normal outside the Play Store ➡ <b>Install anyway</b></li>
-<li>The app tells you when a new version is out ➡ tap ➡ install over it, your data stays</li></ol></div>
+<li>Updates: the app tells you when a new version is out ➡ <b>Install</b> ➡ confirm, your data stays.
+⚙️ <b>Update automatically</b> = new versions install without asking (Android 12+)</li></ol>
+<h2>2. Also works: Obtainium <small>(if you already use it)</small></h2>
+<ol><li>Get <a href="https://github.com/ImranR98/Obtainium/releases/latest">Obtainium</a> (free, open source app updater)</li>
+<li>Tap <b>➕ Add to Obtainium</b> below ➡ <b>Add</b> ➡ <b>Install</b></li></ol>
+<a class="o" href="$(oblink de.strix.marxversion "$WEB/" "$APP")">➕ Add to Obtainium</a>
+<p><small>Button does nothing? In Obtainium tap ＋ and paste <code>$WEB/</code>, and under <i>Version string extraction regular expression</i> enter <code>OhMyMarx-(.+)\.apk</code></small></p></div>
 <div class="tp" id="pd">
 <p><small>Test builds of what's coming next, for testers and contributors. They install as a <b>separate app</b>
 ("Oh My Marx DEV", blue icon) next to the normal one, with their own data. Can break.</small></p>
-<h2>1. Install with Obtainium <small>(updates itself)</small></h2>
+<h2>1. Download the APK <small>(updates itself)</small></h2>
+<a class="b" id="dv" href="dev/">⬇️ Download latest dev build</a>
+<ol><li>Same steps as a release: allow this source (once) ➡ <b>Install</b> · new dev builds: the app tells you</li>
+<li>Bugs: <a href="$SRC/issues/new/choose">open an issue</a></li></ol>
+<h2>2. Also works: Obtainium</h2>
 <ol><li>Get <a href="https://github.com/ImranR98/Obtainium/releases/latest">Obtainium</a></li>
 <li>Tap <b>➕ Add to Obtainium</b> below ➡ <b>Add</b> ➡ <b>Install</b></li></ol>
 <a class="o" href="$(oblink de.strix.marxversion.dev "$WEB/dev/" "$APP DEV")">➕ Add to Obtainium</a>
-<p><small>Button does nothing? In Obtainium tap ＋ and paste <code>$WEB/dev/</code>, and under <i>Version string extraction regular expression</i> enter <code>OhMyMarx-(.+)\.apk</code></small></p>
-<h2>2. Or download the APK</h2>
-<a class="b" id="dv" href="dev/">⬇️ Download latest dev build</a>
-<ol><li>Same steps as a release: allow this source (once) ➡ <b>Install</b></li>
-<li>Bugs: <a href="$SRC/issues/new/choose">open an issue</a></li></ol></div>
+<p><small>Button does nothing? In Obtainium tap ＋ and paste <code>$WEB/dev/</code>, and under <i>Version string extraction regular expression</i> enter <code>OhMyMarx-(.+)\.apk</code></small></p></div>
 </div>
 <h2>Or build it yourself</h2>
 <p>Open source (GPL-3.0): read the code and build the APK on your own machine instead of trusting ours.

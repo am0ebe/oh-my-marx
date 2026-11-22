@@ -172,7 +172,8 @@ fun ReleaseNotes() {
         Text(tr("Dev-Build %s — ungetestet", "Dev build %s — untested").f(mine), fontSize = 12.sp, color = Red)
         when {
             l == null -> {}
-            l.code > BuildConfig.VERSION_CODE -> Text(tr("⚠️ Neuerer Dev-Build da: %s ➡ Obtainium", "⚠️ Newer dev build out: %s ➡ Obtainium").f(l.version),
+            // #327: no "➡ Obtainium" — th in-app updater = main path (notif + Today banner), Obtainium = 2nd
+            l.code > BuildConfig.VERSION_CODE -> Text(tr("⚠️ Neuerer Dev-Build da: %s", "⚠️ Newer dev build out: %s").f(l.version),
                 fontSize = 12.sp, color = Red, fontWeight = FontWeight.Bold)
             else -> Text(tr("✔️ neuester Dev-Build", "✔️ newest dev build"), fontSize = 12.sp, color = MaterialTheme.colorScheme.secondary)
         }

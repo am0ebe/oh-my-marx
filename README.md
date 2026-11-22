@@ -15,18 +15,19 @@ A fun prototype, shared with friends outside the app stores.
 
 Same steps as the download page **<https://scagent.de/oh-my-marx/>**, in the same order:
 
-**1. With Obtainium** (recommended: updates itself)
-
-1. Get [Obtainium](https://github.com/ImranR98/Obtainium/releases/latest) (free, open source app updater)
-2. In Obtainium tap ＋ and paste `https://scagent.de/oh-my-marx/` ➡ **Add** ➡ **Install**
-   (or tap **➕ Add to Obtainium** on the download page)
-
-**2. Or download the APK**
+**1. Download the APK** (recommended: the app updates itself)
 
 1. On your Android phone open **<https://scagent.de/oh-my-marx/>** ➡ tap **Download**
 2. Allow installing from this source (once) ➡ **Install**
 3. Play Protect may warn about an "unknown app" (normal outside the Play Store) ➡ **Install anyway**
-4. The app tells you when a new version is out ➡ tap ➡ install over it, your data stays
+4. Updates: the app tells you when a new version is out (notification + banner on Today) ➡ **Install** ➡
+   confirm, your data stays. ⚙️ **Update automatically** = new versions install without asking (Android 12+)
+
+**2. Also works: Obtainium** (if you already use it to update apps)
+
+1. Get [Obtainium](https://github.com/ImranR98/Obtainium/releases/latest) (free, open source app updater)
+2. In Obtainium tap ＋ and paste `https://scagent.de/oh-my-marx/` ➡ **Add** ➡ **Install**
+   (or tap **➕ Add to Obtainium** on the download page)
 
 **3. Or build it yourself** from this repo ([GitHub](https://github.com/am0ebe/oh-my-marx) or the
 [Forgejo mirror](https://git.scagent.de/am0/oh-my-marx)): see [below](#build-it-yourself).
@@ -117,28 +118,28 @@ Nobody edits it by hand: `bin/ship.sh minor|patch|major` bumps it. Two channels,
 
 | | script | version | goes to | phone |
 |---|---|---|---|---|
-| 🧪 dev | `bin/deploy.sh` (`-a` = also install over wireless adb) | next release + `-dev.MMDD.HHMM`, e.g. `0.9.0-dev.1107.1430` | `scagent.de/oh-my-marx/dev/` (also the 🧪 Dev tab on the page) | "Oh My Marx DEV" (`….dev`) via Obtainium |
+| 🧪 dev | `bin/deploy.sh` (`-a` = also install over wireless adb) | next release + `-dev.MMDD.HHMM`, e.g. `0.9.0-dev.1107.1430` | `scagent.de/oh-my-marx/dev/` (also the 🧪 Dev tab on the page) | "Oh My Marx DEV" (`….dev`), updates itself (or via Obtainium) |
 | 📦 stable | `bin/ship.sh minor` | `0.9.0` | `scagent.de/oh-my-marx/` + git tag + GitHub release | "Oh My Marx" |
 
 Dev builds are labelled with the coming version automatically (shipped `0.9.0` ➡ dev shows `0.10.0-dev…`), so
 `appVersion` lagging one step behind the DEV app is normal: it only moves when you ship.
 `versionCode` = minutes since 2026-01-01, so every build counts as newer and switching channels never needs a
-downgrade. Updates depend on who installed the app: stores update it themselves; Obtainium installs get a
-notification that opens Obtainium (`obtainium://refresh`), and Obtainium's own background check often wins;
-hand-installed APKs get a check on app start + daily, a notification and a one-tap install. After that first
-install, ⚙️ "Update automatically" lets the app update itself silently on Android 12+. The DEV app follows
-`scagent.de/oh-my-marx/dev/`.
+downgrade. The main update path is the app's own updater: hand-installed APKs get a check on app start +
+daily, a notification and a one-tap install. After that first install, ⚙️ "Update automatically" lets the app
+update itself silently on Android 12+. Other installers keep their own job: stores update it themselves;
+Obtainium installs get a notification that opens Obtainium (`obtainium://refresh`), and Obtainium's own
+background check often wins. The DEV app follows `scagent.de/oh-my-marx/dev/`.
 
 **How to ship** (TL;DR):
 
-- 🧪 DEV, any time: `bin/deploy.sh` ➡ `…/dev/` ➡ the DEV app (Obtainium or its own updater) picks it up · no commit, no tag
+- 🧪 DEV, any time: `bin/deploy.sh` ➡ `…/dev/` ➡ the DEV app (its own updater, or Obtainium) picks it up · no commit, no tag
 - 📦 stable: write the `Release("0.10.0", …)` notes on top of `ui/Changelog.kt` ➡ commit + push ➡
   `bin/ship.sh 0.10.0` (or `minor` / `patch`: bumped from the last tag) ➡ APK + page + tag + GitHub release
 - the version you pass = what the DEV app already shows, without `-dev…`
 
 Release cycle:
 
-1. Code ➡ `bin/deploy.sh` ➡ phone: Obtainium ➡ pull to refresh ➡ **Update** on the DEV entry
+1. Code ➡ `bin/deploy.sh` ➡ phone: open the DEV app ➡ notification / Today banner ➡ **Install** (Obtainium: pull to refresh ➡ **Update**)
 2. QA on the phone (feature tour: `notes.md` § QA checklist) ➡ fix ➡ back to 1
 3. New or changed UI strings? `bin/translate.py --only ui` · new plan days? `--only a x` (`bin/check_langs.py` refuses the ship otherwise)
 4. Add `Release("0.9.0", …)` on top of `ui/Changelog.kt` (in-app notes, GitHub release, download page)
