@@ -1,6 +1,12 @@
 # eos omm — resume log · newest on TOP
 _1 block per /eos · written by /eos § 3 · todo keeps 1 line: `▶ resume ➡ eos.md`_
 
+## 261122 22:20 · #327-333 in-app updater = main · appkit · v0.13.1 (M8)
+- **at** · stable **v0.13.1** live (auto-update dflt ON D-078 · page APK 1st / Obtainium 2nd · updater fr kit) · DEV `0.14.0-dev.1122.2212` · kit = own repo `pr/appkit/` (793b5e7), omm vendors it at `appkit/` (git subtree --squash, D-079) · 151 unit (134 app + 17 kit) + lint + 59 py green · deploylog ×5 rows
+- **▶ NEXT** · 🦠 fon: open stable 0.13.0 ➡ 0.13.1 = 1 tap ➡ nxt stable must land silent (todo ⏳ step 5) · then Mo 11/23 Matrix sesh (todo 📆)
+- **👤 🦠** · D-076/077 + egg_arch + retag log boxes (👀, unchanged) · KB dup risk: vendored `appkit/adr.md` + `todo_appkit.md` show up twice (pr/appkit + omm) ❓ kb
+- **⚠️** · kit fixes go i `pr/appkit` 1st ➡ `git subtree pull --prefix appkit ~/gopro/go/pr/appkit main --squash` (clean tree · stash) ➡ then `./gradlew :selfupdate:clean` (stale Kotlin IC = fake "conflicting declarations") · cali crew commits i pr/appkit too ➡ ck `git log` b4 committing · apptool hs 0 bash tsts
+
 ## 261122 16:20 · #311 Matrix fixes + #325 stable v0.13.0 (M8)
 - **at** · stable **v0.13.0** live (page · version.json · GH + Forgejo, 90a54e3) · DEV `0.14.0-dev.1122.1615` · D-076 delete acct = redact evy own msg b4 deactivate · D-077 real id aftr oth ppl's names · live `--app` 13/13 vs continuwuity · 148 unit + lint + py green · deploylog row ✔️
 - **▶ NEXT** · 🦠 updater tst on fon (0.12.0 browser APK ➡ Today banner ➡ Install) ➡ then Mo 11/23 Matrix sesh = todo 📆 (primer + agenda)
