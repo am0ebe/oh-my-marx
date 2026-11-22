@@ -22,7 +22,7 @@
 | resources | ~20 MB RAM · 64 MB cap is plenty |
 | updates | rebuild when the base image moves · no migrations |
 
-## 2 · `omm-matrix` — comments (Synapse, `server/matrix/`)
+## 2 · Matrix homeserver — comments (any client-server v3 homeserver · ours = continuwuity `matrix` since @1113, ops-owned ➡ `pr/ops/matrix.md` · `server/matrix/` = old Synapse template, history)
 | | |
 |--|--|
 | image | `matrixdotorg/synapse` (any current 1.x) · config = generated `homeserver.yaml` + `server/matrix/overrides.yaml` appended |
@@ -34,7 +34,7 @@
 | user rooms (@1104) | 👥 **Lesekreise** = rooms users create themselves: alias `#omm-kreis-<6-char code>`, join rule public but not in the directory, history `shared`, custom timeline event `de.ohmymarx.amen` (`{"day":"YYYY-MM-DD"}`) · ⇒ room count + db grow with users (small text only) · needs: normal users may create rooms (Synapse default) |
 | health | `GET /_matrix/client/versions` |
 | resources | ~105 MB RAM idle · 512 MB cap |
-| updates | Synapse security releases are frequent ➡ bump often · SQLite backup before each bump |
+| updates | homeserver security releases are frequent ➡ bump often · DB backup before each bump (continuwuity = RocksDB dir copy, `pr/ops/matrix.md`) |
 
 ## 3 · secrets crossing the seam
 - **registration token**: made on the server by `setup.py` (`/data/omm_reg_token`) ➡ the app build needs it in git-ignored `android/omm.properties` (`omm.regToken=…`) ➡ ships inside the APK (by design)

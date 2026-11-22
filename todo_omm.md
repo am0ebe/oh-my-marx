@@ -33,7 +33,8 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
 - **🏷️ tags retag scheduled** (M8 @1121 · D-071) `at` job 63 · Sun 11/22 03:00 · `bin/gpu_night.sh bin/retag.py` (1867 Verse, ~1 h) ➡ log `data/retag_night_1122.log` ➡ `data/tags.jsonl`
   - built: `bin/retag.py` (0-2 topics ABOUT, weight 1-3) ➡ build.py `tw` ➡ Marxoskop chip pool = weight ≥ 2 · < 30 ➡ ≥ 1 · no data ➡ old `t` (= today) · `t` + plans untouched (D-042) · tsts: `Retag` 3 py · `marxoskopPoolPrefersAboutTopicsWithGuard`
   - [ ] 🤖 `bin/retag.py --stats` all ✔️ (≥ 30/chip) ➡ `bin/build.py` (only `tw` added i verses.json) ➡ unit green ➡ commit `data/tags.jsonl` + assets ➡ deploy DEV (w th translate box above = 1 deploy)
-  - [ ] 🤖 print 3 quotes per chip (Chef · Miete · …) i th log tail ➡ 🦠 reads there, no fon
+  - [x] 🤖 print 3 quotes per chip (Chef · Miete · …) i th log tail ➡ 🦠 reads there, no fon · `bin/retag.py --peek 3` (f88ebe5)
+  - 🌙 #308 result: retag exit 0 i 9 min · `--stats` all ✔️ (krise 86 … chef 851) · `data/tags.jsonl` committed (af467a1) · translate 03:00 died (644 mode, exit 126) ➡ wrapper fixed (69ad337) ➡ re-run 03:26 ✔️ · i18n committed (5825b09) · 146 unit green · ⏳ left: `bin/build.py` (`tw`) + DEV deploy
   - [ ] 🦠 1 min: `tail -40 data/retag_night_1122.log` ➡ quotes about their chip? (rec ✔️ if ≥ 2/3 fit · was ≈ random)
 ### 🐙 M8 cd decide
 - ✔️ 12 Qs applied @1121 (#307, 🦠 via M8 "ok all") ➡ D-073 + D-074 · ✔️ below · left = 1 Q added aftr th batch he saw (#299 19:19):
@@ -45,7 +46,7 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
     - [ ] 🦠 ½ min, read here (rec ✔️ as is): red txt btn "Delete account" i ⚙️ under Name (only once u hv an account) ➡ dialog **"Delete account?"** "Your account on scagent.de is deleted: new readers no longer see your comments, and you leave all reading circles. Your notes, bookmarks and stamps on this phone stay." [Delete] [Keep] ➡ "✔️ Account deleted. Your next comment makes a new one." (D-072 ➡ Accepted)
   - ✔️ spam · lost fon · no E2E = accepted 4 v1 · report + mod = gate b4 strangers (D-073 · #307)
   - 🤖 Kreis = hourly poll, no push (UnifiedPush/ntfy = 🔵 community ideas) · fine 4 v1
-  - 👤 ops: Synapse `user_ips_max_age` shorter (dflt 28d) · signing key i bup (`pr/ops/omm.md` § 3i ck)
+  - 👤 ops: client-IP retention on continuwuity (live since @1113 · th Synapse knob `user_ips_max_age` went w it) ➡ README § privacy "~28 days" line = Synapse-era, re-ck · signing key i bup (`pr/ops/matrix.md`) · night #308 ➡ [night_1122.md](night_1122.md) F2/F3/F6
 - **🥚 eggs + drop cap** (merged #290: qa_1121 r2 · #246 D-068 · #248 widget) · DEV `0.13.0-dev.1121.0014`
   - [x] 🤖 qa_1121 r2 ck 1 icon stays plain: manifest hs 0 `activity-alias` = 1 fixed icon · ck 2 in-app egg = r1 ✔️ (🦠) + EggResTest · ck 3 drop cap = shot `07_chapter.png` matches (red T, no box, top = line 1, foot = line 3) · 📜 no ¶ = shot `03_chapter_scroll.png` · pinch ➡ ⏳ fon tst step 6
   - [x] 🤖 `EggArchShotTest` 30 eggs × 13 langs fit · `EggResTest.widgetShowsTheDaysEgg` · unit + lint green · DEV deployed
