@@ -28,11 +28,11 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
 ## 👀
 ### 🌙 night run (#248 · 🦠 ✔️ @1121)
 - **translate re-ask scheduled** `at` job 62 · Sun 11/22 03:00 · `bin/gpu_night.sh bin/translate.py --only a` (3 src-fixed Andachten × 11 langs, waits if GPU busy, gives up 08:00) ➡ log `data/translate_night_1122.log`
-  - [ ] 🤖 log ✔️ + check_langs green ➡ commit `data/i18n` + assets ➡ deploy DEV
+  - [x] 🤖 log ✔️ + check_langs green ➡ commit `data/i18n` + assets ➡ deploy DEV (#311: DEV `0.13.0-dev.1122.1353`)
   - ⚠️ 63 q/lang stale on EN ref only (DE same) ➡ left out, re-ask could undo #248 hand fixes
 - **🏷️ tags retag scheduled** (M8 @1121 · D-071) `at` job 63 · Sun 11/22 03:00 · `bin/gpu_night.sh bin/retag.py` (1867 Verse, ~1 h) ➡ log `data/retag_night_1122.log` ➡ `data/tags.jsonl`
   - built: `bin/retag.py` (0-2 topics ABOUT, weight 1-3) ➡ build.py `tw` ➡ Marxoskop chip pool = weight ≥ 2 · < 30 ➡ ≥ 1 · no data ➡ old `t` (= today) · `t` + plans untouched (D-042) · tsts: `Retag` 3 py · `marxoskopPoolPrefersAboutTopicsWithGuard`
-  - [ ] 🤖 `bin/retag.py --stats` all ✔️ (≥ 30/chip) ➡ `bin/build.py` (only `tw` added i verses.json) ➡ unit green ➡ commit `data/tags.jsonl` + assets ➡ deploy DEV (w th translate box above = 1 deploy)
+  - [x] 🤖 `bin/retag.py --stats` all ✔️ (≥ 30/chip) ➡ `bin/build.py` (only `tw` added i verses.json) ➡ unit green ➡ commit `data/tags.jsonl` + assets ➡ deploy DEV (w th translate box above = 1 deploy)
   - [x] 🤖 print 3 quotes per chip (Chef · Miete · …) i th log tail ➡ 🦠 reads there, no fon · `bin/retag.py --peek 3` (f88ebe5)
   - 🌙 #308: retag ✔️ (af467a1) · translate died 644 ➡ wrapper fixed (69ad337) ➡ re-run ✔️ (5825b09) · build `tw` ✔️ (9dab3b6) · 146 unit green · both boxes: only th DEV deploy left
   - [ ] 🦠 1 min: `tail -40 data/retag_night_1122.log` ➡ quotes about their chip? (rec ✔️ if ≥ 2/3 fit · was ≈ random · #308 read ≈ ½, F16)
@@ -41,10 +41,13 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
   - D-015 "Amen only under th snippet" nvr built + D-039 @1116 kept th quote-card Amen (✓ pop) ➡ mark D-015 Superseded by D-039, 0 code (#299) ❓
 ### 🏔️ v1
 - **💬 Matrix v1 — wh's left** (aftr th in-app tst, 1 list · 🤖 = can build · ❓ = 🦠 picks)
-  - ✔️ 🤖 **delete my account** built @1121 (D-072 Proposed): ⚙️ under Name ➡ "Delete account" ➡ confirm ➡ Matrix deactivate + erase ➡ app forgets account + Kreise · live step 12 ✔️ · 6 strings hand-translated ×11 · ❌ not deployed
-    - [x] 🤖 `MatrixTest.deactivateErasesWithPasswordAuth` · `--app` 12/12 · check_langs green
-    - ⚠️ #308 F3: live continuwuity ignores `erase` ➡ "new readers no longer see ur comments" = false ➡ rec ❌ as is: fix txt o redact own msgs b4 deactivate ([night_1122.md](night_1122.md))
-    - [ ] 🦠 ½ min, read here: red txt btn "Delete account" i ⚙️ under Name (only once u hv an account) ➡ dialog **"Delete account?"** "Your account on scagent.de is deleted: new readers no longer see your comments, and you leave all reading circles. Your notes, bookmarks and stamps on this phone stay." [Delete] [Keep] ➡ "✔️ Account deleted. Your next comment makes a new one." (D-072 ➡ Accepted)
+  - ✔️ 🤖 **delete my account** built @1121 (D-072 Proposed): ⚙️ under Name ➡ "Delete account" ➡ confirm ➡ **redact evy own msg (D-076)** ➡ Matrix deactivate ➡ app forgets account + Kreise · DEV `0.13.0-dev.1122.1353`
+    - [x] 🤖 `MatrixTest.deactivateErasesWithPasswordAuth` + `redactAllMineWalksEveryRoomAndPage` · `--app` 13/13 vs live continuwuity (step 13 = app's Kreis msg gone 4 B) · check_langs green
+    - ✔️ #311 F3 (night: continuwuity ignores `erase`) ➡ app redacts 1st · fail/offline ➡ stops b4 deactivate (D-076)
+    - [ ] 🦠 ½ min, read here: dialog **"Delete account?"** "Deletes your comments and circle messages, then your account on scagent.de, and you leave all reading circles. Anyone who already loaded them may have a copy; in circles you left earlier they stay. Your notes, bookmarks and stamps on this phone stay." [Delete] [Keep] ➡ ok? (D-072 + D-076 ➡ Accepted)
+  - ✔️ 🤖 **🪪 name spoof** (#311 F4 · D-077 Proposed): oth ppl's comments + Kreis msgs show th real id muted aftr th name: **strix** `strix-ab12 · 3 min ago` · fr Element elsewhere = `@x:matrix.org` · DEV 1353
+    - [x] 🤖 `MatrixTest.handleShowsTheUnspoofableId` (caught 1 🐛: "strix" fr matrix.org hid th id) · 148 unit + lint green
+    - [ ] 🦠 i th Matrix sesh (📆 @1123): someone else's comment ➡ grey id aftr th name reads ok? (D-077 ➡ Accepted)
   - ✔️ spam · lost fon · no E2E = accepted 4 v1 · report + mod = gate b4 strangers (D-073 · #307)
   - 🤖 Kreis = hourly poll, no push (UnifiedPush/ntfy = 🔵 community ideas) · fine 4 v1
   - 👤 ops: client-IP retention on continuwuity (live since @1113 · th Synapse knob `user_ips_max_age` went w it) ➡ README § privacy "~28 days" line = Synapse-era, re-ck · signing key i bup (`pr/ops/matrix.md`) · night #308 ➡ [night_1122.md](night_1122.md) F2/F3/F6
@@ -54,6 +57,13 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
   - [ ] 🦠 ½ min: `o android/app/build/shots/egg_arch_de.png` ➡ headline on th arch + small tail under th egg reads ok? (rec ✔️: all 30 fit · ➡ D-068 Accepted)
 
 ## 📆
+- 🦠 💬 **Mo 11/23 Matrix sesh w crew** (🦠 #311: "wanna finally mv fwd") · ~45 min · 🔑 primer 1st (5 lines):
+  - 🔑 account = `@name:scagent.de` + pw · login ➡ server hands th device an **access token** (random string) ➡ evy call sends `Authorization: Bearer <token>` · 1 device = 1 token · logout / deactivate / server swap kills it ➡ 401
+  - 📱 omm app = no login screen: 1st comment o Kreis ➡ app registers w th **reg token** baked i th APK (gate vs open signup, 3 UIA steps: token ➡ dummy) ➡ keeps token + random pw on th fon only · lost fon = lost account (D-073) · dead token ➡ quietly re-registers (D-075, F1)
+  - 💻 ur priv account on tow: Element Desktop / app.element.io ➡ homeserver `scagent.de` ➡ Sign up w th reg token (`android/omm.properties` `omm.regToken`) 🧪 nvr tstd on continuwuity · fallback = ops admin room `!admin users create-user <name>` ➡ pw printed
+  - 📱 same account on fon: Element X ➡ **log in** (Element X can't sign up, only log in ⬅ `pr/ops/matrix.md`) ➡ own token per device, same msgs
+  - 🛡️ then ops: `!admin users make-admin @<u>:scagent.de` ➡ u can redact / kick i th 31 chapter rooms (= th "Melden" path b4 strangers, D-073)
+  - agenda: ① account on tow + fon (above) ② join `#omm-kap-1:scagent.de` i Element ⬄ comment i omm DEV 1353 ➡ both sides see it · F4 grey id (D-077 box 👀) ③ F1 proof: old omm account posts again (D-075 Ck) ④ Delete account txt (D-076 box 👀) ⑤ pick nxt: F5 paging · F6 send rate limit (ops) · F7 `allowBackup` ❓
 - 🛍️ Fr 11/27 Black Friday: home-screen widget shows th 🛍️ egg left o "Marx verse" · only if it looks off ➡ screenshot (no box · render = `EggResTest`)
 
 ## 🔵
