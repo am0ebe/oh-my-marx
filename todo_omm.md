@@ -59,6 +59,9 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
 - 🛍️ Fr 11/27 Black Friday: home-screen widget shows th 🛍️ egg left o "Marx verse" · only if it looks off ➡ screenshot (no box · render = `EggResTest`)
 
 ## 🔵
+- 🤖 ‼️ **updater dflt flip** (🦠 @1123): silent auto-update failed on GrapheneOS · banner ➡ Install worked ➡ banner = main path 4 all users, silent auto = OFF by dflt · Obtainium stays 2nd (1 non-tech user gave up on it) · amend D-038 / D-078 · ❓ M8's reading, 🦠 confirms
+- 🤖 ‼️ **v1 this w** (🦠 @1123) = audio (TTS/STT packs fr audio crew) + Matrix chat ➡ then only feedback
+- 🤖 CI: `am0/ci` tag `v1` moved 2 `8dbbfe3` by 🦠 @1123 ➡ ck nxt run green (`cilog`) · push guard A ⬄ B still ❓
 - 👤 **CI red since run 1108**: Robolectric can't fetch `android-all` on th runner (ConnectException, 15 classes) ➡ ops (net o cache) · then 🤖 `cilog` = green · + ops osv on `android/app/gradle.lockfile` (D-082)
 - 🤖🎨 **C-lane gaps** (done @1120: rank perks, feast emblems, 11 heads, initials, ¶, rtl / zh shots, gold swoosh · @1120 #229: 🥚 eggs replace heads in top bar, hero, quote card, D-066 · launcher egg dropped #241 · `launcherReset` rm @1122 #335, D-066 amended):
   - 🖼️ Feast frames (design § 14.2.1) · 🔊 stamp thud sound (D-035).
