@@ -27,12 +27,15 @@ class VoicePacks(
     private val root: File,
     private val fetchText: (String) -> String = ::httpText,
     private val fetchTo: (String, File, (Float) -> Unit) -> Unit = ::httpTo,
+    /** DEV app (🦠's fon): manifest ck evy 10 min, not 1 d / 1 w ➡ a pack uploaded i a sesh shows up on th nxt open (D-090) */
+    private val dev: Boolean = false,
 ) {
     companion object {
         const val BASE = "https://scagent.de/oh-my-marx/voice/"
         const val FORMAT = 1
         const val RECHECK_MS = 7L * 24 * 3600 * 1000   // contract: manifest at most 1×/week
         const val RETRY_MS = 24L * 3600 * 1000         // no manifest yet (404 · offline) ➡ try again next day, not on evy open
+        const val DEV_MS = 10L * 60 * 1000                // DEV build only (D-090)
         private val ZIP_NAME = Regex("[A-Za-z0-9._-]{1,80}\\.zip")
         private val CLIP = Regex("[0-9a-f]{8,40}\\.opus")
         /** contract item ids · day = 0-based index into th plan's days (same as `Tr.a["<plan>:<day>"]`) */
@@ -84,7 +87,7 @@ class VoicePacks(
      *  evy TRY is stamped (404 · offline too) ➡ at most 1 GET per day while there's no manifest, 1 per week aftr */
     fun manifest(now: Long, force: Boolean = false): VoiceManifest? {
         val f = manifestFile; val tried = File(root, "manifest.tried")
-        val every = if (f.exists()) RECHECK_MS else RETRY_MS
+        val every = if (dev) DEV_MS else if (f.exists()) RECHECK_MS else RETRY_MS
         if (force || !tried.exists() || now - tried.lastModified() > every) {
             root.mkdirs(); tried.writeText(""); tried.setLastModified(now)
             runCatching {

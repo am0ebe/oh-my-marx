@@ -20,6 +20,12 @@ _SDD: code says **wh** · th file says **y** · drift = a bug · fmt ➡ `pr/vib
 ## 🧾 decisions (newest on top)
 _Template v2.1 since 20 Nov (converted via `pr/vibe++/adr_convert.md`). Field names: Y = why · Ctx = what forced it · Scope = what it covers · Ck = how to check._
 
+### D-090 @1126 · 🔊 Voice packs go live with one checked command, and the DEV app sees a new pack within 10 minutes · Accepted (crew @1126, M8 #351 · 1st upload = newly public ❓ 🦠)
+- **Ctx:** 🦠 picks th voice @1127 ➡ audio renders ➡ pack must reach th fon i th same sesh. 2 gaps: nobody owned th upload (contract: "rsync by 🦠 o th release script") · th app stamps evy manifest try ➡ aftr today's 404 th DEV app wd look again only tomorrow (cached manifest: 1 w), `force` was nvr called.
+- **Dc:** `bin/voice_up.py [PACKS]` = ck audio's out dir w th app's rules (manifest v + base · sha256 + bytes · zip = index.json + `<hex>.opus` only · ids q:/a: · 1 pack per lang · fresh % vs today's txt) · `-u` = rsync zips 1st, manifest last (an app nvr sees a manifest pointing at a missing zip) · dir missing = newly public ➡ 🛑 til `-y` · old zips stay (rm = data) · DEV build (`.dev` app id) rechecks th manifest evy 10 min (`VoicePacks(dev = true)`) · stable unchanged (1 d aftr a 404, 1 w aftr).
+- **Alt:** audio uploads (con: their crew, our URL + our app rules) · `apptool` subcmd (con: voice = omm-only, kit = shared) · a "ck now" btn i ⚙️ (con: row is hidden til a pack exists, + UI).
+- **Ck:** `bin/test_bin.py VoiceUp` 4 (good pack · sha256 + zip-slip · stale warn · 🛑 wo -y, then files there) · `VoicePackTest.devBuildRechecksEvery10Min` · audio's dry pack `packs_dry` = ✔️ (20 items, 100 % fresh).
+
 ### D-089 @1126 · 🔊 The AI-voice label is shown in the reader's language; the pack only supplies the voice's name · Accepted (crew @1126, M8 #351)
 - **Ctx:** audio's `omm_pack.py` writes `label = "KI-Stimme · <persona>"` into evy pack, all 13 langs ➡ app showed it raw ➡ a French reader wd see German "🔊 KI-Stimme · marx-scholar" under th card + i th dialog + ⚙️ row.
 - **Dc:** `VoicePacks.voiceName(label, persona)` = text aftr th last `·` (blank ➡ persona) · UI `aiVoice(name)` = th app's translated "🔊 AI voice" + " · " + name (string alr i all 11 i18n files) · used on th quote card, th Andacht header, th load dialog · ⚙️ row = name · MB (its header alr says AI voice).

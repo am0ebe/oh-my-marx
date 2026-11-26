@@ -574,5 +574,61 @@ class GpuNight(unittest.TestCase):
         self.assertIn("nothing new 2 commit", out)
 
 
+class VoiceUp(unittest.TestCase):
+    """bin/voice_up.py (D-090): audio's packs ckd w th app's own rules b4 upload · local 'host' (PUBLISH_HOST empty)"""
+
+    def setUp(self):
+        self.vu = load("voice_up")
+        self.d = tempfile.TemporaryDirectory(); root = pathlib.Path(self.d.name)
+        self.content = root / "content"; self.content.mkdir()
+        (self.content / "verses.json").write_text(json.dumps([{"id": "8,9", "qd": "Die Ware."}, {"id": "V1,2", "qd": "Vorwort."}]))
+        (self.content / "plans.json").write_text(json.dumps([{"id": "30tage", "days": [{"ad": "Heute: Ware."}]}]))
+        self.packs = root / "packs"; self.packs.mkdir()
+
+    def tearDown(self):
+        self.d.cleanup()
+
+    def pack(self, entries=None, sha=None, text="Die Ware."):
+        import hashlib, zipfile
+        items = {"q:8,9": {"f": "0123456789abcdef.opus", "sec": 2.0, "sha": self.vu.sha12(text)},
+                 "a:30tage:0": {"f": "0123456789abcdef.opus", "sec": 3.0, "sha": self.vu.sha12("Heute: Ware.")}}
+        z = self.packs / "omm_de.zip"
+        with zipfile.ZipFile(z, "w", zipfile.ZIP_STORED) as zf:
+            zf.writestr("index.json", json.dumps({"v": 1, "persona": "omm", "lang": "de", "items": items}))
+            for n, b in (entries or {"0123456789abcdef.opus": b"op"}).items():
+                zf.writestr(n, b)
+        b = z.read_bytes()
+        (self.packs / "manifest.json").write_text(json.dumps({"v": 1, "base": self.vu.BASE, "packs": [
+            {"persona": "omm", "lang": "de", "file": z.name, "bytes": len(b), "sha256": sha or hashlib.sha256(b).hexdigest()}]}))
+
+    def test_good_pack_passes_and_names_th_missing_langs(self):
+        self.pack()
+        err, warn, rows = self.vu.check(self.packs, self.content)
+        self.assertEqual(err, [])
+        self.assertEqual(len(rows), 1); self.assertIn("100% fresh", rows[0])
+        self.assertTrue(any("no pack 4 en" in w for w in warn))
+
+    def test_sha256_mismatch_and_zip_slip_are_errors(self):
+        self.pack(sha="0" * 64)
+        self.assertTrue(any("sha256" in e for e in self.vu.check(self.packs, self.content)[0]))
+        self.pack(entries={"0123456789abcdef.opus": b"op", "../evil.opus": b"x"})
+        self.assertTrue(any("odd entries" in e for e in self.vu.check(self.packs, self.content)[0]))
+
+    def test_stale_txt_warns(self):
+        self.pack(text="old cut")
+        err, warn, rows = self.vu.check(self.packs, self.content)
+        self.assertEqual(err, [])
+        self.assertTrue(any("1/2 clips match" in w for w in warn))
+
+    def test_upload_needs_yes_4_a_new_public_dir_and_puts_manifest(self):
+        self.pack()
+        web = pathlib.Path(self.d.name) / "web" / "voice"
+        with contextlib.redirect_stderr(io.StringIO()), contextlib.redirect_stdout(io.StringIO()):
+            self.assertEqual(self.vu.upload(self.packs, "", str(web), yes=False), 2)
+            self.assertFalse(web.exists())
+            self.assertEqual(self.vu.upload(self.packs, "", str(web), yes=True), 0)
+        self.assertEqual(sorted(p.name for p in web.iterdir()), ["manifest.json", "omm_de.zip"])
+
+
 if __name__ == "__main__":
     unittest.main()

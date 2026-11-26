@@ -81,6 +81,20 @@ class VoicePackTest {
         assertEquals("nxt day", 2, s.gets)
     }
 
+    /** D-090: DEV app = 🦠's fon i a pack sesh ➡ 404 today, upload, reopen ➡ pack offered wi 10 min (not tomorrow) · same aftr a manifest exists */
+    @Test fun devBuildRechecksEvery10Min() {
+        val s = Server(); val t0 = 1_800_000_000_000L
+        val p = VoicePacks(tmp.root, dev = true,
+            fetchText = { u -> s.gets++; s.files[u.substringAfterLast('/')]?.decodeToString() ?: throw IOException("404 $u") },
+            fetchTo = { u, out, _ -> out.writeBytes(s.files[u.substringAfterLast('/')]!!) })
+        assertNull(p.manifest(t0)); p.manifest(t0 + 60_000)
+        assertEquals("1 GET per 10 min", 1, s.gets)
+        serve(s, zip(mapOf("index.json" to index().toByteArray(), "3fa1c0d2e4b5a697.opus" to opus)))
+        assertNotNull("uploaded ➡ seen 11 min later", p.offer(p.manifest(t0 + 11 * 60_000L), "de"))
+        p.manifest(t0 + 12 * 60_000L); assertEquals(2, s.gets)
+        p.manifest(t0 + 22 * 60_000L); assertEquals("manifest cached ➡ still 10 min, not a week", 3, s.gets)
+    }
+
     @Test fun laterMeansAWeek() {
         val p = packs(Server()); val t0 = 1_800_000_000_000L
         assertTrue(p.shouldAsk("de", t0)); p.asked("de", t0)

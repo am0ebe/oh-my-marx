@@ -169,6 +169,7 @@ Every script answers `--help` (why · what · examples) and does nothing else wh
 | `eggs.py` | the 30 holiday icons ➡ Android vectors + preview gallery |
 | `font_subset.sh` | cuts the 5 Literata styles the app uses |
 | `notes.py` | one version's release notes from `ui/Changelog.kt` |
+| `voice_up.py` | checks the AI voice packs with the app's own rules (size, hash, zip contents, ids, how many clips still match the text) · `-u` uploads them, manifest last |
 | `deploy.sh` · `ship.sh` | DEV build to the phone · stable release (both = [`appkit/tool/apptool`](appkit/README.md), the shared app kit) |
 | `test_bin.py` | tests for the scripts above |
 
