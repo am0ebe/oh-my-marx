@@ -39,7 +39,8 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
   - [ ] 🦠 ½ min, DEV ⚙️ Mine (fresh install o 🧪 Testmodus): "LEVEL 1 · Commodity" ok? name alt: Lehrling / Apprentice · Lohnarbeiter / Wage labourer · badge = faded shovel (rank 2's) ➡ own 🧺 art? (➡ D-084 Accepted)
 - **🔄 updater dflt OFF = banner ➡ Install main** (🦠 @1123 · D-083 · #345) · kit `AUTO_DEFAULT = false` · refused silent try (GrapheneOS) ➡ "Tap = install" notif + no retry 4 th version
   - [x] 🤖 `UpdateWorkerTest` nvr touched ➡ NOTIFIED · ON ➡ SILENT · OFF ➡ NOTIFIED · `refusedSilentInstallAsksInstead` · `refusedForegroundInstallPostsNothing` · 137 + 17 unit + lint green
-  - [ ] 🦠 stable ship ❓ (nvr-touched users flip ON ➡ OFF on it) · Changelog line draft (add on top b4 `bin/ship.sh`): "🔄 Updates fragen wieder: Banner ➡ Installieren · ⚙️ „Automatisch aktualisieren“ = still im Hintergrund (Android 12+)" / "🔄 Updates ask again: banner ➡ Install · ⚙️ “Update automatically” = quietly in the background (Android 12+)" ok?
+  - [x] 🤖 #352 stable **v0.14.0** shipped (🦠 scrap "ship dev and normal" · D-083 re-confirmed "dflt off") · Changelog 6 lines (Was ist neu) · ⚙️ row txt: ON "not on every phone — then the app asks" · CI 1195 ✅ · deploylog ✔️
+  - [ ] 🦠 ½ min, stable o DEV ⚙️ ➡ Was ist neu: 0.14.0 lines read ok? (`python3 bin/notes.py 0.14.0`)
 - **💬 Matrix v1 — wh's left** (aftr th in-app tst, 1 list · 🤖 = can build · ❓ = 🦠 picks)
   - ✔️ 🤖 **delete my account** built @1121 (D-072 Proposed): ⚙️ under Name ➡ "Delete account" ➡ confirm ➡ **redact evy own msg (D-076)** ➡ Matrix deactivate ➡ app forgets account + Kreise · DEV `0.13.0-dev.1122.1353`
     - [x] 🤖 `MatrixTest.deactivateErasesWithPasswordAuth` + `redactAllMineWalksEveryRoomAndPage` · `--app` 13/13 vs live continuwuity (step 13 = app's Kreis msg gone 4 B) · check_langs green

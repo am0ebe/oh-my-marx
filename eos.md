@@ -1,6 +1,11 @@
 # eos omm — resume log · newest on TOP
 _1 block per /eos · written by /eos § 3 · todo keeps 1 line: `▶ resume ➡ eos.md`_
 
+## 261126 23:5x · #352 (M8): D-083 re-confirmed · stable v0.14.0 + DEV · pinch tst
+- **at** · D-083 = 🦠's dc (silent stays opt-in, dflt OFF, in-app updater = path) · ⚙️ row txt "not on every phone" · Changelog 0.14.0 · **stable v0.14.0** + **DEV `0.15.0-dev.1126.2355`** (CI 1195 ✅ · deploylog ×2) · `PinchScaleTest` replaces 🦠 fon step 6 · 🐛 tst state leak: a tst ending i 📜 left `readScroll` on ➡ ReaderGestureTest red = same signature as CI 1171 "stuck state" ➡ ReaderGestureTest @Before resets · 160 unit green
+- **▶ NEXT** · ReaderGestureTest flake prob. = this leak (order-dependent) ➡ ck nxt CI reds b4 more 🔍 · rest = v1_sesh_1127.md (voice pick ➡ voice_up)
+- **👤 🦠** · Was ist neu 0.14.0 read (todo 👀) · sesh page ❓ 1 2 4 5 (❓ 3 done)
+
 ## 261126 23:2x · #351 (M8): v1 sesh page + tonight's 🤖
 - **at** · [v1_sesh_1127.md](v1_sesh_1127.md) = 🦠's 1 page (order · wh audio needs · 5 ❓) · D-089 voice label i reader's lang · D-090 `bin/voice_up.py` + DEV 10-min manifest recheck · 7 UI strings ➡ 11 langs (ship guard was red) · D-091 CI `langs` job · **DEV `0.14.0-dev.1126.2319`** (deploylog ✔️) · 159 unit + 63 py + lint green
 - **▶ NEXT** · aftr 🦠 pick + ❓ 1 yes: audio's out dir ➡ `bin/voice_up.py <dir>` ➡ `-u -y` ➡ 🦠 fon 🔊 (page step 3) · ReaderGestureTest only if red again · CI 1184 ✅ (incl. `langs`)
