@@ -125,7 +125,7 @@ def upload(packs, host, remote, yes):
     for files in (zips, [str(packs / "manifest.json")]):
         if subprocess.run(["rsync", "-t", "--chmod=F644", *files, dst]).returncode != 0:
             print("❌ rsync failed", file=sys.stderr); return 1
-    print(f"✔️ {len(zips)} pack(s) + manifest ➡ {BASE} · apps see it on their nxt manifest ck (≤ 1 d aftr a 404, else ≤ 7 d)")
+    print(f"✔️ {len(zips)} pack(s) + manifest ➡ {BASE} · DEV app sees it ≤ 10 min · stable ≤ 1 d aftr a 404, else ≤ 7 d (D-090)")
     return 0
 
 
