@@ -2563,3 +2563,9 @@
 {"kind": "ui", "k": "🧰 Under the hood: the updater now comes from our shared app kit, same behaviour", "src": "🧰 Unter der Haube: das Update kommt jetzt aus unserem App-Baukasten, gleiches Verhalten\u0000🧰 Under the hood: the updater now comes from our shared app kit, same behaviour", "t": "🧰 Di bawah kap: pembaruan kini berasal dari kit aplikasi kami, perilaku sama"}
 {"kind": "ui", "k": "↑ Load older comments", "src": "↑ Ältere Kommentare laden\u0000↑ Load older comments", "t": "↑ Muat komentar sebelumnya"}
 {"kind": "ui", "k": "🧺 Commodity", "src": "🧺 Ware\u0000🧺 Commodity", "t": "🧺 Barang"}
+{"kind": "ui", "k": "🔊 Load the AI voice?", "src": "🔊 KI-Stimme laden?\u0000🔊 Load the AI voice?", "t": "🔊 Muat suara AI?"}
+{"kind": "ui", "k": "Load · %d MB", "src": "Laden · %d MB\u0000Load · %d MB", "t": "Muat · %d MB"}
+{"kind": "ui", "k": "Reads the daily quotes in an AI voice: load it once, then it works offline. Until then your phone's voice reads.", "src": "Liest die Losungen mit einer KI-Stimme vor, einmal laden, dann offline. Bis dahin liest die Stimme deines Handys.\u0000Reads the daily quotes in an AI voice: load it once, then it works offline. Until then your phone's voice reads.", "t": "Membacakan kutipan harian dengan suara AI: muat sekali, lalu bisa offline. Sampai saat itu, suara ponselmu yang membaca."}
+{"kind": "ui", "k": "🔊 AI voice", "src": "🔊 KI-Stimme\u0000🔊 AI voice", "t": "🔊 Suara AI"}
+{"kind": "ui", "k": "⚠️ Loading didn't work — internet? Try again.", "src": "⚠️ Laden ging nicht — Internet? Nochmal versuchen.\u0000⚠️ Loading didn't work — internet? Try again.", "t": "⚠️ Gagal muat — internet? Coba lagi."}
+{"kind": "ui", "k": "Without the AI voice, your phone's voice reads.", "src": "Ohne KI-Stimme liest die Stimme deines Handys.\u0000Without the AI voice, your phone's voice reads.", "t": "Tanpa suara AI, suara ponselmu yang membaca."}

@@ -29,6 +29,9 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
   - [ ] 🦠 1 min: `tail -40 data/retag_night_1122.log` ➡ quotes about their chip? (rec ✔️ if ≥ 2/3 fit · was ≈ random · #308 read ≈ ½, F16)
 ### 🐙 M8 cd decide
 ### 🏔️ v1
+- **🔊 AI voice packs, app side** (D-085 · #345 ③ · audio contract) · 🔊 on a quote card ➡ "Load · N MB?" ➡ pack clip, else phone voice · ⚙️ Mine row · hidden til a pack exists
+  - [x] 🤖 `VoicePackTest` 10 · real dry pack 20/20 sha match · 150 unit + lint + check_langs green
+  - [ ] 🦠 aftr th 1st real pack (audio): DEV ➡ Today 🔊 ➡ dialog txt + MB ok? ➡ voice plays + "🔊 KI-Stimme · …" line under th card
 - **🧺 start at LEVEL 1 w a name** (🦠 scrap @1126 · D-084 Proposed · #345) · new reader = LEVEL 1 "Ware / Commodity" (Kapital's 1st word) · old 7 ranks = levels 2-8 · perks unchanged (on cards)
   - [x] 🤖 `LevelTest` · `MineLevelTest` (real screen) · `MomentsShotsTest.rank3` = LEVEL 4 · 140 unit + lint + check_langs green
   - [ ] 🦠 ½ min, DEV ⚙️ Mine (fresh install o 🧪 Testmodus): "LEVEL 1 · Commodity" ok? name alt: Lehrling / Apprentice · Lohnarbeiter / Wage labourer · badge = faded shovel (rank 2's) ➡ own 🧺 art? (➡ D-084 Accepted)
@@ -63,6 +66,8 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
 
 ## 🔵
 - 🤖 ‼️ **v1 this w** (🦠 @1123) = audio (TTS/STT packs fr audio crew) + Matrix chat ➡ then only feedback
+  - ✔️ audio app side = D-085 (pack client, DEV) · 👤 audio: real packs (🦠 persona pick 1st) · 🦠 ❓ newly public `scagent.de/oh-my-marx/voice/` · STT = 0 need i v1 · Ogg-Opus = Android 10+ only (8-9 = phone voice, ok?)
+  - 🤖 Andacht 🔊 btn (plays `a:<plan>:<day>` clips) · Matrix: "Melden" on a comment = gate b4 strangers (D-073)
 - 🤖 CI push guard A ⬄ B still ❓ (rest ✔️ @1126, below)
 - 🤖🎨 **C-lane gaps** (done @1120: rank perks, feast emblems, 11 heads, initials, ¶, rtl / zh shots, gold swoosh · @1120 #229: 🥚 eggs replace heads in top bar, hero, quote card, D-066 · launcher egg dropped #241 · `launcherReset` rm @1122 #335, D-066 amended):
   - 🖼️ Feast frames (design § 14.2.1) · 🔊 stamp thud sound (D-035).
@@ -102,6 +107,7 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
 - 🤖 aft QA: rm page fotos (boox proc step 8)
 
 ## ✔️
+- ✔️ @1126 #346 (🦠 "ops yes all 3"): a 🔒 build-tool holes 91 ➡ 0 (D-086, efe6f87) · b nightly `@v1` (4eb574d) · c ReaderGestureTest = alr fixed i 1d4fc85 (run 1156 ✅)
 - ✔️ @1126 #345 🟢 **CI green again** (`v1` = 8dbbfe3 · runner Robolectric ✔️ by ops · osv on lockfile = run 1155 ✅) · 1145 = 1 real red: `ReaderGestureTest.tapTurnsDoubleTapOpensMenu` (tap w menu open didn't turn on th runner) ➡ tst closes th menu 1st ➡ run 1156 ✅
 - ✔️ @1122 #335 🧪 **apptool bash tst** (kit): cali built `tool/test_apptool.sh` (118 cks, e8836e8) + ERR trap ➡ omm subtree pull (c8d8cf7) ➡ 118 ✔️ + omm `bin/deploy.sh -n` exit 0 (nothing uploaded)
 - ✔️ @1122 #335 🤖🔍 **tags over-applied** ("kapitalist" 83 %, root = score.py `maxItems: 4`) ➡ `bin/retag.py` + night run + `tw` chip pool built + deployed · only 🦠 1-min read left (👀 🏷️)

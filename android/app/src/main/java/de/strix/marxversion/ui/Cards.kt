@@ -69,6 +69,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.time.LocalDate
 import kotlin.math.abs
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 // ── 🃏 Home = th cards. Quote cards r 1st-class: open th app ➡ they're right there, swipe thru them ──
 
@@ -147,8 +148,16 @@ fun CardCarousel(
     val shareTitle = tr("Spruchkarte teilen", "Share verse card")
     val curArch = archTitle(cur)
     var sharePanel by remember { mutableStateOf(false) }
+    val voiceUi by vm.voice.collectAsStateWithLifecycle()
+    var askVoice by remember { mutableStateOf<de.strix.marxversion.data.PackInfo?>(null) }
+    LaunchedEffect(lang) { vm.refreshVoice(lang) }
     Row(Modifier.fillMaxWidth().padding(top = 10.dp), horizontalArrangement = Arrangement.SpaceEvenly, verticalAlignment = Alignment.Top) {
-        CardAction(R.drawable.ic_volume, tr("Vorlesen", "Listen"), if (speaker.speaking) Red else Blue) { speaker.say(q, lang, persona) }
+        CardAction(R.drawable.ic_volume, tr("Vorlesen", "Listen"), if (speaker.speaking) Red else Blue) {
+            // 🔊 D-085: AI voice pack offered + not loaded ➡ ask once per run (MB shown) · else play (pack clip o system TTS)
+            val o = voiceUi.offer.takeIf { voiceUi.lang == lang.code && voiceUi.have == null && voiceUi.progress == null }
+            if (o != null && !speaker.speaking && vm.voiceShouldAsk(lang)) { vm.voiceAsked(lang); askVoice = o }
+            else speaker.say(q, lang, persona, "q:${cur.v.id}")
+        }
         CardAction(R.drawable.ic_copy, tr("Kopieren", "Copy"), Blue) {
             copyText(ctx, "${lang.quote(q)}\n— Karl Marx, $r")
             haptic.performHapticFeedback(HapticFeedbackType.LongPress)
@@ -165,6 +174,13 @@ fun CardCarousel(
         CardAction(R.drawable.ic_send, tr("App teilen", "Share app"), Blue) { sharePanel = true }
     }
     if (sharePanel) ShareAppPanel(appShareMsg()) { sharePanel = false }
+    // 🔊 contract: AI speech is labelled while it plays
+    speaker.aiLabel?.let { Text("🔊 $it", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.secondary, textAlign = TextAlign.Center,
+        modifier = Modifier.fillMaxWidth().padding(top = 4.dp)) }
+    askVoice?.let { p ->
+        val play = { askVoice = null; speaker.say(q, lang, persona, "q:${cur.v.id}") }
+        VoiceAskDialog(p, onLoad = { vm.loadVoice(p); play() }, onLater = { play() })
+    }
     // big + red + full width = can't miss it (was a 5th small pill)
     if (cur.kind == CardItem.Kind.TODAY && !doneToday)
         Button(onClick = { onAmen(cur.v) }, colors = ButtonDefaults.buttonColors(containerColor = Red),

@@ -14,6 +14,8 @@ open class MarxApp : Application() {  // open: test/ShotsTest's ShotsApp inits W
     val content by lazy { ContentRepo(this) }
     val db by lazy { MarxDb.create(this) }
     val prefs by lazy { Prefs(this) }
+    /** 🔊 AI voice packs (D-085) · files/voice/<lang>/ */
+    open val voice by lazy { de.strix.marxversion.data.VoicePacks(java.io.File(filesDir, "voice")) }
     /** fire-and-forget writes fr non-composable spots (shareCard counts 4 th 🎖️ Orden) */
     val scope = kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.SupervisorJob() + kotlinx.coroutines.Dispatchers.IO)
 

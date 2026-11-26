@@ -389,9 +389,31 @@ class Speaker(ctx: Context) {
     /** voice picker: always (re)start, even while sth else plays */
     fun sample(text: String, lang: Lang, persona: Persona) { stop(); say(text, lang, persona) }
 
-    /** tap again while talking (or still rendering) = stop */
-    fun say(text: String, lang: Lang, persona: Persona) {
+    /** 🔊 AI voice label while a pack clip plays (contract: AI speech is labelled) · null = system TTS / quiet */
+    var aiLabel by mutableStateOf<String?>(null); private set
+    private val packs = (app as? de.strix.marxversion.MarxApp)?.voice
+
+    /** tap again while talking (or still rendering) = stop · id (`q:<verse>` · `a:<plan>:<day>`) + installed pack ➡ its clip (D-085) */
+    fun say(text: String, lang: Lang, persona: Persona, id: String? = null) {
         if (speaking) { stop(); return }
+        val p = packs
+        if (id != null && p != null) {
+            speaking = true
+            job = scope.launch {
+                val clip = runCatching { p.clip(lang.code, id, text) }.getOrNull()
+                val label = clip?.let { p.installed(lang.code)?.let { i -> i.label.ifBlank { i.persona } } }
+                withContext(Dispatchers.Main) {
+                    if (!isActive) return@withContext
+                    if (clip != null && runCatching { play(clip) }.isSuccess) aiLabel = label
+                    else { speaking = false; sayTts(text, lang, persona) }   // no pack · stale txt · id not rendered · bad file ➡ system TTS
+                }
+            }
+            return
+        }
+        sayTts(text, lang, persona)
+    }
+
+    private fun sayTts(text: String, lang: Lang, persona: Persona) {
         val clean = clean(text)
         val go: () -> Unit = {
             val r = tts.setLanguage(lang.locale)
@@ -447,13 +469,15 @@ class Speaker(ctx: Context) {
     }
 
     private fun play(f: File) {
-        player?.release()
-        player = MediaPlayer().apply {
-            setDataSource(f.path)
-            setOnCompletionListener { speaking = false; it.release(); if (player === it) player = null }
-            setOnErrorListener { mp, _, _ -> speaking = false; mp.release(); if (player === mp) player = null; true }
-            prepare(); start()
-        }
+        player?.release(); player = null
+        val mp = MediaPlayer()
+        try {
+            mp.setDataSource(f.path)
+            mp.setOnCompletionListener { speaking = false; aiLabel = null; it.release(); if (player === it) player = null }
+            mp.setOnErrorListener { m, _, _ -> speaking = false; aiLabel = null; m.release(); if (player === m) player = null; true }
+            mp.prepare(); mp.start()
+        } catch (e: Exception) { mp.release(); throw e }   // caller falls back 2 TTS · no leaked player
+        player = mp
     }
 
     /** hold th popup = pause (stories-style) · plain TTS can't pause ➡ stops */
@@ -463,7 +487,7 @@ class Speaker(ctx: Context) {
     fun stop() {
         job?.cancel(); job = null
         player?.run { runCatching { stop() }; release() }; player = null
-        tts.stop(); speaking = false
+        tts.stop(); speaking = false; aiLabel = null
     }
 
     fun close() { stop(); scope.cancel(); tts.shutdown() }

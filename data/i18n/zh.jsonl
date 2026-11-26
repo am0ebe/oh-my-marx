@@ -2599,3 +2599,9 @@
 {"kind": "ui", "k": "🧰 Under the hood: the updater now comes from our shared app kit, same behaviour", "src": "🧰 Unter der Haube: das Update kommt jetzt aus unserem App-Baukasten, gleiches Verhalten\u0000🧰 Under the hood: the updater now comes from our shared app kit, same behaviour", "t": "🧰 底层机制：更新现在来自我们的共享应用积木，行为一致"}
 {"kind": "ui", "k": "↑ Load older comments", "src": "↑ Ältere Kommentare laden\u0000↑ Load older comments", "t": "↑ 加载更早的评论"}
 {"kind": "ui", "k": "🧺 Commodity", "src": "🧺 Ware\u0000🧺 Commodity", "t": "🧺 商品"}
+{"kind": "ui", "k": "🔊 Load the AI voice?", "src": "🔊 KI-Stimme laden?\u0000🔊 Load the AI voice?", "t": "🔊 加载AI语音？"}
+{"kind": "ui", "k": "Load · %d MB", "src": "Laden · %d MB\u0000Load · %d MB", "t": "加载 · %d MB"}
+{"kind": "ui", "k": "Reads the daily quotes in an AI voice: load it once, then it works offline. Until then your phone's voice reads.", "src": "Liest die Losungen mit einer KI-Stimme vor, einmal laden, dann offline. Bis dahin liest die Stimme deines Handys.\u0000Reads the daily quotes in an AI voice: load it once, then it works offline. Until then your phone's voice reads.", "t": "用AI语音朗读每日箴言：加载一次，离线也能用。暂且先用手机自带语音。"}
+{"kind": "ui", "k": "🔊 AI voice", "src": "🔊 KI-Stimme\u0000🔊 AI voice", "t": "🔊 AI语音"}
+{"kind": "ui", "k": "⚠️ Loading didn't work — internet? Try again.", "src": "⚠️ Laden ging nicht — Internet? Nochmal versuchen.\u0000⚠️ Loading didn't work — internet? Try again.", "t": "⚠️ 加载失败——网络问题？再试一次。"}
+{"kind": "ui", "k": "Without the AI voice, your phone's voice reads.", "src": "Ohne KI-Stimme liest die Stimme deines Handys.\u0000Without the AI voice, your phone's voice reads.", "t": "没有AI语音时，就用手机自带语音。"}

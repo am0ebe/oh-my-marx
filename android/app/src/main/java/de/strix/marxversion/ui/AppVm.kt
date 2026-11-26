@@ -47,6 +47,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -410,6 +411,37 @@ class AppVm(app: Application) : AndroidViewModel(app) {
     fun setDevUnlock(on: Boolean) = viewModelScope.launch { marx.prefs.setDevUnlock(on) }
     fun setAutoUpdate(on: Boolean) = viewModelScope.launch { marx.prefs.setAutoUpdate(on) }
     fun setPersona(p: Persona) = viewModelScope.launch { marx.prefs.setPersona(p.name) }
+
+    // ── 🔊 AI voice packs (D-085) · manifest 1×/week · no manifest (now) = nothing shown, system TTS as b4 ──
+    data class VoiceUi(val lang: String = "", val offer: de.strix.marxversion.data.PackInfo? = null,
+        val have: de.strix.marxversion.data.PackIndex? = null, val update: de.strix.marxversion.data.PackInfo? = null,
+        val bytes: Long = 0, val progress: Float? = null, val failed: Boolean = false)
+    val voice = MutableStateFlow(VoiceUi())
+    /** th "load th AI voice?" dialog: 1× a week per lang (stamp i files/voice), then ⚙️ has it */
+    fun voiceShouldAsk(lang: Lang) = marx.voice.shouldAsk(lang.code, System.currentTimeMillis())
+    fun voiceAsked(lang: Lang) = viewModelScope.launch(Dispatchers.IO) { marx.voice.asked(lang.code, System.currentTimeMillis()) }
+    private var voiceBase = de.strix.marxversion.data.VoicePacks.BASE
+    private val voiceLoading = java.util.concurrent.atomic.AtomicBoolean(false)
+    fun refreshVoice(lang: Lang, force: Boolean = false) = viewModelScope.launch(Dispatchers.IO) {
+        val p = marx.voice
+        val m = p.manifest(System.currentTimeMillis(), force)
+        m?.base?.takeIf { it.startsWith("https://") }?.let { voiceBase = it }
+        // Ogg-Opus plays only on Android 10+ (MediaPlayer) ➡ older fons: no offer, system TTS as b4
+        val offer = p.offer(m, lang.code).takeIf { android.os.Build.VERSION.SDK_INT >= 29 }
+        val have = p.installed(lang.code); val upd = p.update(m, lang.code); val bytes = p.bytes(lang.code)
+        voice.update { cur -> val same = cur.lang == lang.code   // a running download + its error survive a refresh
+            VoiceUi(lang.code, offer, have, upd, bytes, progress = cur.progress.takeIf { same }, failed = same && cur.failed) }
+    }
+    fun loadVoice(pack: de.strix.marxversion.data.PackInfo) = viewModelScope.launch(Dispatchers.IO) {
+        if (!voiceLoading.compareAndSet(false, true)) return@launch   // double tap = 1 download
+        try {
+            voice.update { it.copy(progress = 0f, failed = false) }
+            val ok = marx.voice.install(pack, voiceBase) { f -> voice.update { it.copy(progress = f) } }
+            voice.update { it.copy(progress = null, failed = !ok) }
+        } finally { voiceLoading.set(false) }
+        Lang.entries.firstOrNull { it.code == pack.lang }?.let { refreshVoice(it).join() }
+    }
+    fun deleteVoice(lang: Lang) = viewModelScope.launch(Dispatchers.IO) { marx.voice.delete(lang.code); refreshVoice(lang).join() }
     fun setReadScale(s: Float) = viewModelScope.launch { marx.prefs.setReadScale(s.coerceIn(0.7f, 2f)) }
     fun setReadScroll(on: Boolean) = viewModelScope.launch { marx.prefs.setReadScroll(on) }
     fun setReadPos(id: String) = viewModelScope.launch { marx.prefs.setReadPos(id) }

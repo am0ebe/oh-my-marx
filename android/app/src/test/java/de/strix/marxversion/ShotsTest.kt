@@ -37,6 +37,9 @@ import java.io.File
  */
 /** Robolectric doesn't run androidx.startup ➡ WorkManager by hand, before MarxApp schedules its workers */
 class ShotsApp : MarxApp() {
+    /** 🔊 D-085: UI tsts nvr hit scagent.de 4 voice packs (no manifest = old behaviour, no dialog) */
+    override val voice by lazy { de.strix.marxversion.data.VoicePacks(java.io.File(filesDir, "voice"),
+        fetchText = { throw java.io.IOException("offline (tst)") }, fetchTo = { _, _, _ -> throw java.io.IOException("offline (tst)") }) }
     override fun onCreate() {
         // 2nd test i th same JVM: WorkManager's static instance is still there ➡ "already initialized" = fine
         runCatching { androidx.work.WorkManager.initialize(this, androidx.work.Configuration.Builder().build()) }

@@ -165,6 +165,14 @@ fun SettingsScreen(vm: AppVm, askNotifPermission: () -> Unit) {
         HookNote(Hook.TRIGGER, s.testMode)
         HorizontalDivider()
 
+        // ── 🔊 AI voice pack (D-085) · only when th manifest offers one 4 this lang ──
+        run {
+            val lang = LocalLang.current
+            val vu by vm.voice.collectAsStateWithLifecycle()
+            androidx.compose.runtime.LaunchedEffect(lang) { vm.refreshVoice(lang) }
+            VoicePackRow(vm, lang, vu)
+        }
+
         // ── voice persona ──
         Gap(8)
         // QA r5 (#5): picker only when there's sth 2 pick (D-012: 1 sober voice ➡ hidden)
