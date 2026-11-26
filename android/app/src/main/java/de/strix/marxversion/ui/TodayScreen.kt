@@ -68,6 +68,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asAndroidBitmap
@@ -332,7 +335,17 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
             if (ad.isNotBlank()) {
                 Gap(8)
                 Column(Modifier.fillMaxWidth().clip(Shapes.m).background(accent.copy(alpha = 0.07f)).padding(12.dp)) {
-                    Text(tr("🕯️ Andacht", "🕯️ Devotional"), fontSize = 12.sp, fontWeight = FontWeight.Bold, color = accent)
+                    // 🔊 D-087: `a:<plan>:<day>` = audio contract id ➡ pack clip if loaded + txt unchanged (sha) · else phone voice · tap again = stop
+                    val clipId = "a:${plan.id}:$idx"
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(tr("🕯️ Andacht", "🕯️ Devotional"), fontSize = 12.sp, fontWeight = FontWeight.Bold, color = accent, modifier = Modifier.weight(1f))
+                        speaker.aiLabelFor(clipId)?.let { Text("🔊 $it", style = MaterialTheme.typography.labelSmall, color = Ds.inkMuted) }   // contract: AI speech is labelled
+                        val listen = if (speaker.speaking) tr("Stopp", "Stop") else tr("Andacht vorlesen", "Listen to devotional")
+                        Box(Modifier.size(40.dp).clip(CircleShape).clickable(role = Role.Button) { speaker.say(ad, lang, persona, clipId) }
+                            .semantics { contentDescription = listen }, contentAlignment = Alignment.Center) {
+                            Icon(painterResource(R.drawable.ic_volume), null, tint = if (speaker.speaking) Red else accent, modifier = Modifier.size(20.dp))
+                        }
+                    }
                     Text(ad, fontSize = 15.sp, lineHeight = 22.sp, modifier = Modifier.padding(top = 4.dp))
                 }
             }

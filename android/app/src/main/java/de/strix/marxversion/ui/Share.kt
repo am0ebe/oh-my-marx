@@ -391,6 +391,10 @@ class Speaker(ctx: Context) {
 
     /** 🔊 AI voice label while a pack clip plays (contract: AI speech is labelled) · null = system TTS / quiet */
     var aiLabel by mutableStateOf<String?>(null); private set
+    /** which clip th label belongs 2 (quote card ⬄ Andacht share 1 Speaker) · only read while aiLabel != null */
+    var aiId by mutableStateOf<String?>(null); private set
+    /** th label, only if th playing clip is `id` */
+    fun aiLabelFor(id: String): String? = aiLabel?.takeIf { aiId == id }
     private val packs = (app as? de.strix.marxversion.MarxApp)?.voice
 
     /** tap again while talking (or still rendering) = stop · id (`q:<verse>` · `a:<plan>:<day>`) + installed pack ➡ its clip (D-085) */
@@ -404,7 +408,7 @@ class Speaker(ctx: Context) {
                 val label = clip?.let { p.installed(lang.code)?.let { i -> i.label.ifBlank { i.persona } } }
                 withContext(Dispatchers.Main) {
                     if (!isActive) return@withContext
-                    if (clip != null && runCatching { play(clip) }.isSuccess) aiLabel = label
+                    if (clip != null && runCatching { play(clip) }.isSuccess) { aiId = id; aiLabel = label }
                     else { speaking = false; sayTts(text, lang, persona) }   // no pack · stale txt · id not rendered · bad file ➡ system TTS
                 }
             }

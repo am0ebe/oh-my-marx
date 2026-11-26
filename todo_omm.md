@@ -67,7 +67,7 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
 ## 🔵
 - 🤖 ‼️ **v1 this w** (🦠 @1123) = audio (TTS/STT packs fr audio crew) + Matrix chat ➡ then only feedback
   - ✔️ audio app side = D-085 (pack client, DEV) · 👤 audio: real packs (🦠 persona pick 1st) · 🦠 ❓ newly public `scagent.de/oh-my-marx/voice/` · STT = 0 need i v1 · Ogg-Opus = Android 10+ only (8-9 = phone voice, ok?)
-  - 🤖 Andacht 🔊 btn (plays `a:<plan>:<day>` clips) · Matrix: "Melden" on a comment = gate b4 strangers (D-073)
+  - ✔️ Andacht 🔊 btn (plays `a:<plan>:<day>` clips) = D-087 @1126 #349 · 🤖 Matrix: "Melden" on a comment = gate b4 strangers (D-073)
 - 🤖 CI push guard A ⬄ B still ❓ (rest ✔️ @1126, below)
 - 🤖🔍 CI 1145 + 1163: th runner sometimes drops th 1st 📖 right-tap aftr opening a chapter (local 5/5 fine) ➡ ReaderGestureTest retries it (≤ 2×, nvr 2 turns) · root cause unknown (slow box? Matrix/comments call on open?) · 🦠 if a fon ever ignores th 1st tap ➡ tell
 - 🤖🎨 **C-lane gaps** (done @1120: rank perks, feast emblems, 11 heads, initials, ¶, rtl / zh shots, gold swoosh · @1120 #229: 🥚 eggs replace heads in top bar, hero, quote card, D-066 · launcher egg dropped #241 · `launcherReset` rm @1122 #335, D-066 amended):

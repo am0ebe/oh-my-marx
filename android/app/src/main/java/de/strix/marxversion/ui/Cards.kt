@@ -175,7 +175,7 @@ fun CardCarousel(
     }
     if (sharePanel) ShareAppPanel(appShareMsg()) { sharePanel = false }
     // 🔊 contract: AI speech is labelled while it plays
-    speaker.aiLabel?.let { Text("🔊 $it", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.secondary, textAlign = TextAlign.Center,
+    speaker.aiLabelFor("q:${cur.v.id}")?.let { Text("🔊 $it", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.secondary, textAlign = TextAlign.Center,
         modifier = Modifier.fillMaxWidth().padding(top = 4.dp)) }
     askVoice?.let { p ->
         val play = { askVoice = null; speaker.say(q, lang, persona, "q:${cur.v.id}") }

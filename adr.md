@@ -20,6 +20,12 @@ _SDD: code says **wh** · th file says **y** · drift = a bug · fmt ➡ `pr/vib
 ## 🧾 decisions (newest on top)
 _Template v2.1 since 20 Nov (converted via `pr/vibe++/adr_convert.md`). Field names: Y = why · Ctx = what forced it · Scope = what it covers · Ck = how to check._
 
+### D-087 @1126 · 🔊 Today's Andacht has its own listen button, played from the voice pack when it has that day · Accepted (crew @1126, M8 #349)
+- **Ctx:** D-085 wired only the quote card (`q:<verse>`). The contract also renders `a:<plan>:<day>` (DE `PlanDay.ad` · EN `ae` · rest `Tr.a`), so packs would ship Andacht clips nobody can play.
+- **Dc:** 🔊 icon in the 🕯️ Andacht header on Today ➡ `Speaker.say(ad, lang, persona, "a:<plan>:<idx>")` · same Speaker as th quote card + verses (tap again = stop) · AI label shows next to th header only while ITS clip plays (`Speaker.aiLabelFor(id)`, was 1 shared label ➡ quote card wd say "🔊 <voice>" while th Andacht plays) · no ask dialog here (quote card asks; ⚙️ Mine loads) · pinned old cut / missing translation = raw txt ≠ rendered ➡ sha guard ➡ phone voice.
+- **Alt:** reuse th quote card's ask dialog (con: 2nd ask spot, 1×/week rule gets messy) · 1 "listen to all" btn (con: Today hs 3 txt kinds, verses alr hv 🔊).
+- **Ck:** `AndachtVoiceTest` (plan started ➡ "Listen to devotional" on Today ➡ tap, no crash) · VoicePackTest 10 green · real clip = once a pack exists (👤 audio).
+
 ### D-086 @1126 · 🔒 Build and test tools use fixed versions of 6 libraries with known holes, so the lock file scans clean · Accepted (🦠 @1126 via M8 #346, "ops yes all 3")
 - **Ctx:** ops' scan ([build_vulns.md](../ops/build_vulns.md)): 91 holes in 20 libraries of `android/app/gradle.lockfile`, 0 in the APK (`releaseRuntimeClasspath`). They run on the CI runner (host Docker socket) and on tow during builds. cali fixed the same set (cali D-068, 45 ➡ 0, same AGP 8.13.2 + Robolectric 4.16).
 - **Dc:** cali's `pinned` map + `resolutionStrategy` copied into `app/build.gradle.kts` (guava 33.8.0 · bcprov 1.87 · protobuf 3.25.9 · netty 4.1.x ➡ 4.1.141) + omm's own `org.json` 20260719 (Robolectric's 20240303, GHSA-ghc9-756g-vrcv) · lock re-written over deps + tsts + lint + debug + release (`--write-locks` only rewrites what a task resolves) · a tool bump th brings fixed versions ➡ drop th line.
