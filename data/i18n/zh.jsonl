@@ -2605,3 +2605,10 @@
 {"kind": "ui", "k": "🔊 AI voice", "src": "🔊 KI-Stimme\u0000🔊 AI voice", "t": "🔊 AI语音"}
 {"kind": "ui", "k": "⚠️ Loading didn't work — internet? Try again.", "src": "⚠️ Laden ging nicht — Internet? Nochmal versuchen.\u0000⚠️ Loading didn't work — internet? Try again.", "t": "⚠️ 加载失败——网络问题？再试一次。"}
 {"kind": "ui", "k": "Without the AI voice, your phone's voice reads.", "src": "Ohne KI-Stimme liest die Stimme deines Handys.\u0000Without the AI voice, your phone's voice reads.", "t": "没有AI语音时，就用手机自带语音。"}
+{"kind": "ui", "k": "🚩 Reported. Thanks — we'll take a look.", "src": "🚩 Gemeldet. Danke — wir schauen es uns an.\u0000🚩 Reported. Thanks — we'll take a look.", "t": "🚩 已举报。谢谢——我们会查看。"}
+{"kind": "ui", "k": "⚠️ Report didn't go through — internet? Hold it again.", "src": "⚠️ Melden ging nicht — Internet? Nochmal lange drücken.\u0000⚠️ Report didn't go through — internet? Hold it again.", "t": "⚠️ 举报失败——网络问题？请长按重试。"}
+{"kind": "ui", "k": "🚩 Report this comment?", "src": "🚩 Kommentar melden?\u0000🚩 Report this comment?", "t": "🚩 举报这条评论？"}
+{"kind": "ui", "k": "Report", "src": "Melden\u0000Report", "t": "举报"}
+{"kind": "ui", "k": "Spam, hate or abuse? The scagent.de admins see the report. The comment stays until they decide.", "src": "Spam, Hass oder Beleidigung? Die Betreiber von scagent.de sehen die Meldung. Der Kommentar bleibt, bis sie entscheiden.\u0000Spam, hate or abuse? The scagent.de admins see the report. The comment stays until they decide.", "t": "垃圾、仇恨或侮辱？scagent.de 的管理员会看到举报。评论将保留，直到他们决定。"}
+{"kind": "ui", "k": "Hold someone else's comment = report.", "src": "Fremden Kommentar lange drücken = melden.\u0000Hold someone else's comment = report.", "t": "长按他人评论 = 举报。"}
+{"kind": "ui", "k": "Listen to devotional", "src": "Andacht vorlesen\u0000Listen to devotional", "t": "聆听祷文"}

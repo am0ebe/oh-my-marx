@@ -2569,3 +2569,10 @@
 {"kind": "ui", "k": "🔊 AI voice", "src": "🔊 KI-Stimme\u0000🔊 AI voice", "t": "🔊 Voix IA"}
 {"kind": "ui", "k": "⚠️ Loading didn't work — internet? Try again.", "src": "⚠️ Laden ging nicht — Internet? Nochmal versuchen.\u0000⚠️ Loading didn't work — internet? Try again.", "t": "⚠️ Échec du chargement — connexion Internet ? Réessayer."}
 {"kind": "ui", "k": "Without the AI voice, your phone's voice reads.", "src": "Ohne KI-Stimme liest die Stimme deines Handys.\u0000Without the AI voice, your phone's voice reads.", "t": "Sans voix IA, c’est la voix de votre téléphone qui lit."}
+{"kind": "ui", "k": "🚩 Reported. Thanks — we'll take a look.", "src": "🚩 Gemeldet. Danke — wir schauen es uns an.\u0000🚩 Reported. Thanks — we'll take a look.", "t": "🚩 Signalé. Merci — on regarde ça."}
+{"kind": "ui", "k": "⚠️ Report didn't go through — internet? Hold it again.", "src": "⚠️ Melden ging nicht — Internet? Nochmal lange drücken.\u0000⚠️ Report didn't go through — internet? Hold it again.", "t": "⚠️ Le signalement n’a pas fonctionné — connexion ? Appuyez à nouveau longuement."}
+{"kind": "ui", "k": "🚩 Report this comment?", "src": "🚩 Kommentar melden?\u0000🚩 Report this comment?", "t": "🚩 Signaler ce commentaire ?"}
+{"kind": "ui", "k": "Report", "src": "Melden\u0000Report", "t": "Signaler"}
+{"kind": "ui", "k": "Spam, hate or abuse? The scagent.de admins see the report. The comment stays until they decide.", "src": "Spam, Hass oder Beleidigung? Die Betreiber von scagent.de sehen die Meldung. Der Kommentar bleibt, bis sie entscheiden.\u0000Spam, hate or abuse? The scagent.de admins see the report. The comment stays until they decide.", "t": "Spam, haine ou insulte ? Les administrateurs de scagent.de voient le signalement. Le commentaire reste en ligne jusqu’à leur décision."}
+{"kind": "ui", "k": "Hold someone else's comment = report.", "src": "Fremden Kommentar lange drücken = melden.\u0000Hold someone else's comment = report.", "t": "Appuyez longuement sur un commentaire d’un autre = signaler."}
+{"kind": "ui", "k": "Listen to devotional", "src": "Andacht vorlesen\u0000Listen to devotional", "t": "Écouter la prière"}

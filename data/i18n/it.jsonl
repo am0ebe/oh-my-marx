@@ -2606,3 +2606,10 @@
 {"kind": "ui", "k": "🔊 AI voice", "src": "🔊 KI-Stimme\u0000🔊 AI voice", "t": "🔊 Voce AI"}
 {"kind": "ui", "k": "⚠️ Loading didn't work — internet? Try again.", "src": "⚠️ Laden ging nicht — Internet? Nochmal versuchen.\u0000⚠️ Loading didn't work — internet? Try again.", "t": "⚠️ Caricamento fallito — internet? Riprova."}
 {"kind": "ui", "k": "Without the AI voice, your phone's voice reads.", "src": "Ohne KI-Stimme liest die Stimme deines Handys.\u0000Without the AI voice, your phone's voice reads.", "t": "Senza voce AI, legge la voce del tuo telefono."}
+{"kind": "ui", "k": "🚩 Reported. Thanks — we'll take a look.", "src": "🚩 Gemeldet. Danke — wir schauen es uns an.\u0000🚩 Reported. Thanks — we'll take a look.", "t": "🚩 Segnalato. Grazie — ci occuperemo noi."}
+{"kind": "ui", "k": "⚠️ Report didn't go through — internet? Hold it again.", "src": "⚠️ Melden ging nicht — Internet? Nochmal lange drücken.\u0000⚠️ Report didn't go through — internet? Hold it again.", "t": "⚠️ La segnalazione non è andata a buon fine — internet? Tieni premuto di nuovo."}
+{"kind": "ui", "k": "🚩 Report this comment?", "src": "🚩 Kommentar melden?\u0000🚩 Report this comment?", "t": "🚩 Segnalare questo commento?"}
+{"kind": "ui", "k": "Report", "src": "Melden\u0000Report", "t": "Segnala"}
+{"kind": "ui", "k": "Spam, hate or abuse? The scagent.de admins see the report. The comment stays until they decide.", "src": "Spam, Hass oder Beleidigung? Die Betreiber von scagent.de sehen die Meldung. Der Kommentar bleibt, bis sie entscheiden.\u0000Spam, hate or abuse? The scagent.de admins see the report. The comment stays until they decide.", "t": "Spam, odio o offesa? Gli amministratori di scagent.de vedranno la segnalazione. Il commento rimarrà finché non decideranno."}
+{"kind": "ui", "k": "Hold someone else's comment = report.", "src": "Fremden Kommentar lange drücken = melden.\u0000Hold someone else's comment = report.", "t": "Tieni premuto un commento altrui = segnala."}
+{"kind": "ui", "k": "Listen to devotional", "src": "Andacht vorlesen\u0000Listen to devotional", "t": "Ascolta il brano sacro"}

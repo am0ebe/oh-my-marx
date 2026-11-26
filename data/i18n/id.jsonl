@@ -2569,3 +2569,10 @@
 {"kind": "ui", "k": "🔊 AI voice", "src": "🔊 KI-Stimme\u0000🔊 AI voice", "t": "🔊 Suara AI"}
 {"kind": "ui", "k": "⚠️ Loading didn't work — internet? Try again.", "src": "⚠️ Laden ging nicht — Internet? Nochmal versuchen.\u0000⚠️ Loading didn't work — internet? Try again.", "t": "⚠️ Gagal muat — internet? Coba lagi."}
 {"kind": "ui", "k": "Without the AI voice, your phone's voice reads.", "src": "Ohne KI-Stimme liest die Stimme deines Handys.\u0000Without the AI voice, your phone's voice reads.", "t": "Tanpa suara AI, suara ponselmu yang membaca."}
+{"kind": "ui", "k": "🚩 Reported. Thanks — we'll take a look.", "src": "🚩 Gemeldet. Danke — wir schauen es uns an.\u0000🚩 Reported. Thanks — we'll take a look.", "t": "🚩 Dilaporkan. Terima kasih — kami akan periksa."}
+{"kind": "ui", "k": "⚠️ Report didn't go through — internet? Hold it again.", "src": "⚠️ Melden ging nicht — Internet? Nochmal lange drücken.\u0000⚠️ Report didn't go through — internet? Hold it again.", "t": "⚠️ Laporan gagal — internet? Tekan lagi lama."}
+{"kind": "ui", "k": "🚩 Report this comment?", "src": "🚩 Kommentar melden?\u0000🚩 Report this comment?", "t": "🚩 Laporkan komentar ini?"}
+{"kind": "ui", "k": "Report", "src": "Melden\u0000Report", "t": "Laporkan"}
+{"kind": "ui", "k": "Spam, hate or abuse? The scagent.de admins see the report. The comment stays until they decide.", "src": "Spam, Hass oder Beleidigung? Die Betreiber von scagent.de sehen die Meldung. Der Kommentar bleibt, bis sie entscheiden.\u0000Spam, hate or abuse? The scagent.de admins see the report. The comment stays until they decide.", "t": "Spam, kebencian, atau penghinaan? Admin scagent.de akan lihat laporan. Komentar tetap ada sampai mereka putuskan."}
+{"kind": "ui", "k": "Hold someone else's comment = report.", "src": "Fremden Kommentar lange drücken = melden.\u0000Hold someone else's comment = report.", "t": "Tekan lama komentar orang lain = laporkan."}
+{"kind": "ui", "k": "Listen to devotional", "src": "Andacht vorlesen\u0000Listen to devotional", "t": "Dengarkan doa"}

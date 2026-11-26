@@ -2569,3 +2569,10 @@
 {"kind": "ui", "k": "🔊 AI voice", "src": "🔊 KI-Stimme\u0000🔊 AI voice", "t": "🔊 AI آواز"}
 {"kind": "ui", "k": "⚠️ Loading didn't work — internet? Try again.", "src": "⚠️ Laden ging nicht — Internet? Nochmal versuchen.\u0000⚠️ Loading didn't work — internet? Try again.", "t": "⚠️ لوڈ ہونے میں ناکامی — انٹرنیٹ؟ دوبارہ کوشش کریں۔"}
 {"kind": "ui", "k": "Without the AI voice, your phone's voice reads.", "src": "Ohne KI-Stimme liest die Stimme deines Handys.\u0000Without the AI voice, your phone's voice reads.", "t": "AI آواز کے بغیر آپ کے فون کی آواز پڑھے گی۔"}
+{"kind": "ui", "k": "🚩 Reported. Thanks — we'll take a look.", "src": "🚩 Gemeldet. Danke — wir schauen es uns an.\u0000🚩 Reported. Thanks — we'll take a look.", "t": "🚩 رپورٹ کی گئی۔ شکریہ — ہم اسے دیکھیں گے۔"}
+{"kind": "ui", "k": "⚠️ Report didn't go through — internet? Hold it again.", "src": "⚠️ Melden ging nicht — Internet? Nochmal lange drücken.\u0000⚠️ Report didn't go through — internet? Hold it again.", "t": "⚠️ رپورٹ نہیں ہوئی — انٹرنیٹ؟ دوبارہ لمبے عرصے تک دبائیں۔"}
+{"kind": "ui", "k": "🚩 Report this comment?", "src": "🚩 Kommentar melden?\u0000🚩 Report this comment?", "t": "🚩 اس تبصرے کو رپورٹ کریں؟"}
+{"kind": "ui", "k": "Report", "src": "Melden\u0000Report", "t": "رپورٹ کریں"}
+{"kind": "ui", "k": "Spam, hate or abuse? The scagent.de admins see the report. The comment stays until they decide.", "src": "Spam, Hass oder Beleidigung? Die Betreiber von scagent.de sehen die Meldung. Der Kommentar bleibt, bis sie entscheiden.\u0000Spam, hate or abuse? The scagent.de admins see the report. The comment stays until they decide.", "t": "اسپام، نفرت یا اہانت؟ scagent.de کے انتظامیہ رپورٹ دیکھیں گے۔ تبصرہ اس وقت تک رہے گا جب تک وہ فیصلہ نہ کریں۔"}
+{"kind": "ui", "k": "Hold someone else's comment = report.", "src": "Fremden Kommentar lange drücken = melden.\u0000Hold someone else's comment = report.", "t": "دوسروں کے تبصرے کو لمبے عرصے تک دبائیں = رپورٹ کریں۔"}
+{"kind": "ui", "k": "Listen to devotional", "src": "Andacht vorlesen\u0000Listen to devotional", "t": "مذہبی تقریر سنیں"}
