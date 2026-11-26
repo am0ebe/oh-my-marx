@@ -8,7 +8,7 @@ plugins {
 
 // ⭐ th 1 version number = th last shipped (o about-to-ship) release · `bin/ship.sh minor|patch|major` bumps it
 // dev builds (bin/deploy.sh) show th NEXT one: 0.8.0 shipped ➡ 0.9.0-dev.MMDD.HHMM (-PdevBase) · bin/lib.sh reads this line
-val appVersion = "0.13.1"
+val appVersion = "0.14.0"
 // 🔢 versionCode (minutes) · DEV name (-Pdev -PdevBase) · 1st-entry APK stamp ➡ appkit (../appkit/README.md · D-079)
 extra["appVersion"] = appVersion
 extra["appStampKey"] = "ommBuild"
