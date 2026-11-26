@@ -1,6 +1,11 @@
 # eos omm — resume log · newest on TOP
 _1 block per /eos · written by /eos § 3 · todo keeps 1 line: `▶ resume ➡ eos.md`_
 
+## 261126 19:35 · #350 round 3 (M8): CI flake 🔍 + DEV deploy
+- **at** · CI 1171 red = ReaderGestureTest again: all 3 retries failed ➡ stuck state, not a dropped tap · no local repro (1 core · TZ=UTC) ➡ failure dumps bounds + menu + tree, gradle testLogging FULL (bdab37a) · CI 1174 ✅ · **DEV `0.14.0-dev.1126.1931`** = D-087 + D-088 (deploylog ✔️)
+- **▶ NEXT** · nxt CI red on that tst ➡ `cilog <run> | grep -A40 "3 right-taps"` ➡ fix th real cause · 🔵 🤖 rest: CI push guard A ⬄ B = ❓ 🦠 · rest 🦠 / 👤 gated
+- **👤 🦠** · DEV 1931 on fon: Andacht 🔊 (plan card) + hold a stranger's comment = report · D-088 wording · + blocks below
+
 ## 261126 18:4x · #349 round 2 (M8): D-087 Andacht 🔊 · D-088 report a comment
 - **at** · Today's 🕯️ Andacht hs its own 🔊 (`a:<plan>:<day>`, AI label per item) · hold a stranger's comment ➡ Matrix `/report` (D-073 gate half 1) · 157 unit + lint green · pushed · DEV unchanged (`0.14.0-dev.1126.1603`)
 - **▶ NEXT** · 1 DEV deploy (D-087 + D-088, inform tier) · 🔵 top 🤖 left: CI push guard A ⬄ B ❓ · ReaderGestureTest root cause 🔍 · rest = 🦠 / 👤 gated

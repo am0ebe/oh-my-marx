@@ -48,7 +48,7 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
     - [x] 🤖 `MatrixTest.handleShowsTheUnspoofableId` (caught 1 🐛: "strix" fr matrix.org hid th id) · 148 unit + lint green
     - [ ] 🦠 i th Matrix sesh (📆 @1123): someone else's comment ➡ grey id aftr th name reads ok? (D-077 ➡ Accepted)
   - ✔️ spam · lost fon · no E2E = accepted 4 v1 · report + mod = gate b4 strangers (D-073 · #307)
-  - ✔️ 🤖 **🚩 report a comment** (D-088 · #349): hold someone else's comment ➡ "🚩 Report this comment?" ➡ Matrix `/report` ➡ continuwuity admin room · not on DEV yet
+  - ✔️ 🤖 **🚩 report a comment** (D-088 · #349): hold someone else's comment ➡ "🚩 Report this comment?" ➡ Matrix `/report` ➡ continuwuity admin room · DEV `0.14.0-dev.1126.1931`
     - [x] 🤖 `MatrixTest.reportPostsReasonToTheEvent` · `CommentReportTest` 3 · 155 unit + lint green
     - [ ] 🦠 ½ min, read here (o i th Matrix sesh): dialog "Spam, hate or abuse? The scagent.de admins see the report. The comment stays until they decide." · result "🚩 Reported. Thanks — we'll take a look." · ⓘ "Hold someone else's comment = report." ok?
     - [ ] 👤 ops: 1 real report vs continuwuity (Matrix sesh: B reports A) ➡ lands i th admin room? who reads it?
@@ -74,7 +74,7 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
   - ✔️ audio app side = D-085 (pack client, DEV) · 👤 audio: real packs (🦠 persona pick 1st) · 🦠 ❓ newly public `scagent.de/oh-my-marx/voice/` · STT = 0 need i v1 · Ogg-Opus = Android 10+ only (8-9 = phone voice, ok?)
   - ✔️ Andacht 🔊 btn (plays `a:<plan>:<day>` clips) = D-087 @1126 #349 · ✔️ Matrix "Melden" on a comment = D-088 @1126 #349 (gate b4 strangers, D-073)
 - 🤖 CI push guard A ⬄ B still ❓ (rest ✔️ @1126, below)
-- 🤖🔍 CI 1145 + 1163: th runner sometimes drops th 1st 📖 right-tap aftr opening a chapter (local 5/5 fine) ➡ ReaderGestureTest retries it (≤ 2×, nvr 2 turns) · root cause unknown (slow box? Matrix/comments call on open?) · 🦠 if a fon ever ignores th 1st tap ➡ tell
+- 🤖🔍 CI 1145 + 1163 + 1171: `tapTurnsDoubleTapOpensMenu` ➡ right-tap aftr menu open + close doesn't turn, all 3 retries (1171) = **stuck state, not a dropped tap** · local green on 1 core + TZ=UTC · #350: failure now dumps page-1 node bounds + menu + tree, gradle log FULL ➡ nxt red: `cilog <run> | grep -A40 "3 right-taps"` = th cause · 🦠 if a fon ever ignores a tap aftr closing a passage menu ➡ tell
 - 🤖🎨 **C-lane gaps** (done @1120: rank perks, feast emblems, 11 heads, initials, ¶, rtl / zh shots, gold swoosh · @1120 #229: 🥚 eggs replace heads in top bar, hero, quote card, D-066 · launcher egg dropped #241 · `launcherReset` rm @1122 #335, D-066 amended):
   - 🖼️ Feast frames (design § 14.2.1) · 🔊 stamp thud sound (D-035).
 - 🦠 ‼️ ⭐🧪 **QA @1116** ➡ [qa_1116.md](qa_1116.md) — 14 ⚡ i 6 lanes (L3 share 1st) · 3 🎨 (➡ Fable spec aftr) · 2 🔍 · 💬 Qs ✔️ answered @1116 ➡ lanes built (D-039 · D-040) · Q8 revised = no Werkbank (D-041) · left: D3 joker · fon items (#13 cold-start ms · ✔️ #14 lib baseline profiles alr ship i th APK, #299)
@@ -83,7 +83,7 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
 - 🦠 ‼️ 📨⭐ **user feedback** — 1st real users = gold · log (M · M2 · Jan · Mi) ➡ `feedback.md` + [notes.md § 🗃️](notes.md) · phase 1 ✔️ (page mail + GH issue forms + app ⚙️ btn)
   - 🤖🛠️ `/triage` skill (gh issues + Migadu ➡ label · dedupe · draft) · ⏸️ @1122 #335: 0 GH issues ever (labels `needs-triage` + `from-app` ready) ➡ build when issues pile up (≥ ~5), not b4 · 🔵 phase 2 in-app form ➡ `POST /feedback` aft QA rounds
 - 🦠📣 ‼️ send **scagent.de/omm** 2 2-3 friends (0.6.0 ppl need 1 manual update, banner only fr ≥0.7.0)
-  - 🚧 gate (D-073): beyond friends ➡ ✔️ 🤖 min "Melden" on a comment (D-088 @1126, not on DEV yet) + 👤 ops rate limit / captcha on signup + 👤 ops: reports land i continuwuity's admin room ➡ who reads it?
+  - 🚧 gate (D-073): beyond friends ➡ ✔️ 🤖 min "Melden" on a comment (D-088 @1126, DEV 1931) + 👤 ops rate limit / captcha on signup + 👤 ops: reports land i continuwuity's admin room ➡ who reads it?
 - 👤 ‼️ 🌍 **LLM book qy** — 👤 native QA zh/ar/hi/bn/ur · `bin/translate_full.py --show 5 --langs it es` · alt = existing translations (© check) ➡ [notes.md § 🗃️](notes.md)
 - 🦠 ‼️ **P3 habit test 2w** — aft th nxt big version is out, w audio (🦠 @1114) · Hooked ch 8: identify ➡ codify ➡ modify · start = 🦠's 1st day, log it here
 - 🦠📚 ‼️ **Matrix + chat: K + tst** — 🦠 re notes § 🏗️ technical + `server/SERVICE.md` § 2 + `pr/ops/matrix.md` · ✔️ `bin/matrix_e2e.py` smoke vs live 18/18 @1121 (👀 above) · ✔️ `Matrix.kt` JVM tst (fake server) @1116: MatrixTest 8 ➡ 13, all calls covered (+ Lesekreis: create · members · name · leave · redact · setName · code)
