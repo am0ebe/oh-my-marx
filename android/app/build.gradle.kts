@@ -63,6 +63,8 @@ android {
         unitTests.all { t ->
             t.maxHeapSize = "512m"   // D-030: Robolectric fork · CI 3g cap = gradle 1280m + this
             t.maxParallelForks = 1
+            // 🔍 CI log = only place a runner-only failure shows ➡ full message (dflt = "AssertionError at X.kt:95", msg dropped)
+            t.testLogging { exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL }
             t.systemProperty("shots", if (project.hasProperty("shots")) "1" else "")
             t.systemProperty("shotsDir", layout.buildDirectory.dir("shots").get().asFile.path)
             // 💬 MatrixLiveTest = th real UI vs LIVE Synapse (real accounts) ➡ only via `bin/matrix_e2e.py --app` (-Plive)

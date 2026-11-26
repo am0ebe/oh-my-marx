@@ -9,6 +9,7 @@ import androidx.compose.ui.test.swipe
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.onRoot
+import androidx.compose.ui.test.printToString
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTouchInput
 import org.junit.Assert.assertFalse
@@ -46,6 +47,15 @@ class ReaderGestureTest {
             passage().performTouchInput { click(centerRight - Offset(24f, 0f)) }; settle()
             if (runCatching { rule.waitUntil(3_000) { !has(first) } }.isSuccess) return
         }
+        // 🔍 1171: all 3 retries failed ➡ stuck state, not a dropped tap · can't repro (1 core · TZ=UTC: green) ➡ th CI log says why
+        throw AssertionError("📖 3 right-taps, page 1 stays · ${why()}")
+    }
+    /** where page 1's passage sits (on screen o an off-screen/peek page?) · menu open? · th tree top */
+    private fun why(): String {
+        val root = runCatching { rule.onRoot().fetchSemanticsNode().boundsInRoot }.getOrElse { "≥ 2 roots (dialog/popup open?)" }
+        val hits = rule.onAllNodesWithText(first, substring = true).fetchSemanticsNodes().map { it.boundsInRoot }
+        return "root=$root · page-1 nodes=$hits · menu=${has("Note", true)} · tree:\n" +
+            runCatching { rule.onRoot().printToString(maxDepth = 6) }.getOrDefault("?").take(3000)
     }
 
     /** 🐛 DEV 1009 (🦠 @1120): 1st tap on a fresh page = th menu, not a turn · no double-tap b4 (th old tst hid it) */
