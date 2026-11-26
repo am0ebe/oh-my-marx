@@ -156,7 +156,7 @@ fun CardCarousel(
             // 🔊 D-085: AI voice pack offered + not loaded ➡ ask once per run (MB shown) · else play (pack clip o system TTS)
             val o = voiceUi.offer.takeIf { voiceUi.lang == lang.code && voiceUi.have == null && voiceUi.progress == null }
             if (o != null && !speaker.speaking && vm.voiceShouldAsk(lang)) { vm.voiceAsked(lang); askVoice = o }
-            else speaker.say(q, lang, persona, "q:${cur.v.id}")
+            else speaker.say(q, lang, persona, de.strix.marxversion.data.VoicePacks.quoteId(cur.v.id))
         }
         CardAction(R.drawable.ic_copy, tr("Kopieren", "Copy"), Blue) {
             copyText(ctx, "${lang.quote(q)}\n— Karl Marx, $r")
@@ -175,10 +175,10 @@ fun CardCarousel(
     }
     if (sharePanel) ShareAppPanel(appShareMsg()) { sharePanel = false }
     // 🔊 contract: AI speech is labelled while it plays
-    speaker.aiLabelFor("q:${cur.v.id}")?.let { Text("🔊 $it", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.secondary, textAlign = TextAlign.Center,
+    speaker.aiLabelFor(de.strix.marxversion.data.VoicePacks.quoteId(cur.v.id))?.let { Text("🔊 $it", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.secondary, textAlign = TextAlign.Center,
         modifier = Modifier.fillMaxWidth().padding(top = 4.dp)) }
     askVoice?.let { p ->
-        val play = { askVoice = null; speaker.say(q, lang, persona, "q:${cur.v.id}") }
+        val play = { askVoice = null; speaker.say(q, lang, persona, de.strix.marxversion.data.VoicePacks.quoteId(cur.v.id)) }
         VoiceAskDialog(p, onLoad = { vm.loadVoice(p); play() }, onLater = { play() })
     }
     // big + red + full width = can't miss it (was a 5th small pill)

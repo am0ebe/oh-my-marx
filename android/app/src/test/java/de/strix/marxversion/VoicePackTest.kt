@@ -136,4 +136,22 @@ class VoicePackTest {
 
     /** contract § stale check: SHA-1 over th raw UTF-8 string, 1st 12 hex (python: hashlib.sha1(s.encode()).hexdigest()[:12]) */
     @Test fun sha12MatchesThePythonRenderer() = assertEquals("a9993e364706", VoicePacks.sha12("abc"))
+
+    /** D-087: ids = omm_contract.md § item ids examples (`q:8,9` · `a:30tage:0` = day 1 o th plan, 0-based) */
+    @Test fun idsMatchTheContract() {
+        assertEquals("q:8,9", VoicePacks.quoteId("8,9"))
+        assertEquals("a:30tage:0", VoicePacks.andachtId("30tage", 0))
+    }
+
+    /** D-087: an `a:` clip plays only while th Andacht txt is th one it was rendered from (pinned old cut · edit ➡ phone voice) */
+    @Test fun andachtClipFollowsItsText() {
+        val ad = "Heute: die Ware als Zelle."
+        val p = VoicePacks(tmp.root, fetchText = { throw java.io.IOException() }, fetchTo = { _, _, _ -> throw java.io.IOException() })
+        val d = File(tmp.root, "de").apply { mkdirs() }
+        File(d, "0123456789abcdef.opus").writeBytes(byteArrayOf(1))
+        File(d, "index.json").writeText("""{"v":1,"persona":"p","lang":"de","items":{"${VoicePacks.andachtId("30tage", 0)}":{"f":"0123456789abcdef.opus","sec":3.0,"sha":"${VoicePacks.sha12(ad)}"}}}""")
+        assertNotNull(p.clip("de", VoicePacks.andachtId("30tage", 0), ad))
+        assertNull(p.clip("de", VoicePacks.andachtId("30tage", 0), "$ad (edited)"))
+        assertNull(p.clip("de", VoicePacks.andachtId("30tage", 1), ad))
+    }
 }

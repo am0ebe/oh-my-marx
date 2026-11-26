@@ -336,7 +336,7 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
                 Gap(8)
                 Column(Modifier.fillMaxWidth().clip(Shapes.m).background(accent.copy(alpha = 0.07f)).padding(12.dp)) {
                     // 🔊 D-087: `a:<plan>:<day>` = audio contract id ➡ pack clip if loaded + txt unchanged (sha) · else phone voice · tap again = stop
-                    val clipId = "a:${plan.id}:$idx"
+                    val clipId = de.strix.marxversion.data.VoicePacks.andachtId(plan.id, idx)
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(tr("🕯️ Andacht", "🕯️ Devotional"), fontSize = 12.sp, fontWeight = FontWeight.Bold, color = accent, modifier = Modifier.weight(1f))
                         speaker.aiLabelFor(clipId)?.let { Text("🔊 $it", style = MaterialTheme.typography.labelSmall, color = Ds.inkMuted) }   // contract: AI speech is labelled

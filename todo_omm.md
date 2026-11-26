@@ -31,7 +31,8 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
 ### 🏔️ v1
 - **🔊 AI voice packs, app side** (D-085 · #345 ③ · audio contract) · 🔊 on a quote card ➡ "Load · N MB?" ➡ pack clip, else phone voice · ⚙️ Mine row · hidden til a pack exists
   - [x] 🤖 `VoicePackTest` 10 · real dry pack 20/20 sha match · 150 unit + lint + check_langs green
-  - [ ] 🦠 aftr th 1st real pack (audio): DEV ➡ Today 🔊 ➡ dialog txt + MB ok? ➡ voice plays + "🔊 KI-Stimme · …" line under th card
+  - [ ] 🦠 aftr th 1st real pack (audio): DEV ➡ Today 🔊 ➡ dialog txt + MB ok? ➡ voice plays + "🔊 KI-Stimme · …" line under th card · same sesh: plan's 🕯️ Andacht 🔊 (header, right) plays its clip + label next 2 it (D-087)
+  - [x] 🤖 D-087 Andacht 🔊: `AndachtVoiceTest` · `VoicePackTest.idsMatchTheContract` + `andachtClipFollowsItsText` · 157 unit + lint green
 - **🧺 start at LEVEL 1 w a name** (🦠 scrap @1126 · D-084 Proposed · #345) · new reader = LEVEL 1 "Ware / Commodity" (Kapital's 1st word) · old 7 ranks = levels 2-8 · perks unchanged (on cards)
   - [x] 🤖 `LevelTest` · `MineLevelTest` (real screen) · `MomentsShotsTest.rank3` = LEVEL 4 · 140 unit + lint + check_langs green
   - [ ] 🦠 ½ min, DEV ⚙️ Mine (fresh install o 🧪 Testmodus): "LEVEL 1 · Commodity" ok? name alt: Lehrling / Apprentice · Lohnarbeiter / Wage labourer · badge = faded shovel (rank 2's) ➡ own 🧺 art? (➡ D-084 Accepted)
@@ -47,6 +48,10 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
     - [x] 🤖 `MatrixTest.handleShowsTheUnspoofableId` (caught 1 🐛: "strix" fr matrix.org hid th id) · 148 unit + lint green
     - [ ] 🦠 i th Matrix sesh (📆 @1123): someone else's comment ➡ grey id aftr th name reads ok? (D-077 ➡ Accepted)
   - ✔️ spam · lost fon · no E2E = accepted 4 v1 · report + mod = gate b4 strangers (D-073 · #307)
+  - ✔️ 🤖 **🚩 report a comment** (D-088 · #349): hold someone else's comment ➡ "🚩 Report this comment?" ➡ Matrix `/report` ➡ continuwuity admin room · not on DEV yet
+    - [x] 🤖 `MatrixTest.reportPostsReasonToTheEvent` · `CommentReportTest` 3 · 155 unit + lint green
+    - [ ] 🦠 ½ min, read here (o i th Matrix sesh): dialog "Spam, hate or abuse? The scagent.de admins see the report. The comment stays until they decide." · result "🚩 Reported. Thanks — we'll take a look." · ⓘ "Hold someone else's comment = report." ok?
+    - [ ] 👤 ops: 1 real report vs continuwuity (Matrix sesh: B reports A) ➡ lands i th admin room? who reads it?
   - 🤖 Kreis = hourly poll, no push (UnifiedPush/ntfy = 🔵 community ideas) · fine 4 v1
   - ✔️ client-IP retention (#341, ops src-read): 1 IP per device, overwritten, no purge ➡ README § Known gaps fixed (F15) · 👤 ops: signing key i bup (`pr/ops/matrix.md`) · night #308 ➡ [night_1122.md](night_1122.md) F2/F3/F6
 - **🥚 eggs + drop cap** (merged #290: qa_1121 r2 · #246 D-068 · #248 widget) · DEV `0.13.0-dev.1121.0014`

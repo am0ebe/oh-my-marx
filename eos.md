@@ -1,6 +1,12 @@
 # eos omm — resume log · newest on TOP
 _1 block per /eos · written by /eos § 3 · todo keeps 1 line: `▶ resume ➡ eos.md`_
 
+## 261126 18:4x · #349 round 2 (M8): D-087 Andacht 🔊 · D-088 report a comment
+- **at** · Today's 🕯️ Andacht hs its own 🔊 (`a:<plan>:<day>`, AI label per item) · hold a stranger's comment ➡ Matrix `/report` (D-073 gate half 1) · 157 unit + lint green · pushed · DEV unchanged (`0.14.0-dev.1126.1603`)
+- **▶ NEXT** · 1 DEV deploy (D-087 + D-088, inform tier) · 🔵 top 🤖 left: CI push guard A ⬄ B ❓ · ReaderGestureTest root cause 🔍 · rest = 🦠 / 👤 gated
+- **👤 🦠** · D-088 wording (todo 👀 Matrix list) · 👤 ops: who reads continuwuity's admin room (reports land there) · + all of th block below
+- **⚠️** · report not run vs live continuwuity (wd spam th admin room) ➡ Matrix sesh · voice ids now only via `VoicePacks.quoteId` / `andachtId`
+
 ## 261126 16:05 · #345 full steam + #346 (M8)
 - **at** · D-083 updates ask by dflt (kit `AUTO_DEFAULT` false + refused silent ➡ notif) · CI green again (1156) · D-084 LEVEL 1 "Commodity" (Proposed) · D-085 voice pack client (hidden til a pack exists) · D-086 build pins 91 ➡ 0 · nightly `@v1` · DEV `0.14.0-dev.1126.1603` · 150 unit + 17 kit + lint green · all pushed
 - **▶ NEXT** · ck CI 1162 green · 🔵 top: Andacht 🔊 (`a:` clips) · Matrix "Melden" on a comment (D-073 gate)

@@ -35,6 +35,9 @@ class VoicePacks(
         const val RETRY_MS = 24L * 3600 * 1000         // no manifest yet (404 · offline) ➡ try again next day, not on evy open
         private val ZIP_NAME = Regex("[A-Za-z0-9._-]{1,80}\\.zip")
         private val CLIP = Regex("[0-9a-f]{8,40}\\.opus")
+        /** contract item ids · day = 0-based index into th plan's days (same as `Tr.a["<plan>:<day>"]`) */
+        fun quoteId(verse: String) = "q:$verse"
+        fun andachtId(plan: String, day: Int) = "a:$plan:$day"
         fun sha12(raw: String): String = MessageDigest.getInstance("SHA-1").digest(raw.toByteArray(Charsets.UTF_8))
             .joinToString("") { "%02x".format(it) }.take(12)
         fun sha256(f: File): String = MessageDigest.getInstance("SHA-256").let { md ->
