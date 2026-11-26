@@ -9,17 +9,14 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
   - 🚦 rule: no version bump / ship / big new feat til th current one had ≥1 QA round on th fon · big side-quests (voice, chat infra) ➡ own pr
 
 ## ⏳
-- 🦠📱 **fon tst 2nd half: silent self-update** (D-038 + D-078 · steps 1-4 ✔️ @1122) — **0.13.1 live @1122 22:17** · ~2 min
-  5. stable 0.13.0 on ur fon (toggle untouched) ➡ open app ➡ 0.13.1 = notif / banner ➡ **Install** (1 tap: 0.13.0's code = dflt OFF · we r installer since 0.12 ➡ 0.13 = likely no Android confirm) ➡ ⚙️ shows 0.13.1 + "Update automatically" ON
-     - then th nxt stable (0.13.2 / 0.14.0) ➡ open app ➡ ✔️ no dialog, quiet "✔️ installed" notification (Android 12+) = silent proven
-     - had u set ⚙️ ON on 0.13.0 b4 opening ➡ 0.13.1 itself goes silent already
+- 🦠📱 **fon tst: updater** (D-038 · steps 1-4 ✔️ @1122) · step 5 silent ❌ GrapheneOS @1123 (🦠) ➡ **D-083: dflt OFF, banner ➡ Install = main** (#345) · silent stays opt-in, a refused silent try now asks (notif "Tap = install")
   6. (+30 s, fr qa_1121 r2 ck 4) any chapter ➡ 📜 Scroll ➡ pinch = txt grows / shrinks · back 2 📖 Pages = same size as b4
   - ❌ any step ➡ screenshot (auto-lands i `/opt/pix_fon`) + step nr ➡ 🤖
   - 🧮 **updater matrix** (@1116 · @1122: normal APK ✔️ fon) (same code both channels, only th URL differs: `/` ⬄ `/dev/`)
     | | APK (browser) = main (#327) | Obtainium = 2nd |
     |--|--|--|
     | DEV | ✔️ unit tsts · same code as normal (fon ran on stable) | ✔️ fon: Obtainium 1h ck auto-updated (🦠) · app's own notif ➡ obtainium://refresh = unit tst only |
-    | normal | ✔️ fon @1122 (🦠): 0.12.0 browser APK ➡ 0.13.0 via in-app updater (notif/banner ➡ Install ➡ confirm) · ⏳ silent (step 5) | ✔️ Obtainium follows th page (same as DEV) |
+    | normal | ✔️ fon @1122 (🦠): 0.12.0 browser APK ➡ 0.13.0 via in-app updater (notif/banner ➡ Install ➡ confirm) · ❌ silent on GrapheneOS @1123 ➡ opt-in only (D-083) | ✔️ Obtainium follows th page (same as DEV) |
     - 0.9.0 ➡ 0.10.0 APK users: banner ➡ page ➡ install by hand 1× (then 1-tap / silent fr there)
 
 ## 👀
@@ -32,6 +29,9 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
   - [ ] 🦠 1 min: `tail -40 data/retag_night_1122.log` ➡ quotes about their chip? (rec ✔️ if ≥ 2/3 fit · was ≈ random · #308 read ≈ ½, F16)
 ### 🐙 M8 cd decide
 ### 🏔️ v1
+- **🔄 updater dflt OFF = banner ➡ Install main** (🦠 @1123 · D-083 · #345) · kit `AUTO_DEFAULT = false` · refused silent try (GrapheneOS) ➡ "Tap = install" notif + no retry 4 th version
+  - [x] 🤖 `UpdateWorkerTest` nvr touched ➡ NOTIFIED · ON ➡ SILENT · OFF ➡ NOTIFIED · `refusedSilentInstallAsksInstead` · `refusedForegroundInstallPostsNothing` · 137 + 17 unit + lint green
+  - [ ] 🦠 stable ship ❓ (nvr-touched users flip ON ➡ OFF on it) · Changelog line draft (add on top b4 `bin/ship.sh`): "🔄 Updates fragen wieder: Banner ➡ Installieren · ⚙️ „Automatisch aktualisieren“ = still im Hintergrund (Android 12+)" / "🔄 Updates ask again: banner ➡ Install · ⚙️ “Update automatically” = quietly in the background (Android 12+)" ok?
 - **💬 Matrix v1 — wh's left** (aftr th in-app tst, 1 list · 🤖 = can build · ❓ = 🦠 picks)
   - ✔️ 🤖 **delete my account** built @1121 (D-072 Proposed): ⚙️ under Name ➡ "Delete account" ➡ confirm ➡ **redact evy own msg (D-076)** ➡ Matrix deactivate ➡ app forgets account + Kreise · DEV `0.13.0-dev.1122.1353`
     - [x] 🤖 `MatrixTest.deactivateErasesWithPasswordAuth` + `redactAllMineWalksEveryRoomAndPage` · `--app` 13/13 vs live continuwuity (step 13 = app's Kreis msg gone 4 B) · check_langs green
@@ -59,7 +59,6 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
 - 🛍️ Fr 11/27 Black Friday: home-screen widget shows th 🛍️ egg left o "Marx verse" · only if it looks off ➡ screenshot (no box · render = `EggResTest`)
 
 ## 🔵
-- 🤖 ‼️ **updater dflt flip** (🦠 @1123): silent auto-update failed on GrapheneOS · banner ➡ Install worked ➡ banner = main path 4 all users, silent auto = OFF by dflt · Obtainium stays 2nd (1 non-tech user gave up on it) · amend D-038 / D-078 · ❓ M8's reading, 🦠 confirms
 - 🤖 ‼️ **v1 this w** (🦠 @1123) = audio (TTS/STT packs fr audio crew) + Matrix chat ➡ then only feedback
 - 🤖 CI: `am0/ci` tag `v1` moved 2 `8dbbfe3` by 🦠 @1123 ➡ ck nxt run green (`cilog`) · push guard A ⬄ B still ❓
 - 👤 **CI red since run 1108**: Robolectric can't fetch `android-all` on th runner (ConnectException, 15 classes) ➡ ops (net o cache) · then 🤖 `cilog` = green · + ops osv on `android/app/gradle.lockfile` (D-082)

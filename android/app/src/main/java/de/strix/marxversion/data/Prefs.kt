@@ -35,7 +35,7 @@ data class Settings(
     val readScroll: Boolean = false,    // 📜 reader mode: false = 📖 book pages · true = endless scroll (qa_1116 Q4/Q7, remembers last)
     val readPos: String? = null,        // 📍 qa_1120: last passage on screen i th reader (📖 page's 1st o 📜 top) ➡ "Continue reading"
     val community: Boolean = true,      // 👥 Mitlesen: anonymous daily-token counts + comments · always on since QA r5 (D-020, no ⚙️ toggle)
-    val autoUpdate: Boolean = appkit.selfupdate.Update.AUTO_DEFAULT,   // 🆕 browser installs: install updates wo asking (Android 12+) · dflt ON (D-078 @1122, was ask D-038) · set OFF = stays OFF
+    val autoUpdate: Boolean = appkit.selfupdate.Update.AUTO_DEFAULT,   // 🆕 browser installs: install updates wo asking (Android 12+) · dflt OFF (D-083 @1126, was ON D-078) · set ON = stays ON
 )
 
 /** 👥 a Lesekreis = 1 Matrix room, found by its code */
@@ -137,11 +137,13 @@ class Prefs(private val context: Context) {
             readScroll = p[K.readScroll] ?: false,
             readPos = p[K.readPos],
             community = true,   // QA r5 (D-020): Mitlesen always on, toggle gone ➡ an old stored "off" no longer counts
-            autoUpdate = appkit.selfupdate.Update.autoOn(p[K.autoUpdate]),   // D-078: key absent (nvr touched) ➡ kit dflt ON · stored OFF stays OFF
+            autoUpdate = appkit.selfupdate.Update.autoOn(p[K.autoUpdate]),   // D-083: key absent (nvr touched) ➡ kit dflt OFF · stored ON stays ON
         )
     }
 
     suspend fun setAutoUpdate(on: Boolean) = context.store.edit { it[K.autoUpdate] = on }
+    /** 🧪 back 2 "nvr touched" (key absent ➡ kit dflt, D-083) · tsts only */
+    @androidx.annotation.VisibleForTesting suspend fun clearAutoUpdate() = context.store.edit { it.remove(K.autoUpdate) }
     suspend fun setLang(l: Lang) = context.store.edit { it[K.lang] = l.name }
     suspend fun setTestMode(on: Boolean) = context.store.edit { it[K.testMode] = on }
     suspend fun setDevUnlock(on: Boolean) = context.store.edit { it[K.devUnlock] = on }

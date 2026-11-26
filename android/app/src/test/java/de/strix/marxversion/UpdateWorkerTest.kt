@@ -104,18 +104,44 @@ class UpdateWorkerTest {
         assertEquals(Outcome.NONE, checkAndNotify(app, { throw java.io.IOException("offline") }, null, 35, 0L, noSilent))
     }
 
-    /** D-078: dflt ON (kit) · a usr who set ⚙️ OFF stays OFF ➡ asked · back ON ➡ silent (worker reads omm's Prefs, no auto override) */
-    @Test fun autoDefaultOnAndOffChoiceStays() = runBlocking {
-        assertEquals(true, ommUpdate().autoDefault)
-        assertEquals(true, Settings().autoUpdate)                       // fresh Settings = kit dflt
+    /** D-083: dflt OFF (kit, was ON D-078) · nvr touched ➡ asked (banner/notif ➡ Install) · ⚙️ ON ➡ silent · back OFF ➡ asked (worker reads omm's Prefs, no auto override) */
+    @Test fun autoDefaultOffAndOnChoiceStays() = runBlocking {
+        assertEquals(false, ommUpdate().autoDefault)
+        assertEquals(false, Settings().autoUpdate)                      // fresh Settings = kit dflt
         val prefs = app.prefs
+        val again = { app.getSharedPreferences("omm_update", 0).edit().clear().commit(); nm.cancelAll() }
         try {
-            prefs.setAutoUpdate(false)
+            prefs.clearAutoUpdate()                                     // key absent = nvr touched ➡ Prefs.kt ➡ kit dflt
             assertEquals(Outcome.NOTIFIED, checkAndNotify(app, fake(newer), me, 35, 0L, noSilent))
-            app.getSharedPreferences("omm_update", 0).edit().clear().commit(); nm.cancelAll()
-            prefs.setAutoUpdate(true)
+            again(); prefs.setAutoUpdate(true)
             assertEquals(Outcome.SILENT, checkAndNotify(app, fake(newer), me, 35, 0L, noSilent))
-        } finally { prefs.setAutoUpdate(true) }                          // DataStore = process-wide ➡ leave it at th dflt
+            again(); prefs.setAutoUpdate(false)
+            assertEquals(Outcome.NOTIFIED, checkAndNotify(app, fake(newer), me, 35, 0L, noSilent))
+            assertEquals("only th ON check went silent", 1, silentRuns)
+        } finally { prefs.clearAutoUpdate() }                            // DataStore = process-wide ➡ back 2 nvr touched
+    }
+
+    /** D-083: Android refuses a silent try LATER (session result, GrapheneOS @1123) ➡ "Tap = install" notif · nxt check asks, no 2nd silent try 4 th version */
+    @Test fun refusedSilentInstallAsksInstead() {
+        app.getSharedPreferences("omm_update", 0).edit().putString("silent", "9.9.9").commit()
+        appkit.selfupdate.InstallReceiver().onReceive(app, android.content.Intent()
+            .putExtra(Update.EXTRA_BG, true).putExtra(android.content.pm.PackageInstaller.EXTRA_STATUS, android.content.pm.PackageInstaller.STATUS_FAILURE))
+        assertNotNull("refused silent ➡ notif", notif)
+        assertNull("no 'installed ✔️' aftr a swap th nvr came", app.getSharedPreferences("omm_update", 0).getString("silent", null))
+        nm.cancelAll()
+        assertEquals(Outcome.NOTIFIED, run(newer, me))                  // auto ON + we r installer, but 9.9.9 failed ➡ ask
+        assertEquals(0, silentRuns)
+        Update.installError.value = null
+    }
+
+    /** a FOREGROUND (banner ➡ Install) failure = th dialog shows it, no extra notif */
+    @Test fun refusedForegroundInstallPostsNothing() {
+        appkit.selfupdate.InstallReceiver().onReceive(app, android.content.Intent()
+            .putExtra(Update.EXTRA_BG, false).putExtra(android.content.pm.PackageInstaller.EXTRA_STATUS, android.content.pm.PackageInstaller.STATUS_FAILURE))
+        assertNull(notif)
+        assertNotNull(Update.installError.value)
+        assertEquals(Outcome.SILENT, run(newer, me))                    // fg failure doesn't block a later silent try
+        Update.installError.value = null
     }
 
     /** 🧩 appkit (D-079): omm's channel URLs + th pre-kit storage names (renamed = lost nag state + a 2nd periodic job) */

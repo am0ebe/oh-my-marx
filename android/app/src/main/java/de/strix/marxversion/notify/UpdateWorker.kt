@@ -34,7 +34,7 @@ fun ommUpdate() = UpdateConfig(
         .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP).putExtra(MainActivity.EXTRA_POP, "update") },
     openApp = { ctx -> Intent(ctx, MainActivity::class.java) },
     de = { ctx -> setting(ctx) { it.lang == Lang.DE } },
-    auto = { ctx -> setting(ctx) { it.autoUpdate } },   // ⚙️ "auto-update" (browser installs only) · Prefs alr applies th kit dflt ON (D-078) · read timeout ➡ false = ask
+    auto = { ctx -> setting(ctx) { it.autoUpdate } },   // ⚙️ "auto-update" (browser installs only) · Prefs alr applies th kit dflt OFF (D-083) · read timeout ➡ false = ask
     prefs = "omm_update",
     work = "marx_update",
     sessionName = "omm.apk",

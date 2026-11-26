@@ -192,7 +192,7 @@ fun SettingsScreen(vm: AppVm, askNotifPermission: () -> Unit) {
         Gap(8)
         HorizontalDivider()
 
-        // ── 🆕 updates: browser install = auto by dflt (D-078 @1122, kit dflt) · OFF = ask (opt-out) · Obtainium/store = their job ──
+        // ── 🆕 updates: browser install = ask by dflt (banner ➡ Install, D-083 @1126, kit dflt) · ON = silent (opt-in) · Obtainium/store = their job ──
         run {
             val ctx = androidx.compose.ui.platform.LocalContext.current
             val via = remember { appkit.selfupdate.Update.via(ctx) }

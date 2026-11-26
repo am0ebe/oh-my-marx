@@ -78,6 +78,9 @@ class ReaderGestureTest {
         passage().performTouchInput { doubleClick() }; settle()
         assertTrue("double-tap opens th passage menu", has("Note", true))
         assertTrue(has(first))
+        // 👆👆 again = menu closes · CI run 1145: a tap w th menu still open didn't turn (local did) ➡ turn only on a bare page
+        passage().performTouchInput { doubleClick() }; settle()
+        assertFalse("2nd double-tap closes th menu", has("Note", true))
         // 👆 right half ➡ nxt page (page 1 leaves th composition)
         passage().performTouchInput { click(centerRight - Offset(24f, 0f)) }; settle()
         assertFalse("tap right = next page", has(first))
