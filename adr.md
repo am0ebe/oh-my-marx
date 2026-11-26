@@ -73,12 +73,13 @@ _Template v2.1 since 20 Nov (converted via `pr/vibe++/adr_convert.md`). Field na
 - **Open:** level 1 shows th faded rank_1 badge (shovel = Primitive accumulation, "not yet" look) · own 🧺 badge art = 🦠 ❓ · D-050 / D-063 perk numbers = cards (shown level = +1, top = 8).
 - **Ck:** `LevelTest` (new reader = 1 + Commodity · 1st card = 2 + Primitive accumulation · 7 = 8) · `MineLevelTest` (real Mine screen: no LEVEL 0 / "No rank yet") · `MomentsShotsTest.rank3` = LEVEL 4 · 140 unit + lint + check_langs green @1126.
 
-### D-083 @1126 · 🔄 Updates ask by default: the banner's Install button is the main path, silent auto-update is opt-in again · Accepted (🦠 @1123 via M8 #345)
+### D-083 @1126 · 🔄 Updates ask by default: the banner's Install button is the main path, silent auto-update is opt-in again · Accepted (🦠 @1123 via M8 #345 · re-confirmed 🦠 @1126 via M8 #352)
 - **Ctx:** 🦠 @1123: silent auto-update failed on GrapheneOS · in-app banner ➡ Install worked ➡ "banner = main path 4 all users, silent auto = OFF by dflt · Obtainium stays 2nd" (1 non-tech user gave up on Obtainium). D-078 had flipped the default to ON 1 day earlier.
 - **Dc:** kit `Update.AUTO_DEFAULT = false` (pr/appkit) · omm passes no own `autoDefault` ➡ kit dflt · key `auto_update` absent ➡ OFF · ⚙️ "Update automatically" row stays = opt-in (as D-038) · silent path code unchanged (a usr who turns it ON still gets it; a failed silent try already falls back 2 asking).
 - **Y:** the 1 path proven on a real phone (banner ➡ Install ➡ confirm) beats a path th fails quietly on some ROMs; a usr who wants silent can still pick it.
 - **Alt:** keep ON + detect GrapheneOS (fragile, unknown root cause, oth ROMs may fail th same way) · drop silent code (con: works on stock 12+, cheap 2 keep).
 - **Existing installs:** nvr touched ➡ OFF from th build th carries D-083 on (DEV now · stable = 🦠's call) · set ON by hand ➡ stays ON · set OFF ➡ stays OFF · cali alr passed `autoDefault = false` ➡ 0 change there.
+- **Confirmed @1126 (#352):** 🦠 aftr th in-app updater worked on his fon: "updater works! D038 > keep android auto-update. maybe it works in future. but dflt off. we use our own auto-update" ➡ 0 logic chg: silent path stays (opt-in, may work on more ROMs later) · th in-app updater (banner / notif ➡ Install) = th path · ⚙️ row txt now says ON doesn't work on evy phone + then it asks (was "install without asking" = false on GrapheneOS) · 0.14.0 Changelog says updates ask again.
 - **Prev:** D-078 (default ON ➡ superseded) · D-038 (OFF default, back).
 - **Ck:** kit `UpdateTest.autoDefaultIsOffButAnOnChoiceStays` · omm `UpdateWorkerTest.autoDefaultOffAndOnChoiceStays` (nvr touched ➡ OFF · ON ➡ SILENT · OFF ➡ NOTIFIED) · 135 + 17 unit + lint green @1126.
 

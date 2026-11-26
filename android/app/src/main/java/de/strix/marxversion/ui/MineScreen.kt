@@ -208,8 +208,8 @@ fun SettingsScreen(vm: AppVm, askNotifPermission: () -> Unit) {
             if (via == appkit.selfupdate.Update.Via.SELF) Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(vertical = 8.dp)) {
                 Column(Modifier.weight(1f)) {
                     Text(tr("🆕 Automatisch aktualisieren", "🆕 Update automatically"))
-                    Text(tr("Neue Versionen installieren sich ohne Nachfrage (Android 12+). Aus = du bekommst eine Nachricht und tippst.",
-                        "New versions install without asking (Android 12+). Off = you get a notification and tap."),
+                    Text(tr("Neue Versionen installieren sich ohne Nachfrage (Android 12+, nicht auf jedem Handy — dann fragt die App wie sonst). Aus = du bekommst eine Nachricht und tippst.",
+                        "New versions install without asking (Android 12+, not on every phone — then the app asks as usual). Off = you get a notification and tap."),
                         style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
                 de.strix.marxversion.ui.ds.DsSwitch(s.autoUpdate, { vm.setAutoUpdate(it) })
