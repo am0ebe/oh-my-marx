@@ -33,6 +33,7 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
   - [x] 🤖 `VoicePackTest` 10 · real dry pack 20/20 sha match · 150 unit + lint + check_langs green
   - [ ] 🦠 aftr th 1st real pack (audio): DEV ➡ Today 🔊 ➡ dialog txt + MB ok? ➡ voice plays + "🔊 KI-Stimme · …" line under th card · same sesh: plan's 🕯️ Andacht 🔊 (header, right) plays its clip + label next 2 it (D-087)
   - [x] 🤖 D-087 Andacht 🔊: `AndachtVoiceTest` · `VoicePackTest.idsMatchTheContract` + `andachtClipFollowsItsText` · 157 unit + lint green
+  - [x] 🤖 #351 D-089 label i reader's lang (was German "KI-Stimme" i all 13) · D-090 `bin/voice_up.py` (ck + `-u` upload, 1st = `-y` ❓ newly public) + DEV rechecks manifest evy 10 min · D-091 CI `langs` job · 159 unit + 63 py + lint green · DEV `0.14.0-dev.1126.2319`
 - **🧺 start at LEVEL 1 w a name** (🦠 scrap @1126 · D-084 Proposed · #345) · new reader = LEVEL 1 "Ware / Commodity" (Kapital's 1st word) · old 7 ranks = levels 2-8 · perks unchanged (on cards)
   - [x] 🤖 `LevelTest` · `MineLevelTest` (real screen) · `MomentsShotsTest.rank3` = LEVEL 4 · 140 unit + lint + check_langs green
   - [ ] 🦠 ½ min, DEV ⚙️ Mine (fresh install o 🧪 Testmodus): "LEVEL 1 · Commodity" ok? name alt: Lehrling / Apprentice · Lohnarbeiter / Wage labourer · badge = faded shovel (rank 2's) ➡ own 🧺 art? (➡ D-084 Accepted)
@@ -73,7 +74,7 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
 - 🤖 ‼️ **v1 this w** (🦠 @1123) = audio (TTS/STT packs fr audio crew) + Matrix chat ➡ then only feedback
   - ✔️ audio app side = D-085 (pack client, DEV) · 👤 audio: real packs (🦠 persona pick 1st) · 🦠 ❓ newly public `scagent.de/oh-my-marx/voice/` · STT = 0 need i v1 · Ogg-Opus = Android 10+ only (8-9 = phone voice, ok?)
   - ✔️ Andacht 🔊 btn (plays `a:<plan>:<day>` clips) = D-087 @1126 #349 · ✔️ Matrix "Melden" on a comment = D-088 @1126 #349 (gate b4 strangers, D-073)
-- 🤖 CI push guard A ⬄ B still ❓ (rest ✔️ @1126, below)
+- 📆 **@1127 v1 sesh = 1 page** ➡ [v1_sesh_1127.md](v1_sesh_1127.md) (order · wh audio needs · ❓ w rec) · #351
 - 🤖🔍 CI 1145 + 1163 + 1171: `tapTurnsDoubleTapOpensMenu` ➡ right-tap aftr menu open + close doesn't turn, all 3 retries (1171) = **stuck state, not a dropped tap** · local green on 1 core + TZ=UTC · #350: failure now dumps page-1 node bounds + menu + tree, gradle log FULL ➡ nxt red: `cilog <run> | grep -A40 "3 right-taps"` = th cause · 🦠 if a fon ever ignores a tap aftr closing a passage menu ➡ tell
 - 🤖🎨 **C-lane gaps** (done @1120: rank perks, feast emblems, 11 heads, initials, ¶, rtl / zh shots, gold swoosh · @1120 #229: 🥚 eggs replace heads in top bar, hero, quote card, D-066 · launcher egg dropped #241 · `launcherReset` rm @1122 #335, D-066 amended):
   - 🖼️ Feast frames (design § 14.2.1) · 🔊 stamp thud sound (D-035).
@@ -113,6 +114,7 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
 - 🤖 aft QA: rm page fotos (boox proc step 8)
 
 ## ✔️
+- ✔️ @1126 #351 CI push guard A ⬄ B = ops' ❓ (build_vulns.md · m8 agenda 4), not omm's: omm lock = 0 holes (D-086) ➡ nothing blocks omm pushes · line closed here
 - ✔️ @1126 #346 (🦠 "ops yes all 3"): a 🔒 build-tool holes 91 ➡ 0 (D-086, efe6f87) · b nightly `@v1` (4eb574d) · c ReaderGestureTest = alr fixed i 1d4fc85 (run 1156 ✅)
 - ✔️ @1126 #345 🟢 **CI green again** (`v1` = 8dbbfe3 · runner Robolectric ✔️ by ops · osv on lockfile = run 1155 ✅) · 1145 = 1 real red: `ReaderGestureTest.tapTurnsDoubleTapOpensMenu` (tap w menu open didn't turn on th runner) ➡ tst closes th menu 1st ➡ run 1156 ✅
 - ✔️ @1122 #335 🧪 **apptool bash tst** (kit): cali built `tool/test_apptool.sh` (118 cks, e8836e8) + ERR trap ➡ omm subtree pull (c8d8cf7) ➡ 118 ✔️ + omm `bin/deploy.sh -n` exit 0 (nothing uploaded)

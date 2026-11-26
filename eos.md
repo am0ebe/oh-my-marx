@@ -1,6 +1,11 @@
 # eos omm — resume log · newest on TOP
 _1 block per /eos · written by /eos § 3 · todo keeps 1 line: `▶ resume ➡ eos.md`_
 
+## 261126 23:2x · #351 (M8): v1 sesh page + tonight's 🤖
+- **at** · [v1_sesh_1127.md](v1_sesh_1127.md) = 🦠's 1 page (order · wh audio needs · 5 ❓) · D-089 voice label i reader's lang · D-090 `bin/voice_up.py` + DEV 10-min manifest recheck · 7 UI strings ➡ 11 langs (ship guard was red) · D-091 CI `langs` job · **DEV `0.14.0-dev.1126.2319`** (deploylog ✔️) · 159 unit + 63 py + lint green
+- **▶ NEXT** · ck CI run w th new `langs` job (`cilog`) · aftr 🦠 pick + ❓ 1 yes: audio's out dir ➡ `bin/voice_up.py <dir>` ➡ `-u -y` ➡ 🦠 fon 🔊 · ReaderGestureTest only if red again
+- **👤 🦠** · page § ❓ 1-5 · fon step 3 · read + tick step 4
+
 ## 261126 19:35 · #350 round 3 (M8): CI flake 🔍 + DEV deploy
 - **at** · CI 1171 red = ReaderGestureTest again: all 3 retries failed ➡ stuck state, not a dropped tap · no local repro (1 core · TZ=UTC) ➡ failure dumps bounds + menu + tree, gradle testLogging FULL (bdab37a) · CI 1174 ✅ · **DEV `0.14.0-dev.1126.1931`** = D-087 + D-088 (deploylog ✔️)
 - **▶ NEXT** · nxt CI red on that tst ➡ `cilog <run> | grep -A40 "3 right-taps"` ➡ fix th real cause · 🔵 🤖 rest: CI push guard A ⬄ B = ❓ 🦠 · rest 🦠 / 👤 gated
