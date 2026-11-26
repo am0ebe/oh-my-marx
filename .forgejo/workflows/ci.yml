@@ -19,3 +19,12 @@ jobs:
        #   ➡ move into app.yml default once am0 moves v1, then drop th override here
        gradle: '-Dorg.gradle.jvmargs="-Xmx1280m -XX:MaxMetaspaceSize=768m" --max-workers=2 lintDebug testDebugUnitTest assembleRelease'}
     secrets: inherit
+
+  # 🌐 D-091: ship guard on evy push (D-087/088 added 7 tr() strings ➡ 11 langs half-EN, only ship.sh wd hv seen it)
+  #   stdlib python only, no LLM · fix = bin/translate.py --only ui on tow ➡ commit
+  langs:
+    runs-on: docker
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262   # v4.4.0 (same sha as am0/ci)
+      - run: python3 bin/check_langs.py
+      - run: python3 -m unittest bin/test_bin.py

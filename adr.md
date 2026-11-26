@@ -20,6 +20,12 @@ _SDD: code says **wh** · th file says **y** · drift = a bug · fmt ➡ `pr/vib
 ## 🧾 decisions (newest on top)
 _Template v2.1 since 20 Nov (converted via `pr/vibe++/adr_convert.md`). Field names: Y = why · Ctx = what forced it · Scope = what it covers · Ck = how to check._
 
+### D-091 @1126 · 🌐 CI checks on every push that each language has all app texts · Accepted (crew @1126, M8 #351)
+- **Ctx:** D-087 + D-088 added 7 `tr()` strings ➡ 11 langs showed them i English on DEV · CI stayed green (am0/ci runs gradle + server/ only) · `check_langs` ran only i `bin/ship.sh` ➡ th stable ship wd hv been refused on th day.
+- **Dc:** own `langs` job i `.forgejo/workflows/ci.yml` (runner `docker`, stdlib python): `bin/check_langs.py` + `bin/test_bin.py` (rsync tst skips wo rsync) · red ➡ `bin/translate.py --only ui` on tow ➡ commit.
+- **Alt:** a gradle JVM tst th re-implements check_langs (con: 2 copies o 1 rule) · ask ops 4 an app.yml input (con: shared workflow, slower; can move there later).
+- **Ck:** 1st CI run w th job green (`cilog`) · local: check_langs ✔️ · 63 py green.
+
 ### D-090 @1126 · 🔊 Voice packs go live with one checked command, and the DEV app sees a new pack within 10 minutes · Accepted (crew @1126, M8 #351 · 1st upload = newly public ❓ 🦠)
 - **Ctx:** 🦠 picks th voice @1127 ➡ audio renders ➡ pack must reach th fon i th same sesh. 2 gaps: nobody owned th upload (contract: "rsync by 🦠 o th release script") · th app stamps evy manifest try ➡ aftr today's 404 th DEV app wd look again only tomorrow (cached manifest: 1 w), `force` was nvr called.
 - **Dc:** `bin/voice_up.py [PACKS]` = ck audio's out dir w th app's rules (manifest v + base · sha256 + bytes · zip = index.json + `<hex>.opus` only · ids q:/a: · 1 pack per lang · fresh % vs today's txt) · `-u` = rsync zips 1st, manifest last (an app nvr sees a manifest pointing at a missing zip) · dir missing = newly public ➡ 🛑 til `-y` · old zips stay (rm = data) · DEV build (`.dev` app id) rechecks th manifest evy 10 min (`VoicePacks(dev = true)`) · stable unchanged (1 d aftr a 404, 1 w aftr).

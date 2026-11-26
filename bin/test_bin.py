@@ -620,6 +620,7 @@ class VoiceUp(unittest.TestCase):
         self.assertEqual(err, [])
         self.assertTrue(any("1/2 clips match" in w for w in warn))
 
+    @unittest.skipUnless(shutil.which("rsync"), "no rsync (CI image)")
     def test_upload_needs_yes_4_a_new_public_dir_and_puts_manifest(self):
         self.pack()
         web = pathlib.Path(self.d.name) / "web" / "voice"
