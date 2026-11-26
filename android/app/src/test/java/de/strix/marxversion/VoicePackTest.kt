@@ -143,6 +143,22 @@ class VoicePackTest {
         assertEquals("a:30tage:0", VoicePacks.andachtId("30tage", 0))
     }
 
+    /** D-089: packs label evy lang "KI-Stimme · <name>" (German) ➡ app keeps only th name + adds its own translated "AI voice" */
+    @Test fun voiceNameDropsThePacksGermanPrefix() {
+        assertEquals("marx-scholar", VoicePacks.voiceName("KI-Stimme · marx-scholar", "x"))
+        assertEquals("Erzählerin", VoicePacks.voiceName("Erzählerin", "x"))
+        assertEquals("marx-scholar", VoicePacks.voiceName("", "marx-scholar"))
+        assertEquals("marx-scholar", VoicePacks.voiceName("KI-Stimme · ", "marx-scholar"))
+        // th prefix th app adds is translated i evy menu lang (not th German fallback)
+        val ui = Regex("\"🔊 AI voice\"\\s*:\\s*\"([^\"]+)\"")
+        for (l in de.strix.marxversion.data.Lang.menu.filter { it.ordinal > 1 }) {
+            val f = File("src/main/assets/content/${l.file}")
+            val t = ui.find(f.readText())?.groupValues?.get(1)
+            assertNotNull("${l.name}: no '🔊 AI voice'", t)
+            assertTrue("${l.name}: $t", t!!.startsWith("🔊") && "KI-Stimme" !in t)
+        }
+    }
+
     /** D-087: an `a:` clip plays only while th Andacht txt is th one it was rendered from (pinned old cut · edit ➡ phone voice) */
     @Test fun andachtClipFollowsItsText() {
         val ad = "Heute: die Ware als Zelle."

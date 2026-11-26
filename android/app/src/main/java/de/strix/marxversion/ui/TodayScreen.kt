@@ -339,7 +339,7 @@ fun TodayScreen(vm: AppVm, askNotif: () -> Unit, openChapter: (String, String) -
                     val clipId = de.strix.marxversion.data.VoicePacks.andachtId(plan.id, idx)
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(tr("🕯️ Andacht", "🕯️ Devotional"), fontSize = 12.sp, fontWeight = FontWeight.Bold, color = accent, modifier = Modifier.weight(1f))
-                        speaker.aiLabelFor(clipId)?.let { Text("🔊 $it", style = MaterialTheme.typography.labelSmall, color = Ds.inkMuted) }   // contract: AI speech is labelled
+                        speaker.aiLabelFor(clipId)?.let { Text(aiVoice(it), style = MaterialTheme.typography.labelSmall, color = Ds.inkMuted) }   // contract: AI speech is labelled
                         val listen = if (speaker.speaking) tr("Stopp", "Stop") else tr("Andacht vorlesen", "Listen to devotional")
                         Box(Modifier.size(40.dp).clip(CircleShape).clickable(role = Role.Button) { speaker.say(ad, lang, persona, clipId) }
                             .semantics { contentDescription = listen }, contentAlignment = Alignment.Center) {

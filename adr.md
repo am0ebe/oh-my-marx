@@ -20,6 +20,12 @@ _SDD: code says **wh** · th file says **y** · drift = a bug · fmt ➡ `pr/vib
 ## 🧾 decisions (newest on top)
 _Template v2.1 since 20 Nov (converted via `pr/vibe++/adr_convert.md`). Field names: Y = why · Ctx = what forced it · Scope = what it covers · Ck = how to check._
 
+### D-089 @1126 · 🔊 The AI-voice label is shown in the reader's language; the pack only supplies the voice's name · Accepted (crew @1126, M8 #351)
+- **Ctx:** audio's `omm_pack.py` writes `label = "KI-Stimme · <persona>"` into evy pack, all 13 langs ➡ app showed it raw ➡ a French reader wd see German "🔊 KI-Stimme · marx-scholar" under th card + i th dialog + ⚙️ row.
+- **Dc:** `VoicePacks.voiceName(label, persona)` = text aftr th last `·` (blank ➡ persona) · UI `aiVoice(name)` = th app's translated "🔊 AI voice" + " · " + name (string alr i all 11 i18n files) · used on th quote card, th Andacht header, th load dialog · ⚙️ row = name · MB (its header alr says AI voice).
+- **Alt:** ask audio 4 1 label per lang (con: 13 strings i their pipeline, app alr hs th translation) · show th label raw (con: German i 12 langs).
+- **Ck:** `VoicePackTest.voiceNameDropsThePacksGermanPrefix` (prefix cut · no `·` · blank ➡ persona · evy LLM lang hs a non-German "🔊 AI voice").
+
 ### D-088 @1126 · 🚩 Hold someone else's comment to report it to the scagent.de admins · Accepted (crew @1126, M8 #349 · wording = 🦠 👀)
 - **Ctx:** D-073 gates "send scagent.de/omm beyond friends" on a minimal "Melden" on a comment. Comments had hold-own = delete only.
 - **Dc:** hold a stranger's comment ➡ MarxDialog "🚩 Report this comment?" (Report · Cancel · outside tap / Esc = Cancel) ➡ `Matrix.report` = `POST /rooms/<room>/report/<event>` w a fixed reason (`omm app: … (chapter <kap>)`, ≤ 250 chars) ➡ continuwuity posts it in th admin room (ops reads it) · result line under th list ("Reported." / "didn't go through") · comment stays (admins decide) · 1 try, no retry · no free-txt reason (nothing new 2 moderate) · ⓘ dialog gets th "hold = report" line.

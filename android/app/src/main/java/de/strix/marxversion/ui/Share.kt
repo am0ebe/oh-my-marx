@@ -405,7 +405,7 @@ class Speaker(ctx: Context) {
             speaking = true
             job = scope.launch {
                 val clip = runCatching { p.clip(lang.code, id, text) }.getOrNull()
-                val label = clip?.let { p.installed(lang.code)?.let { i -> i.label.ifBlank { i.persona } } }
+                val label = clip?.let { p.installed(lang.code)?.let { i -> de.strix.marxversion.data.VoicePacks.voiceName(i.label, i.persona) } }
                 withContext(Dispatchers.Main) {
                     if (!isActive) return@withContext
                     if (clip != null && runCatching { play(clip) }.isSuccess) { aiId = id; aiLabel = label }

@@ -13,10 +13,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import de.strix.marxversion.data.Lang
 import de.strix.marxversion.data.PackInfo
+import de.strix.marxversion.data.VoicePacks
 import de.strix.marxversion.data.f
 import de.strix.marxversion.ui.ds.Ds
 import de.strix.marxversion.ui.ds.Primary
 import de.strix.marxversion.ui.ds.TextBtn
+
+/** 🔊 "AI voice · <name>" i th app's lang (contract: AI speech is labelled) · name = pack label wo its German prefix (D-089) */
+@Composable
+fun aiVoice(name: String): String = "${tr("🔊 KI-Stimme", "🔊 AI voice")} · $name"
 
 /** MB 4 humans: 41 000 000 ➡ "41" · < 1 MB ➡ "1" (a dialog nvr says 0 MB) */
 fun mb(bytes: Long): Int = ((bytes + 999_999) / 1_000_000).toInt().coerceAtLeast(1)
@@ -30,7 +35,7 @@ fun VoiceAskDialog(p: PackInfo, onLoad: () -> Unit, onLater: () -> Unit) =
         Text(tr("Liest die Losungen mit einer KI-Stimme vor, einmal laden, dann offline. Bis dahin liest die Stimme deines Handys.",
             "Reads the daily quotes in an AI voice: load it once, then it works offline. Until then your phone's voice reads."),
             style = MaterialTheme.typography.bodyMedium, color = Ds.ink)
-        if (p.label.isNotBlank()) Text(p.label, style = MaterialTheme.typography.bodySmall, color = Ds.inkMuted, modifier = Modifier.padding(top = 6.dp))
+        Text(aiVoice(VoicePacks.voiceName(p.label, p.persona)), style = MaterialTheme.typography.bodySmall, color = Ds.inkMuted, modifier = Modifier.padding(top = 6.dp))
     }
 
 /** ⚙️ Mine row: loaded ➡ label · MB · Delete (+ new version) · offered ➡ Load · MB · busy ➡ bar · no pack 4 th lang ➡ nothing */
@@ -44,7 +49,7 @@ fun VoicePackRow(vm: AppVm, lang: Lang, v: AppVm.VoiceUi) {
             v.progress != null -> LinearProgressIndicator(progress = { v.progress.coerceIn(0f, 1f) }, color = Ds.gold, trackColor = Ds.paperDeep,
                 modifier = Modifier.fillMaxWidth().padding(top = 8.dp))
             have != null -> Row(verticalAlignment = Alignment.CenterVertically) {
-                Text("${have.label.ifBlank { have.persona }} · %d MB".f(mb(v.bytes)), style = MaterialTheme.typography.bodySmall,
+                Text("${VoicePacks.voiceName(have.label, have.persona)} · %d MB".f(mb(v.bytes)), style = MaterialTheme.typography.bodySmall,
                     color = Ds.inkMuted, modifier = Modifier.weight(1f))
                 v.update?.let { u -> TextBtn(tr("Neue Version", "New version"), { vm.loadVoice(u) }) }
                 TextBtn(tr("Löschen", "Delete"), { vm.deleteVoice(lang) }, danger = true)

@@ -38,6 +38,9 @@ class VoicePacks(
         /** contract item ids · day = 0-based index into th plan's days (same as `Tr.a["<plan>:<day>"]`) */
         fun quoteId(verse: String) = "q:$verse"
         fun andachtId(plan: String, day: Int) = "a:$plan:$day"
+        /** th voice's name only: packs write a German "KI-Stimme · <name>" label 4 evy lang ➡ app drops th prefix + adds its own translated "AI voice" (D-089) */
+        fun voiceName(label: String, persona: String): String =
+            label.substringAfterLast('·').trim().ifBlank { persona }
         fun sha12(raw: String): String = MessageDigest.getInstance("SHA-1").digest(raw.toByteArray(Charsets.UTF_8))
             .joinToString("") { "%02x".format(it) }.take(12)
         fun sha256(f: File): String = MessageDigest.getInstance("SHA-256").let { md ->
