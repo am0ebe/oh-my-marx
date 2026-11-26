@@ -84,6 +84,11 @@ val RANKS = listOf(
     T("☭ Expropriation der Expropriateure", "☭ Expropriating the expropriators"),
 )
 fun rank(i: Int) = RANKS[i.coerceIn(0, RANKS.lastIndex)]
+/** 🧺 D-084 (🦠 @1126 "start w lvl1. It shd also have a name"): evy reader starts at LEVEL 1 = Kapital's 1st word, th single commodity ·
+ *  shown level = full Stempelkarten + 1 · perks + unlocks stay on cards (D-050), only th number shifts */
+val LEVEL1 = T("🧺 Ware", "🧺 Commodity")
+fun shownLevel(cards: Int) = cards + 1   // ≠ th `level` params/vals (= cards, perks) i Today · Emblem · Moments
+fun levelName(cards: Int) = if (cards <= 0) LEVEL1 else rank(cards - 1)
 private val RANK_ART = listOf(R.drawable.rank_1, R.drawable.rank_2, R.drawable.rank_3, R.drawable.rank_4,
     R.drawable.rank_5, R.drawable.rank_6, R.drawable.rank_7)
 fun rankArt(i: Int) = RANK_ART[i.coerceIn(0, RANK_ART.lastIndex)]
@@ -311,7 +316,7 @@ fun PromotionScreen(rankIdx: Int, totalDays: Int, milestone: Int?, hooked: Boole
                     Image(painterResource(rankArt(rankIdx)), tr(rank(rankIdx)), Modifier.size(120.dp)
                         .offset { IntOffset(0, ((1 - fly.value) * -400).toInt()) }.scale(.6f + .4f * fly.value))
                     // D-060 (qa_1120 "GENEHMIGT = bureaucratic ➡ lvl-up"): gold LEVEL UP pill pops (overshoot), no rubber stamp
-                    Text(tr("LEVEL %d ▲", "LEVEL %d ▲").f(rankIdx + 1), color = Ds.ink, fontWeight = FontWeight.Black, style = MaterialTheme.typography.titleLarge,
+                    Text(tr("LEVEL %d ▲", "LEVEL %d ▲").f(shownLevel(rankIdx + 1)), color = Ds.ink, fontWeight = FontWeight.Black, style = MaterialTheme.typography.titleLarge,
                         modifier = Modifier.align(Alignment.BottomCenter).alpha(seal.value).scale(.4f + .6f * seal.value)
                             .background(Brush.verticalGradient(listOf(androidx.compose.ui.graphics.lerp(Ds.gold, Ds.white, .45f), Ds.gold)), Shapes.pill)
                             .border(2.dp, Ds.white, Shapes.pill).padding(horizontal = 16.dp, vertical = 4.dp))

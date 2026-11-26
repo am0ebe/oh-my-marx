@@ -91,7 +91,7 @@ class MomentsShotsTest {
     @Test fun rank3() {
         rule.setContent { MarxTheme(Lang.EN, null) { PromotionScreen(2, 28, milestone = 30, hooked = false) {} } }
         dialogShot("moment_rank_3")
-        assertTrue(has("LEVEL 3")); assertTrue(!has("GENEHMIGT") && !has("APPROVED")); assertTrue(has("Expanded reproduction")); assertTrue(has("30 days in a row"))
+        assertTrue("3 cards = LEVEL 4 (D-084: start = 1)", has("LEVEL 4")); assertTrue(!has("GENEHMIGT") && !has("APPROVED")); assertTrue(has("Expanded reproduction")); assertTrue(has("30 days in a row"))
         assertTrue("rank-3 perk line (built @1120 #206)", has("Marx Basics"))
     }
 

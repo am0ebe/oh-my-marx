@@ -20,6 +20,14 @@ _SDD: code says **wh** · th file says **y** · drift = a bug · fmt ➡ `pr/vib
 ## 🧾 decisions (newest on top)
 _Template v2.1 since 20 Nov (converted via `pr/vibe++/adr_convert.md`). Field names: Y = why · Ctx = what forced it · Scope = what it covers · Ck = how to check._
 
+### D-084 @1126 · 🧺 Every reader starts at level 1, "Commodity", instead of level 0 with no rank · Proposed (crew @1126, 🦠 scrap via M8 #345; name = 🦠's taste)
+- **Ctx:** 🦠 scrap @1126: "start w lvl1. It shd also have a name." ⚙️ Mine showed **LEVEL 0 · "No rank yet"** until the 1st full Stempelkarte (D-061 row). LEVEL 0 + "no rank" = a new reader starts with nothing.
+- **Dc:** shown level = full cards + 1 (`ui/Moments.kt` `level()` · `levelName()`) · level 1 = **🧺 Ware / Commodity**, Kapital's first word ("die einzelne Ware als seine Elementarform") · the 7 old rank names keep their order and sit at levels 2-8 · Mine, Promotion pill ("LEVEL N ▲") and the plan lock hint ("at level N") all shift +1 · perks + unlocks stay on cards (D-050 numbers = cards, now shown 1 higher) · i18n 11 langs (it + hi hand-fixed: Merce · माल).
+- **Y:** a name from the 1st minute = identity from day 1 (Hooked: investment) · Commodity fits the rank path (Kapital's own history of capitalism) and is where the book starts.
+- **Alt:** "📕 Lehrling / Apprentice" (generic, off the Kapital path) · "🧑‍🏭 Lohnarbeiter / Wage labourer" (heavier, the reader = labour power) · keep 0, only add a name (con: "level 0" still reads as nothing).
+- **Open:** level 1 shows th faded rank_1 badge (shovel = Primitive accumulation, "not yet" look) · own 🧺 badge art = 🦠 ❓ · D-050 / D-063 perk numbers = cards (shown level = +1, top = 8).
+- **Ck:** `LevelTest` (new reader = 1 + Commodity · 1st card = 2 + Primitive accumulation · 7 = 8) · `MineLevelTest` (real Mine screen: no LEVEL 0 / "No rank yet") · `MomentsShotsTest.rank3` = LEVEL 4 · 140 unit + lint + check_langs green @1126.
+
 ### D-083 @1126 · 🔄 Updates ask by default: the banner's Install button is the main path, silent auto-update is opt-in again · Accepted (🦠 @1123 via M8 #345)
 - **Ctx:** 🦠 @1123: silent auto-update failed on GrapheneOS · in-app banner ➡ Install worked ➡ "banner = main path 4 all users, silent auto = OFF by dflt · Obtainium stays 2nd" (1 non-tech user gave up on Obtainium). D-078 had flipped the default to ON 1 day earlier.
 - **Dc:** kit `Update.AUTO_DEFAULT = false` (pr/appkit) · omm passes no own `autoDefault` ➡ kit dflt · key `auto_update` absent ➡ OFF · ⚙️ "Update automatically" row stays = opt-in (as D-038) · silent path code unchanged (a usr who turns it ON still gets it; a failed silent try already falls back 2 asking).

@@ -91,9 +91,10 @@ fun MineScreen(vm: AppVm, openChapter: (String, String) -> Unit) {
                     androidx.compose.foundation.Image(androidx.compose.ui.res.painterResource(rankArt((ranks - 1).coerceAtLeast(0))), null,
                         Modifier.size(56.dp).padding(end = 12.dp).then(if (ranks == 0) Modifier.alpha(.3f) else Modifier))
                     Column(Modifier.weight(1f)) {
-                        Text(tr("LEVEL %d", "LEVEL %d").f(ranks), style = de.strix.marxversion.ui.ds.OmmType.bookMeta,
+                        // D-084: start = LEVEL 1 "Ware", not LEVEL 0 "No rank yet"
+                        Text(tr("LEVEL %d", "LEVEL %d").f(shownLevel(ranks)), style = de.strix.marxversion.ui.ds.OmmType.bookMeta,
                             color = de.strix.marxversion.ui.ds.Ds.goldDeep)
-                        Text(if (ranks > 0) tr(rank(ranks - 1)).substringAfter(' ') else tr("Noch kein Rang", "No rank yet"),
+                        Text(tr(levelName(ranks)).substringAfter(' '),
                             style = MaterialTheme.typography.titleSmall)
                     }
                 }
@@ -101,7 +102,7 @@ fun MineScreen(vm: AppVm, openChapter: (String, String) -> Unit) {
                     androidx.compose.material3.LinearProgressIndicator(progress = { (de.strix.marxversion.logic.CARD - card.left).toFloat() / de.strix.marxversion.logic.CARD },
                         color = de.strix.marxversion.ui.ds.Ds.gold, trackColor = de.strix.marxversion.ui.ds.Ds.paperDeep, gapSize = 0.dp, drawStopIndicator = {},
                         modifier = Modifier.fillMaxWidth().padding(top = 10.dp, bottom = 4.dp).height(6.dp))
-                    Text(tr("noch %d Lesetage bis Level %d · %s", "%d more reading days to level %d · %s").f(card.left, ranks + 1, tr(rank(ranks)).substringAfter(' ')),
+                    Text(tr("noch %d Lesetage bis Level %d · %s", "%d more reading days to level %d · %s").f(card.left, shownLevel(ranks + 1), tr(levelName(ranks + 1)).substringAfter(' ')),
                         style = MaterialTheme.typography.bodySmall, color = de.strix.marxversion.ui.ds.Ds.inkMuted)
                 }
                 HookNote(Hook.STAMPS, s.testMode)

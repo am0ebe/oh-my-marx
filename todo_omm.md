@@ -29,6 +29,9 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
   - [ ] 🦠 1 min: `tail -40 data/retag_night_1122.log` ➡ quotes about their chip? (rec ✔️ if ≥ 2/3 fit · was ≈ random · #308 read ≈ ½, F16)
 ### 🐙 M8 cd decide
 ### 🏔️ v1
+- **🧺 start at LEVEL 1 w a name** (🦠 scrap @1126 · D-084 Proposed · #345) · new reader = LEVEL 1 "Ware / Commodity" (Kapital's 1st word) · old 7 ranks = levels 2-8 · perks unchanged (on cards)
+  - [x] 🤖 `LevelTest` · `MineLevelTest` (real screen) · `MomentsShotsTest.rank3` = LEVEL 4 · 140 unit + lint + check_langs green
+  - [ ] 🦠 ½ min, DEV ⚙️ Mine (fresh install o 🧪 Testmodus): "LEVEL 1 · Commodity" ok? name alt: Lehrling / Apprentice · Lohnarbeiter / Wage labourer · badge = faded shovel (rank 2's) ➡ own 🧺 art? (➡ D-084 Accepted)
 - **🔄 updater dflt OFF = banner ➡ Install main** (🦠 @1123 · D-083 · #345) · kit `AUTO_DEFAULT = false` · refused silent try (GrapheneOS) ➡ "Tap = install" notif + no retry 4 th version
   - [x] 🤖 `UpdateWorkerTest` nvr touched ➡ NOTIFIED · ON ➡ SILENT · OFF ➡ NOTIFIED · `refusedSilentInstallAsksInstead` · `refusedForegroundInstallPostsNothing` · 137 + 17 unit + lint green
   - [ ] 🦠 stable ship ❓ (nvr-touched users flip ON ➡ OFF on it) · Changelog line draft (add on top b4 `bin/ship.sh`): "🔄 Updates fragen wieder: Banner ➡ Installieren · ⚙️ „Automatisch aktualisieren“ = still im Hintergrund (Android 12+)" / "🔄 Updates ask again: banner ➡ Install · ⚙️ “Update automatically” = quietly in the background (Android 12+)" ok?
@@ -60,8 +63,7 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
 
 ## 🔵
 - 🤖 ‼️ **v1 this w** (🦠 @1123) = audio (TTS/STT packs fr audio crew) + Matrix chat ➡ then only feedback
-- 🤖 CI: `am0/ci` tag `v1` moved 2 `8dbbfe3` by 🦠 @1123 ➡ ck nxt run green (`cilog`) · push guard A ⬄ B still ❓
-- 👤 **CI red since run 1108**: Robolectric can't fetch `android-all` on th runner (ConnectException, 15 classes) ➡ ops (net o cache) · then 🤖 `cilog` = green · + ops osv on `android/app/gradle.lockfile` (D-082)
+- 🤖 CI push guard A ⬄ B still ❓ (rest ✔️ @1126, below)
 - 🤖🎨 **C-lane gaps** (done @1120: rank perks, feast emblems, 11 heads, initials, ¶, rtl / zh shots, gold swoosh · @1120 #229: 🥚 eggs replace heads in top bar, hero, quote card, D-066 · launcher egg dropped #241 · `launcherReset` rm @1122 #335, D-066 amended):
   - 🖼️ Feast frames (design § 14.2.1) · 🔊 stamp thud sound (D-035).
 - 🦠 ‼️ ⭐🧪 **QA @1116** ➡ [qa_1116.md](qa_1116.md) — 14 ⚡ i 6 lanes (L3 share 1st) · 3 🎨 (➡ Fable spec aftr) · 2 🔍 · 💬 Qs ✔️ answered @1116 ➡ lanes built (D-039 · D-040) · Q8 revised = no Werkbank (D-041) · left: D3 joker · fon items (#13 cold-start ms · ✔️ #14 lib baseline profiles alr ship i th APK, #299)
@@ -100,6 +102,7 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
 - 🤖 aft QA: rm page fotos (boox proc step 8)
 
 ## ✔️
+- ✔️ @1126 #345 🟢 **CI green again** (`v1` = 8dbbfe3 · runner Robolectric ✔️ by ops · osv on lockfile = run 1155 ✅) · 1145 = 1 real red: `ReaderGestureTest.tapTurnsDoubleTapOpensMenu` (tap w menu open didn't turn on th runner) ➡ tst closes th menu 1st ➡ run 1156 ✅
 - ✔️ @1122 #335 🧪 **apptool bash tst** (kit): cali built `tool/test_apptool.sh` (118 cks, e8836e8) + ERR trap ➡ omm subtree pull (c8d8cf7) ➡ 118 ✔️ + omm `bin/deploy.sh -n` exit 0 (nothing uploaded)
 - ✔️ @1122 #335 🤖🔍 **tags over-applied** ("kapitalist" 83 %, root = score.py `maxItems: 4`) ➡ `bin/retag.py` + night run + `tw` chip pool built + deployed · only 🦠 1-min read left (👀 🏷️)
 - ✔️ @1122 #335 ✂️ **`launcherReset` rm** (DEV 1911 cleanup, cb37b25) · 🛡️ night F8 omm_api keys = `p:1-9999` only (ff0c68f) · live = 👤 ops rebuild omm-api
