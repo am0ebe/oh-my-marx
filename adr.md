@@ -20,6 +20,12 @@ _SDD: code says **wh** · th file says **y** · drift = a bug · fmt ➡ `pr/vib
 ## 🧾 decisions (newest on top)
 _Template v2.1 since 20 Nov (converted via `pr/vibe++/adr_convert.md`). Field names: Y = why · Ctx = what forced it · Scope = what it covers · Ck = how to check._
 
+### D-088 @1126 · 🚩 Hold someone else's comment to report it to the scagent.de admins · Accepted (crew @1126, M8 #349 · wording = 🦠 👀)
+- **Ctx:** D-073 gates "send scagent.de/omm beyond friends" on a minimal "Melden" on a comment. Comments had hold-own = delete only.
+- **Dc:** hold a stranger's comment ➡ MarxDialog "🚩 Report this comment?" (Report · Cancel · outside tap / Esc = Cancel) ➡ `Matrix.report` = `POST /rooms/<room>/report/<event>` w a fixed reason (`omm app: … (chapter <kap>)`, ≤ 250 chars) ➡ continuwuity posts it in th admin room (ops reads it) · result line under th list ("Reported." / "didn't go through") · comment stays (admins decide) · 1 try, no retry · no free-txt reason (nothing new 2 moderate) · ⓘ dialog gets th "hold = report" line.
+- **Alt:** free-txt reason (con: 1 more field, spam vector) · hide th reported comment locally (con: hides it 4 me only, users think it's gone) · report = auto-redact by server bot (con: ops work, abuse lever).
+- **Ck:** MatrixTest `reportPostsReasonToTheEvent` (path · auth · 250 cut · 404 ➡ false) · CommentReportTest 3 (report · cancel + own = delete · failed line) · live: not run vs continuwuity (wd post a real report in th admin room) ➡ 1st real report = ops sees it 👤 · ops rate limit / captcha = still th 2nd half o th D-073 gate.
+
 ### D-087 @1126 · 🔊 Today's Andacht has its own listen button, played from the voice pack when it has that day · Accepted (crew @1126, M8 #349)
 - **Ctx:** D-085 wired only the quote card (`q:<verse>`). The contract also renders `a:<plan>:<day>` (DE `PlanDay.ad` · EN `ae` · rest `Tr.a`), so packs would ship Andacht clips nobody can play.
 - **Dc:** 🔊 icon in the 🕯️ Andacht header on Today ➡ `Speaker.say(ad, lang, persona, "a:<plan>:<idx>")` · same Speaker as th quote card + verses (tap again = stop) · AI label shows next to th header only while ITS clip plays (`Speaker.aiLabelFor(id)`, was 1 shared label ➡ quote card wd say "🔊 <voice>" while th Andacht plays) · no ask dialog here (quote card asks; ⚙️ Mine loads) · pinned old cut / missing translation = raw txt ≠ rendered ➡ sha guard ➡ phone voice.

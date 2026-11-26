@@ -67,7 +67,7 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
 ## 🔵
 - 🤖 ‼️ **v1 this w** (🦠 @1123) = audio (TTS/STT packs fr audio crew) + Matrix chat ➡ then only feedback
   - ✔️ audio app side = D-085 (pack client, DEV) · 👤 audio: real packs (🦠 persona pick 1st) · 🦠 ❓ newly public `scagent.de/oh-my-marx/voice/` · STT = 0 need i v1 · Ogg-Opus = Android 10+ only (8-9 = phone voice, ok?)
-  - ✔️ Andacht 🔊 btn (plays `a:<plan>:<day>` clips) = D-087 @1126 #349 · 🤖 Matrix: "Melden" on a comment = gate b4 strangers (D-073)
+  - ✔️ Andacht 🔊 btn (plays `a:<plan>:<day>` clips) = D-087 @1126 #349 · ✔️ Matrix "Melden" on a comment = D-088 @1126 #349 (gate b4 strangers, D-073)
 - 🤖 CI push guard A ⬄ B still ❓ (rest ✔️ @1126, below)
 - 🤖🔍 CI 1145 + 1163: th runner sometimes drops th 1st 📖 right-tap aftr opening a chapter (local 5/5 fine) ➡ ReaderGestureTest retries it (≤ 2×, nvr 2 turns) · root cause unknown (slow box? Matrix/comments call on open?) · 🦠 if a fon ever ignores th 1st tap ➡ tell
 - 🤖🎨 **C-lane gaps** (done @1120: rank perks, feast emblems, 11 heads, initials, ¶, rtl / zh shots, gold swoosh · @1120 #229: 🥚 eggs replace heads in top bar, hero, quote card, D-066 · launcher egg dropped #241 · `launcherReset` rm @1122 #335, D-066 amended):
@@ -78,7 +78,7 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
 - 🦠 ‼️ 📨⭐ **user feedback** — 1st real users = gold · log (M · M2 · Jan · Mi) ➡ `feedback.md` + [notes.md § 🗃️](notes.md) · phase 1 ✔️ (page mail + GH issue forms + app ⚙️ btn)
   - 🤖🛠️ `/triage` skill (gh issues + Migadu ➡ label · dedupe · draft) · ⏸️ @1122 #335: 0 GH issues ever (labels `needs-triage` + `from-app` ready) ➡ build when issues pile up (≥ ~5), not b4 · 🔵 phase 2 in-app form ➡ `POST /feedback` aft QA rounds
 - 🦠📣 ‼️ send **scagent.de/omm** 2 2-3 friends (0.6.0 ppl need 1 manual update, banner only fr ≥0.7.0)
-  - 🚧 gate (D-073): beyond friends ➡ 1st 🤖 min "Melden" on a comment (Matrix `/report`) + 👤 ops rate limit / captcha on signup
+  - 🚧 gate (D-073): beyond friends ➡ ✔️ 🤖 min "Melden" on a comment (D-088 @1126, not on DEV yet) + 👤 ops rate limit / captcha on signup + 👤 ops: reports land i continuwuity's admin room ➡ who reads it?
 - 👤 ‼️ 🌍 **LLM book qy** — 👤 native QA zh/ar/hi/bn/ur · `bin/translate_full.py --show 5 --langs it es` · alt = existing translations (© check) ➡ [notes.md § 🗃️](notes.md)
 - 🦠 ‼️ **P3 habit test 2w** — aft th nxt big version is out, w audio (🦠 @1114) · Hooked ch 8: identify ➡ codify ➡ modify · start = 🦠's 1st day, log it here
 - 🦠📚 ‼️ **Matrix + chat: K + tst** — 🦠 re notes § 🏗️ technical + `server/SERVICE.md` § 2 + `pr/ops/matrix.md` · ✔️ `bin/matrix_e2e.py` smoke vs live 18/18 @1121 (👀 above) · ✔️ `Matrix.kt` JVM tst (fake server) @1116: MatrixTest 8 ➡ 13, all calls covered (+ Lesekreis: create · members · name · leave · redact · setName · code)

@@ -177,6 +177,13 @@ class AppVm(app: Application) : AndroidViewModel(app) {
         if (Matrix.redact(s, r, id)) refreshComments(s, r, kap, gone = setOf(id))
     }
 
+    /** 🚩 D-088: report a stranger's comment ➡ server admins · done(ok) · fixed reason (no free txt = nothing new 2 moderate) */
+    fun reportComment(kap: String, id: String, done: (Boolean) -> Unit) = viewModelScope.launch {
+        val s = session()
+        val r = s?.let { room(it, kap) }
+        done(s != null && r != null && Matrix.report(s, r, id, "omm app: comment reported by a reader (chapter $kap)"))
+    }
+
     /** 1 random comrade name per app run = th prefill evywhere a name is asked (⚙️ · comments · Kreise) */
     val suggestedName = comradeName()
 

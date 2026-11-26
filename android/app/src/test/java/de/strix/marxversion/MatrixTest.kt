@@ -305,6 +305,18 @@ class MatrixTest {
         assertFalse("1 redact refused ➡ don't deactivate", runBlocking { Matrix.redactAllMine(S) })
     }
 
+    /** 🚩 D-088: report = POST /rooms/<room>/report/<event> w reason, auth'd · refused o offline = false (UI says so), nvr a crash */
+    @Test fun reportPostsReasonToTheEvent() {
+        routes["$P/rooms/"] = { 200 to JSONObject() }
+        assertTrue(runBlocking { Matrix.report(S, "!r:scagent.de", "\$e1", "x".repeat(400)) })
+        val r = seen.single()
+        assertEquals("POST", r.method); assertEquals("Bearer tok123", r.auth)
+        assertEquals("$P/rooms/%21r%3Ascagent.de/report/%24e1", r.path)
+        assertEquals(250, r.body.getString("reason").length)
+        routes["$P/rooms/"] = { 404 to JSONObject() }
+        assertFalse(runBlocking { Matrix.report(S, "!r:scagent.de", "\$e1", "spam") })
+    }
+
     /** D-077: shown handle = server-set id (localpart on ours, full id elsewhere) · hidden only when th name alr IS it */
     @Test fun handleShowsTheUnspoofableId() {
         assertEquals("strix-cd34", Matrix.handle("@strix-cd34:scagent.de", "strix"))

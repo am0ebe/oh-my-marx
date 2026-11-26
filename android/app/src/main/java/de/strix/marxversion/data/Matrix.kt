@@ -188,6 +188,12 @@ object Matrix {
     /** delete my own comment (Matrix redact) · txn id = nanoTime + counter: 2 redacts i th same ms must not collapse into 1 (idempotent txn) */
     suspend fun redact(s: Session, room: String, eventId: String): Boolean = withContext(Dispatchers.IO) { redactNow(s, room, eventId) }
 
+    /** 🚩 D-088 (D-073 gate): report a stranger's comment ➡ Matrix `/report` ➡ th server's admin room (ops reads it) · 1 try, no retry */
+    suspend fun report(s: Session, room: String, eventId: String, reason: String): Boolean = withContext(Dispatchers.IO) {
+        runCatching { call("POST", "/rooms/${enc(room)}/report/${enc(eventId)}", JSONObject().put("reason", reason.take(250)), s.token).first == 200 }
+            .getOrDefault(false)
+    }
+
     private val txn = java.util.concurrent.atomic.AtomicInteger()
     /** blocking redact · 429 ➡ wait `retry_after_ms` (≤ 10 s) + retry, 3 tries */
     private fun redactNow(s: Session, room: String, eventId: String): Boolean = runCatching {

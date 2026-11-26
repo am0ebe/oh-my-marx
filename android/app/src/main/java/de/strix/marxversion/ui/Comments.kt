@@ -96,6 +96,7 @@ fun CommentsSheet(vm: AppVm, kap: String, page: Int?, onDismiss: () -> Unit) {
                 vm.postComment(kap, page, draft, name ?: newName) { ok -> busy = false; if (ok) draft = "" else failed = true }
             },
             onDelete = { vm.deleteComment(kap, it) }, onClose = onDismiss,
+            onReport = { id, done -> vm.reportComment(kap, id, done) },
             onOlder = if (older[kap] != null) ({ vm.loadOlderComments(kap) }) else null,
         )
     }
@@ -112,9 +113,12 @@ fun CommentsPanel(
     page: Int?, list: List<Matrix.Comment>, me: String?, writer: String, draft: String, onDraft: (String) -> Unit,
     canSend: Boolean, busy: Boolean, failed: Boolean, onSend: () -> Unit, onDelete: (String) -> Unit, onClose: () -> Unit,
     onOlder: (() -> Unit)? = null,   // night F5: room hs more back ➡ "older comments" on top · null = all loaded
+    onReport: ((String, (Boolean) -> Unit) -> Unit)? = null,   // 🚩 D-088: hold a stranger's comment ➡ confirm ➡ report · null = off
 ) {
     val typo = MaterialTheme.typography
     var legal by remember { mutableStateOf(false) }
+    var reportId by remember { mutableStateOf<String?>(null) }
+    var reported by remember { mutableStateOf<Boolean?>(null) }   // result line under th list · null = nothing 2 say
     Column(Modifier.fillMaxWidth().padding(horizontal = Space.gutter).imePadding().navigationBarsPadding()) {
         // ★ close top-end, like evy window (MarxDialog)
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -134,8 +138,8 @@ fun CommentsPanel(
                 val mine = c.sender == me
                 val time = DateUtils.getRelativeTimeSpanString(c.ts).toString()
                     .let { t -> if (mine) t else Matrix.handle(c.sender, c.name)?.let { "$it · $t" } ?: t }   // D-077: real id, can't be spoofed
-                // hold ur own = delete · own = end-aligned blue ("me" voice, same as margin notes) · others = paperDeep bubble
-                val hold = Modifier.combinedClickable(onClick = {}, onLongClick = { if (mine) onDelete(c.id) })
+                // hold ur own = delete · hold a stranger's = report (D-088) · own = end-aligned blue ("me" voice, same as margin notes) · others = paperDeep bubble
+                val hold = Modifier.combinedClickable(onClick = {}, onLongClick = { if (mine) onDelete(c.id) else if (onReport != null) reportId = c.id })
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = if (mine) Arrangement.End else Arrangement.Start) {
                     if (mine) Spacer(Modifier.width(Space.xxxl))
                     // C5 · D-054 b: mine = th same NoteCard as margin notes (blue ruler) · others = same shape i paperDeep
@@ -158,10 +162,26 @@ fun CommentsPanel(
         }
         if (failed) Text(tr("⚠️ Ging nicht — Internet? Nochmal versuchen.", "⚠️ Didn't work — internet? Try again."),
             style = typo.bodyMedium, color = Ds.redDeep, modifier = Modifier.padding(bottom = Space.s))
+        reported?.let { ok ->
+            Text(if (ok) tr("🚩 Gemeldet. Danke — wir schauen es uns an.", "🚩 Reported. Thanks — we'll take a look.")
+                else tr("⚠️ Melden ging nicht — Internet? Nochmal lange drücken.", "⚠️ Report didn't go through — internet? Hold it again."),
+                style = typo.bodyMedium, color = if (ok) Ds.inkMuted else Ds.redDeep, modifier = Modifier.padding(bottom = Space.s))
+        }
+    }
+    reportId?.let { id ->
+        MarxDialog({ reportId = null }, title = tr("🚩 Kommentar melden?", "🚩 Report this comment?"),
+            primary = DialogAction(tr("Melden", "Report")) { reportId = null; onReport?.invoke(id) { reported = it } },
+            defer = DialogAction(tr("Abbrechen", "Cancel")) { reportId = null }) {
+            Text(tr("Spam, Hass oder Beleidigung? Die Betreiber von scagent.de sehen die Meldung. Der Kommentar bleibt, bis sie entscheiden.",
+                "Spam, hate or abuse? The scagent.de admins see the report. The comment stays until they decide."),
+                style = typo.bodyMedium, color = Ds.ink)
+        }
     }
     if (legal) MarxDialog({ legal = false }, title = tr("Lesesaal", "Reading room")) {
         Text(tr("Öffentlich für alle Mitlesenden.", "Public to everyone reading along."), style = typo.bodyMedium, color = Ds.ink)
         Text(tr("Eigenen Kommentar lange drücken = löschen.", "Hold your own comment = delete."), style = typo.bodyMedium, color = Ds.ink,
+            modifier = Modifier.padding(top = Space.s))
+        Text(tr("Fremden Kommentar lange drücken = melden.", "Hold someone else's comment = report."), style = typo.bodyMedium, color = Ds.ink,
             modifier = Modifier.padding(top = Space.s))
     }
 }
