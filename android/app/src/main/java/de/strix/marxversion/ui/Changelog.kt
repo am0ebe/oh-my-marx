@@ -34,6 +34,15 @@ import de.strix.marxversion.data.f
 data class Release(val version: String, val date: String, val items: List<Pair<String, String>>)
 
 val RELEASES = listOf(
+    // 0.14.0 = #335-#352: updates ask (D-083) · LEVEL 1 (D-084) · Andacht 🔊 (D-087) · report (D-088) · older comments (D-080) · build holes (D-086) · voice packs = hidden til a pack exists (D-085)
+    Release("0.14.0", "2026-11-27", listOf(
+        T("🔄 Updates fragen wieder: Nachricht o. Banner ➡ Installieren · ⚙️ „Automatisch aktualisieren“ = still im Hintergrund (Android 12+, nicht auf jedem Handy)", "🔄 Updates ask again: notification or banner ➡ Install · ⚙️ “Update automatically” = quietly in the background (Android 12+, not on every phone)"),
+        T("🧺 Alle starten auf LEVEL 1: „Ware“", "🧺 Every reader starts at LEVEL 1: “Commodity”"),
+        T("🕯️ Die Andacht von heute hat ihren eigenen 🔊-Knopf", "🕯️ Today's devotional has its own 🔊 button"),
+        T("🚩 Fremden Kommentar lange drücken = melden", "🚩 Hold someone else's comment to report it"),
+        T("📜 Kommentare: „↑ Ältere Kommentare laden“ zeigt auch frühere", "📜 Comments: “↑ Load older comments” shows earlier ones too"),
+        T("🔒 Unter der Haube: Bauwerkzeuge ohne bekannte Sicherheitslücken", "🔒 Under the hood: build tools without known security holes"),
+    )),
     // 0.13.1 = #327-#333: auto-update dflt ON (D-078) · install order APK 1st (page) · updater fr th shared kit (D-079)
     Release("0.13.1", "2026-11-22", listOf(
         T("🆕 Updates installieren sich jetzt von selbst (Android 12+) · ⚙️ „Automatisch aktualisieren“ ausgeschaltet? Bleibt aus", "🆕 Updates now install by themselves (Android 12+) · turned ⚙️ “Update automatically” off? It stays off"),
