@@ -10,7 +10,7 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
 
 ## ⏳
 - 🦠📱 **fon tst: updater** (D-038 · steps 1-4 ✔️ @1122) · step 5 silent ❌ GrapheneOS @1123 (🦠) ➡ **D-083: dflt OFF, banner ➡ Install = main** (#345) · silent stays opt-in, a refused silent try now asks (notif "Tap = install")
-  6. (+30 s, fr qa_1121 r2 ck 4) any chapter ➡ 📜 Scroll ➡ pinch = txt grows / shrinks · back 2 📖 Pages = same size as b4
+  6. ✔️ 🤖 #352 ③ `PinchScaleTest` (real app, Robolectric): 📜 Scroll ➡ pinch = txt grows + saved ➡ 📖 Pages = same size ➡ 📜 again = same · mutation (no pinch i 📜) = red · 🦠 fon step dropped
   - ❌ any step ➡ screenshot (auto-lands i `/opt/pix_fon`) + step nr ➡ 🤖
   - 🧮 **updater matrix** (@1116 · @1122: normal APK ✔️ fon) (same code both channels, only th URL differs: `/` ⬄ `/dev/`)
     | | APK (browser) = main (#327) | Obtainium = 2nd |
