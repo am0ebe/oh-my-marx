@@ -31,6 +31,11 @@ import org.robolectric.annotation.GraphicsMode
 class ReaderGestureTest {
     @get:Rule val rule = createAndroidComposeRule<MainActivity>()
 
+    /** 🐛 #352: DataStore = process-wide ➡ a tst th ends i 📜 (o w a pinched size) left th reader i scroll mode 4 th nxt one
+     *  ➡ "3 right-taps, page 1 stays" (taps don't turn i 📜) · evy tst starts i 📖 at size 1 */
+    @org.junit.Before fun freshReader() { kotlinx.coroutines.runBlocking {
+        (rule.activity.application as MarxApp).prefs.run { setReadScroll(false); setReadScale(1f) } } }
+
     private fun has(t: String, exact: Boolean = false) = rule.onAllNodesWithText(t, substring = !exact).fetchSemanticsNodes().isNotEmpty()
     private fun tap(t: String, exact: Boolean = false) {
         rule.waitUntil(30_000) { has(t, exact) }

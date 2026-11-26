@@ -51,8 +51,8 @@ class PinchScaleTest {
         return out.first().layoutInput.style.fontSize.value
     }
 
-    /** DataStore = process-wide ➡ a grown scale wd leak into th nxt UI tst i this JVM (project_robolectric_state_leak) */
-    @After fun resetScale() { runBlocking { app.prefs.setReadScale(1f) } }
+    /** DataStore = process-wide ➡ a grown scale + 📜 mode leaked into ReaderGestureTest (4 red, #352) ➡ back 2 📖 at size 1 */
+    @After fun resetReader() { runBlocking { app.prefs.run { setReadScale(1f); setReadScroll(false) } } }
 
     @Test fun pinchInScrollGrowsTextAndPagesKeepIt() {
         tap("Read", true); tap("p. 49"); settle()
