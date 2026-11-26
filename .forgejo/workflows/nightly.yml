@@ -9,6 +9,6 @@ on:
 
 jobs:
   nightly:
-    uses: am0/ci/.forgejo/workflows/nightly.yml@main   # ➡ @v1 once am0 moves th tag
+    uses: am0/ci/.forgejo/workflows/nightly.yml@v1   # pinned like ci.yml (v1 = 8dbbfe3 @1123, #346)
     with: {name: omm, image: "omm-api:local", health: "https://scagent.de/omm/api/v1/health"}  # no host port ➡ via Caddy
     secrets: inherit
