@@ -1,6 +1,12 @@
 # eos omm — resume log · newest on TOP
 _1 block per /eos · written by /eos § 3 · todo keeps 1 line: `▶ resume ➡ eos.md`_
 
+## 261126 16:05 · #345 full steam + #346 (M8)
+- **at** · D-083 updates ask by dflt (kit `AUTO_DEFAULT` false + refused silent ➡ notif) · CI green again (1156) · D-084 LEVEL 1 "Commodity" (Proposed) · D-085 voice pack client (hidden til a pack exists) · D-086 build pins 91 ➡ 0 · nightly `@v1` · DEV `0.14.0-dev.1126.1603` · 150 unit + 17 kit + lint green · all pushed
+- **▶ NEXT** · ck CI 1162 green · 🔵 top: Andacht 🔊 (`a:` clips) · Matrix "Melden" on a comment (D-073 gate)
+- **👤 🦠** · stable ship ❓ (D-083 flips nvr-touched users ON ➡ OFF) + Changelog line (todo 👀) · D-084 name + 🧺 badge art · `scagent.de/oh-my-marx/voice/` = newly public ❓ · persona pick (audio) · Android 8-9 = no packs ok?
+- **⚠️** · `--write-locks` only rewrites configs a task resolves ➡ run deps + tsts + lint + debug + release (D-086) · kit fix = pr/appkit 1st ➡ subtree pull · cali gets D-083 receiver fix on its nxt pull
+
 ## 261122 23:10 · /eos · #335-341 BL sweep (M8)
 - **at** · night list closed exc F6 (ops D-065 💬 🦠) · D-080 paging DEV 2238 · D-081 · D-082 lockfile · 135 unit + lint + 6 server green locally · all pushed
 - **▶ NEXT** · 🦠 fon step 5 (silent update, todo ⏳) ➡ Mo 11/23 Matrix sesh (📆) · 🤖 aftr ops fixes runner: `cilog` ➡ green ck
