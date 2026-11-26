@@ -92,6 +92,27 @@ dependencyLocking {
     ignoredDependencies.add("org.jetbrains.kotlin:kotlin-stdlib-common")
 }
 
+// 🔒 D-086 (= cali D-068, ops build_vulns.md #346): indirect libraries o th build + tst tools w a known hole ➡ pinned 2 a fixed version
+//   none o them is i th apk (Robolectric · Room's code generator · th Android plugin's device-tst runner),
+//   but th push guard + th CI scan read th whole lock file · a tool bump th brings a fixed version itself ➡ drop its line
+//   new finding ➡ raise th version here, then re-write th lock (cmd above)
+val pinned = mapOf(
+    "com.google.guava:guava" to "33.8.0-jre",             // CVE-2026-102554 (fixed 33.7.2)
+    "org.bouncycastle:bcprov-jdk18on" to "1.87",          // CVE-2025-14813 · CVE-2026-8763 · -13506 · -5598 (fixed 1.85)
+    "com.google.protobuf:protobuf-java" to "3.25.9",      // CVE-2024-7254 (fixed 3.25.5)
+    "com.google.protobuf:protobuf-java-util" to "3.25.9", // same release train as protobuf-java
+    "com.google.protobuf:protobuf-kotlin" to "3.25.9",
+    "org.json:json" to "20260719",                        // GHSA-ghc9-756g-vrcv (Robolectric's 20240303 · omm only, cali hs no org.json)
+)
+configurations.configureEach {
+    resolutionStrategy.eachDependency {
+        val v = requested.version.orEmpty()
+        pinned["${requested.group}:${requested.name}"]?.let { useVersion(it); because("known hole in the older version (D-086)") }
+        // netty 4.1.x: findings across codec · http · http2 · handler (fixed up to 4.1.137) · netty-tcnative hs its own numbers
+        if (requested.group == "io.netty" && v.startsWith("4.1.")) { useVersion("4.1.141.Final"); because("known holes in the older version (D-086)") }
+    }
+}
+
 dependencies {
     implementation(project(":selfupdate"))   // 🧩 appkit
     implementation(libs.androidx.core.ktx)
