@@ -38,6 +38,15 @@ class ReaderGestureTest {
     private fun settle() { rule.mainClock.advanceTimeBy(1500); rule.waitForIdle() }
     private val first = "wealth of those societies"
     private fun passage() = rule.onAllNodesWithText(first, substring = true).onFirst()
+    /** 👆 right half ➡ page 1 must leave · CI runs 1145 + 1163: th runner sometimes drops th 1st tap aftr opening (local 5/5 fine)
+     *  ➡ wait real ti, retry ≤ 2× · a retry only happens while page 1 is still there ➡ nvr 2 turns */
+    private fun tapRightTurns() {
+        repeat(3) {
+            if (!has(first)) return
+            passage().performTouchInput { click(centerRight - Offset(24f, 0f)) }; settle()
+            if (runCatching { rule.waitUntil(3_000) { !has(first) } }.isSuccess) return
+        }
+    }
 
     /** 🐛 DEV 1009 (🦠 @1120): 1st tap on a fresh page = th menu, not a turn · no double-tap b4 (th old tst hid it) */
     @Test fun firstTapTurnsNoMenu() {
@@ -53,7 +62,7 @@ class ReaderGestureTest {
     /** 🐛 qa_1120 #200: 📖 ⬄ 📜 stays on th same page · 📜 can scroll back up (was: batch feed, start = top) · Continue resumes */
     @Test fun modeToggleKeepsPage_scrollGoesBack_continueResumes() {
         tap("Read", true); tap("p. 49"); settle()
-        passage().performTouchInput { click(centerRight - Offset(24f, 0f)) }; settle()
+        tapRightTurns()
         assertFalse("on page 2", has(first))
         tap("Scroll"); settle()
         assertFalse("📜 opens at page 2, not th chapter top", has(first))
@@ -82,7 +91,7 @@ class ReaderGestureTest {
         passage().performTouchInput { doubleClick() }; settle()
         assertFalse("2nd double-tap closes th menu", has("Note", true))
         // 👆 right half ➡ nxt page (page 1 leaves th composition)
-        passage().performTouchInput { click(centerRight - Offset(24f, 0f)) }; settle()
+        tapRightTurns()
         assertFalse("tap right = next page", has(first))
         // 👆 tap left ➡ back 2 page 1
         rule.onRoot().performTouchInput { click(Offset(60f, centerY)) }; settle()
