@@ -31,7 +31,7 @@ import java.security.MessageDigest
  *  openUpdate notification tap ➡ th app's update dialog (an Intent 2 its activity) · openApp = aftr a silent update
  *  de / auto  app lang = German? · ⚙️ "update automatically" on? (both: read th app's settings, ≤ 0.5 s)
  *             auto = th STORED toggle, null = usr nvr touched it ➡ autoDefault · app's ⚙️ row: `Update.autoOn(stored)`
- *  autoDefault th toggle's dflt (omm D-078 @1122: ON) · a usr who set it OFF stays OFF
+ *  autoDefault th toggle's dflt (omm D-083 @1126: OFF, was ON D-078) · a usr who set it ON/OFF keeps it
  *  onReplaced extra work aftr evy self-update (MY_PACKAGE_REPLACED), b4 th "installed ✔️" notification
  *  prefs/work/sessionName = storage names · keep them once shipped (renaming = lost nag state + a 2nd periodic job)
  */
@@ -70,8 +70,8 @@ object Update {
     fun init(c: UpdateConfig) { cfg = c }
     val config: UpdateConfig get() = cfg
 
-    /** ⚙️ "update automatically" dflt 4 evy app (omm D-078 @1122: ON · th 1st in-app update still asks once, then silent on 12+) */
-    const val AUTO_DEFAULT = true
+    /** ⚙️ "update automatically" dflt 4 evy app (omm D-083 @1126: OFF · silent install failed on GrapheneOS, banner ➡ Install = th main path) */
+    const val AUTO_DEFAULT = false
     /** stored toggle ➡ effective · null = nvr touched ➡ th app's autoDefault (o AUTO_DEFAULT b4 init) */
     fun autoOn(stored: Boolean?): Boolean = stored ?: if (::cfg.isInitialized) cfg.autoDefault else AUTO_DEFAULT
 
