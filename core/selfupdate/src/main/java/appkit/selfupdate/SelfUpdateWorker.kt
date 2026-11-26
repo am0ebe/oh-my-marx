@@ -66,7 +66,8 @@ suspend fun checkAndNotify(
     if (sp.getInt("seen_code", 0) != l.code) sp.edit { putInt("seen_code", l.code).putLong("seen_at", now) }
     val de = isDe(ctx)
 
-    if (auto && via == Update.Via.SELF && l.apk != null && Update.silentOk(installer, ctx.packageName, sdk)) {
+    if (auto && via == Update.Via.SELF && l.apk != null && Update.silentOk(installer, ctx.packageName, sdk) &&
+        sp.getString("silent_failed", null) != l.version) {   // Android refused th silent try 4 th version (InstallReceiver) ➡ ask
         sp.edit { putString("silent", l.version) }   // ➡ UpdatedReceiver aft th swap
         if (runCatching { silent(l) }.isSuccess) return Outcome.SILENT
         sp.edit { remove("silent") }                 // download/install failed ➡ fall back 2 asking
@@ -130,8 +131,14 @@ class InstallReceiver : BroadcastReceiver() {
             }
             PackageInstaller.STATUS_SUCCESS -> {}   // we r being replaced ➡ UpdatedReceiver takes over
             else -> {
-                ctx.getSharedPreferences(cfg.prefs, Context.MODE_PRIVATE).edit { remove("silent") }
+                val sp = ctx.getSharedPreferences(cfg.prefs, Context.MODE_PRIVATE)
+                val v = sp.getString("silent", null)
+                sp.edit { remove("silent"); if (bg && v != null) putString("silent_failed", v) }
                 Update.installError.value = (i.getStringExtra(PackageInstaller.EXTRA_STATUS_MESSAGE) ?: "") + " ($st)"
+                // omm D-083: a bg (silent) try th Android refused later (GrapheneOS @1123) ➡ ask instead · th worker skips silent 4 th version
+                if (bg) { val de = isDe(ctx)
+                    post(ctx, if (de) "🆕 Update bereit" else "🆕 Update ready",
+                        if (de) "Antippen = installieren" else "Tap = install", cfg.openUpdate(ctx), de) }
             }
         }
     }
