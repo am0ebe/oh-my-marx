@@ -20,7 +20,8 @@ MAIL=omm@scagent.de                                 # feedback addr (Migadu alia
 SRC=https://github.com/am0ebe/oh-my-marx
 FGJ=https://git.scagent.de/am0/oh-my-marx           # Forgejo mirror (self-hosted, no public sign-up ➡ issues stay on GitHub)
 # 😇 public page emoji (#378 · D-093 💬): was ☭ = too political 4 evy public page (🦠 @1127) · ☭ stays i th app + private KB
-#   rec 😇 = th app icon's halo (Marx like th Bible) · alt 📖 · 🙏 · override 4 a preview: EMO=📖 bin/ship.sh -p
+#   rec 😇 = th app icon's halo (Marx like th Bible) · alt 📖 · 🙏 · ⚠️ ship.sh -p = LIVE page, not a preview
+#   local preview (nothing uploaded): ( EMO=📖; . bin/lib.sh; page <dir w a dummy OhMyMarx-X.apk> X OhMyMarx-X.apk ) ➡ <dir>/index.html
 EMO=${EMO:-😇}
 
 # all tools i bin/, 1 line each (shown by evy -h)

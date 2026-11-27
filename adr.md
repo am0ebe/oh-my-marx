@@ -25,7 +25,7 @@ _Template v2.1 since 20 Nov (converted via `pr/vibe++/adr_convert.md`). Field na
 - **Dc (rec, open):** 1 var `EMO` i `bin/lib.sh` (dflt 😇) feeds the stable page · 😇 = the icon's halo = the "like the Bible" joke, 0 politics · favicon PNG unchanged · ☭ stays in the app (stamps, Amen, ✊ fx) + old release notes (history) + private KB tab.
 - **Alt:** 📖 (neutral, but generic) · 🙏 (Amen mechanic; reads more "religious") · an SVG emoji favicon (con: loses the icon = brand recognition on the tab).
 - **Open:** in-app share texts that leave the phone (invite · streak · promoted · share app = "Oh My Marx ☭") ➡ public once sent ❓ · `/k/` page + README h1 ➡ swap aftr the pick.
-- **Ck:** `EMO=📖 bin/ship.sh -p` renders a variant · preview = `priv/img/page_emoji_1127.png` (real `page()`, 3 headers) · stable re-renders only on `ship -p` / nxt ship ➡ aftr 🦠's word.
+- **Ck:** preview = `priv/img/page_emoji_1127.png` (real `page()` rendered locally, 3 headers · recipe i `bin/lib.sh`) · ⚠️ dflt 😇 is committed ➡ any ship / `ship -p` b4 🦠's word puts 😇 live (= th rec, in his direction; ❓ 8 sits i th v1 sesh b4 any ship) · other pick ➡ change th dflt, then `ship -p`.
 
 ### D-092 @1127 · 💬 Whatever Matrix shape ops picks, omm keeps its server and rooms; in-app chat for v1 = the reading circles as they are · 💬 Open (🦠 @1127 eve, v1 sesh ❓ 6 · 7, M8 #366)
 - **Ctx:** 🦠 to ops (#364): "i dont use matrix yet … need infra so i can use it privately, host groups for others and host groups or mk chat possible in omm app!!" ➡ ops dc page (`../ops/dc_1127.md`, ops D-071): A 1 server · **B** 2 servers (rec) · D private on matrix.org. The app hard-codes `scagent.de` (`Matrix.HS` · `SERVER`) and the room aliases `#omm-kap-*` / `#omm-kreis-*`.
