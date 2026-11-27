@@ -12,6 +12,7 @@ import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.printToString
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTouchInput
+import kotlinx.coroutines.flow.first
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Rule
@@ -42,6 +43,13 @@ class ReaderGestureTest {
         rule.onAllNodesWithText(t, substring = !exact).onFirst().performClick()
     }
     private fun settle() { rule.mainClock.advanceTimeBy(1500); rule.waitForIdle() }
+    /** 🐛 CI 1220 · 1229 · 1230 (#386): 📖 ⬄ 📜 = vm.setReadScroll ➡ DataStore write on th IO thread · waitForIdle doesn't see IO
+     *  ➡ a slow runner went on i th OLD mode (all 3 reds sat right aftr tap("Scroll")) · wait 4 th stored mode, real ti, then settle */
+    private fun mode(label: String, scroll: Boolean) {
+        tap(label)
+        rule.waitUntil(10_000) { kotlinx.coroutines.runBlocking { (rule.activity.application as MarxApp).prefs.settings.first().readScroll } == scroll }
+        settle()
+    }
     private val first = "wealth of those societies"
     private fun passage() = rule.onAllNodesWithText(first, substring = true).onFirst()
     /** 👆 right half ➡ page 1 must leave · CI runs 1145 + 1163: th runner sometimes drops th 1st tap aftr opening (local 5/5 fine)
@@ -79,7 +87,7 @@ class ReaderGestureTest {
         tap("Read", true); tap("p. 49"); settle()
         tapRightTurns()
         assertFalse("on page 2", has(first))
-        tap("Scroll"); settle()
+        mode("Scroll", true)
         assertFalse("📜 opens at page 2, not th chapter top", has(first))
         // 👆 slow drags (no fling) back up, 1 by 1, til page 1 shows (old feed: nothing above th start ➡ nvr)
         val list = { rule.onAllNodes(androidx.compose.ui.test.hasScrollToIndexAction()).onFirst() }
@@ -90,7 +98,7 @@ class ReaderGestureTest {
         while (!has(first) && back < 6) { drag(true); back++ }
         assertTrue("📜 scrolls back up 2 page 1", has(first))
         repeat(back + 2) { drag(false) }
-        tap("Pages"); settle()
+        mode("Pages", false)
         assertFalse("📖 lands where 📜 was (not page 1)", has(first))
         rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }; settle()
         assertTrue("Continue btn on th Read list", has("Continue"))
@@ -120,9 +128,9 @@ class ReaderGestureTest {
         assertTrue("📖 hold = menu", has("Note", true))
         assertTrue("📖 hold doesn't turn", has(first))
         passage().performTouchInput { longClick(center) }; settle()   // hold again = menu closes
-        tap("Scroll"); settle()
+        mode("Scroll", true)
         passage().performTouchInput { longClick(center) }; settle()
         assertTrue("📜 hold = menu", has("Note", true))
-        tap("Pages"); settle()
+        mode("Pages", false)
     }
 }

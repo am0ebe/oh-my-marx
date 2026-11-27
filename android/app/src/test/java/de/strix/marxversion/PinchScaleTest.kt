@@ -39,6 +39,10 @@ class PinchScaleTest {
         rule.onAllNodesWithText(t, substring = !exact).onFirst().performClick()
     }
     private fun settle() { rule.mainClock.advanceTimeBy(1500); rule.waitForIdle() }
+    /** 🐛 CI 1229 · 1230 (#386): mode + scale = DataStore writes on th IO thread, waitForIdle doesn't see them ➡ slow runner
+     *  read "scale saved (1.0)" while th txt had alr grown · wait 4 th stored value, real ti */
+    private fun stored() = runBlocking { app.prefs.settings.first() }
+    private fun mode(label: String, scroll: Boolean) { tap(label); rule.waitUntil(10_000) { stored().readScroll == scroll }; settle() }
     private val first = "wealth of those societies"
 
     /** font size th passage is laid out with (TextLayoutResult = wh th screen draws) */
@@ -56,7 +60,7 @@ class PinchScaleTest {
 
     @Test fun pinchInScrollGrowsTextAndPagesKeepIt() {
         tap("Read", true); tap("p. 49"); settle()
-        tap("Scroll"); settle()
+        mode("Scroll", true)
         val before = fontSp()
         // 2 fingers spread apart vertically on th 📜 list (zoom ≈ 2 ➡ clamp 2f · Initial pass = no scroll while pinching)
         rule.onAllNodes(hasScrollToIndexAction()).onFirst().performTouchInput {
@@ -66,11 +70,11 @@ class PinchScaleTest {
         settle()
         val grown = fontSp()
         assertTrue("📜 pinch out = bigger txt ($before ➡ $grown sp)", grown > before * 1.2f)
-        val saved = runBlocking { app.prefs.settings.first().readScale }
+        val saved = runCatching { rule.waitUntil(10_000) { stored().readScale > 1.2f } }.let { stored().readScale }
         assertTrue("scale saved ($saved)", saved > 1.2f)
-        tap("Pages"); settle()
+        mode("Pages", false)
         assertEquals("📖 Pages = same size as i 📜", grown, fontSp(), 0.01f)
-        tap("Scroll"); settle()
+        mode("Scroll", true)
         assertEquals("📜 again = still th same", grown, fontSp(), 0.01f)
     }
 }
