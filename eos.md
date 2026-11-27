@@ -1,6 +1,12 @@
 # eos omm — resume log · newest on TOP
 _1 block per /eos · written by /eos § 3 · todo keeps 1 line: `▶ resume ➡ eos.md`_
 
+## 261127 17:4x · #374 (M8): v1 sesh step 1 = DE eval ➡ "meh", wants poly
+- **at** · 3 DE pack clips (`priv/voice_eval/`, git-ignored) heard by 🦠: better than Android, blander than cloned cards · DE fine · wants 1 voice 4 all langs · nothing uploaded · sesh page § ⏱️ logs it · /eos aftr step 1
+- **▶ NEXT** · voice = audio's lane: 🦠 hears candidates across langs (poly lab) ➡ pick ➡ audio renders ➡ `bin/voice_up.py <dir>` ➡ ❓ 1 · rest o th 60-min page (step 3-7) still open
+- **👤 🦠** · ❓ 1 upload · D-092 ❓ 6 (chat scope) + 7 (token timing) · 👀 4 PNGs + 3 reads (page § 👀) · ❓ 2 4 5
+- **⚠️** · CI 1220 red = ReaderGestureTest `holdOpensMenuInBothModes` (new spot) · CI 1229 = queued, unread · local 161 green
+
 ## 261127 17:0x · #366 (M8): v1 sesh prep 4 🦠's eve
 - **at** · [v1_sesh_1127.md](v1_sesh_1127.md) top = 60-min run (7 steps · min · link) · Matrix live sesh ✂️ ➡ D-077/D-088 = DE PNGs (`MatrixLookShotTest` ➡ `priv/img/mx_*.png`) + fresh `egg_arch_de.png` · § 💬 omm side vs ops A/B/D (ops `dc_1127.md`, rec B, 0 app code) · D-092 💬 · audio's DE pack ✔️ dry (1110 items, not uploaded) · no code change ➡ no DEV
 - **▶ NEXT** · 🦠 ❓ 1 "yes" ➡ `bin/voice_up.py ../audio/voice/out/packs_1127/both -u -y` ➡ fon 🔊 (step 7) · his ❓ 6/7 ➡ D-092 Accepted o rewrite · tick 👀 boxes fr his 1-word answers
