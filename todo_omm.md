@@ -20,6 +20,8 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
     - 0.9.0 ➡ 0.10.0 APK users: banner ➡ page ➡ install by hand 1× (then 1-tap / silent fr there)
 
 ## 👀
+- **😇 own mark sketches** (#390 ③ · [D-093](adr.md)): A Saint Marx (red tile) · B Shrine (gold niche) · C 😇-Marx (th emoji w Marx's beard) · SVGs `priv/marks/` (priv = not on th public repo til picked) · nothing swapped
+  - [ ] 🦠 pick A / B / C / none (+ where: favicon · h1 · og.png) · look: `priv/marks/marks.html` (o `priv/img/marks_1127.png` on fon) ❓
 ### 🌙 night run (#248 · 🦠 ✔️ @1121)
 - **🏷️ tags retag scheduled** (M8 @1121 · D-071) `at` job 63 · Sun 11/22 03:00 · `bin/gpu_night.sh bin/retag.py` (1867 Verse, ~1 h) ➡ log `data/retag_night_1122.log` ➡ `data/tags.jsonl`
   - built: `bin/retag.py` (0-2 topics ABOUT, weight 1-3) ➡ build.py `tw` ➡ Marxoskop chip pool = weight ≥ 2 · < 30 ➡ ≥ 1 · no data ➡ old `t` (= today) · `t` + plans untouched (D-042) · tsts: `Retag` 3 py · `marxoskopPoolPrefersAboutTopicsWithGuard`
