@@ -44,7 +44,7 @@ import java.io.File
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @Config(sdk = [35], qualifiers = "w411dp-h891dp-xxhdpi", application = android.app.Application::class)
 class MomentsShotsTest {
-    @get:Rule val rule = createAndroidComposeRule<ComponentActivity>()
+    @get:Rule val rule = createAndroidComposeRule<ComponentActivity>(effectRule)
     private val dir = File(System.getProperty("shotsDir") ?: "build/shots")
     private val shots get() = System.getProperty("shots") == "1"
     private val chain = List(14) { if (it == 5) Cell.REST else if (it == 9) Cell.STRIKE else Cell.DONE }

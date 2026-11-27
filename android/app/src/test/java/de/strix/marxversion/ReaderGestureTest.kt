@@ -30,7 +30,7 @@ import org.robolectric.annotation.GraphicsMode
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @Config(sdk = [35], qualifiers = "w411dp-h891dp-xxhdpi", application = ShotsApp::class)
 class ReaderGestureTest {
-    @get:Rule val rule = createAndroidComposeRule<MainActivity>()
+    @get:Rule val rule = createAndroidComposeRule<MainActivity>(effectRule)
 
     /** 🐛 #352: DataStore = process-wide ➡ a tst th ends i 📜 (o w a pinched size) left th reader i scroll mode 4 th nxt one
      *  ➡ "3 right-taps, page 1 stays" (taps don't turn i 📜) · evy tst starts i 📖 at size 1 */

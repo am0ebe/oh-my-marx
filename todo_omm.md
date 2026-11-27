@@ -118,6 +118,7 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
 - 🤖 aft QA: rm page fotos (boox proc step 8)
 
 ## ✔️
+- ✔️ @1127 #390 🟢 **CI red 1237 = tst-env bug, not app** · AndachtVoiceTest crash "multithreaded access to SnapshotStateObserver" · compose-ui-test 1.10 runs composition effects on `UnconfinedTestDispatcher` ➡ Cards.kt `produceState { withContext(Default) }` (card bitmap) resumes ON th worker ➡ recomposer frame there (prod: AndroidUiDispatcher = alw main) · 2nd signal = `EffectThreadTest` deterministic red (resumed on DefaultDispatcher-worker-1) · fix = `effectRule` (StandardTestDispatcher) i all 15 compose rules ➡ guard green · local 162 ✔️
 - ✔️ @1127 #386 🟢 **CI green again** (run 1232 · 63f3a0a) · reds 1220 · 1229 · 1230 = all right aftr `tap("Scroll")`: 📖 ⬄ 📜 + pinch scale = DataStore writes on th IO thread, `waitForIdle` blind 2 them ➡ slow runner went on i th old mode / read scale 1.0 while th txt had grown · fix = tsts wait 4 th STORED value (`mode()` helper, fails fast if alr stored) · ❌ MatrixLookShotTest order theory: same class order local = green (also 1 core + CPU hogs) · no local repro o th race ➡ proof = CI only, 2nd run = nxt push
 - ✔️ @1126 #351 CI push guard A ⬄ B = ops' ❓ (build_vulns.md · m8 agenda 4), not omm's: omm lock = 0 holes (D-086) ➡ nothing blocks omm pushes · line closed here
 - ✔️ @1126 #346 (🦠 "ops yes all 3"): a 🔒 build-tool holes 91 ➡ 0 (D-086, efe6f87) · b nightly `@v1` (4eb574d) · c ReaderGestureTest = alr fixed i 1d4fc85 (run 1156 ✅)

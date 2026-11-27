@@ -38,7 +38,7 @@ import java.time.LocalDate
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @Config(sdk = [35], qualifiers = "w411dp-h891dp-xxhdpi", application = android.app.Application::class)
 class FeastSheetTest {
-    @get:Rule val rule = createAndroidComposeRule<ComponentActivity>()
+    @get:Rule val rule = createAndroidComposeRule<ComponentActivity>(effectRule)
 
     private val fixed = mapOf(
         "01-01" to Feast.NEUJAHR, "01-15" to Feast.ROSA_KARL, "02-14" to Feast.VALENTIN, "02-21" to Feast.MANIFEST,

@@ -244,7 +244,7 @@ private fun Reader(which: Char) = Column(Modifier.fillMaxSize().background(Ds.pa
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @Config(sdk = [35], qualifiers = "w411dp-h891dp-xxhdpi", application = android.app.Application::class)
 class DsChoicesTest {
-    @get:Rule val rule = createAndroidComposeRule<ComponentActivity>()
+    @get:Rule val rule = createAndroidComposeRule<ComponentActivity>(effectRule)
     private val dir = File(System.getProperty("shotsDir") ?: "build/shots")
 
     @Before fun gate() = assumeTrue("needs -Pshots", System.getProperty("shots") == "1")

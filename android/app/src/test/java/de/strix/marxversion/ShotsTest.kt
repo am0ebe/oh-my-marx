@@ -53,7 +53,7 @@ class ShotsApp : MarxApp() {
 @Config(sdk = [35], qualifiers = "w411dp-h891dp-xxhdpi", application = ShotsApp::class)
 @org.junit.FixMethodOrder(org.junit.runners.MethodSorters.NAME_ASCENDING)
 class ShotsTest {
-    @get:Rule val rule = createAndroidComposeRule<MainActivity>()
+    @get:Rule val rule = createAndroidComposeRule<MainActivity>(effectRule)
     private val dir = File(System.getProperty("shotsDir") ?: "build/shots")
     private var n = 0
 

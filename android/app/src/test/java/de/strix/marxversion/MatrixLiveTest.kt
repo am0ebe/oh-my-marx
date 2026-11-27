@@ -51,7 +51,7 @@ import java.util.Date
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @Config(sdk = [35], qualifiers = "w411dp-h891dp-xxhdpi", application = ShotsApp::class)
 class MatrixLiveTest {
-    @get:Rule val rule = createAndroidComposeRule<MainActivity>()
+    @get:Rule val rule = createAndroidComposeRule<MainActivity>(effectRule)
 
     @Before fun gate() {
         assumeTrue("needs -Plive (bin/matrix_e2e.py --app)", System.getProperty("live") == "1")

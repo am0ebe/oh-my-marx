@@ -57,7 +57,7 @@ private val HERO = listOf(Color(0xFF1F4E9A), Color(0xFF3A8BD0))
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @Config(sdk = [35], qualifiers = "w411dp-h891dp-xxhdpi", application = android.app.Application::class)
 class CloseSheetTest {
-    @get:Rule val rule = createAndroidComposeRule<ComponentActivity>()
+    @get:Rule val rule = createAndroidComposeRule<ComponentActivity>(effectRule)
     private val dir = File(System.getProperty("shotsDir") ?: "build/shots")
 
     /** always runs: evy variant composes, says "Close" 4 TalkBack + fires onClick */

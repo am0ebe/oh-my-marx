@@ -23,7 +23,7 @@ import org.robolectric.annotation.GraphicsMode
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @Config(sdk = [35], qualifiers = "w411dp-h891dp-xxhdpi", application = android.app.Application::class)
 class CommentReportTest {
-    @get:Rule val rule = createAndroidComposeRule<ComponentActivity>()
+    @get:Rule val rule = createAndroidComposeRule<ComponentActivity>(effectRule)
     private val now = System.currentTimeMillis()
     private val list = listOf(
         Matrix.Comment("e1", "@clara", "Clara", "buy cheap watches", now - 60_000, 49),

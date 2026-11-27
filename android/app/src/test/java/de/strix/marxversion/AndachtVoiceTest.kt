@@ -23,7 +23,7 @@ import java.time.LocalDate
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @Config(sdk = [35], qualifiers = "w411dp-h891dp-xxhdpi", application = ShotsApp::class)
 class AndachtVoiceTest {
-    @get:Rule val rule = createEmptyComposeRule()
+    @get:Rule val rule = createEmptyComposeRule(effectRule)
 
     @Test fun andachtHasListen() {
         val app = ApplicationProvider.getApplicationContext<MarxApp>()
