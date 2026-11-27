@@ -20,6 +20,12 @@ _SDD: code says **wh** · th file says **y** · drift = a bug · fmt ➡ `pr/vib
 ## 🧾 decisions (newest on top)
 _Template v2.1 since 20 Nov (converted via `pr/vibe++/adr_convert.md`). Field names: Y = why · Ctx = what forced it · Scope = what it covers · Ck = how to check._
 
+### D-092 @1127 · 💬 Whatever Matrix shape ops picks, omm keeps its server and rooms; in-app chat for v1 = the reading circles as they are · 💬 Open (🦠 @1127 eve, v1 sesh ❓ 6 · 7, M8 #366)
+- **Ctx:** 🦠 to ops (#364): "i dont use matrix yet … need infra so i can use it privately, host groups for others and host groups or mk chat possible in omm app!!" ➡ ops dc page (`../ops/dc_1127.md`, ops D-071): A 1 server · **B** 2 servers (rec) · D private on matrix.org. The app hard-codes `scagent.de` (`Matrix.HS` · `SERVER`) and the room aliases `#omm-kap-*` / `#omm-kreis-*`.
+- **Dc (rec, open):** omm stays on `scagent.de` with the same aliases under every option (a move = new APK + every account, comment and circle lost again, like @1113) ➡ 0 app code for A, B or D · v1 chat = Lesekreis (group room, 6-char code) + chapter comments as built · per-install signup token fr omm-api (ops' 🩹, replaces the APK token) = after v1, before strangers (2nd half of the D-073 gate).
+- **Alt:** v1 + push (UnifiedPush/ntfy; con: new dep + ops gateway) · v1 + DMs (con: new UI + E2E expectation) · token swap now (con: ~½ d app + ops server work, nothing gates friends).
+- **Ck:** 🦠's 1 word on ❓ 6 + 7 (v1_sesh_1127.md § 💬) ➡ Accepted o rewritten · D-077 / D-088 / D-076 hold under B (foreign ids already shown in full, reports land in omm's own admin room).
+
 ### D-091 @1126 · 🌐 CI checks on every push that each language has all app texts · Accepted (crew @1126, M8 #351)
 - **Ctx:** D-087 + D-088 added 7 `tr()` strings ➡ 11 langs showed them i English on DEV · CI stayed green (am0/ci runs gradle + server/ only) · `check_langs` ran only i `bin/ship.sh` ➡ th stable ship wd hv been refused on th day.
 - **Dc:** own `langs` job i `.forgejo/workflows/ci.yml` (runner `docker`, stdlib python): `bin/check_langs.py` + `bin/test_bin.py` (rsync tst skips wo rsync) · red ➡ `bin/translate.py --only ui` on tow ➡ commit.

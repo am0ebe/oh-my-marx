@@ -48,21 +48,21 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
     - [ ] 🦠 ½ min, read here: dialog **"Delete account?"** "Deletes your comments and circle messages, then your account on scagent.de, and you leave all reading circles. Anyone who already loaded them may have a copy; in circles you left earlier they stay. Your notes, bookmarks and stamps on this phone stay." [Delete] [Keep] ➡ ok? (D-072 + D-076 ➡ Accepted)
   - ✔️ 🤖 **🪪 name spoof** (#311 F4 · D-077 Proposed): oth ppl's comments + Kreis msgs show th real id muted aftr th name: **strix** `strix-ab12 · 3 min ago` · fr Element elsewhere = `@x:matrix.org` · DEV 1353
     - [x] 🤖 `MatrixTest.handleShowsTheUnspoofableId` (caught 1 🐛: "strix" fr matrix.org hid th id) · 148 unit + lint green
-    - [ ] 🦠 i th Matrix sesh (📆 @1123): someone else's comment ➡ grey id aftr th name reads ok? (D-077 ➡ Accepted)
+    - [ ] 🦠 ½ min, PNG (#366, no live sesh): `o priv/img/mx_ids_de.png` ➡ grey id aftr th name reads ok? (D-077 ➡ Accepted)
   - ✔️ spam · lost fon · no E2E = accepted 4 v1 · report + mod = gate b4 strangers (D-073 · #307)
   - ✔️ 🤖 **🚩 report a comment** (D-088 · #349): hold someone else's comment ➡ "🚩 Report this comment?" ➡ Matrix `/report` ➡ continuwuity admin room · DEV `0.14.0-dev.1126.1931`
     - [x] 🤖 `MatrixTest.reportPostsReasonToTheEvent` · `CommentReportTest` 3 · 155 unit + lint green
-    - [ ] 🦠 ½ min, read here (o i th Matrix sesh): dialog "Spam, hate or abuse? The scagent.de admins see the report. The comment stays until they decide." · result "🚩 Reported. Thanks — we'll take a look." · ⓘ "Hold someone else's comment = report." ok?
+    - [ ] 🦠 ½ min, PNG (#366): `o priv/img/mx_report_de.png` + `mx_reported_de.png` · EN txt: dialog "Spam, hate or abuse? The scagent.de admins see the report. The comment stays until they decide." · result "🚩 Reported. Thanks — we'll take a look." · ⓘ "Hold someone else's comment = report." ok?
     - [ ] 👤 ops: 1 real report vs continuwuity (Matrix sesh: B reports A) ➡ lands i th admin room? who reads it?
   - 🤖 Kreis = hourly poll, no push (UnifiedPush/ntfy = 🔵 community ideas) · fine 4 v1
   - ✔️ client-IP retention (#341, ops src-read): 1 IP per device, overwritten, no purge ➡ README § Known gaps fixed (F15) · 👤 ops: signing key i bup (`pr/ops/matrix.md`) · night #308 ➡ [night_1122.md](night_1122.md) F2/F3/F6
 - **🥚 eggs + drop cap** (merged #290: qa_1121 r2 · #246 D-068 · #248 widget) · DEV `0.13.0-dev.1121.0014`
   - [x] 🤖 qa_1121 r2 ck 1 icon stays plain: manifest hs 0 `activity-alias` = 1 fixed icon · ck 2 in-app egg = r1 ✔️ (🦠) + EggResTest · ck 3 drop cap = shot `07_chapter.png` matches (red T, no box, top = line 1, foot = line 3) · 📜 no ¶ = shot `03_chapter_scroll.png` · pinch ➡ ⏳ fon tst step 6
   - [x] 🤖 `EggArchShotTest` 30 eggs × 13 langs fit · `EggResTest.widgetShowsTheDaysEgg` · unit + lint green · DEV deployed
-  - [ ] 🦠 ½ min: `o android/app/build/shots/egg_arch_de.png` ➡ headline on th arch + small tail under th egg reads ok? (rec ✔️: all 30 fit · ➡ D-068 Accepted)
+  - [ ] 🦠 ½ min: `o priv/img/egg_arch_de.png` (fresh @1127 15:30) ➡ headline on th arch + small tail under th egg reads ok? (rec ✔️: all 30 fit · ➡ D-068 Accepted)
 
 ## 📆
-- 🦠 💬 **Mo 11/23 Matrix sesh w crew** (🦠 #311: "wanna finally mv fwd") · ~45 min · 🔑 primer 1st (5 lines):
+- 🦠 💬 **Mo 11/23 Matrix sesh w crew** (🦠 #311: "wanna finally mv fwd") · ~45 min · ✂️ @1127 #366: live sesh ➡ dc (ops [dc_1127.md](../ops/dc_1127.md) A/B/D) + omm boxes = PNGs ([v1_sesh_1127.md](v1_sesh_1127.md) § 👀) · primer below stays 4 when u set up ur own acct (B) · 🔑 primer 1st (5 lines):
   - 🔑 account = `@name:scagent.de` + pw · login ➡ server hands th device an **access token** (random string) ➡ evy call sends `Authorization: Bearer <token>` · 1 device = 1 token · logout / deactivate / server swap kills it ➡ 401
   - 📱 omm app = no login screen: 1st comment o Kreis ➡ app registers w th **reg token** baked i th APK (gate vs open signup, 3 UIA steps: token ➡ dummy) ➡ keeps token + random pw on th fon only · lost fon = lost account (D-073) unless Google bup restores it (D-081) · dead token ➡ quietly re-registers (D-075, F1)
   - 💻 ur priv account on tow: Element Desktop / app.element.io ➡ homeserver `scagent.de` ➡ Sign up w th reg token (`android/omm.properties` `omm.regToken`) 🧪 nvr tstd on continuwuity · fallback = ops admin room `!admin users create-user <name>` ➡ pw printed
