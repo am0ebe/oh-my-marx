@@ -53,7 +53,7 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
   - ✔️ 🤖 **🚩 report a comment** (D-088 · #349): hold someone else's comment ➡ "🚩 Report this comment?" ➡ Matrix `/report` ➡ continuwuity admin room · DEV `0.14.0-dev.1126.1931`
     - [x] 🤖 `MatrixTest.reportPostsReasonToTheEvent` · `CommentReportTest` 3 · 155 unit + lint green
     - [ ] 🦠 ½ min, PNG (#366): `o priv/img/mx_report_de.png` + `mx_reported_de.png` · EN txt: dialog "Spam, hate or abuse? The scagent.de admins see the report. The comment stays until they decide." · result "🚩 Reported. Thanks — we'll take a look." · ⓘ "Hold someone else's comment = report." ok?
-    - [ ] 👤 ops: 1 real report vs continuwuity (Matrix sesh: B reports A) ➡ lands i th admin room? who reads it?
+    - [ ] 👤 ops: 1 real report vs continuwuity (was Matrix sesh, ✂️ #366 ➡ ops: 2 test accts, B reports A via `/report`, o 1st real report) ➡ lands i th admin room? who reads it?
   - 🤖 Kreis = hourly poll, no push (UnifiedPush/ntfy = 🔵 community ideas) · fine 4 v1
   - ✔️ client-IP retention (#341, ops src-read): 1 IP per device, overwritten, no purge ➡ README § Known gaps fixed (F15) · 👤 ops: signing key i bup (`pr/ops/matrix.md`) · night #308 ➡ [night_1122.md](night_1122.md) F2/F3/F6
 - **🥚 eggs + drop cap** (merged #290: qa_1121 r2 · #246 D-068 · #248 widget) · DEV `0.13.0-dev.1121.0014`
