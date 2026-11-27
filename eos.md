@@ -1,6 +1,11 @@
 # eos omm — resume log · newest on TOP
 _1 block per /eos · written by /eos § 3 · todo keeps 1 line: `▶ resume ➡ eos.md`_
 
+## 261127 17:0x · #366 (M8): v1 sesh prep 4 🦠's eve
+- **at** · [v1_sesh_1127.md](v1_sesh_1127.md) top = 60-min run (7 steps · min · link) · Matrix live sesh ✂️ ➡ D-077/D-088 = DE PNGs (`MatrixLookShotTest` ➡ `priv/img/mx_*.png`) + fresh `egg_arch_de.png` · § 💬 omm side vs ops A/B/D (ops `dc_1127.md`, rec B, 0 app code) · D-092 💬 · audio's DE pack ✔️ dry (1110 items, not uploaded) · no code change ➡ no DEV
+- **▶ NEXT** · 🦠 ❓ 1 "yes" ➡ `bin/voice_up.py ../audio/voice/out/packs_1127/both -u -y` ➡ fon 🔊 (step 7) · his ❓ 6/7 ➡ D-092 Accepted o rewrite · tick 👀 boxes fr his 1-word answers
+- **⚠️** · 497 DE txts not i th pack (phone voice) ➡ ask audio if pool cut o gap · `voice_up -u` real ssh path = 1st run tonight
+
 ## 261126 23:5x · #352 (M8): D-083 re-confirmed · stable v0.14.0 + DEV · pinch tst
 - **at** · D-083 = 🦠's dc (silent stays opt-in, dflt OFF, in-app updater = path) · ⚙️ row txt "not on every phone" · Changelog 0.14.0 · **stable v0.14.0** + **DEV `0.15.0-dev.1126.2355`** (CI 1195 ✅ · deploylog ×2) · `PinchScaleTest` replaces 🦠 fon step 6 · 🐛 tst state leak: a tst ending i 📜 left `readScroll` on ➡ ReaderGestureTest red = same signature as CI 1171 "stuck state" ➡ ReaderGestureTest @Before resets · 160 unit green
 - **▶ NEXT** · ReaderGestureTest flake prob. = this leak (order-dependent) ➡ ck nxt CI reds b4 more 🔍 · rest = v1_sesh_1127.md (voice pick ➡ voice_up)
