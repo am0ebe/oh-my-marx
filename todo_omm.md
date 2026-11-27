@@ -72,6 +72,7 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
 - 🛍️ Fr 11/27 Black Friday: home-screen widget shows th 🛍️ egg left o "Marx verse" · only if it looks off ➡ screenshot (no box · render = `EggResTest`)
 
 ## 🔵
+- 🤖🩹 📜 reader mode = local state 1st, persist aftr (like pinch scale) · now: UI waits 4 th DataStore round trip ➡ lag on a slow fon + th CI race (#386, tsts patched only)
 - 🤖 ‼️ **v1 this w** (🦠 @1123) = audio (TTS/STT packs fr audio crew) + Matrix chat ➡ then only feedback
   - ✔️ audio app side = D-085 (pack client, DEV) · 👤 audio: real packs (🦠 persona pick 1st) · 🦠 ❓ newly public `scagent.de/oh-my-marx/voice/` · STT = 0 need i v1 · Ogg-Opus = Android 10+ only (8-9 = phone voice, ok?)
   - ✔️ Andacht 🔊 btn (plays `a:<plan>:<day>` clips) = D-087 @1126 #349 · ✔️ Matrix "Melden" on a comment = D-088 @1126 #349 (gate b4 strangers, D-073)

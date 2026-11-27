@@ -1,6 +1,12 @@
 # eos omm — resume log · newest on TOP
 _1 block per /eos · written by /eos § 3 · todo keeps 1 line: `▶ resume ➡ eos.md`_
 
+## 261127 21:2x · #381 #378 #386 (M8, 🦠 otg): page emoji 😇 + CI green
+- **at** · CI green 1232 + 1235 (reader tsts wait 4 stored DataStore value) · stable page tpl ☭ ➡ `$EMO` (dflt 😇, D-093 💬) · preview `priv/img/page_emoji_1127.png` · nothing shipped
+- **▶ NEXT** · 🦠 back ➡ v1 sesh steps 3-6 1st (Matrix 2 words · 4 PNGs · 3 reads · ❓ 2 4 5 8 9) · voice step 1 waits on audio's poly clips (#382)
+- **👤 🦠** · ❓ 8 emoji (😇 / 📖 / 🙏) · ❓ 9 in-app share txts ☭ ➡ swap? · ❓ 1 upload · D-092 ❓ 6 7
+- **⚠️** · 😇 dflt committed ➡ 🚫 ship b4 ❓ 8 · aftr pick: `/k/` (`bin/kreis.html`) + README h1 still ☭ · CI race never repro'd locally = 2 greens = th proof
+
 ## 261127 17:4x · #374 (M8): v1 sesh step 1 = DE eval ➡ "meh", wants poly
 - **at** · 3 DE pack clips (`priv/voice_eval/`, git-ignored) heard by 🦠: better than Android, blander than cloned cards · DE fine · wants 1 voice 4 all langs · nothing uploaded · sesh page § ⏱️ logs it · /eos aftr step 1
 - **▶ NEXT** · voice = audio's lane: 🦠 hears candidates across langs (poly lab) ➡ pick ➡ audio renders ➡ `bin/voice_up.py <dir>` ➡ ❓ 1 · rest o th 60-min page (step 3-7) still open

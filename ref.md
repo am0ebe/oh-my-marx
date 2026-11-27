@@ -38,6 +38,7 @@ _entry page = click-thru start · details live i th linked files · design + dec
 - 🃏 link preview = `bin/og.png` (1200×630, OG + Twitter tags) ➡ th card Signal / Telegram / Mastodon show = th real viral lever
 - 🤖 agents: `llms.txt` + JSON-LD `MobileApplication` + `version.json` · static, no JS needed 4 content
 - `/dev/` = small page + Obtainium source 4 th DEV app (1 apk link)
+- 😇 page emoji = `EMO` i `bin/lib.sh` (was ☭, D-093 💬 🦠 pick) · favicon = app icon PNG · ⚠️ `ship.sh -p` = LIVE · preview = local `page()` (recipe i lib.sh)
 - ✔️ **Obtainium trap — solved @1107**: pasting th bare URL ➡ HTML source w/o version regex ➡ "version" = hash o th APK's **1st 1024 bytes** (Obtainium src `checkPartialDownloadHash`) = AGP's app-metadata entry + library dex ➡ was identical evy build ➡ nvr an update
   - fix 1 (any entry, even defaults): `ommStamp` i `app/build.gradle.kts` writes version into that 1st zip entry ➡ CRC i th zip header changes per build · `deploy.sh` fails if th 1st KiB = live (guard)
   - fix 2 (real versions): th page's ➕ buttons carry regex `OhMyMarx-(.+)\.apk` + `$1` (`oblink` i `bin/lib.sh`) · ➕ re-import = same id ➡ **overwrites** th old entry (no delete needed) · `deploy.sh --qr` = QR o /dev/ + raw link
