@@ -20,11 +20,11 @@ _SDD: code says **wh** · th file says **y** · drift = a bug · fmt ➡ `pr/vib
 ## 🧾 decisions (newest on top)
 _Template v2.1 since 20 Nov (converted via `pr/vibe++/adr_convert.md`). Field names: Y = why · Ctx = what forced it · Scope = what it covers · Ck = how to check._
 
-### D-093 @1127 · 💬 Public pages show 😇 instead of ☭; the app keeps ☭ inside · 💬 Open (🦠 @1127 17:4x, M8 #378 · pick 😇 / 📖 / 🙏)
+### D-093 @1127 · 😇 Public pages show 😇 instead of ☭; the app keeps ☭ inside · Accepted (🦠 @1127 23:1x, M8 #390: "omm moji: 😇 (the others are cool too)")
 - **Ctx:** 🦠: "omm needs diff symbol as favicon emoji. i like hammer-sickle but its too political dangerous today to publicly put it there. its enough im pub a kapital app. dont need to show it so big on every page." · the favicon itself = app icon (Marx + halo PNG, no ☭) · ☭ sat in the download page's tab title, h1, OG title, share texts + footer, the `/k/` invite page, README h1.
-- **Dc (rec, open):** 1 var `EMO` i `bin/lib.sh` (dflt 😇) feeds the stable page · 😇 = the icon's halo = the "like the Bible" joke, 0 politics · favicon PNG unchanged · ☭ stays in the app (stamps, Amen, ✊ fx) + old release notes (history) + private KB tab.
+- **Dc:** 1 var `EMO` i `bin/lib.sh` (dflt 😇) feeds the stable page · 😇 = the icon's halo = the "like the Bible" joke, 0 politics · favicon PNG unchanged · ☭ stays in the app (stamps, Amen, ✊ fx) + old release notes (history) + private KB tab.
 - **Alt:** 📖 (neutral, but generic) · 🙏 (Amen mechanic; reads more "religious") · an SVG emoji favicon (con: loses the icon = brand recognition on the tab).
-- **Open:** in-app share texts that leave the phone (invite · streak · promoted · share app = "Oh My Marx ☭") ➡ public once sent ❓ · `/k/` page + README h1 ➡ swap aftr the pick.
+- **Open:** in-app share texts that leave the phone (invite · streak · promoted · share app = "Oh My Marx ☭") ➡ public once sent ❓ (still 🦠's word) · `/k/` page (title · line · btn, + favicon it lacked) + README h1 ➡ 😇 @1127 (#390) · a custom 😇-Marx mark (SVG) ➡ sketches 1st, no swap b4 🦠 sees them.
 - **Ck:** preview = `priv/img/page_emoji_1127.png` (real `page()` rendered locally, 3 headers · recipe i `bin/lib.sh`) · ⚠️ dflt 😇 is committed ➡ any ship / `ship -p` b4 🦠's word puts 😇 live (= th rec, in his direction; ❓ 8 sits i th v1 sesh b4 any ship) · other pick ➡ change th dflt, then `ship -p`.
 
 ### D-092 @1127 · 💬 Whatever Matrix shape ops picks, omm keeps its server and rooms; in-app chat for v1 = the reading circles as they are · 💬 Open (🦠 @1127 eve, v1 sesh ❓ 6 · 7, M8 #366)

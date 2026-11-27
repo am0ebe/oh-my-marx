@@ -1,4 +1,4 @@
-# ☭ Oh My Marx
+# 😇 Oh My Marx
 
 [![release](https://img.shields.io/github/v/release/am0ebe/oh-my-marx?label=release&color=b3261e)](https://github.com/am0ebe/oh-my-marx/releases)
 [![license](https://img.shields.io/badge/license-GPL--3.0-e8b931)](LICENSE)
