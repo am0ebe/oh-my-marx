@@ -42,7 +42,10 @@ class PinchScaleTest {
     /** 🐛 CI 1229 · 1230 (#386): mode + scale = DataStore writes on th IO thread, waitForIdle doesn't see them ➡ slow runner
      *  read "scale saved (1.0)" while th txt had alr grown · wait 4 th stored value, real ti */
     private fun stored() = runBlocking { app.prefs.settings.first() }
-    private fun mode(label: String, scroll: Boolean) { tap(label); rule.waitUntil(10_000) { stored().readScroll == scroll }; settle() }
+    private fun mode(label: String, scroll: Boolean) {
+        check(stored().readScroll != scroll) { "$label: mode alr stored (leak fr an earlier tst?) ➡ th wait wd prove nothing" }
+        tap(label); rule.waitUntil(10_000) { stored().readScroll == scroll }; settle()
+    }
     private val first = "wealth of those societies"
 
     /** font size th passage is laid out with (TextLayoutResult = wh th screen draws) */

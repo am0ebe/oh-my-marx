@@ -45,9 +45,11 @@ class ReaderGestureTest {
     private fun settle() { rule.mainClock.advanceTimeBy(1500); rule.waitForIdle() }
     /** 🐛 CI 1220 · 1229 · 1230 (#386): 📖 ⬄ 📜 = vm.setReadScroll ➡ DataStore write on th IO thread · waitForIdle doesn't see IO
      *  ➡ a slow runner went on i th OLD mode (all 3 reds sat right aftr tap("Scroll")) · wait 4 th stored mode, real ti, then settle */
+    private fun storedScroll() = kotlinx.coroutines.runBlocking { (rule.activity.application as MarxApp).prefs.settings.first().readScroll }
     private fun mode(label: String, scroll: Boolean) {
+        check(storedScroll() != scroll) { "$label: mode alr stored (leak fr an earlier tst?) ➡ th wait wd prove nothing" }
         tap(label)
-        rule.waitUntil(10_000) { kotlinx.coroutines.runBlocking { (rule.activity.application as MarxApp).prefs.settings.first().readScroll } == scroll }
+        rule.waitUntil(10_000) { storedScroll() == scroll }
         settle()
     }
     private val first = "wealth of those societies"
