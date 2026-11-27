@@ -20,6 +20,13 @@ _SDD: code says **wh** · th file says **y** · drift = a bug · fmt ➡ `pr/vib
 ## 🧾 decisions (newest on top)
 _Template v2.1 since 20 Nov (converted via `pr/vibe++/adr_convert.md`). Field names: Y = why · Ctx = what forced it · Scope = what it covers · Ck = how to check._
 
+### D-093 @1127 · 💬 Public pages show 😇 instead of ☭; the app keeps ☭ inside · 💬 Open (🦠 @1127 17:4x, M8 #378 · pick 😇 / 📖 / 🙏)
+- **Ctx:** 🦠: "omm needs diff symbol as favicon emoji. i like hammer-sickle but its too political dangerous today to publicly put it there. its enough im pub a kapital app. dont need to show it so big on every page." · the favicon itself = app icon (Marx + halo PNG, no ☭) · ☭ sat in the download page's tab title, h1, OG title, share texts + footer, the `/k/` invite page, README h1.
+- **Dc (rec, open):** 1 var `EMO` i `bin/lib.sh` (dflt 😇) feeds the stable page · 😇 = the icon's halo = the "like the Bible" joke, 0 politics · favicon PNG unchanged · ☭ stays in the app (stamps, Amen, ✊ fx) + old release notes (history) + private KB tab.
+- **Alt:** 📖 (neutral, but generic) · 🙏 (Amen mechanic; reads more "religious") · an SVG emoji favicon (con: loses the icon = brand recognition on the tab).
+- **Open:** in-app share texts that leave the phone (invite · streak · promoted · share app = "Oh My Marx ☭") ➡ public once sent ❓ · `/k/` page + README h1 ➡ swap aftr the pick.
+- **Ck:** `EMO=📖 bin/ship.sh -p` renders a variant · preview = `priv/img/page_emoji_1127.png` (real `page()`, 3 headers) · stable re-renders only on `ship -p` / nxt ship ➡ aftr 🦠's word.
+
 ### D-092 @1127 · 💬 Whatever Matrix shape ops picks, omm keeps its server and rooms; in-app chat for v1 = the reading circles as they are · 💬 Open (🦠 @1127 eve, v1 sesh ❓ 6 · 7, M8 #366)
 - **Ctx:** 🦠 to ops (#364): "i dont use matrix yet … need infra so i can use it privately, host groups for others and host groups or mk chat possible in omm app!!" ➡ ops dc page (`../ops/dc_1127.md`, ops D-071): A 1 server · **B** 2 servers (rec) · D private on matrix.org. The app hard-codes `scagent.de` (`Matrix.HS` · `SERVER`) and the room aliases `#omm-kap-*` / `#omm-kreis-*`.
 - **Dc (rec, open):** omm stays on `scagent.de` with the same aliases under every option (a move = new APK + every account, comment and circle lost again, like @1113) ➡ 0 app code for A, B or D · v1 chat = Lesekreis (group room, 6-char code) + chapter comments as built · per-install signup token fr omm-api (ops' 🩹, replaces the APK token) = after v1, before strangers (2nd half of the D-073 gate).

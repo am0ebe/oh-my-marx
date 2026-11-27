@@ -19,6 +19,9 @@ DIRS=/srv/www/oh-my-marx
 MAIL=omm@scagent.de                                 # feedback addr (Migadu alias ➡ am0ebe's inbox)
 SRC=https://github.com/am0ebe/oh-my-marx
 FGJ=https://git.scagent.de/am0/oh-my-marx           # Forgejo mirror (self-hosted, no public sign-up ➡ issues stay on GitHub)
+# 😇 public page emoji (#378 · D-093 💬): was ☭ = too political 4 evy public page (🦠 @1127) · ☭ stays i th app + private KB
+#   rec 😇 = th app icon's halo (Marx like th Bible) · alt 📖 · 🙏 · override 4 a preview: EMO=📖 bin/ship.sh -p
+EMO=${EMO:-😇}
 
 # all tools i bin/, 1 line each (shown by evy -h)
 tools() {
@@ -133,14 +136,14 @@ $(bin/notes.py "$ver" | sed 's/^- [^[:alnum:]„“"(]* */- /')
 EOF
     # 📣 share: native sheet 1st (phone) · then 1-tap links · prefilled txt = th hook · OG card = th preview evy messenger shows
     local u t
-    u=$(enc "$SHORT"); t=$(enc "Read Das Kapital like the Bible ☭ a daily verse, the whole book, free & open source: $SHORT")
+    u=$(enc "$SHORT"); t=$(enc "Read Das Kapital like the Bible $EMO a daily verse, the whole book, free & open source: $SHORT")
     # order (strix @1105/06 · #327 @1122): APK + in-app update 1st · Obtainium 2nd "also works" (Stable | 🧪 Dev) · build-it-urself 3rd (GitHub | Forgejo) · what's new · footer = share + feedback
     cat > "$out/index.html" <<EOF
 <!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>$APP ☭</title>
+<title>$APP $EMO</title>
 <meta name="description" content="Read Das Kapital like the Bible: a daily verse from Marx, the whole book in 13 languages, reading plans, streaks. Free, open source Android app.">
 <meta property="og:type" content="website"><meta property="og:site_name" content="$APP"><meta property="og:url" content="$WEB/">
-<meta property="og:title" content="$APP ☭ Read Das Kapital like the Bible">
+<meta property="og:title" content="$APP $EMO Read Das Kapital like the Bible">
 <meta property="og:description" content="A daily verse from Marx, the whole book in 13 languages, reading plans, streaks. Free and open source, for Android.">
 <meta property="og:image" content="$WEB/og.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Karl Marx with a halo: Oh My Marx, read Das Kapital like the Bible"><meta name="twitter:card" content="summary_large_image">
@@ -153,7 +156,7 @@ EOF
 "offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"},"author":{"@type":"Person","name":"am0ebe"},
 "sameAs":["$SRC","$FGJ"],"image":"$WEB/og.png"}</script>
 <style>$CSS</style>
-<h1>☭ $APP</h1>
+<h1>$EMO $APP</h1>
 <p>Read Marx like the Bible: a daily verse from <i>Das Kapital</i>, the whole book, reading plans, streaks —
 and a Hooked mode that confesses every habit trick the app plays on you. In English, German (Marx's original), Italiano · Español · Português · 中文 · عربي.</p>
 <!-- 1 tab box 4 both ways in (strix @1106): Release (dflt) | dev (quiet, 4 testers) · each: 1. APK (updates itself) 2. Obtainium (#327) -->
@@ -199,7 +202,7 @@ Step-by-step guide in the README, no Android experience needed.</p>
 $news
 <p><small>Older versions + all release notes: <a href="$SRC/releases">GitHub releases</a> · v$ver · $(date '+%F %H:%M') · sha256 ${sha:0:16}…</small></p>
 <footer>
-<h2>Know someone who'd read Marx on the bus? ☭</h2>
+<h2>Know someone who'd read Marx on the bus? $EMO</h2>
 <button class="sb" id="sh"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="fill:none"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg> Share $APP</button>
 <p class="fb" id="feedback">💬 Bug, idea, praise? <a href="mailto:$MAIL?subject=Oh%20My%20Marx%20$ver&amp;body=What%20did%20you%20do%3F%0A%0A%0AWhat%20did%20you%20expect%3F%0A%0A%0AVersion%3A%20$ver%0A(screenshot%20optional%2C%20helps)">$MAIL</a>
 · <a href="$SRC/issues/new/choose">GitHub issue</a></p>
@@ -211,9 +214,9 @@ $news
 <nav class="so">
 <a href="https://s2f.kytta.dev/?text=$t" title="Fediverse: Mastodon, Lemmy, Misskey …" rel="noopener" target="_blank">$(ico mastodon)<span>Fediverse</span></a>
 <a href="https://bsky.app/intent/compose?text=$t" title="Bluesky" rel="noopener" target="_blank">$(ico bluesky)<span>Bluesky</span></a>
-<a href="https://t.me/share/url?url=$u&amp;text=$(enc "Read Das Kapital like the Bible ☭")" title="Telegram" rel="noopener" target="_blank">$(ico telegram)<span>Telegram</span></a>
+<a href="https://t.me/share/url?url=$u&amp;text=$(enc "Read Das Kapital like the Bible $EMO")" title="Telegram" rel="noopener" target="_blank">$(ico telegram)<span>Telegram</span></a>
 <a href="https://www.reddit.com/submit?url=$u&amp;title=$(enc "Oh My Marx: read Das Kapital like the Bible (free, open source Android app)")" title="Reddit" rel="noopener" target="_blank">$(ico reddit)<span>Reddit</span></a>
-<a href="mailto:?subject=$(enc "Oh My Marx ☭")&amp;body=$t" title="Mail"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="fill:none"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg><span>Mail</span></a>
+<a href="mailto:?subject=$(enc "$APP $EMO")&amp;body=$t" title="Mail"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="fill:none"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg><span>Mail</span></a>
 <a href="https://wa.me/?text=$t" title="WhatsApp" rel="noopener" target="_blank">$(ico whatsapp)<span>WhatsApp</span></a>
 </nav>
 <div class="r2"><button class="p" id="cp"><span>📋 Copy link</span></button></div>
@@ -221,7 +224,7 @@ $(qrencode -t SVG --inline --svg-path -m 2 --foreground=1d1230 --background=f4ea
 <small>Scan with a phone camera · scagent.de/oh-my-marx</small>
 </dialog>
 <script>
-var U = '$SHORT', TXT = 'Read Das Kapital like the Bible ☭ a daily verse, the whole book, free & open source';
+var U = '$SHORT', TXT = 'Read Das Kapital like the Bible $EMO a daily verse, the whole book, free & open source';
 var d = document.getElementById('sd');
 document.getElementById('sh').onclick = function () { d.showModal(); };
 document.getElementById('sx').onclick = function () { d.close(); };
