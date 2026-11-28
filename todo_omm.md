@@ -21,7 +21,7 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
 
 ## 👀
 - 🩹 **📖 ⬄ 📜 = local state 1st** (#400, was 🔵 aftr #386) · ReadScreen `modeTap` (null = stored, set once = local wins, no flicker on 2 fast taps) ➡ chip + list flip at once, DataStore persists aftr · tst `modeFlipsBeforeStored` holds th DataStore write ➡ red wo fix ("chip flipped … b4 th write"), green w · local 163 ✔️ + lint
-  - [ ] 🤖 CI green (`cilog`)
+  - [x] 🤖 CI green: run 1246 ✅ · DEV 0.15.0-dev.1128.0204 live (deploylog)
   - [ ] 🦠🧪 DEV: chip tap = instant flip, mode kept aftr leaving + reopening th reader
 - 🎨 **icon polish** (#390 ③ ➡ #400 · 🦠 @1128: keep th b/w photo + halo) · v1 closer (tight crop, ring 5) · v2 warm sepia + glowing halo · v3 no ring, halo on th crown · built fr th Mayall src by `priv/icon_polish/mk.sh` (priv til picked) · nothing swapped
   - [ ] 🦠 pick v0 (keep) / v1 / v2 / v3 / mix · look: `priv/icon_polish/icons.html` (fon: `priv/img/icon_polish_1128.png`) ❓
