@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.map
 
 // DataStore = async key-value store (replaces SharedPreferences) · 1 file, survives app restarts
 
-private val Context.store by preferencesDataStore("settings")
+internal val Context.store by preferencesDataStore("settings")   // internal: ReaderGestureTest holds a write 2 prove UI ≠ waits 4 it
 
 data class Settings(
     val lang: Lang = Lang.system(),   // never picked ➡ fon lang if we hv it, else EN (@1106: EN 1st, DE 2nd)

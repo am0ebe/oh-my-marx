@@ -2,7 +2,7 @@
 _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm wo 🦠 ok · dropped @1113 ➡ [notes.md § 🗃️](notes.md)_
 
 ## 🏔️
-- ☭ **v1** (roadmap 1/3 now · 🦠 @1120 ➡ [compass § 🗺️](../compass.md)) — design § 14 C-lanes + **Matrix chat** + **audio** (many langs · how deployed) + feedback loop · v1 = **QY bar**: UX + func + purpose feel ~80-90 % aftr thorough eval/tst (🦠) · done = stable release at th bar ➡ then analytics/Hooked · spin-off: Matrix 4 ourselves (ops)
+- ☭ **v1** (roadmap 1/3 now · 🦠 @1120 ➡ [compass § 🗺️](../../dash/compass.md)) — design § 14 C-lanes + **Matrix chat** + **audio** (many langs · how deployed) + feedback loop · v1 = **QY bar**: UX + func + purpose feel ~80-90 % aftr thorough eval/tst (🦠) · done = stable release at th bar ➡ then analytics/Hooked · spin-off: Matrix 4 ourselves (ops)
 
 ## 🎯 sprint goal
 - 🧪 **QA + iterate 0.9.x b4 anything new** (was 0.7.0, bumped @1112) (🦠 @1106: "test existing feats + iterate a couple o times, else slop") ➡ friends' feedback in ➡ fix ➡ only then 0.8.0
@@ -20,6 +20,9 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
     - 0.9.0 ➡ 0.10.0 APK users: banner ➡ page ➡ install by hand 1× (then 1-tap / silent fr there)
 
 ## 👀
+- 🩹 **📖 ⬄ 📜 = local state 1st** (#400, was 🔵 aftr #386) · ReadScreen `modeTap` (null = stored, set once = local wins, no flicker on 2 fast taps) ➡ chip + list flip at once, DataStore persists aftr · tst `modeFlipsBeforeStored` holds th DataStore write ➡ red wo fix ("chip flipped … b4 th write"), green w · local 163 ✔️ + lint
+  - [ ] 🤖 CI green (`cilog`)
+  - [ ] 🦠🧪 DEV: chip tap = instant flip, mode kept aftr leaving + reopening th reader
 ### 🌙 night run (#248 · 🦠 ✔️ @1121)
 - **🏷️ tags retag scheduled** (M8 @1121 · D-071) `at` job 63 · Sun 11/22 03:00 · `bin/gpu_night.sh bin/retag.py` (1867 Verse, ~1 h) ➡ log `data/retag_night_1122.log` ➡ `data/tags.jsonl`
   - built: `bin/retag.py` (0-2 topics ABOUT, weight 1-3) ➡ build.py `tw` ➡ Marxoskop chip pool = weight ≥ 2 · < 30 ➡ ≥ 1 · no data ➡ old `t` (= today) · `t` + plans untouched (D-042) · tsts: `Retag` 3 py · `marxoskopPoolPrefersAboutTopicsWithGuard`
@@ -72,7 +75,6 @@ _✂️ rule (🦠 @1113): drop candidate ➡ flag `✂️` on its line, nvr rm 
 - 🛍️ Fr 11/27 Black Friday: home-screen widget shows th 🛍️ egg left o "Marx verse" · only if it looks off ➡ screenshot (no box · render = `EggResTest`)
 
 ## 🔵
-- 🤖🩹 📜 reader mode = local state 1st, persist aftr (like pinch scale) · now: UI waits 4 th DataStore round trip ➡ lag on a slow fon + th CI race (#386, tsts patched only)
 - 🤖 ‼️ **v1 this w** (🦠 @1123) = audio (TTS/STT packs fr audio crew) + Matrix chat ➡ then only feedback
   - ✔️ audio app side = D-085 (pack client, DEV) · 👤 audio: real packs (🦠 persona pick 1st) · 🦠 ❓ newly public `scagent.de/oh-my-marx/voice/` · STT = 0 need i v1 · Ogg-Opus = Android 10+ only (8-9 = phone voice, ok?)
   - ✔️ Andacht 🔊 btn (plays `a:<plan>:<day>` clips) = D-087 @1126 #349 · ✔️ Matrix "Melden" on a comment = D-088 @1126 #349 (gate b4 strangers, D-073)

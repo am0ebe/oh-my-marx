@@ -12,7 +12,10 @@ import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.printToString
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTouchInput
+import androidx.datastore.preferences.core.edit
+import de.strix.marxversion.data.store
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Rule
@@ -104,6 +107,25 @@ class ReaderGestureTest {
         assertFalse("📖 lands where 📜 was (not page 1)", has(first))
         rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }; settle()
         assertTrue("Continue btn on th Read list", has("Continue"))
+    }
+
+    /** 🩹 #400: 📖 ⬄ 📜 flips th screen at once, not aftr th DataStore write (was: lag on a slow fon + CI race #386)
+     *  ➡ a held write (DataStore = 1 writer at a ti) blocks setReadScroll · th chip + list must flip anyway · release ➡ stored */
+    @Test fun modeFlipsBeforeStored() {
+        tap("Read", true); tap("p. 49"); settle()
+        val app = rule.activity.application as MarxApp
+        val hold = kotlinx.coroutines.CompletableDeferred<Unit>()
+        val held = kotlinx.coroutines.CompletableDeferred<Unit>()
+        val writer = app.scope.launch { app.store.edit { held.complete(Unit); hold.await() } }
+        try {
+            kotlinx.coroutines.runBlocking { held.await() }
+            tap("Scroll"); settle()
+            assertFalse("write still held", storedScroll())
+            assertTrue("chip flipped 2 📖 Pages b4 th write", has("Pages"))
+            assertTrue("📜 list shows", rule.onAllNodes(androidx.compose.ui.test.hasScrollToIndexAction()).fetchSemanticsNodes().isNotEmpty())
+        } finally { hold.complete(Unit) }
+        kotlinx.coroutines.runBlocking { writer.join() }
+        rule.waitUntil(10_000) { storedScroll() }
     }
 
     @Test fun tapTurnsDoubleTapOpensMenu() {

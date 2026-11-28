@@ -235,10 +235,14 @@ fun ChapterScreen(vm: AppVm, kap: String, focus: String?, @Suppress("UNUSED_PARA
     val scope = rememberCoroutineScope()
     val s by vm.settings.collectAsStateWithLifecycle()
     var scale by remember(s.readScale) { mutableFloatStateOf(s.readScale) }
+    // 📖 ⬄ 📜 = local 1st (#400): th chip flips th screen NOW, DataStore catches up · was: UI waited 4 th IO write ➡ lag + CI race (#386)
+    //   null = not toggled this visit ➡ stored value · set once ➡ local wins (no flicker when 2 fast taps' writes land late)
+    var modeTap by remember { mutableStateOf<Boolean?>(null) }
+    val scrollMode = modeTap ?: s.readScroll
     val speaker = rememberSpeaker()
     val density = LocalDensity.current
     LaunchedEffect(index) { vm.read(pages[index].verses.map { it.id }); vm.pageSeen(pages[index].page) }  // page seen = read (+ 👥 count)
-    LaunchedEffect(index, s.readScroll) { if (!s.readScroll) vm.setReadPos(pages[index].verses.first().id) }   // 📍 📖 position
+    LaunchedEffect(index, scrollMode) { if (!scrollMode) vm.setReadPos(pages[index].verses.first().id) }   // 📍 📖 position
     // ⏱️ D-062 reading time: 15 s ticks while th app is resumed AND u touched th reader ≤ 90 s ago (no input = nothing counts)
     //   1 sitting ≥ 60 active min ➡ "longshift" (Überstunden badge) · session = this screen visit
     var lastInput by remember { androidx.compose.runtime.mutableLongStateOf(System.currentTimeMillis()) }
@@ -279,7 +283,6 @@ fun ChapterScreen(vm: AppVm, kap: String, focus: String?, @Suppress("UNUSED_PARA
     // (QA r5 peek + hint pill rm'd @1116 qa_1116 L2: "distracting" ➡ th dog-ears r th only hint · git: 65a2639)
     // 📖 ⬄ 📜 (qa_1116 Q4/Q7, 🦠 @1116): 2 reading modes til 🦠 picks 1 design · toggle i th slim head · remembers last
     //   📜 starts at th current page's 1st passage (fixed when th mode flips) · scrolled past ➡ index follows ➡ 📖 resumes there
-    val scrollMode = s.readScroll
     val pageOf = remember(pages) { buildMap { pages.forEachIndexed { i, p -> p.verses.forEach { put(it.id, i) } } } }
     val scrollFrom = remember(scrollMode) {
         pages[index].verses.first().id.let { id -> vm.content.verses.indexOfFirst { it.id == id }.coerceAtLeast(0) }
@@ -317,7 +320,7 @@ fun ChapterScreen(vm: AppVm, kap: String, focus: String?, @Suppress("UNUSED_PARA
       Column(Modifier.fillMaxSize().background(Ds.page).imePadding()
           // ⏱️ D-062: any touch on th reader = "still reading" (Initial pass, consumes nothing)
           .pointerInput(Unit) { awaitPointerEventScope { while (true) { awaitPointerEvent(PointerEventPass.Initial); lastInput = System.currentTimeMillis() } } }) {
-        SlimHead(vm, pages[index], scrollMode, { vm.setReadScroll(!scrollMode); hintKey++ }) { talk = pages[index] }
+        SlimHead(vm, pages[index], scrollMode, { (!scrollMode).let { modeTap = it; vm.setReadScroll(it) }; hintKey++ }) { talk = pages[index] }
         if (scrollMode) {
             // 📜 = whole book, lazy, both ways (qa_1120 🐛 stuck + no way back) · top passage ➡ index = th 📖 page u land on
             var listAt by remember { mutableStateOf(Offset.Zero) }
